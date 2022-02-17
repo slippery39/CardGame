@@ -1,0 +1,78 @@
+using System.Collections;
+using System.Collections.Generic;
+
+public abstract class BaseCardData
+{
+    public string Name { get; set; }
+    public string RulesText { get; set; }
+    public string ManaCost { get; set; }
+    public abstract string CardType { get; }
+    public string ArtPath { get; set; }
+
+}
+
+public class UnitCardData : BaseCardData
+{
+    public int Power { get; set; }
+    public int Toughness { get; set; }
+    public override string CardType => "Unit";
+}
+
+public class SpellCardData : BaseCardData
+{
+    public override string CardType => "Spell";
+}
+
+public interface ICardDatabase
+{
+    List<BaseCardData> GetAll();
+    BaseCardData GetCardData(string name);
+}
+
+public class CardDatabase : ICardDatabase
+{
+    private List<BaseCardData> _cards;
+    public CardDatabase()
+    {
+        _cards = new List<BaseCardData>();
+
+        //Create cards here for now.
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Grizzly Bear",
+            RulesText = "",
+            ManaCost = "2",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/GrizzlyBear"
+        });
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Lightning Bolt",
+            RulesText = "Deal 3 damage to target unit or player",
+            ManaCost = "1",
+            ArtPath = "CardArt/LightningBolt"
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Storm Crow",
+            RulesText = "Flying",
+            ManaCost = "2",
+            Power = 1,
+            Toughness = 2,
+            ArtPath = "CardArt/StormCrow"
+        });
+    }
+
+    public List<BaseCardData> GetAll()
+    {
+        return _cards;
+    }
+
+    public BaseCardData GetCardData(string name)
+    {
+        return _cards.Find(c => c.Name == name);
+    }
+}
