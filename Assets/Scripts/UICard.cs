@@ -20,6 +20,13 @@ public class UICard : MonoBehaviour
     private SpriteRenderer cardArtRenderer;
 
     private BaseCardData _cardData;
+    #region Public Properties
+    public SpriteRenderer CardArtRenderer { get => cardArtRenderer; set => cardArtRenderer = value; }
+
+    #endregion
+
+
+
 
     public void SetFromCardData(BaseCardData cardData)
     {

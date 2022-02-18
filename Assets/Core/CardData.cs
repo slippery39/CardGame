@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[System.Serializable]
 public abstract class BaseCardData
 {
     public string Name { get; set; }
@@ -8,19 +9,45 @@ public abstract class BaseCardData
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
     public string ArtPath { get; set; }
-
+    public abstract BaseCardData Clone();
 }
 
+[System.Serializable]
 public class UnitCardData : BaseCardData
 {
     public int Power { get; set; }
     public int Toughness { get; set; }
     public override string CardType => "Unit";
+
+    public override BaseCardData Clone()
+    {
+        return new UnitCardData()
+        {
+            Name = Name,
+            RulesText = RulesText,
+            ManaCost = ManaCost,
+            ArtPath = ArtPath,
+            Power = Power,
+            Toughness = Toughness
+        };
+    }
 }
 
+[System.Serializable]
 public class SpellCardData : BaseCardData
 {
     public override string CardType => "Spell";
+
+    public override BaseCardData Clone()
+    {
+        return new SpellCardData()
+        {
+            Name = Name,
+            RulesText = RulesText,
+            ManaCost = ManaCost,
+            ArtPath = ArtPath,
+        };
+    }
 }
 
 public interface ICardDatabase
