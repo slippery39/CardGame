@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour
         //Test Hotkey for testing our Battle System.
        if (Input.GetKeyDown(KeyCode.B))
         {
-            _gameState.BattleSystem.ExecuteBattles(_gameState.Player1Lane, _gameState.Player2Lane);
+            _gameState.BattleSystem.ExecuteBattles(_gameState);
             UpdateLane(_player1Lanes, _gameState.Player1Lane);
             UpdateLane(_player2Lanes, _gameState.Player2Lane);           
         }
