@@ -8,7 +8,8 @@ public abstract class BaseCardData
     public string RulesText { get; set; }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
-    public string ArtPath { get; set; }
+    public string ArtPath { get; set; }    
+    public List<CardAbility> Abilities { get; set; }
     public abstract BaseCardData Clone();
 }
 
