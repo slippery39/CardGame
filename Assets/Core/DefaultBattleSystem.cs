@@ -17,10 +17,14 @@ public class DefaultBattleSystem : IBattleSystem
             if (lane2[i] == null)
             {
                 //Lane 1 will attack player 2 directly.
+                var card1 = (UnitCardData)lane1[i].CurrentCardData;
+                cardGame.Player2Health -= card1.Power;
             }
             else if (lane1[i] == null)
             {
                 //Lane 2 will attack player 1 directly.
+                var card2 = (UnitCardData)lane2[i].CurrentCardData;
+                cardGame.Player1Health -= card2.Power;       
             }
             else
             {

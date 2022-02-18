@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
@@ -13,13 +14,15 @@ public class GameController : MonoBehaviour
     private Transform _player1Lanes;
     [SerializeField]
     private Transform _player2Lanes;
+    [SerializeField]
+    private TextMeshPro _player1HealthText;
+    [SerializeField]
+    private TextMeshPro _player2HealthText;
 
     void Start()
     {
         _gameState = new CardGame();
-        //Spawn our cards in some "lanes" for the UI
-        UpdateLane(_player1Lanes, _gameState.Player1Lane);
-        UpdateLane(_player2Lanes, _gameState.Player2Lane);
+        UpdateBoard();
     }
 
     private void Update()
@@ -28,19 +31,19 @@ public class GameController : MonoBehaviour
        if (Input.GetKeyDown(KeyCode.B))
         {
             _gameState.BattleSystem.ExecuteBattles(_gameState);
-            UpdateLane(_player1Lanes, _gameState.Player1Lane);
-            UpdateLane(_player2Lanes, _gameState.Player2Lane);           
+            UpdateBoard();
         }
     }
 
     #region Private Methods
-    private GameObject CreateCardWithData(BaseCardData data)
-    {
-        var newCard = Instantiate(_uiCardTemplate);
-        newCard.GetComponent<UICard>().SetFromCardData(data);
-        return newCard;
-    }
 
+    private void UpdateBoard()
+    {
+        UpdateLane(_player1Lanes, _gameState.Player1Lane);
+        UpdateLane(_player2Lanes, _gameState.Player2Lane);
+        _player1HealthText.text = _gameState.Player1Health.ToString();
+        _player2HealthText.text = _gameState.Player2Health.ToString();
+    }
     private void UpdateLane(Transform laneInScene, List<CardInstance> cardsInLane)
     {
         var uiCards = laneInScene.GetComponentsInChildren<UICard>(true);
