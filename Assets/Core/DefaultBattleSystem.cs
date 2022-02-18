@@ -8,45 +8,53 @@ public class DefaultBattleSystem : IBattleSystem
         var lane1 = cardGame.Player1Lane;
         var lane2 = cardGame.Player2Lane;
 
-        for (int i = 0; i < lane1.Count; i++)
+        var lanesForAttacker = cardGame.ActivePlayer == 1 ? lane1 : lane2;
+        var lanesForDefender = cardGame.ActivePlayer == 1 ? lane2 : lane1;
+
+        //TODO - we need a concept of a player here, since things are getting a bit trickier.
+
+        for (int i = 0; i < lanesForAttacker.Count; i++)
         {
-            if (lane1[i] == null && lane2[i] == null)
+            //Neither player has units in lane
+            if (lanesForAttacker[i] == null)
             {
                 continue;
             }
-            if (lane2[i] == null)
+            //Attacking an empty lane
+            if (lanesForAttacker[i] != null && lanesForDefender[i] == null)
             {
-                //Lane 1 will attack player 2 directly.
-                var card1 = (UnitCardData)lane1[i].CurrentCardData;
-                cardGame.Player2Health -= card1.Power;
-            }
-            else if (lane1[i] == null)
-            {
-                //Lane 2 will attack player 1 directly.
-                var card2 = (UnitCardData)lane2[i].CurrentCardData;
-                cardGame.Player1Health -= card2.Power;       
+                var unit = (UnitCardData)lanesForAttacker[i].CurrentCardData;
+                if (cardGame.ActivePlayer == 1)
+                {
+                    cardGame.Player2Health -= unit.Power;
+                }
+                else
+                {
+                    cardGame.Player1Health -= unit.Power;
+                }
             }
             else
             {
                 //Both lanes have units, they will attack eachother.
-                var card1 = (UnitCardData)lane1[i].CurrentCardData;
-                var card2 = (UnitCardData)lane2[i].CurrentCardData;
+                var attackingUnit = (UnitCardData)lanesForAttacker[i].CurrentCardData;
+                var defendingUnit = (UnitCardData)lanesForDefender[i].CurrentCardData;
 
-                card1.Toughness -= card2.Power;
-                card2.Toughness -= card1.Power;
+                attackingUnit.Toughness -= defendingUnit.Power;
+                defendingUnit.Toughness -= attackingUnit.Power;
 
-                if (card1.Toughness <= 0)
+                if (attackingUnit.Toughness <= 0)
                 {
                     //should die
-                    lane1[i] = null;
-                 }
-                if (card2.Toughness <= 0)
-                {
-                    lane2[i] = null;
+                    lanesForAttacker[i] = null;
                 }
-
+                if (defendingUnit.Toughness <= 0)
+                {
+                    lanesForDefender[i] = null;
+                }
             }
-
+            //Both players have units in lane
         }
+        //Temporary hack for now. In the future we should have a seperate system which handles our turn logic.
+        _ = cardGame.ActivePlayer == 1 ? cardGame.ActivePlayer = 2 : cardGame.ActivePlayer = 1;
     }
 }

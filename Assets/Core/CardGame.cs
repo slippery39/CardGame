@@ -12,6 +12,7 @@ public class CardGame
     private List<CardInstance> _player2Lanes;
     private int _player1Health = 100;
     private int _player2Health = 100;
+    private int _activePlayer = 1;
 
     private IBattleSystem battleSystem;
 
@@ -21,6 +22,7 @@ public class CardGame
     internal IBattleSystem BattleSystem { get => battleSystem; set => battleSystem = value; }
     public int Player1Health { get => _player1Health; set => _player1Health = value; }
     public int Player2Health { get => _player2Health; set => _player2Health = value; }
+    public int ActivePlayer { get => _activePlayer; set => _activePlayer = value; }
     #endregion
 
     public CardGame()

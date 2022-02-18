@@ -18,6 +18,8 @@ public class GameController : MonoBehaviour
     private TextMeshPro _player1HealthText;
     [SerializeField]
     private TextMeshPro _player2HealthText;
+    [SerializeField]
+    private TextMeshPro _turnIndicator;
 
     void Start()
     {
@@ -43,6 +45,7 @@ public class GameController : MonoBehaviour
         UpdateLane(_player2Lanes, _gameState.Player2Lane);
         _player1HealthText.text = _gameState.Player1Health.ToString();
         _player2HealthText.text = _gameState.Player2Health.ToString();
+        _turnIndicator.text = $"Player {_gameState.ActivePlayer}'s Turn";
     }
     private void UpdateLane(Transform laneInScene, List<CardInstance> cardsInLane)
     {
