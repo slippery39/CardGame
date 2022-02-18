@@ -23,12 +23,33 @@ public class GameController : MonoBehaviour
         FillLaneWithCards(_player2LanePosition, _gameState.Player2Lane);
     }
 
+    private void Update()
+    {
+        //Test Hotkey for testing our Battle System.
+       if (Input.GetKeyDown(KeyCode.B))
+        {
+            _gameState.BattleSystem.ExecuteBattles(_gameState.Player1Lane, _gameState.Player2Lane);
+            UpdateLane(_player1LanePosition, _gameState.Player1Lane);
+            UpdateLane(_player2LanePosition, _gameState.Player2Lane);
+           
+        }
+    }
+
     #region Private Methods
     private GameObject CreateCardWithData(BaseCardData data)
     {
         var newCard = Instantiate(_uiCardTemplate);
         newCard.GetComponent<UICard>().SetFromCardData(data);
         return newCard;
+    }
+
+    private void UpdateLane(Transform laneInScene, List<CardInstance> cardsInLane)
+    {
+        var uiCards = laneInScene.GetComponentsInChildren<UICard>();
+        for (int i = 0; i < cardsInLane.Count; i++)
+        {
+            uiCards[i].GetComponent<UICard>().SetFromCardData(cardsInLane[i].CurrentCardData);
+        }
     }
 
     private void FillLaneWithCards(Transform laneInScene, List<CardInstance> cardsInLane)
