@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+[System.Serializable]
 public class CardGame
 {
     //We will probably create our own Lane class eventually, but for now plain old lists are good enough.
-
     private List<CardInstance> _player1Lanes;
     private List<CardInstance> _player2Lanes;
 

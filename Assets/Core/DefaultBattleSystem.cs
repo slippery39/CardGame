@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class DefaultBattleSystem : IBattleSystem
 {
@@ -26,6 +27,20 @@ public class DefaultBattleSystem : IBattleSystem
 
                 card1.Toughness -= card2.Power;
                 card2.Toughness -= card1.Power;
+
+                Debug.Log(card1.Toughness);
+                Debug.Log(card2.Toughness);
+
+                if (card1.Toughness <= 0)
+                {
+                    //should die
+                    lane1[i] = null;
+                 }
+                if (card2.Toughness <= 0)
+                {
+                    lane2[i] = null;
+                }
+
             }
 
         }

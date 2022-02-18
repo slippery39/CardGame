@@ -43,9 +43,21 @@ public class GameController : MonoBehaviour
 
     private void UpdateLane(Transform laneInScene, List<CardInstance> cardsInLane)
     {
-        var uiCards = laneInScene.GetComponentsInChildren<UICard>();
+        var uiCards = laneInScene.GetComponentsInChildren<UICard>(true);
         for (int i = 0; i < cardsInLane.Count; i++)
         {
+            Debug.Log(i);
+            //If there is no card in the game state for a lane, just hide the card.
+            if (cardsInLane[i] == null)
+            {
+                uiCards[i].gameObject.SetActive(false);
+                continue;
+            }
+            else
+            {
+                uiCards[i].gameObject.SetActive(true);
+            }
+
             uiCards[i].GetComponent<UICard>().SetFromCardData(cardsInLane[i].CurrentCardData);
         }
     }
