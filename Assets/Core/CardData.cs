@@ -91,6 +91,46 @@ public class CardDatabase : ICardDatabase
             Toughness = 2,
             ArtPath = "CardArt/StormCrow"
         });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Goblin Raider",
+            RulesText = "Goblin Raider can't block",
+            ManaCost = "2",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/GoblinRaider"
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Sunstriker",
+            RulesText = "Lifelink",
+            ManaCost = "2",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/Sunstriker"
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Typhoid Rats",
+            RulesText="Deathtouch",
+            ManaCost = "1",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/TyphoidRats"
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Hexplate Golem",
+            RulesText = "",
+            ManaCost = "7",
+            Power = 5,
+            Toughness = 7,
+            ArtPath = "CardArt/HexplateGolem"
+        });
     }
 
     public List<BaseCardData> GetAll()
