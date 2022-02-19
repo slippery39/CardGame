@@ -43,7 +43,8 @@ public class CardGame
         //AddRandomUnitsToLane(Player2.Lanes);
         //SetupCantBlockTestLanes();
         //SetupFlyingTestLanes();
-        SetupLifelinkTestLanes();
+        //SetupLifelinkTestLanes();
+        SetupDeathtouchTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
     }
@@ -97,7 +98,7 @@ public class CardGame
 
         var stormCrow = db.GetCardData("Storm Crow");
         var hexPlateGolem = db.GetCardData("Hexplate Golem");
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1,stormCrow);
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, stormCrow);
         Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, hexPlateGolem);
 
         Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, stormCrow);
@@ -112,12 +113,22 @@ public class CardGame
         var db = new CardDatabase();
 
         var sunstriker = db.GetCardData("Sunstriker");
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1,sunstriker);
-        Player2.Lanes[0].UnitInLane = AddCardToGame (Player2, sunstriker);
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, sunstriker);
+        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, sunstriker);
 
         Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, sunstriker);
 
-        Player2.Lanes[2].UnitInLane = AddCardToGame(Player2, sunstriker);     
+        Player2.Lanes[2].UnitInLane = AddCardToGame(Player2, sunstriker);
 
+    }
+
+    private void SetupDeathtouchTestLanes()
+    {
+        var db = new CardDatabase();
+
+        var rats = db.GetCardData("Typhoid Rats");
+        var hexPlateGolem = db.GetCardData("Hexplate Golem");
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, rats);
+        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, hexPlateGolem);
     }
 }

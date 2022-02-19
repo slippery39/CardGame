@@ -9,7 +9,7 @@ public abstract class BaseCardData
     public string RulesText { get; set; }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
-    public string ArtPath { get; set; }    
+    public string ArtPath { get; set; }
     public List<CardAbility> Abilities { get; set; }
     public abstract BaseCardData Clone();
 }
@@ -135,11 +135,15 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Typhoid Rats",
-            RulesText="Deathtouch",
+            RulesText = "Deathtouch",
             ManaCost = "1",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/TyphoidRats"
+            ArtPath = "CardArt/TyphoidRats",
+            Abilities = new List<CardAbility>()
+            {
+               new DeathtouchAbility()
+            }
         });
 
         _cards.Add(new UnitCardData()
