@@ -44,51 +44,21 @@ public class DefaultBattleSystem : IBattleSystem
     private void DirectAttack(CardGame cardGame, Lane attackingLane, Lane defendingLane)
     {
         Debug.Log("Defending Lane was Empty");
-        var attackingUnit = (UnitCardData)attackingLane.UnitInLane.CurrentCardData;
-        if (cardGame.ActivePlayerId == 1)
-        {
-            cardGame.Player2.Health -= attackingUnit.Power;
-        }
-        else
-        {
-            cardGame.Player1.Health -= attackingUnit.Power;
-        }
-        //Trigger Damage Dealt Abilities.
-        //TODO - Handle case if 0 damage is dealt for whatever reason.
-        var getDamageDealtAbilities = attackingUnit.Abilities.Where(ab => ab is IOnDamageDealt).FirstOrDefault();
-        if (getDamageDealtAbilities != null)
-        {
-            var damageDealtAbility = (IOnDamageDealt)getDamageDealtAbilities;
-            damageDealtAbility.OnDamageDealt(cardGame, attackingLane.UnitInLane, null, attackingUnit.Power);
-        }
-
+        //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
+        cardGame.DamageSystem.DealCombatDamageToPlayer(cardGame, attackingLane.UnitInLane, cardGame.InactivePlayer);
     }
 
     private void FightUnits(CardGame gameState, Lane attackingLane, Lane defendingLane)
     {
         Debug.Log("Both Lanes have Units");
+        Debug.Log(gameState);
+        Debug.Log(attackingLane.UnitInLane);
+        Debug.Log(defendingLane.UnitInLane);
         //Both lanes have units, they will attack eachother.
+        gameState.DamageSystem.DealCombatDamageToUnits(gameState, attackingLane.UnitInLane, defendingLane.UnitInLane);
+
         var attackingUnit = (UnitCardData)attackingLane.UnitInLane.CurrentCardData;
         var defendingUnit = (UnitCardData)defendingLane.UnitInLane.CurrentCardData;
-
-        attackingUnit.Toughness -= defendingUnit.Power;
-        defendingUnit.Toughness -= attackingUnit.Power;
-
-        //Attacker Damage Dealt Abilities
-        var damageDealtAbilitiesAtk = attackingUnit.Abilities.Where(ab => ab is IOnDamageDealt).FirstOrDefault();
-        if (damageDealtAbilitiesAtk != null)
-        {
-            var damageDealtAbilityAtk = (IOnDamageDealt)damageDealtAbilitiesAtk;
-            damageDealtAbilityAtk.OnDamageDealt(gameState, attackingLane.UnitInLane, defendingLane.UnitInLane, attackingUnit.Power);
-        }
-
-        //Defender Damage Dealt Abilities
-        var damageDealtAbilitiesDef = defendingUnit.Abilities.Where(ab => ab is IOnDamageDealt).FirstOrDefault();
-        if (damageDealtAbilitiesDef != null)
-        {
-            var damageDealtAbilityDef = (IOnDamageDealt)damageDealtAbilitiesDef;
-            damageDealtAbilityDef.OnDamageDealt(gameState, defendingLane.UnitInLane, attackingLane.UnitInLane, defendingUnit.Power);
-        }
 
         if (attackingUnit.Toughness <= 0)
         {
@@ -98,6 +68,7 @@ public class DefaultBattleSystem : IBattleSystem
         }
         if (defendingUnit.Toughness <= 0)
         {
+            //should also die.
             Debug.Log("Defending Unit Is Dying");
             defendingLane.RemoveUnitFromLane();
         }

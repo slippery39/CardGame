@@ -10,17 +10,22 @@ public class CardGame
 
     private List<Player> _players;
     private int _activePlayerId = 1;
-    private IBattleSystem _battleSystem;
     private int _numberOfLanes = 5;
     private int _startingPlayerHealth = 100;
+    private IBattleSystem _battleSystem;
+    private IDamageSystem _damageSystem;
 
     #region Public Properties
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
     public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
-    internal IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
+
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
+    #region Systems
+    public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
+    public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
+    #endregion
     #endregion
 
     public CardGame()
@@ -47,6 +52,10 @@ public class CardGame
         SetupDeathtouchTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
+        _damageSystem = new DefaultDamageSystem();
+
+        //TODO - some sort of check to make sure all systems are initialized?
+            //maybe have 
     }
 
     public Player GetOwnerOfUnit(CardInstance unitInstance)
