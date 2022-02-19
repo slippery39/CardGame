@@ -30,12 +30,12 @@ public class CardGame
         _players.Add(new Player(_numberOfLanes)
         {
             PlayerId = 1,
-            Health = 100
+            Health = _startingPlayerHealth
         });
         _players.Add(new Player(_numberOfLanes)
         {
             PlayerId = 2,
-            Health = 100
+            Health = _startingPlayerHealth
         });
 
         //Create Random Cards in Each Lane 
