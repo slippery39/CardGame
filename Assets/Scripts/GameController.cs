@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         //Test Hotkey for testing our Battle System.
-       if (Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.B))
         {
             _gameState.BattleSystem.ExecuteBattles(_gameState);
             UpdateBoard();
@@ -41,20 +41,19 @@ public class GameController : MonoBehaviour
 
     private void UpdateBoard()
     {
-        UpdateLane(_player1Lanes, _gameState.Player1Lane);
-        UpdateLane(_player2Lanes, _gameState.Player2Lane);
-        _player1HealthText.text = $"Player 1 Health : {_gameState.Player1Health}";
-        _player2HealthText.text = $"Player 2 Health : {_gameState.Player2Health}";
-        _turnIndicator.text = $"Player {_gameState.ActivePlayer}'s Turn";
+        UpdateLanes(_player1Lanes, _gameState.Player1.Lanes);
+        UpdateLanes(_player2Lanes, _gameState.Player2.Lanes);
+        _player1HealthText.text = $"Player 1 Health : {_gameState.Player1.Health}";
+        _player2HealthText.text = $"Player 2 Health : {_gameState.Player2.Health}";
+        _turnIndicator.text = $"Player {_gameState.ActivePlayerId}'s Turn";
     }
-    private void UpdateLane(Transform laneInScene, List<CardInstance> cardsInLane)
+    private void UpdateLanes(Transform laneInScene, List<Lane> lanes)
     {
         var uiCards = laneInScene.GetComponentsInChildren<UICard>(true);
-        for (int i = 0; i < cardsInLane.Count; i++)
-        {
-            Debug.Log(i);
+        for (int i = 0; i < lanes.Count; i++)
+        {         
             //If there is no card in the game state for a lane, just hide the card.
-            if (cardsInLane[i] == null)
+            if (lanes[i].IsEmpty())
             {
                 uiCards[i].gameObject.SetActive(false);
                 continue;
@@ -63,8 +62,8 @@ public class GameController : MonoBehaviour
             {
                 uiCards[i].gameObject.SetActive(true);
             }
-
-            uiCards[i].GetComponent<UICard>().SetFromCardData(cardsInLane[i].CurrentCardData);
+            
+            uiCards[i].GetComponent<UICard>().SetFromCardData(lanes[i].UnitInLane.CurrentCardData);
         }
     }
     #endregion

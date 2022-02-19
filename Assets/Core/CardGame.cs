@@ -7,48 +7,56 @@ using System.Threading.Tasks;
 [System.Serializable]
 public class CardGame
 {
-    //We will probably create our own Lane class eventually, but for now plain old lists are good enough.
-    private List<CardInstance> _player1Lanes;
-    private List<CardInstance> _player2Lanes;
-    private int _player1Health = 100;
-    private int _player2Health = 100;
-    private int _activePlayer = 1;
 
-    private IBattleSystem battleSystem;
+    private List<Player> _players;
+    private int _activePlayerId = 1;
+    private IBattleSystem _battleSystem;
+    private int _numberOfLanes = 5;
+    private int _startingPlayerHealth = 100;
 
     #region Public Properties
-    public List<CardInstance> Player1Lane { get => _player1Lanes; set => _player1Lanes = value; }
-    public List<CardInstance> Player2Lane { get => _player2Lanes; set => _player2Lanes = value; }
-    internal IBattleSystem BattleSystem { get => battleSystem; set => battleSystem = value; }
-    public int Player1Health { get => _player1Health; set => _player1Health = value; }
-    public int Player2Health { get => _player2Health; set => _player2Health = value; }
-    public int ActivePlayer { get => _activePlayer; set => _activePlayer = value; }
+    public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
+    public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
+    internal IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
+    public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
+    public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
+    public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
     #endregion
 
     public CardGame()
     {
-        _player1Lanes = new List<CardInstance>();
-        _player2Lanes = new List<CardInstance>();
+        _players = new List<Player>();
+
+        _players.Add(new Player(_numberOfLanes)
+        {
+            PlayerId = 1,
+            Health = 100
+        });
+        _players.Add(new Player(_numberOfLanes)
+        {
+            PlayerId = 2,
+            Health = 100
+        });
 
         //Create Random Cards in Each Lane 
-        AddRandomUnitsToLane(_player1Lanes);
-        AddRandomUnitsToLane(_player2Lanes);
+        AddRandomUnitsToLane(Player1.Lanes);
+        AddRandomUnitsToLane(Player2.Lanes);
 
-        battleSystem = new DefaultBattleSystem();
+        _battleSystem = new DefaultBattleSystem();
     }
 
-    private void AddRandomUnitsToLane(List<CardInstance> lane)
+    private void AddRandomUnitsToLane(List<Lane> lanes)
     {
         CardDatabase db = new CardDatabase();
         var unitsOnly = db.GetAll().Where(c => c.GetType() == typeof(UnitCardData)).ToList();
 
         var rng = new Random();
 
-        for (int i = 0; i < 5; i++)
+        foreach (Lane lane in lanes)
         {
             var randomIndex = rng.Next(0, unitsOnly.Count());
             var instancedCard = new CardInstance(unitsOnly[randomIndex]);
-            lane.Add(instancedCard);
+            lane.UnitInLane = instancedCard;
         }
     }
 }
