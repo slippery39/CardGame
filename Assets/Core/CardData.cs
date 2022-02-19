@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 [System.Serializable]
 public abstract class BaseCardData
@@ -20,6 +21,11 @@ public class UnitCardData : BaseCardData
     public int Toughness { get; set; }
     public override string CardType => "Unit";
 
+    public UnitCardData()
+    {
+        Abilities = new List<CardAbility>();
+    }
+
     public override BaseCardData Clone()
     {
         return new UnitCardData()
@@ -29,7 +35,8 @@ public class UnitCardData : BaseCardData
             ManaCost = ManaCost,
             ArtPath = ArtPath,
             Power = Power,
-            Toughness = Toughness
+            Toughness = Toughness,
+            Abilities = Abilities.ToList() //todo - potential deep clone.
         };
     }
 }
@@ -100,7 +107,11 @@ public class CardDatabase : ICardDatabase
             ManaCost = "2",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/GoblinRaider"
+            ArtPath = "CardArt/GoblinRaider",
+            Abilities = new List<CardAbility>()
+            {
+                new CantBlockAbility()
+            }
         });
 
         _cards.Add(new UnitCardData()

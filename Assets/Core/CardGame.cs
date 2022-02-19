@@ -39,8 +39,9 @@ public class CardGame
         });
 
         //Create Random Cards in Each Lane 
-        AddRandomUnitsToLane(Player1.Lanes);
-        AddRandomUnitsToLane(Player2.Lanes);
+        //AddRandomUnitsToLane(Player1.Lanes);
+        //AddRandomUnitsToLane(Player2.Lanes);
+        SetupCantBlockTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
     }
@@ -58,5 +59,16 @@ public class CardGame
             var instancedCard = new CardInstance(unitsOnly[randomIndex]);
             lane.UnitInLane = instancedCard;
         }
+    }
+
+    private void SetupCantBlockTestLanes()
+    {
+        var db = new CardDatabase();
+
+        var hexPlateGolem = db.GetCardData("Hexplate Golem");
+        Player1.Lanes[0].UnitInLane = new CardInstance(hexPlateGolem);
+
+        var goblinRaider = db.GetCardData("Goblin Raider");
+        Player2.Lanes[0].UnitInLane = new CardInstance(goblinRaider);
     }
 }

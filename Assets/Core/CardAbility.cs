@@ -5,7 +5,12 @@ public abstract class CardAbility
     public string Type;
 }
 
-public class CantBlockAbility : CardAbility
+public interface IModifyCanBlock
+{
+    bool ModifyCanBlock(CardGame gameState);
+}
+
+public class CantBlockAbility : CardAbility, IModifyCanBlock
 {
     public CantBlockAbility()
     {
@@ -29,7 +34,7 @@ public class LifelinkAbility : CardAbility
     //TODO - in order for this to work, we need our players and an id system setup.
     //public void OnDamageDealt(CardGame gameState,DamageDealtInfo damageDealtInfo)
     //{
-  
+
     //}
 }
 
@@ -43,7 +48,7 @@ public class DeathtouchAbility : CardAbility
     //TODO - in order for this to work, we need a Unit destroying system.
     //public void OnDamageDealt(CardGame gameState,DamageDealtInfo damageDealtInfo)
     //{
-        
+
     //}
 }
 
@@ -54,10 +59,11 @@ public class FlyingAbility : CardAbility
         Type = "Flying";
     }
 
-    public bool ModifyCanAttackDirectly(CardGame gameState,UnitCardData otherUnit)
+    public bool ModifyCanAttackDirectly(CardGame gameState, UnitCardData otherUnit)
     {
         //If the other unit does not have flying, then this creature can attack directly.
-        if (otherUnit.Abilities.Where(ab=>ab.GetType() == typeof(FlyingAbility)).Count()>0){
+        if (otherUnit.Abilities.Where(ab => ab.GetType() == typeof(FlyingAbility)).Count() > 0)
+        {
             return false;
         }
         return true;
