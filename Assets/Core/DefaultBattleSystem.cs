@@ -26,7 +26,7 @@ public class DefaultBattleSystem : IBattleSystem
                 continue;
             }
             //Attacking an empty lane
-            else if (defendingLane.IsEmpty() || !DefenderCanBlock(cardGame, defendingLane))
+            else if (defendingLane.IsEmpty() || !DefenderCanBlock(cardGame, attackingLane, defendingLane))
             {
                 DirectAttack(cardGame, attackingLane, defendingLane);
             }
@@ -79,17 +79,32 @@ public class DefaultBattleSystem : IBattleSystem
     }
 
     //Note - this method can be hooked into from Abilities.
-    private bool DefenderCanBlock(CardGame cardGame, Lane lane)
+    private bool DefenderCanBlock(CardGame cardGame, Lane attackingLane, Lane defendingLane)
     {
-        if (lane.IsEmpty())
+        if (defendingLane.IsEmpty())
         {
             return false;
         }
 
         bool canBlock = true; //default is that the defender is able to block unless an ability states otherwise.
 
+        //check to see if the attacker can attack directly by default
+
+        var attackingUnit = (UnitCardData)attackingLane.UnitInLane.CurrentCardData;
+        var getDirectAttackAbilities = attackingUnit.Abilities.Where(ab => ab is IModifyCanAttackDirectly).FirstOrDefault();
+
+        if (getDirectAttackAbilities != null)
+        {
+            var attackDirectlyAbility = (IModifyCanAttackDirectly)getDirectAttackAbilities;
+            var canAttackDirectly = attackDirectlyAbility.ModifyCanAttackDirectly(cardGame, attackingLane, defendingLane);
+            if (canAttackDirectly == true)
+            {
+                return false; //Opposing creature cannot block.
+            }
+        }
+
         //Check the defenders abilities to see if it has any of the the type IModifyCanBlock;
-        var defendingUnit = (UnitCardData)lane.UnitInLane.CurrentCardData;
+        var defendingUnit = (UnitCardData)defendingLane.UnitInLane.CurrentCardData;
         var getAbilities = defendingUnit.Abilities.Where(ab => ab is IModifyCanBlock).FirstOrDefault();
 
         //TODO - need some sort of priority system for determining which abilities should apply first and last.

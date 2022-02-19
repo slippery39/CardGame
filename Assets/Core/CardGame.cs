@@ -41,7 +41,8 @@ public class CardGame
         //Create Random Cards in Each Lane 
         //AddRandomUnitsToLane(Player1.Lanes);
         //AddRandomUnitsToLane(Player2.Lanes);
-        SetupCantBlockTestLanes();
+        //SetupCantBlockTestLanes();
+        SetupFlyingTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
     }
@@ -70,5 +71,24 @@ public class CardGame
 
         var goblinRaider = db.GetCardData("Goblin Raider");
         Player2.Lanes[0].UnitInLane = new CardInstance(goblinRaider);
+    }
+
+    private void SetupFlyingTestLanes()
+    {
+
+        //Test Cases
+        //Flying -> Non Flying - should attack directly
+        //Flying -> Flying -should attack eachother
+        var db = new CardDatabase();
+
+        var stormCrow = db.GetCardData("Storm Crow");
+        var hexPlateGolem = db.GetCardData("Hexplate Golem");
+        Player1.Lanes[0].UnitInLane = new CardInstance(stormCrow);
+
+        
+        Player2.Lanes[0].UnitInLane = new CardInstance(hexPlateGolem);
+
+        Player1.Lanes[1].UnitInLane = new CardInstance(stormCrow);
+        Player2.Lanes[1].UnitInLane = new CardInstance(stormCrow);
     }
 }

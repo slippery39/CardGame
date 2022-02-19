@@ -97,7 +97,11 @@ public class CardDatabase : ICardDatabase
             ManaCost = "2",
             Power = 1,
             Toughness = 2,
-            ArtPath = "CardArt/StormCrow"
+            ArtPath = "CardArt/StormCrow",
+            Abilities = new List<CardAbility>()
+            {
+                new FlyingAbility()
+            }
         });
 
         _cards.Add(new UnitCardData()

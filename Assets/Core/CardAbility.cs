@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UnityEngine;
 
 public abstract class CardAbility
 {
@@ -51,21 +52,27 @@ public class DeathtouchAbility : CardAbility
 
     //}
 }
-
-public class FlyingAbility : CardAbility
+public interface IModifyCanAttackDirectly
+{
+    bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane);
+}
+public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
 {
     public FlyingAbility()
     {
         Type = "Flying";
     }
 
-    public bool ModifyCanAttackDirectly(CardGame gameState, UnitCardData otherUnit)
+    public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
     {
+        var defendingUnit = (UnitCardData)defendingLane.UnitInLane.CurrentCardData;
         //If the other unit does not have flying, then this creature can attack directly.
-        if (otherUnit.Abilities.Where(ab => ab.GetType() == typeof(FlyingAbility)).Count() > 0)
+        if (defendingUnit.Abilities.Where(ab => ab is FlyingAbility).Count() > 0)
         {
+            Debug.Log("can attack directly");
             return false;
         }
+        Debug.Log("cannot attack directly");
         return true;
     }
 }
