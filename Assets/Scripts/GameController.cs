@@ -43,8 +43,8 @@ public class GameController : MonoBehaviour
     {
         UpdateLane(_player1Lanes, _gameState.Player1Lane);
         UpdateLane(_player2Lanes, _gameState.Player2Lane);
-        _player1HealthText.text = _gameState.Player1Health.ToString();
-        _player2HealthText.text = _gameState.Player2Health.ToString();
+        _player1HealthText.text = $"Player 1 Health : {_gameState.Player1Health}";
+        _player2HealthText.text = $"Player 2 Health : {_gameState.Player2Health}";
         _turnIndicator.text = $"Player {_gameState.ActivePlayer}'s Turn";
     }
     private void UpdateLane(Transform laneInScene, List<CardInstance> cardsInLane)
