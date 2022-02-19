@@ -25,32 +25,40 @@ public class CantBlockAbility : CardAbility, IModifyCanBlock
     }
 }
 
-public class LifelinkAbility : CardAbility
+public interface IOnDamageDealt
+{
+    void OnDamageDealt(CardGame gameState,CardInstance damagingUnit,CardInstance damagedUnit, int damage);
+}
+
+public class LifelinkAbility : CardAbility, IOnDamageDealt
 {
     public LifelinkAbility()
     {
         Type = "Lifelink";
     }
 
-    //TODO - in order for this to work, we need our players and an id system setup.
-    //public void OnDamageDealt(CardGame gameState,DamageDealtInfo damageDealtInfo)
-    //{
-
-    //}
+    public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit,int damage)
+    {
+        //Need a way to find out who owns which unit\
+        Player playerToGainLife = gameState.GetOwnerOfUnit(damagingUnit);
+        playerToGainLife.Health += damage;
+    }
 }
 
-public class DeathtouchAbility : CardAbility
+public class DeathtouchAbility : CardAbility, IOnDamageDealt
 {
     public DeathtouchAbility()
     {
         Type = "Deathtouch";
     }
 
-    //TODO - in order for this to work, we need a Unit destroying system.
-    //public void OnDamageDealt(CardGame gameState,DamageDealtInfo damageDealtInfo)
-    //{
-
-    //}
+    public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
+    {
+        //Need a way to find out who owns which unit
+        //hack - setting toughness to 0.
+        //later on we will probably have some sort of DestroyingSystem and we would call that instead.
+        ((UnitCardData)damagedUnit.CurrentCardData).Toughness = 0;
+    }
 }
 public interface IModifyCanAttackDirectly
 {

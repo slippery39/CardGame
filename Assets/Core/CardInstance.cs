@@ -10,8 +10,12 @@ public class CardInstance
 {
     private BaseCardData _originalCardData;
     private BaseCardData _currentCardData;
+    private int _ownerId;
 
+    #region Public Properties
     public BaseCardData CurrentCardData { get => _currentCardData; set => _currentCardData = value; }
+    public int OwnerId { get => _ownerId; set => _ownerId = value; }
+    #endregion
 
     public CardInstance(BaseCardData cardData)
     {

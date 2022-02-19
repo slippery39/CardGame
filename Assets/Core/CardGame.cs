@@ -42,11 +42,26 @@ public class CardGame
         //AddRandomUnitsToLane(Player1.Lanes);
         //AddRandomUnitsToLane(Player2.Lanes);
         //SetupCantBlockTestLanes();
-        SetupFlyingTestLanes();
+        //SetupFlyingTestLanes();
+        SetupLifelinkTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
     }
 
+    public Player GetOwnerOfUnit(CardInstance unitInstance)
+    {
+        return _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
+    }
+
+    public CardInstance AddCardToGame(Player player, BaseCardData data)
+    {
+        var cardInstance = new CardInstance(data);
+        cardInstance.OwnerId = player.PlayerId;
+        return cardInstance;
+    }
+
+    //WARNING: Obsolete
+    //This no longer works since a card instance needs to be registered to a player.
     private void AddRandomUnitsToLane(List<Lane> lanes)
     {
         CardDatabase db = new CardDatabase();
@@ -67,15 +82,14 @@ public class CardGame
         var db = new CardDatabase();
 
         var hexPlateGolem = db.GetCardData("Hexplate Golem");
-        Player1.Lanes[0].UnitInLane = new CardInstance(hexPlateGolem);
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, hexPlateGolem);
 
         var goblinRaider = db.GetCardData("Goblin Raider");
-        Player2.Lanes[0].UnitInLane = new CardInstance(goblinRaider);
+        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, goblinRaider);
     }
 
     private void SetupFlyingTestLanes()
     {
-
         //Test Cases
         //Flying -> Non Flying - should attack directly
         //Flying -> Flying -should attack eachother
@@ -83,12 +97,27 @@ public class CardGame
 
         var stormCrow = db.GetCardData("Storm Crow");
         var hexPlateGolem = db.GetCardData("Hexplate Golem");
-        Player1.Lanes[0].UnitInLane = new CardInstance(stormCrow);
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1,stormCrow);
+        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, hexPlateGolem);
 
-        
-        Player2.Lanes[0].UnitInLane = new CardInstance(hexPlateGolem);
+        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, stormCrow);
+        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, stormCrow);
+    }
 
-        Player1.Lanes[1].UnitInLane = new CardInstance(stormCrow);
-        Player2.Lanes[1].UnitInLane = new CardInstance(stormCrow);
+    private void SetupLifelinkTestLanes()
+    {
+        //Test Cases
+        //2 Lifelinkers in one lane
+        //Life linkers in lanes with no defenders
+        var db = new CardDatabase();
+
+        var sunstriker = db.GetCardData("Sunstriker");
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1,sunstriker);
+        Player2.Lanes[0].UnitInLane = AddCardToGame (Player2, sunstriker);
+
+        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, sunstriker);
+
+        Player2.Lanes[2].UnitInLane = AddCardToGame(Player2, sunstriker);     
+
     }
 }

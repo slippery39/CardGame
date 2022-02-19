@@ -125,7 +125,11 @@ public class CardDatabase : ICardDatabase
             ManaCost = "2",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/Sunstriker"
+            ArtPath = "CardArt/Sunstriker",
+            Abilities = new List<CardAbility>()
+            {
+                new LifelinkAbility()
+            }
         });
 
         _cards.Add(new UnitCardData()
