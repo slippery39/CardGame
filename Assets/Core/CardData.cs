@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-[System.Serializable]
+
 public abstract class BaseCardData
 {
     public string Name { get; set; }
@@ -14,7 +14,7 @@ public abstract class BaseCardData
     public abstract BaseCardData Clone();
 }
 
-[System.Serializable]
+
 public class UnitCardData : BaseCardData
 {
     public int Power { get; set; }
@@ -41,7 +41,7 @@ public class UnitCardData : BaseCardData
     }
 }
 
-[System.Serializable]
+
 public class SpellCardData : BaseCardData
 {
     public override string CardType => "Spell";
