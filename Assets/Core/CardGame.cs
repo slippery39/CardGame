@@ -48,9 +48,9 @@ public class CardGame
         //Create Random Cards in Each Lane 
         //AddRandomUnitsToLane(Player1.Lanes);
         //AddRandomUnitsToLane(Player2.Lanes);
-        //SetupCantBlockTestLanes();
+        SetupCantBlockTestLanes();
         //SetupFlyingTestLanes();
-        SetupLifelinkTestLanes();
+        //SetupLifelinkTestLanes();
         //SetupDeathtouchTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
