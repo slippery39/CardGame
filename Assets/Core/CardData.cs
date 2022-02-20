@@ -127,12 +127,12 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new UnitCardData()
         {
-            Name = "Sunstriker",
+            Name = "Ajani's Sunstriker",
             RulesText = "Lifelink",
             ManaCost = "2",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/Sunstriker",
+            ArtPath = "CardArt/AjanisSunstriker",
             Abilities = new List<CardAbility>()
             {
                 new LifelinkAbility()
@@ -166,15 +166,31 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Vampire Nighthawk",
-            RulesText = "",
+            RulesText = "Flying, Deathtouch",
             ManaCost = "3",
             Power = 2,
             Toughness = 3,
+            ArtPath = "CardArt/VampireNighthawk",
             Abilities = new List<CardAbility>()
             {
                 new FlyingAbility(),
                 new DeathtouchAbility(),
                 new LifelinkAbility()
+            }
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name="Inkfathom Infiltrator",
+            RulesText = "Unblockable, Can't Block",
+            ManaCost = "2",
+            Power = 2,
+            Toughness = 1,
+            ArtPath = "CardArt/InkfathomInfiltrator",
+            Abilities = new List<CardAbility>()
+            {
+                new UnblockableAbility(),
+                new CantBlockAbility()
             }
         });
     }

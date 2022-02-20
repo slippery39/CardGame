@@ -48,11 +48,12 @@ public class CardGame
         //Create Random Cards in Each Lane 
         //AddRandomUnitsToLane(Player1.Lanes);
         //AddRandomUnitsToLane(Player2.Lanes);
-        SetupCantBlockTestLanes();
+        //SetupCantBlockTestLanes();
         //SetupFlyingTestLanes();
         //SetupLifelinkTestLanes();
         //SetupDeathtouchTestLanes();
-        SetupMultipleAbilityTestLanes();
+        //SetupMultipleAbilityTestLanes();
+        SetupUnblockableTest();
 
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
@@ -161,6 +162,22 @@ public class CardGame
         Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, vampireNighthawk);
 
         var hexplateGolem = db.GetCardData("Hexplate Golem");
-        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2,  hexplateGolem);
+        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, hexplateGolem);
+    }
+
+    private void SetupUnblockableTest()
+    {
+        var db = new CardDatabase();
+
+        var infiltrator = db.GetCardData("Inkfathom Infiltrator");
+        var hexplateGolem = db.GetCardData("Hexplate Golem");
+
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, infiltrator);
+        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, infiltrator);
+
+        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, infiltrator);       
+        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, hexplateGolem);
+
+        Player1.Lanes[2].UnitInLane = AddCardToGame(Player1, infiltrator);
     }
 }

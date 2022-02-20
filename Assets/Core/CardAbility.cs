@@ -92,3 +92,11 @@ public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
         }
     }
 }
+
+public class UnblockableAbility : CardAbility, IModifyCanAttackDirectly
+{
+    public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
+    {
+        return true;
+    }
+}
