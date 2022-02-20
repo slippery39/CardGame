@@ -39,9 +39,9 @@ public class LifelinkAbility : CardAbility, IOnDamageDealt
 
     public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit,int damage)
     {
-        //Need a way to find out who owns which unit\
+        //Need a way to find out who owns which unit
         Player playerToGainLife = gameState.GetOwnerOfUnit(damagingUnit);
-        playerToGainLife.Health += damage;
+        gameState.HealingSystem.HealPlayer(gameState,playerToGainLife, damage);
     }
 }
 

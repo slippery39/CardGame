@@ -14,6 +14,7 @@ public class CardGame
     private int _startingPlayerHealth = 100;
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
+    private IHealingSystem _healingSystem;
 
     #region Public Properties
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
@@ -25,6 +26,7 @@ public class CardGame
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
+    public IHealingSystem HealingSystem { get => _healingSystem; set => _healingSystem = value;}
     #endregion
     #endregion
 
@@ -48,11 +50,12 @@ public class CardGame
         //AddRandomUnitsToLane(Player2.Lanes);
         //SetupCantBlockTestLanes();
         //SetupFlyingTestLanes();
-        //SetupLifelinkTestLanes();
-        SetupDeathtouchTestLanes();
+        SetupLifelinkTestLanes();
+        //SetupDeathtouchTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
+        _healingSystem = new DefaultHealingSystem();
 
         //TODO - some sort of check to make sure all systems are initialized?
             //maybe have 
