@@ -53,7 +53,8 @@ public class CardGame
         //SetupLifelinkTestLanes();
         //SetupDeathtouchTestLanes();
         //SetupMultipleAbilityTestLanes();
-        SetupUnblockableTest();
+        //SetupUnblockableTest();
+        SetupUnblockableFlyingTest();
 
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
@@ -175,9 +176,25 @@ public class CardGame
         Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, infiltrator);
         Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, infiltrator);
 
-        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, infiltrator);       
+        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, infiltrator);
         Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, hexplateGolem);
 
         Player1.Lanes[2].UnitInLane = AddCardToGame(Player1, infiltrator);
+    }
+
+    private void SetupUnblockableFlyingTest()
+    {
+        var db = new CardDatabase();
+
+        var customDude = db.GetCardData("Unblockable Flying Dude");
+        var stormCrow = db.GetCardData("Storm Crow");
+
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, customDude);
+        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, customDude);
+
+        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, customDude);
+        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, stormCrow);
+
+        Player1.Lanes[2].UnitInLane = AddCardToGame(Player1, customDude);
     }
 }

@@ -15,7 +15,13 @@ public abstract class BaseCardData
     //Unsafe here, basing this method off of Unity's own GetComponent call.
     public List<T> GetAbilities<T>()
     {
-        var foundAbilities = Abilities.Where(ab => ab is T).Cast<T>().ToList(); //this returns card abilities.
+        //We are sorting so the highest priority items are at the bottom of the list.
+        //This ensures they execute last, which in the case of ModAbilities, would ensure their modification,
+        //takes preference over every other one.        
+        //If we ever need certain abilities to fire first for whatever reason then we should give it a negative priority.
+        var sortedAbilities = Abilities.ToList();
+        sortedAbilities.Sort((a, b) => a.Priority - b.Priority);
+        var foundAbilities = sortedAbilities.Where(ab => ab is T).Cast<T>().ToList(); //this returns card abilities.
         return foundAbilities;
     }
     public abstract BaseCardData Clone();
@@ -181,7 +187,7 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new UnitCardData()
         {
-            Name="Inkfathom Infiltrator",
+            Name = "Inkfathom Infiltrator",
             RulesText = "Unblockable, Can't Block",
             ManaCost = "2",
             Power = 2,
@@ -191,6 +197,20 @@ public class CardDatabase : ICardDatabase
             {
                 new UnblockableAbility(),
                 new CantBlockAbility()
+            }
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Unblockable Flying Dude",
+            RulesText = "Unblockable, Flying",
+            ManaCost = "5",
+            Power = 4,
+            Toughness = 5,
+            Abilities = new List<CardAbility>()
+            {
+                new FlyingAbility(),
+                new UnblockableAbility()
             }
         });
     }

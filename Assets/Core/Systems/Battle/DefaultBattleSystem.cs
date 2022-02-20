@@ -88,15 +88,20 @@ public class DefaultBattleSystem : IBattleSystem
 
         var attackingUnit = (UnitCardData)attackingLane.UnitInLane.CurrentCardData;
         var directAttackAbilities = attackingUnit.GetAbilities<IModifyCanAttackDirectly>();
+
+        var canAttackDirectly = false;
+        //In this case, it might be possible to just take the highest priority ability in the list.
+        //Although if any abilities are tracking some sort of internal state with their method then we may need
+        //to still fire it..
         foreach (var ability in directAttackAbilities)
         {
-            var canAttackDirectly = ability.ModifyCanAttackDirectly(cardGame, attackingLane, defendingLane);
-            if (canAttackDirectly)
-            {
-                return false; //Opposing Unit cannot block.
-            }
-
+            canAttackDirectly = ability.ModifyCanAttackDirectly(cardGame, attackingLane, defendingLane);
         }
+        if (canAttackDirectly)
+        {
+            return false; //defender can't block, we can attack directly.
+        }
+
 
         //TODO - need some sort of priority system for determining which abilities should apply first and last.
         //in case some abilities should always override other abilities.

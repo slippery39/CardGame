@@ -4,6 +4,7 @@ using UnityEngine;
 public abstract class CardAbility
 {
     public string Type;
+    public int Priority { get; set; }
 }
 
 public interface IModifyCanBlock
@@ -95,6 +96,10 @@ public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
 
 public class UnblockableAbility : CardAbility, IModifyCanAttackDirectly
 {
+    public UnblockableAbility()
+    {
+        Priority = 10; //Unblockable should take priority over any IModifyCanAttackDirectly Ability.
+    }
     public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
     {
         return true;
