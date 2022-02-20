@@ -9,48 +9,44 @@ public class DefaultDamageSystem : IDamageSystem
 {
     public void DealCombatDamageToPlayer(CardGame cardGame, CardInstance damagingUnit, Player damagedPlayer)
     {
-        var damagingUnitData = (UnitCardData)damagingUnit.CurrentCardData;
-        int damage = damagingUnitData.Power;
-        damagedPlayer.Health -= damagingUnitData.Power;
+        int damage = damagingUnit.Power;
+        damagedPlayer.Health -= damagingUnit.Power;
 
         cardGame.Log($"{damagedPlayer} has taken {damage} combat damage!");
 
         //Trigger Damage Dealt Abilities.
         //TODO - Handle case if 0 damage is dealt for whatever reason.
-        var damageDealtAbilities = damagingUnitData.GetAbilities<IOnDamageDealt>();
+        var damageDealtAbilities = damagingUnit.GetAbilities<IOnDamageDealt>();
 
         foreach (var ability in damageDealtAbilities)
         {
             //TODO - fix deathtouchh ability.
-            ability.OnDamageDealt(cardGame, damagingUnit, null, damagingUnitData.Power);
+            ability.OnDamageDealt(cardGame, damagingUnit, null, damagingUnit.Power);
         }
     }
     public void DealCombatDamageToUnits(CardGame cardGame, CardInstance attackingUnit, CardInstance defendingUnit)
     {
-        var defendingUnitData = (UnitCardData)defendingUnit.CurrentCardData;
-        var attackingUnitData = (UnitCardData)attackingUnit.CurrentCardData;
+        var attackingDamage = attackingUnit.Power;
+        var defendingDamage = defendingUnit.Power;
 
-        var attackingDamage = attackingUnitData.Power;
-        var defendingDamage = defendingUnitData.Power;
+        attackingUnit.Toughness -= defendingDamage;
+        defendingUnit.Toughness -= attackingDamage;
 
-        attackingUnitData.Toughness -= defendingDamage;
-        defendingUnitData.Toughness -= attackingDamage;
-
-        cardGame.Log($"{defendingUnitData.Name} took {attackingDamage} combat damage");
-        cardGame.Log($"{attackingUnitData.Name} took {defendingDamage} combat damage");
+        cardGame.Log($"{defendingUnit.Name} took {attackingDamage} combat damage");
+        cardGame.Log($"{attackingUnit.Name} took {defendingDamage} combat damage");
 
         //Attacker Damage Dealt Abilities
-        var attackingAbilities = attackingUnitData.GetAbilities<IOnDamageDealt>();
+        var attackingAbilities = attackingUnit.GetAbilities<IOnDamageDealt>();
         foreach (var ability in attackingAbilities)
         {
-            ability.OnDamageDealt(cardGame, attackingUnit, defendingUnit, attackingUnitData.Power);
+            ability.OnDamageDealt(cardGame, attackingUnit, defendingUnit, attackingUnit.Power);
         }
 
         //Defender Damage Dealt Abilities
-        var defendingAbilities = defendingUnitData.GetAbilities<IOnDamageDealt>();
+        var defendingAbilities = defendingUnit.GetAbilities<IOnDamageDealt>();
         foreach (var ability in defendingAbilities)
         {
-            ability.OnDamageDealt(cardGame, defendingUnit, attackingUnit, defendingUnitData.Power);
+            ability.OnDamageDealt(cardGame, defendingUnit, attackingUnit, defendingUnit.Power);
         }
     }
 }

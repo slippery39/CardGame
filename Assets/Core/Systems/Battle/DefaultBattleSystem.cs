@@ -39,20 +39,20 @@ public class DefaultBattleSystem : IBattleSystem
 
     private void DirectAttack(CardGame cardGame, Lane attackingLane, Lane defendingLane)
     {
-        cardGame.Log($"{attackingLane.UnitInLane.CurrentCardData.Name} is attacking directly!");
+        cardGame.Log($"{attackingLane.UnitInLane.Name} is attacking directly!");
         //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
         cardGame.DamageSystem.DealCombatDamageToPlayer(cardGame, attackingLane.UnitInLane, cardGame.InactivePlayer);
     }
 
     private void FightUnits(CardGame cardGame, Lane attackingLane, Lane defendingLane)
     {
-        var attackingUnit = (UnitCardData)attackingLane.UnitInLane.CurrentCardData;
-        var defendingUnit = (UnitCardData)defendingLane.UnitInLane.CurrentCardData;
+        var attackingUnit = attackingLane.UnitInLane;
+        var defendingUnit = defendingLane.UnitInLane;
 
         cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
 
         //Both lanes have units, they will attack eachother.
-        cardGame.DamageSystem.DealCombatDamageToUnits(cardGame, attackingLane.UnitInLane, defendingLane.UnitInLane);
+        cardGame.DamageSystem.DealCombatDamageToUnits(cardGame, attackingUnit, defendingUnit);
 
         if (attackingUnit.Toughness <= 0)
         {
@@ -80,7 +80,7 @@ public class DefaultBattleSystem : IBattleSystem
 
         //check to see if the attacker can attack directly by default
 
-        var attackingUnit = (UnitCardData)attackingLane.UnitInLane.CurrentCardData;
+        var attackingUnit = attackingLane.UnitInLane;
         var directAttackAbilities = attackingUnit.GetAbilities<IModifyCanAttackDirectly>();
 
         var canAttackDirectly = false;
@@ -101,7 +101,7 @@ public class DefaultBattleSystem : IBattleSystem
         //in case some abilities should always override other abilities.
         //For example, the Can't Block ability would always overrdie any other ModifyBlocking abilities.
         //Check the defenders abilities to see if it has any of the the type IModifyCanBlock;
-        var defendingUnit = (UnitCardData)defendingLane.UnitInLane.CurrentCardData;
+        var defendingUnit = defendingLane.UnitInLane;
         var modifyBlockAbilities = defendingUnit.GetAbilities<IModifyCanBlock>();
         foreach (var ability in modifyBlockAbilities)
         {

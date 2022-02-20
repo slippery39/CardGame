@@ -45,7 +45,7 @@ public class LifelinkAbility : CardAbility, IOnDamageDealt
     {
         //Need a way to find out who owns which unit
         Player playerToGainLife = cardGame.GetOwnerOfUnit(damagingUnit);
-        cardGame.Log($"{playerToGainLife} gained {damage} life from {damagingUnit.CurrentCardData.Name}'s Lifelink!");
+        cardGame.Log($"{playerToGainLife} gained {damage} life from {damagingUnit.Name}'s Lifelink!");
         cardGame.HealingSystem.HealPlayer(cardGame, playerToGainLife, damage);
     }
 }
@@ -68,7 +68,7 @@ public class DeathtouchAbility : CardAbility, IOnDamageDealt
         //Need a way to find out who owns which unit
         //hack - setting toughness to 0.
         //later on we will probably have some sort of DestroyingSystem and we would call that instead.
-        cardGame.Log($"{damagedUnit.CurrentCardData.Name} died from {damagingUnit.CurrentCardData.Name}'s deathtouch!");
+        cardGame.Log($"{damagedUnit.Name} died from {damagingUnit.Name}'s deathtouch!");
         ((UnitCardData)damagedUnit.CurrentCardData).Toughness = 0;
     }
 }
@@ -86,7 +86,7 @@ public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
 
     public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
     {
-        var defendingUnit = (UnitCardData)defendingLane.UnitInLane.CurrentCardData;
+        var defendingUnit = defendingLane.UnitInLane;
         //If the other unit does not have flying, then this creature can attack directly.
         if (defendingUnit.Abilities.Where(ab => ab is FlyingAbility).Count() > 0)
         {

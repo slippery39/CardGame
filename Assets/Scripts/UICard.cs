@@ -27,7 +27,7 @@ public class UICard : MonoBehaviour
 
 
 
-
+    //TODO - could also have a SetFromCardInstance method which could do fancier stuff?
     public void SetFromCardData(BaseCardData cardData)
     {
         _cardData = cardData;
