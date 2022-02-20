@@ -6,13 +6,11 @@ using System.Linq;
 public abstract class BaseCardData
 {
     public string Name { get; set; }
-    public string RulesText { get; set; }
+    public string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)); } }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
     public string ArtPath { get; set; }
     public List<CardAbility> Abilities { get; set; }
-
-    //Unsafe here, basing this method off of Unity's own GetComponent call.
     public List<T> GetAbilities<T>()
     {
         //We are sorting so the highest priority items are at the bottom of the list.
@@ -44,7 +42,6 @@ public class UnitCardData : BaseCardData
         return new UnitCardData()
         {
             Name = Name,
-            RulesText = RulesText,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
             Power = Power,
@@ -64,7 +61,6 @@ public class SpellCardData : BaseCardData
         return new SpellCardData()
         {
             Name = Name,
-            RulesText = RulesText,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
         };
@@ -88,7 +84,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Grizzly Bear",
-            RulesText = "",
             ManaCost = "2",
             Power = 2,
             Toughness = 2,
@@ -98,7 +93,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new SpellCardData()
         {
             Name = "Lightning Bolt",
-            RulesText = "Deal 3 damage to target unit or player",
             ManaCost = "1",
             ArtPath = "CardArt/LightningBolt"
         });
@@ -106,7 +100,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Storm Crow",
-            RulesText = "Flying",
             ManaCost = "2",
             Power = 1,
             Toughness = 2,
@@ -120,7 +113,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Goblin Raider",
-            RulesText = "Goblin Raider can't block",
             ManaCost = "2",
             Power = 2,
             Toughness = 2,
@@ -134,7 +126,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Ajani's Sunstriker",
-            RulesText = "Lifelink",
             ManaCost = "2",
             Power = 2,
             Toughness = 2,
@@ -148,7 +139,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Typhoid Rats",
-            RulesText = "Deathtouch",
             ManaCost = "1",
             Power = 1,
             Toughness = 1,
@@ -162,7 +152,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Hexplate Golem",
-            RulesText = "",
             ManaCost = "7",
             Power = 5,
             Toughness = 7,
@@ -172,7 +161,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Vampire Nighthawk",
-            RulesText = "Flying, Deathtouch",
             ManaCost = "3",
             Power = 2,
             Toughness = 3,
@@ -188,7 +176,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Inkfathom Infiltrator",
-            RulesText = "Unblockable, Can't Block",
             ManaCost = "2",
             Power = 2,
             Toughness = 1,
@@ -203,7 +190,6 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Unblockable Flying Dude",
-            RulesText = "Unblockable, Flying",
             ManaCost = "5",
             Power = 4,
             Toughness = 5,
@@ -225,3 +211,4 @@ public class CardDatabase : ICardDatabase
         return _cards.Find(c => c.Name == name);
     }
 }
+ 

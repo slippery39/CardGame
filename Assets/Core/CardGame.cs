@@ -46,15 +46,15 @@ public class CardGame
         });
 
         //Create Random Cards in Each Lane 
-        //AddRandomUnitsToLane(Player1.Lanes);
-        //AddRandomUnitsToLane(Player2.Lanes);
+        AddRandomUnitsToLane(Player1);
+        AddRandomUnitsToLane(Player2);
         //SetupCantBlockTestLanes();
         //SetupFlyingTestLanes();
         //SetupLifelinkTestLanes();
         //SetupDeathtouchTestLanes();
         //SetupMultipleAbilityTestLanes();
         //SetupUnblockableTest();
-        SetupUnblockableFlyingTest();
+        //SetupUnblockableFlyingTest();
 
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
@@ -78,18 +78,17 @@ public class CardGame
 
     //WARNING: Obsolete
     //This no longer works since a card instance needs to be registered to a player.
-    private void AddRandomUnitsToLane(List<Lane> lanes)
+    private void AddRandomUnitsToLane(Player player)
     {
         CardDatabase db = new CardDatabase();
         var unitsOnly = db.GetAll().Where(c => c.GetType() == typeof(UnitCardData)).ToList();
 
         var rng = new Random();
 
-        foreach (Lane lane in lanes)
+        foreach (Lane lane in player.Lanes)
         {
             var randomIndex = rng.Next(0, unitsOnly.Count());
-            var instancedCard = new CardInstance(unitsOnly[randomIndex]);
-            lane.UnitInLane = instancedCard;
+            lane.UnitInLane = AddCardToGame(player, unitsOnly[randomIndex]);
         }
     }
 

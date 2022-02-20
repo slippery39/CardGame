@@ -5,6 +5,7 @@ public abstract class CardAbility
 {
     public string Type;
     public int Priority { get; set; }
+    public string RulesText { get; set; }
 }
 
 public interface IModifyCanBlock
@@ -17,6 +18,7 @@ public class CantBlockAbility : CardAbility, IModifyCanBlock
     public CantBlockAbility()
     {
         Type = "Cant Block";
+        RulesText = "Can't Block";
     }
 
     public bool ModifyCanBlock(CardGame gameState)
@@ -36,6 +38,7 @@ public class LifelinkAbility : CardAbility, IOnDamageDealt
     public LifelinkAbility()
     {
         Type = "Lifelink";
+        RulesText = "Lifelink";
     }
 
     public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
@@ -51,6 +54,7 @@ public class DeathtouchAbility : CardAbility, IOnDamageDealt
     public DeathtouchAbility()
     {
         Type = "Deathtouch";
+        RulesText = "Deathtouch";
     }
 
     public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
@@ -75,6 +79,7 @@ public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
     public FlyingAbility()
     {
         Type = "Flying";
+        RulesText = "Flying";
     }
 
     public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
@@ -98,6 +103,7 @@ public class UnblockableAbility : CardAbility, IModifyCanAttackDirectly
 {
     public UnblockableAbility()
     {
+        RulesText = "Unblockable";
         Priority = 10; //Unblockable should take priority over any IModifyCanAttackDirectly Ability.
     }
     public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
