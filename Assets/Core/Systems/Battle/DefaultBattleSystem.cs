@@ -13,25 +13,21 @@ public class DefaultBattleSystem : IBattleSystem
         {
             var attackingLane = attackingLanes[i];
             var defendingLane = defendingLanes[i];
-            Debug.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(i + 1)}");
-            Debug.Log("Checking Attacking Lane is Empty");
-            Debug.Log(attackingLane.IsEmpty());
-            Debug.Log("Checking Defending Lane is Empty");
-            Debug.Log(defendingLane.IsEmpty());
 
             //Attacking Player does not have a unit in lane, so we should skip.
             if (attackingLane.IsEmpty())
             {
-                Debug.Log("Both Lanes were empty");
                 continue;
             }
             //Attacking an empty lane
             else if (defendingLane.IsEmpty() || !DefenderCanBlock(cardGame, attackingLane, defendingLane))
             {
+                cardGame.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(i + 1)}");
                 DirectAttack(cardGame, attackingLane, defendingLane);
             }
             else
             {
+                cardGame.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(i + 1)}");
                 FightUnits(cardGame, attackingLane, defendingLane);
             }
         }
@@ -43,33 +39,31 @@ public class DefaultBattleSystem : IBattleSystem
 
     private void DirectAttack(CardGame cardGame, Lane attackingLane, Lane defendingLane)
     {
-        Debug.Log("Defending Lane was Empty");
+        cardGame.Log($"{attackingLane.UnitInLane.CurrentCardData.Name} is attacking directly!");
         //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
         cardGame.DamageSystem.DealCombatDamageToPlayer(cardGame, attackingLane.UnitInLane, cardGame.InactivePlayer);
     }
 
-    private void FightUnits(CardGame gameState, Lane attackingLane, Lane defendingLane)
+    private void FightUnits(CardGame cardGame, Lane attackingLane, Lane defendingLane)
     {
-        Debug.Log("Both Lanes have Units");
-        Debug.Log(gameState);
-        Debug.Log(attackingLane.UnitInLane);
-        Debug.Log(defendingLane.UnitInLane);
-        //Both lanes have units, they will attack eachother.
-        gameState.DamageSystem.DealCombatDamageToUnits(gameState, attackingLane.UnitInLane, defendingLane.UnitInLane);
-
         var attackingUnit = (UnitCardData)attackingLane.UnitInLane.CurrentCardData;
         var defendingUnit = (UnitCardData)defendingLane.UnitInLane.CurrentCardData;
+
+        cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
+
+        //Both lanes have units, they will attack eachother.
+        cardGame.DamageSystem.DealCombatDamageToUnits(cardGame, attackingLane.UnitInLane, defendingLane.UnitInLane);
 
         if (attackingUnit.Toughness <= 0)
         {
             //should die
-            Debug.Log("Attacking Unit Is Dying");
+            cardGame.Log($"Attacking Unit {attackingUnit.Name} has died!");
             attackingLane.RemoveUnitFromLane();
         }
         if (defendingUnit.Toughness <= 0)
         {
             //should also die.
-            Debug.Log("Defending Unit Is Dying");
+            cardGame.Log($"Defending Unit {defendingUnit.Name} has died!");
             defendingLane.RemoveUnitFromLane();
         }
     }

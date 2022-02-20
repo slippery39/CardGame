@@ -15,6 +15,7 @@ public class CardGame
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
     private IHealingSystem _healingSystem;
+    private ICardGameLogger _cardGameLogger;
 
     #region Public Properties
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
@@ -23,6 +24,7 @@ public class CardGame
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
+    public ICardGameLogger Logger { get => _cardGameLogger; }
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
@@ -60,6 +62,8 @@ public class CardGame
         _damageSystem = new DefaultDamageSystem();
         _healingSystem = new DefaultHealingSystem();
 
+        _cardGameLogger = new UnityCardGameLogger();
+
         //TODO - some sort of check to make sure all systems are initialized?
         //maybe have 
     }
@@ -75,9 +79,12 @@ public class CardGame
         cardInstance.OwnerId = player.PlayerId;
         return cardInstance;
     }
-
-    //WARNING: Obsolete
-    //This no longer works since a card instance needs to be registered to a player.
+    
+    //For general console logging purposes.
+    public void Log(string message)
+    {
+        Logger.Log(message);
+    }
     private void AddRandomUnitsToLane(Player player)
     {
         CardDatabase db = new CardDatabase();

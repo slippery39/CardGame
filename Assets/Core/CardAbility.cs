@@ -10,7 +10,7 @@ public abstract class CardAbility
 
 public interface IModifyCanBlock
 {
-    bool ModifyCanBlock(CardGame gameState);
+    bool ModifyCanBlock(CardGame cardGame);
 }
 
 public class CantBlockAbility : CardAbility, IModifyCanBlock
@@ -21,7 +21,7 @@ public class CantBlockAbility : CardAbility, IModifyCanBlock
         RulesText = "Can't Block";
     }
 
-    public bool ModifyCanBlock(CardGame gameState)
+    public bool ModifyCanBlock(CardGame cardGame)
     {
         //This creature can't ever block;
         return false;
@@ -30,7 +30,7 @@ public class CantBlockAbility : CardAbility, IModifyCanBlock
 
 public interface IOnDamageDealt
 {
-    void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage);
+    void OnDamageDealt(CardGame cardGame, CardInstance damagingUnit, CardInstance damagedUnit, int damage);
 }
 
 public class LifelinkAbility : CardAbility, IOnDamageDealt
@@ -41,11 +41,12 @@ public class LifelinkAbility : CardAbility, IOnDamageDealt
         RulesText = "Lifelink";
     }
 
-    public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
+    public void OnDamageDealt(CardGame cardGame, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
     {
         //Need a way to find out who owns which unit
-        Player playerToGainLife = gameState.GetOwnerOfUnit(damagingUnit);
-        gameState.HealingSystem.HealPlayer(gameState, playerToGainLife, damage);
+        Player playerToGainLife = cardGame.GetOwnerOfUnit(damagingUnit);
+        cardGame.Log($"{playerToGainLife} gained {damage} life from {damagingUnit.CurrentCardData.Name}'s Lifelink!");
+        cardGame.HealingSystem.HealPlayer(cardGame, playerToGainLife, damage);
     }
 }
 
@@ -57,7 +58,7 @@ public class DeathtouchAbility : CardAbility, IOnDamageDealt
         RulesText = "Deathtouch";
     }
 
-    public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
+    public void OnDamageDealt(CardGame cardGame, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
     {
         //Filter out damage events that are not dealing to units, or else this will crash.
         if (damagedUnit == null)
@@ -67,6 +68,7 @@ public class DeathtouchAbility : CardAbility, IOnDamageDealt
         //Need a way to find out who owns which unit
         //hack - setting toughness to 0.
         //later on we will probably have some sort of DestroyingSystem and we would call that instead.
+        cardGame.Log($"{damagedUnit.CurrentCardData.Name} died from {damagingUnit.CurrentCardData.Name}'s deathtouch!");
         ((UnitCardData)damagedUnit.CurrentCardData).Toughness = 0;
     }
 }
@@ -88,12 +90,10 @@ public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
         //If the other unit does not have flying, then this creature can attack directly.
         if (defendingUnit.Abilities.Where(ab => ab is FlyingAbility).Count() > 0)
         {
-            Debug.Log("can't attack directly");
             return false;
         }
         else
         {
-            Debug.Log("cannot attack directly");
             return true;
         }
     }
