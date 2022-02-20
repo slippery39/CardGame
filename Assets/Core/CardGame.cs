@@ -26,7 +26,7 @@ public class CardGame
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
-    public IHealingSystem HealingSystem { get => _healingSystem; set => _healingSystem = value;}
+    public IHealingSystem HealingSystem { get => _healingSystem; set => _healingSystem = value; }
     #endregion
     #endregion
 
@@ -52,13 +52,14 @@ public class CardGame
         //SetupFlyingTestLanes();
         //SetupLifelinkTestLanes();
         //SetupDeathtouchTestLanes();
+        SetupMultipleAbilityTestLanes();
 
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
         _healingSystem = new DefaultHealingSystem();
 
         //TODO - some sort of check to make sure all systems are initialized?
-            //maybe have 
+        //maybe have 
     }
 
     public Player GetOwnerOfUnit(CardInstance unitInstance)
@@ -142,5 +143,24 @@ public class CardGame
         var hexPlateGolem = db.GetCardData("Hexplate Golem");
         Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, rats);
         Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, hexPlateGolem);
+    }
+
+    private void SetupMultipleAbilityTestLanes()
+    {
+        //Test Cases
+        //Nighthawk vs non flying creature
+        //Nighthawk vs flying creature
+
+        var db = new CardDatabase();
+
+        var vampireNighthawk = db.GetCardData("Vampire Nighthawk");
+
+        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, vampireNighthawk);
+        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, vampireNighthawk);
+
+        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, vampireNighthawk);
+
+        var hexplateGolem = db.GetCardData("Hexplate Golem");
+        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2,  hexplateGolem);
     }
 }

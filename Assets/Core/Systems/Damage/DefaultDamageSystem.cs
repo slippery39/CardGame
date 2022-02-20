@@ -19,6 +19,7 @@ public class DefaultDamageSystem : IDamageSystem
 
         foreach (var ability in damageDealtAbilities)
         {
+            //TODO - fix deathtouchh ability.
             ability.OnDamageDealt(cardGame, damagingUnit, null, damagingUnitData.Power);
         }
     }

@@ -27,7 +27,7 @@ public class CantBlockAbility : CardAbility, IModifyCanBlock
 
 public interface IOnDamageDealt
 {
-    void OnDamageDealt(CardGame gameState,CardInstance damagingUnit,CardInstance damagedUnit, int damage);
+    void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage);
 }
 
 public class LifelinkAbility : CardAbility, IOnDamageDealt
@@ -37,11 +37,11 @@ public class LifelinkAbility : CardAbility, IOnDamageDealt
         Type = "Lifelink";
     }
 
-    public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit,int damage)
+    public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
     {
         //Need a way to find out who owns which unit
         Player playerToGainLife = gameState.GetOwnerOfUnit(damagingUnit);
-        gameState.HealingSystem.HealPlayer(gameState,playerToGainLife, damage);
+        gameState.HealingSystem.HealPlayer(gameState, playerToGainLife, damage);
     }
 }
 
@@ -54,6 +54,11 @@ public class DeathtouchAbility : CardAbility, IOnDamageDealt
 
     public void OnDamageDealt(CardGame gameState, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
     {
+        //Filter out damage events that are not dealing to units, or else this will crash.
+        if (damagedUnit == null)
+        {
+            return;
+        }
         //Need a way to find out who owns which unit
         //hack - setting toughness to 0.
         //later on we will probably have some sort of DestroyingSystem and we would call that instead.
@@ -77,10 +82,13 @@ public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
         //If the other unit does not have flying, then this creature can attack directly.
         if (defendingUnit.Abilities.Where(ab => ab is FlyingAbility).Count() > 0)
         {
-            Debug.Log("can attack directly");
+            Debug.Log("can't attack directly");
             return false;
         }
-        Debug.Log("cannot attack directly");
-        return true;
+        else
+        {
+            Debug.Log("cannot attack directly");
+            return true;
+        }
     }
 }
