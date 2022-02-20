@@ -14,21 +14,18 @@ public class DefaultDamageSystem : IDamageSystem
 
         //Trigger Damage Dealt Abilities.
         //TODO - Handle case if 0 damage is dealt for whatever reason.
-        var getDamageDealtAbilities = damagingUnitData.Abilities.Where(ab => ab is IOnDamageDealt).FirstOrDefault();
-        if (getDamageDealtAbilities != null)
+
+        var damageDealtAbilities = damagingUnitData.GetAbilities<IOnDamageDealt>();
+
+        foreach (var ability in damageDealtAbilities)
         {
-            var damageDealtAbility = (IOnDamageDealt)getDamageDealtAbilities;
-            damageDealtAbility.OnDamageDealt(cardGame, damagingUnit, null, damagingUnitData.Power);
+            ability.OnDamageDealt(cardGame, damagingUnit, null, damagingUnitData.Power);
         }
     }
-
     public void DealCombatDamageToUnits(CardGame cardGame, CardInstance attackingUnit, CardInstance defendingUnit)
     {
         var defendingUnitData = (UnitCardData)defendingUnit.CurrentCardData;
         var attackingUnitData = (UnitCardData)attackingUnit.CurrentCardData;
-
-        Debug.Log(defendingUnitData.Power);
-        Debug.Log(attackingUnitData.Power);
 
         attackingUnitData.Toughness -= defendingUnitData.Power;
         defendingUnitData.Toughness -= attackingUnitData.Power;
@@ -36,19 +33,17 @@ public class DefaultDamageSystem : IDamageSystem
         Debug.Log("before checking the abilities");
 
         //Attacker Damage Dealt Abilities
-        var damageDealtAbilitiesAtk = attackingUnitData.Abilities.Where(ab => ab is IOnDamageDealt).FirstOrDefault();
-        if (damageDealtAbilitiesAtk != null)
+        var attackingAbilities = attackingUnitData.GetAbilities<IOnDamageDealt>();
+        foreach (var ability in attackingAbilities)
         {
-            var damageDealtAbilityAtk = (IOnDamageDealt)damageDealtAbilitiesAtk;
-            damageDealtAbilityAtk.OnDamageDealt(cardGame, attackingUnit, defendingUnit, attackingUnitData.Power);
+            ability.OnDamageDealt(cardGame, attackingUnit, defendingUnit, attackingUnitData.Power);
         }
 
         //Defender Damage Dealt Abilities
-        var damageDealtAbilitiesDef = defendingUnitData.Abilities.Where(ab => ab is IOnDamageDealt).FirstOrDefault();
-        if (damageDealtAbilitiesDef != null)
+        var defendingAbilities = defendingUnitData.GetAbilities<IOnDamageDealt>();
+        foreach (var ability in defendingAbilities)
         {
-            var damageDealtAbilityDef = (IOnDamageDealt)damageDealtAbilitiesDef;
-            damageDealtAbilityDef.OnDamageDealt(cardGame, defendingUnit, attackingUnit, defendingUnitData.Power);
+            ability.OnDamageDealt(cardGame, defendingUnit, attackingUnit, defendingUnitData.Power);
         }
     }
 }

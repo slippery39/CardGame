@@ -11,6 +11,13 @@ public abstract class BaseCardData
     public abstract string CardType { get; }
     public string ArtPath { get; set; }
     public List<CardAbility> Abilities { get; set; }
+
+    //Unsafe here, basing this method off of Unity's own GetComponent call.
+    public List<T> GetAbilities<T>()
+    {
+        var foundAbilities = Abilities.Where(ab => ab is T).Cast<T>().ToList(); //this returns card abilities.
+        return foundAbilities;
+    }
     public abstract BaseCardData Clone();
 }
 
@@ -154,6 +161,21 @@ public class CardDatabase : ICardDatabase
             Power = 5,
             Toughness = 7,
             ArtPath = "CardArt/HexplateGolem"
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Vampire Nighthawk",
+            RulesText = "",
+            ManaCost = "3",
+            Power = 2,
+            Toughness = 3,
+            Abilities = new List<CardAbility>()
+            {
+                new FlyingAbility(),
+                new DeathtouchAbility(),
+                new LifelinkAbility()
+            }
         });
     }
 
