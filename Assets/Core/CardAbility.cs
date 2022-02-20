@@ -69,7 +69,7 @@ public class DeathtouchAbility : CardAbility, IOnDamageDealt
         //hack - setting toughness to 0.
         //later on we will probably have some sort of DestroyingSystem and we would call that instead.
         cardGame.Log($"{damagedUnit.Name} died from {damagingUnit.Name}'s deathtouch!");
-        ((UnitCardData)damagedUnit.CurrentCardData).Toughness = 0;
+        damagedUnit.Toughness = 0;
     }
 }
 public interface IModifyCanAttackDirectly
