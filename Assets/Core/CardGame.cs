@@ -50,13 +50,6 @@ public class CardGame
         //Create Random Cards in Each Lane 
         AddRandomUnitsToLane(Player1);
         AddRandomUnitsToLane(Player2);
-        //SetupCantBlockTestLanes();
-        //SetupFlyingTestLanes();
-        //SetupLifelinkTestLanes();
-        //SetupDeathtouchTestLanes();
-        //SetupMultipleAbilityTestLanes();
-        //SetupUnblockableTest();
-        //SetupUnblockableFlyingTest();
 
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
@@ -73,13 +66,13 @@ public class CardGame
         return _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
     }
 
-    public CardInstance AddCardToGame(Player player, BaseCardData data)
+    public void AddCardToGame(Player player, BaseCardData data, IZone zone)
     {
         var cardInstance = new CardInstance(data);
         cardInstance.OwnerId = player.PlayerId;
-        return cardInstance;
+        zone.Add(cardInstance);
     }
-    
+
     //For general console logging purposes.
     public void Log(string message)
     {
@@ -95,112 +88,7 @@ public class CardGame
         foreach (Lane lane in player.Lanes)
         {
             var randomIndex = rng.Next(0, unitsOnly.Count());
-            lane.UnitInLane = AddCardToGame(player, unitsOnly[randomIndex]);
+            AddCardToGame(player, unitsOnly[randomIndex], lane);
         }
-    }
-
-    private void SetupCantBlockTestLanes()
-    {
-        var db = new CardDatabase();
-
-        var hexPlateGolem = db.GetCardData("Hexplate Golem");
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, hexPlateGolem);
-
-        var goblinRaider = db.GetCardData("Goblin Raider");
-        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, goblinRaider);
-    }
-
-    private void SetupFlyingTestLanes()
-    {
-        //Test Cases
-        //Flying -> Non Flying - should attack directly
-        //Flying -> Flying -should attack eachother
-        var db = new CardDatabase();
-
-        var stormCrow = db.GetCardData("Storm Crow");
-        var hexPlateGolem = db.GetCardData("Hexplate Golem");
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, stormCrow);
-        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, hexPlateGolem);
-
-        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, stormCrow);
-        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, stormCrow);
-    }
-
-    private void SetupLifelinkTestLanes()
-    {
-        //Test Cases
-        //2 Lifelinkers in one lane
-        //Life linkers in lanes with no defenders
-        var db = new CardDatabase();
-
-        var sunstriker = db.GetCardData("Sunstriker");
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, sunstriker);
-        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, sunstriker);
-
-        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, sunstriker);
-
-        Player2.Lanes[2].UnitInLane = AddCardToGame(Player2, sunstriker);
-
-    }
-
-    private void SetupDeathtouchTestLanes()
-    {
-        var db = new CardDatabase();
-
-        var rats = db.GetCardData("Typhoid Rats");
-        var hexPlateGolem = db.GetCardData("Hexplate Golem");
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, rats);
-        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, hexPlateGolem);
-    }
-
-    private void SetupMultipleAbilityTestLanes()
-    {
-        //Test Cases
-        //Nighthawk vs non flying creature
-        //Nighthawk vs flying creature
-
-        var db = new CardDatabase();
-
-        var vampireNighthawk = db.GetCardData("Vampire Nighthawk");
-
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, vampireNighthawk);
-        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, vampireNighthawk);
-
-        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, vampireNighthawk);
-
-        var hexplateGolem = db.GetCardData("Hexplate Golem");
-        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, hexplateGolem);
-    }
-
-    private void SetupUnblockableTest()
-    {
-        var db = new CardDatabase();
-
-        var infiltrator = db.GetCardData("Inkfathom Infiltrator");
-        var hexplateGolem = db.GetCardData("Hexplate Golem");
-
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, infiltrator);
-        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, infiltrator);
-
-        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, infiltrator);
-        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, hexplateGolem);
-
-        Player1.Lanes[2].UnitInLane = AddCardToGame(Player1, infiltrator);
-    }
-
-    private void SetupUnblockableFlyingTest()
-    {
-        var db = new CardDatabase();
-
-        var customDude = db.GetCardData("Unblockable Flying Dude");
-        var stormCrow = db.GetCardData("Storm Crow");
-
-        Player1.Lanes[0].UnitInLane = AddCardToGame(Player1, customDude);
-        Player2.Lanes[0].UnitInLane = AddCardToGame(Player2, customDude);
-
-        Player1.Lanes[1].UnitInLane = AddCardToGame(Player1, customDude);
-        Player2.Lanes[1].UnitInLane = AddCardToGame(Player2, stormCrow);
-
-        Player1.Lanes[2].UnitInLane = AddCardToGame(Player1, customDude);
     }
 }
