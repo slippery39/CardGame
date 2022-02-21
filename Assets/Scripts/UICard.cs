@@ -30,6 +30,12 @@ public class UICard : MonoBehaviour
     //TODO - could also have a SetFromCardInstance method which could do fancier stuff?
     public void SetFromCardData(BaseCardData cardData)
     {
+
+        if (cardData is SpellCardData)
+        {
+            cardCombatStatsText.gameObject.SetActive(false);
+        }
+
         _cardData = cardData;
 
         cardNameText.text = cardData.Name;

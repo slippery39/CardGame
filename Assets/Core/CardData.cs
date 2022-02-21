@@ -23,6 +23,11 @@ public abstract class BaseCardData
         return foundAbilities;
     }
     public abstract BaseCardData Clone();
+
+    public BaseCardData()
+    {
+        Abilities = new List<CardAbility>();
+    }
 }
 
 
@@ -32,9 +37,8 @@ public class UnitCardData : BaseCardData
     public int Toughness { get; set; }
     public override string CardType => "Unit";
 
-    public UnitCardData()
+    public UnitCardData() : base()
     {
-        Abilities = new List<CardAbility>();
     }
 
     public override BaseCardData Clone()
@@ -55,6 +59,11 @@ public class UnitCardData : BaseCardData
 public class SpellCardData : BaseCardData
 {
     public override string CardType => "Spell";
+
+    public SpellCardData(): base()
+    {
+
+    }
 
     public override BaseCardData Clone()
     {

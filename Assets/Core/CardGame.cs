@@ -12,6 +12,7 @@ public class CardGame
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
     private int _startingPlayerHealth = 100;
+    private int _startingHandSize = 5;
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
     private IHealingSystem _healingSystem;
@@ -51,6 +52,8 @@ public class CardGame
         AddRandomUnitsToLane(Player1);
         AddRandomUnitsToLane(Player2);
 
+        AddRandomSpellsToHand(Player1);
+
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
         _healingSystem = new DefaultHealingSystem();
@@ -89,6 +92,20 @@ public class CardGame
         {
             var randomIndex = rng.Next(0, unitsOnly.Count());
             AddCardToGame(player, unitsOnly[randomIndex], lane);
+        }
+    }
+
+    private void AddRandomSpellsToHand(Player player)
+    {
+        CardDatabase db = new CardDatabase();
+        var spellsOnly = db.GetAll().Where(c => c is SpellCardData).ToList();
+
+        var rng = new Random();
+
+        for (int i = 0; i < _startingHandSize; i++)
+        {
+            var randomIndex = rng.Next(0, spellsOnly.Count());
+            AddCardToGame(player, spellsOnly[randomIndex], player.Hand);
         }
     }
 }

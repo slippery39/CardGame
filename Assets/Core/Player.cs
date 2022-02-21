@@ -10,11 +10,14 @@ public class Player
     #region Private Fields
     private int _playerId;
     private int _health;
-    private List<Lane> lanes; 
+    private List<Lane> _lanes;
+    private Hand _hand;
     #endregion
 
     public Player(int numberOfLanes)
     {
+
+        Hand = new Hand();
         Lanes = new List<Lane>();
         
         for (int i = 0; i < numberOfLanes; i++)
@@ -29,7 +32,8 @@ public class Player
     #region Public Properties
     public int PlayerId { get => _playerId; set => _playerId = value; }
     public int Health { get => _health; set => _health = value; }
-    public List<Lane> Lanes { get => lanes; set => lanes = value; }
+    public List<Lane> Lanes { get => _lanes; set => _lanes = value; }
+    public Hand Hand { get => _hand; set => _hand = value; }
     #endregion
 }
 
