@@ -37,6 +37,13 @@ public class GameController : MonoBehaviour
             _gameState.BattleSystem.ExecuteBattles(_gameState);
             UpdateBoard();
         }
+
+        //Test Hotkey for Playing our First Spell.
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _gameState.PlayCardFromHand(_gameState.Player1, _gameState.Player1.Hand.Cards[0]);
+            UpdateBoard();
+        }
     }
 
     #region Private Methods

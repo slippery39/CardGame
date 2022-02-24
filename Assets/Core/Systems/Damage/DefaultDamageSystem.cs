@@ -7,10 +7,20 @@ using UnityEngine;
 
 public class DefaultDamageSystem : IDamageSystem
 {
+    public void DealAbilityDamage(CardGame cardGame, DamageAbility abilitySource, CardInstance damagingCard, CardInstance damagedCard)
+    {
+        DealDamage(damagedCard, abilitySource.Amount);
+        cardGame.Log($"{damagingCard.Name} dealt {abilitySource.Amount} damage to {damagedCard.Name}!");
+
+        //TODO - Fire any of our on damage dealt effects.
+    }
+
     public void DealCombatDamageToPlayer(CardGame cardGame, CardInstance damagingUnit, Player damagedPlayer)
     {
         int damage = damagingUnit.Power;
         damagedPlayer.Health -= damagingUnit.Power;
+
+        //TODO - Deal Damage needs to work with players too.
 
         cardGame.Log($"{damagedPlayer} has taken {damage} combat damage!");
 
@@ -29,8 +39,8 @@ public class DefaultDamageSystem : IDamageSystem
         var attackingDamage = attackingUnit.Power;
         var defendingDamage = defendingUnit.Power;
 
-        attackingUnit.Toughness -= defendingDamage;
-        defendingUnit.Toughness -= attackingDamage;
+        DealDamage(attackingUnit, defendingDamage);
+        DealDamage(defendingUnit, attackingDamage);
 
         cardGame.Log($"{defendingUnit.Name} took {attackingDamage} combat damage");
         cardGame.Log($"{attackingUnit.Name} took {defendingDamage} combat damage");
@@ -48,5 +58,10 @@ public class DefaultDamageSystem : IDamageSystem
         {
             ability.OnDamageDealt(cardGame, defendingUnit, attackingUnit, defendingUnit.Power);
         }
+    }
+
+    private void DealDamage(CardInstance damagedUnit,int damage)
+    {
+        damagedUnit.Toughness -= damage;
     }
 }

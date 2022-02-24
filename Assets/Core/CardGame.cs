@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 public class CardGame
 {
-
     private List<Player> _players;
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
@@ -16,7 +15,9 @@ public class CardGame
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
     private IHealingSystem _healingSystem;
+    private ISpellCastingSystem _spellCastingSystem;
     private ICardGameLogger _cardGameLogger;
+    
 
     #region Public Properties
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
@@ -57,6 +58,7 @@ public class CardGame
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
         _healingSystem = new DefaultHealingSystem();
+        _spellCastingSystem = new DefaultSpellCastingSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -74,6 +76,20 @@ public class CardGame
         var cardInstance = new CardInstance(data);
         cardInstance.OwnerId = player.PlayerId;
         zone.Add(cardInstance);
+    }
+
+    public void PlayCardFromHand(Player player, CardInstance cardFromHand)
+    {
+        //TODO - Implement our ability to play cards from hand. 
+
+        //TODO - if its a spell, do its effect
+        
+        if (cardFromHand.CurrentCardData is SpellCardData)
+        {
+            _spellCastingSystem.CastSpell(this, player, cardFromHand);
+        }
+
+        //TODO - later - if its a creature, put it in a lane
     }
 
     //For general console logging purposes.

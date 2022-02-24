@@ -5,7 +5,7 @@ public abstract class CardAbility
 {
     public string Type;
     public int Priority { get; set; }
-    public string RulesText { get; set; }
+    public abstract string RulesText { get;}
 }
 
 public interface IModifyCanBlock
@@ -15,10 +15,10 @@ public interface IModifyCanBlock
 
 public class CantBlockAbility : CardAbility, IModifyCanBlock
 {
+    public override string RulesText => "Can't Block";
     public CantBlockAbility()
     {
         Type = "Cant Block";
-        RulesText = "Can't Block";
     }
 
     public bool ModifyCanBlock(CardGame cardGame)
@@ -35,10 +35,10 @@ public interface IOnDamageDealt
 
 public class LifelinkAbility : CardAbility, IOnDamageDealt
 {
+    public override string RulesText => "Lifelink";
     public LifelinkAbility()
     {
         Type = "Lifelink";
-        RulesText = "Lifelink";
     }
 
     public void OnDamageDealt(CardGame cardGame, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
@@ -52,10 +52,10 @@ public class LifelinkAbility : CardAbility, IOnDamageDealt
 
 public class DeathtouchAbility : CardAbility, IOnDamageDealt
 {
+    public override string RulesText => "Deathtouch";
     public DeathtouchAbility()
     {
         Type = "Deathtouch";
-        RulesText = "Deathtouch";
     }
 
     public void OnDamageDealt(CardGame cardGame, CardInstance damagingUnit, CardInstance damagedUnit, int damage)
@@ -78,10 +78,10 @@ public interface IModifyCanAttackDirectly
 }
 public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
 {
+    public override string RulesText => "Flying";
     public FlyingAbility()
     {
         Type = "Flying";
-        RulesText = "Flying";
     }
 
     public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
@@ -101,13 +101,20 @@ public class FlyingAbility : CardAbility, IModifyCanAttackDirectly
 
 public class UnblockableAbility : CardAbility, IModifyCanAttackDirectly
 {
+    public override string RulesText => "Unblockable";
     public UnblockableAbility()
     {
-        RulesText = "Unblockable";
         Priority = 10; //Unblockable should take priority over any IModifyCanAttackDirectly Ability.
     }
     public bool ModifyCanAttackDirectly(CardGame gameState, Lane attackingLane, Lane defendingLane)
     {
         return true;
     }
+}
+
+//Damage Abiltiies are handled by the DamageSystem themselves?
+public class DamageAbility : CardAbility
+{
+    public override string RulesText => $"Deal {Amount} Damage";
+    public int Amount { get; set; }
 }

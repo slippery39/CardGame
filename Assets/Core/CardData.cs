@@ -72,6 +72,7 @@ public class SpellCardData : BaseCardData
             Name = Name,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
+            Abilities = Abilities.ToList() //todo - potential deep clone.
         };
     }
 }
@@ -103,7 +104,14 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Lightning Bolt",
             ManaCost = "1",
-            ArtPath = "CardArt/LightningBolt"
+            ArtPath = "CardArt/LightningBolt",
+            Abilities = new List<CardAbility>()
+            {
+                new DamageAbility()
+                {
+                    Amount = 3
+                }
+            }
         });
 
         _cards.Add(new UnitCardData()

@@ -7,4 +7,5 @@ public interface IDamageSystem
 {
     void DealCombatDamageToUnits(CardGame cardGame, CardInstance attackingUnit, CardInstance defendingUnit);
     void DealCombatDamageToPlayer(CardGame cardGame, CardInstance damagingUnit, Player damagedPlayer);
+    void DealAbilityDamage(CardGame cardGame, DamageAbility abilitySource, CardInstance damagingCard, CardInstance damagedCard);
 }
