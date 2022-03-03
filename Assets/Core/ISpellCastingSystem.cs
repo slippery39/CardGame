@@ -26,12 +26,17 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
                     Targets = cardGame.Player2.Lanes.Where(lane => lane.IsEmpty() == false).Select(lane => lane.UnitInLane).ToList()
                 };
 
-                foreach (var target in targetInfo.Targets) {
+                foreach (var target in targetInfo.Targets)
+                {
                     cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageAbility)ab, spellCard, target);
                 }
             }
             //Figure out how to resolve abilities.
         }
+
+        //TODO - Spell should move into the discard zone
+        cardGame.ZoneChangeSystem.MoveToZone(cardGame,spellCard,player.DiscardPile);
+
     }
 
     public List<CardInstance> GetValidTargets(Player player, SpellCardData spellCard)

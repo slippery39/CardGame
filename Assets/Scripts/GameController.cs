@@ -43,7 +43,7 @@ public class GameController : MonoBehaviour
         {
             _gameState.PlayCardFromHand(_gameState.Player1, _gameState.Player1.Hand.Cards[0]);
             UpdateBoard();
-        }
+         }
     }
 
     #region Private Methods
@@ -83,7 +83,7 @@ public class GameController : MonoBehaviour
         for (int i = 0; i < uiCards.Length; i++)
         {
             //If there is no card in the game state for a lane, just hide the card.
-            if (hand.Cards[i] == null)
+            if (hand.Cards.Count <= i || hand.Cards[i] == null)
             {
                 uiCards[i].gameObject.SetActive(false);
                 continue;
@@ -92,7 +92,6 @@ public class GameController : MonoBehaviour
             {
                 uiCards[i].gameObject.SetActive(true);
             }
-
             uiCards[i].GetComponent<UICard>().SetFromCardData(hand.Cards[i].CurrentCardData);
         }
     }

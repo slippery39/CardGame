@@ -16,6 +16,7 @@ public class CardGame
     private IDamageSystem _damageSystem;
     private IHealingSystem _healingSystem;
     private ISpellCastingSystem _spellCastingSystem;
+    private IZoneChangeSystem _zoneChangeSystem;
     private ICardGameLogger _cardGameLogger;
     
 
@@ -31,6 +32,7 @@ public class CardGame
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
     public IHealingSystem HealingSystem { get => _healingSystem; set => _healingSystem = value; }
+    public IZoneChangeSystem ZoneChangeSystem { get => _zoneChangeSystem; set => _zoneChangeSystem = value; }
     #endregion
     #endregion
 
@@ -59,6 +61,7 @@ public class CardGame
         _damageSystem = new DefaultDamageSystem();
         _healingSystem = new DefaultHealingSystem();
         _spellCastingSystem = new DefaultSpellCastingSystem();
+        _zoneChangeSystem = new DefaultZoneChangeSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -90,6 +93,21 @@ public class CardGame
         }
 
         //TODO - later - if its a creature, put it in a lane
+    }
+
+    //Grab a master list of all zones in the game.
+    public List<IZone> GetZones()
+    {
+        //TODO - generalize this?
+
+        List<IZone> zones = new List<IZone>();
+        zones.Add(Player1.Hand);
+        zones.Add(Player2.Hand);
+
+        zones.AddRange(Player1.Lanes);
+        zones.AddRange(Player2.Lanes);
+
+        return zones;
     }
 
     //For general console logging purposes.

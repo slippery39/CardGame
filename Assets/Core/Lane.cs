@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 //NOTE - Unity does not support null in serialization. If we want things to be serialized, we should use the null object pattern instead.
 //Don't use System.Serializable unless we are 100% sure nothing will be set to null.
@@ -12,6 +13,21 @@ public class Lane : IZone
     #region Public Properties
     public CardInstance UnitInLane { get { return _unitInLane; } set { _unitInLane = value; } }
     public int LaneId { get; set; }
+
+    public List<CardInstance> Cards
+    {
+        get
+        {
+            if (_unitInLane == null)
+            {
+                return new List<CardInstance>() { };
+            }
+            else
+            {
+                return new List<CardInstance>() { UnitInLane };
+            }
+        }
+    }
 
     public string Name => "Lane";
     #endregion
