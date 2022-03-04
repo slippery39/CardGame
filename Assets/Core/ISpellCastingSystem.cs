@@ -12,30 +12,28 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
     public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard)
     {
         //TODO - check if spell card is a spell card.
-        foreach(var ab in spellCard.Abilities)
+        foreach (var ab in spellCard.Abilities)
         {
             if (ab is DamageAbility)
             {
-                //TODO - we need TargetInfo.
-                //Need to able to process our targets.
+                //For now just grab a random target on the opponents side of the board.
+                var validTargets = cardGame.Player2.Lanes.Where(lane => lane.IsEmpty() == false).Select(lane => lane.UnitInLane).ToList();
 
-                //For now let target everything.
-                //TODO - this is only going after player 2 right now.
-                var targetInfo = new AbilityTargetInfo()
+                if (validTargets.Count == 0)
                 {
-                    Targets = cardGame.Player2.Lanes.Where(lane => lane.IsEmpty() == false).Select(lane => lane.UnitInLane).ToList()
-                };
-
-                foreach (var target in targetInfo.Targets)
-                {
-                    cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageAbility)ab, spellCard, target);
+                    continue;
                 }
+
+                var target = validTargets.Randomize().First();
+
+                cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageAbility)ab, spellCard, target);
+
             }
             //Figure out how to resolve abilities.
         }
 
         //TODO - Spell should move into the discard zone
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame,spellCard,player.DiscardPile);
+        cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, player.DiscardPile);
 
     }
 
@@ -43,9 +41,4 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
     {
         throw new System.NotImplementedException();
     }
-}
-
-public class AbilityTargetInfo
-{
-    public List<CardInstance> Targets;
 }
