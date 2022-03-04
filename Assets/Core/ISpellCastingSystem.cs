@@ -4,7 +4,6 @@ using System.Linq;
 public interface ISpellCastingSystem
 {
     public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard);
-    //public List<CardInstance> GetValidTargets(Player player, CardInstance spellCard);
 }
 
 public class DefaultSpellCastingSystem : ISpellCastingSystem
@@ -35,10 +34,5 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
         //TODO - Spell should move into the discard zone
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, player.DiscardPile);
 
-    }
-
-    public List<CardInstance> GetValidTargets(Player player, SpellCardData spellCard)
-    {
-        throw new System.NotImplementedException();
     }
 }
