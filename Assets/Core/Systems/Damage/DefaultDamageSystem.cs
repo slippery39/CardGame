@@ -11,7 +11,7 @@ public class DefaultDamageSystem : IDamageSystem
     {
         DealDamage(damagedCard, abilitySource.Amount);
         cardGame.Log($"{damagingCard.Name} dealt {abilitySource.Amount} damage to {damagedCard.Name}!");
-
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
         //TODO - Fire any of our on damage dealt effects.
     }
 
@@ -63,5 +63,6 @@ public class DefaultDamageSystem : IDamageSystem
     private void DealDamage(CardInstance damagedUnit,int damage)
     {
         damagedUnit.Toughness -= damage;
+        
     }
 }

@@ -38,12 +38,31 @@ public class GameController : MonoBehaviour
             UpdateBoard();
         }
 
-        //Test Hotkey for Playing our First Spell.
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        var castingSpellKeys = new List<KeyCode>()
         {
-            _gameState.PlayCardFromHand(_gameState.Player1, _gameState.Player1.Hand.Cards[0]);
-            UpdateBoard();
-         }
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4,
+            KeyCode.Alpha5,
+            KeyCode.Alpha7,
+            KeyCode.Alpha8,
+            KeyCode.Alpha9
+        };
+
+        //Testing Keys for Casting our Spells.
+        for (int i = 0; i < castingSpellKeys.Count; i++)
+        {
+            if (Input.GetKeyDown(castingSpellKeys[i]))
+            {
+                if (_gameState.Player1.Hand.Cards.Count > i)
+                {
+                    _gameState.PlayCardFromHand(_gameState.Player1, _gameState.Player1.Hand.Cards[0]);
+                    UpdateBoard();
+                }         
+            }
+        }
+
     }
 
     #region Private Methods

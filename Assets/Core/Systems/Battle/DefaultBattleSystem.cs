@@ -50,22 +50,9 @@ public class DefaultBattleSystem : IBattleSystem
         var defendingUnit = defendingLane.UnitInLane;
 
         cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
-
         //Both lanes have units, they will attack eachother.
         cardGame.DamageSystem.DealCombatDamageToUnits(cardGame, attackingUnit, defendingUnit);
-
-        if (attackingUnit.Toughness <= 0)
-        {
-            //should die
-            cardGame.Log($"Attacking Unit {attackingUnit.Name} has died!");
-            attackingLane.RemoveUnitFromLane();
-        }
-        if (defendingUnit.Toughness <= 0)
-        {
-            //should also die.
-            cardGame.Log($"Defending Unit {defendingUnit.Name} has died!");
-            defendingLane.RemoveUnitFromLane();
-        }
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);        
     }
 
     //Note - this method can be hooked into from Abilities.

@@ -17,7 +17,6 @@ public class Player
 
     public Player(int numberOfLanes)
     {
-
         Hand = new Hand();
         Lanes = new List<Lane>();
         DiscardPile = new DiscardPile();

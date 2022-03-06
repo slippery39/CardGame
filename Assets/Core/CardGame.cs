@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 public class CardGame
 {
+    #region Private Fields
     private List<Player> _players;
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
@@ -17,8 +18,10 @@ public class CardGame
     private IHealingSystem _healingSystem;
     private ISpellCastingSystem _spellCastingSystem;
     private IZoneChangeSystem _zoneChangeSystem;
+    private IStateBasedEffectSystem _stateBasedEffectSystem;
     private ICardGameLogger _cardGameLogger;
-    
+    #endregion
+
 
     #region Public Properties
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
@@ -33,6 +36,7 @@ public class CardGame
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
     public IHealingSystem HealingSystem { get => _healingSystem; set => _healingSystem = value; }
     public IZoneChangeSystem ZoneChangeSystem { get => _zoneChangeSystem; set => _zoneChangeSystem = value; }
+    public IStateBasedEffectSystem StateBasedEffectSystem { get => _stateBasedEffectSystem; set => _stateBasedEffectSystem = value; }
     #endregion
     #endregion
 
@@ -62,6 +66,7 @@ public class CardGame
         _healingSystem = new DefaultHealingSystem();
         _spellCastingSystem = new DefaultSpellCastingSystem();
         _zoneChangeSystem = new DefaultZoneChangeSystem();
+        _stateBasedEffectSystem = new DefaultStateBasedEffectSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -108,6 +113,15 @@ public class CardGame
         zones.AddRange(Player2.Lanes);
 
         return zones;
+    }
+
+    public List<CardInstance> GetUnitsInPlay()
+    {
+
+        var player1Units = Player1.Lanes.Select(lane => lane.UnitInLane).Where(unit=>unit!=null);
+        var player2Units = Player2.Lanes.Select(lane => lane.UnitInLane).Where(unit=>unit!=null);
+
+        return player1Units.Concat(player2Units).ToList();
     }
 
     //For general console logging purposes.

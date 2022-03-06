@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public interface ISpellCastingSystem
 {
@@ -32,6 +33,7 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
         }
 
         //TODO - Spell should move into the discard zone
+        Debug.Log("Moving Spell to Zone?");
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, player.DiscardPile);
 
     }

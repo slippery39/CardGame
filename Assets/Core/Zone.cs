@@ -26,13 +26,8 @@ public interface IZone
 {
     string Name { get; }
     List<CardInstance> Cards { get;}
-
     void Add(CardInstance card);
-    //We may not have the actual card reference for whatever reason. 
-    //So search for a UID instead?
-    //Not sure the best way to deal with this.
     void Remove(CardInstance card);
-
 }
 
 

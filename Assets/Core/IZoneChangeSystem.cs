@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using UnityEngine;
 
 public interface IZoneChangeSystem
 {
@@ -17,6 +17,8 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
     {
 
         var currentZone = cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();
+
+        Debug.Log(currentZone);
 
         currentZone.Remove(card);
         zoneTo.Add(card);
