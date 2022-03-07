@@ -13,6 +13,7 @@ public class Player
     private List<Lane> _lanes;
     private Hand _hand;
     private DiscardPile _discardPile;
+    private Deck deck;
     #endregion
 
     public Player(int numberOfLanes)
@@ -36,6 +37,7 @@ public class Player
     public List<Lane> Lanes { get => _lanes; set => _lanes = value; }
     public Hand Hand { get => _hand; set => _hand = value; }
     public DiscardPile DiscardPile { get => _discardPile; set => _discardPile = value; }
+    public Deck Deck { get => deck; set => deck = value; }
 
     #endregion
 
