@@ -12,7 +12,6 @@ public class DefaultDamageSystem : IDamageSystem
         DealDamage(damagedCard, abilitySource.Amount);
         cardGame.Log($"{damagingCard.Name} dealt {abilitySource.Amount} damage to {damagedCard.Name}!");
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
-        //TODO - Fire any of our on damage dealt effects.
     }
 
     public void DealCombatDamageToPlayer(CardGame cardGame, CardInstance damagingUnit, Player damagedPlayer)
@@ -44,6 +43,8 @@ public class DefaultDamageSystem : IDamageSystem
 
         cardGame.Log($"{defendingUnit.Name} took {attackingDamage} combat damage");
         cardGame.Log($"{attackingUnit.Name} took {defendingDamage} combat damage");
+
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
 
         //Attacker Damage Dealt Abilities
         var attackingAbilities = attackingUnit.GetAbilities<IOnDamageDealt>();

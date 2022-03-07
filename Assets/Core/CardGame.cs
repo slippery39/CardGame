@@ -115,6 +115,20 @@ public class CardGame
         return zones;
     }
 
+    public Player GetOwnerOfCard(CardInstance card)
+    {
+        if (Player1.IsOwnerOfCard(card))
+        {
+            return Player1;
+        }
+        else if (Player2.IsOwnerOfCard(card))
+        {
+            return Player2;
+        }
+
+        throw new Exception("No owner for this card");
+    }
+
     public List<CardInstance> GetUnitsInPlay()
     {
 

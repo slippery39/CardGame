@@ -114,6 +114,58 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Lightning Helix",
+            ManaCost = "2",
+            ArtPath="CardArt/LightningHelix",
+            Abilities = new List<CardAbility>()
+            {
+                new DamageAbility()
+                {
+                    Amount = 3
+                },
+                new LifeGainAbility()
+                {
+                    Amount = 3
+                }
+            }
+        });
+
+        /*
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Ancestral Recall",
+            ManaCost = "1",
+            ArtPath = "CardArt/AncestralRecall",
+            Abilities = new List<CardAbility>()
+            {
+                new DrawCardAbility()
+                {
+                    Amount = 3
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Giant Growth",
+            ManaCost = "1",
+            ArtPath  = "CardArt/GiantGrwoth",
+            Abilities = new List<CardAbility>()
+            {
+                new PumpUnitAbility()
+                {
+                    Power = 3,
+                    Toughness = 3
+                }
+            }
+        });
+
+        */
+
+
         _cards.Add(new UnitCardData()
         {
             Name = "Storm Crow",

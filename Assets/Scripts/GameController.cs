@@ -57,7 +57,7 @@ public class GameController : MonoBehaviour
             {
                 if (_gameState.Player1.Hand.Cards.Count > i)
                 {
-                    _gameState.PlayCardFromHand(_gameState.Player1, _gameState.Player1.Hand.Cards[0]);
+                    _gameState.PlayCardFromHand(_gameState.Player1, _gameState.Player1.Hand.Cards[i]);
                     UpdateBoard();
                 }         
             }

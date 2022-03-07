@@ -118,3 +118,9 @@ public class DamageAbility : CardAbility
     public override string RulesText => $"Deal {Amount} Damage";
     public int Amount { get; set; }
 }
+
+public class LifeGainAbility : CardAbility
+{
+    public override string RulesText => $"Gain {Amount} Life";
+    public int Amount { get; set; }
+}

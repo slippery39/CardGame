@@ -28,6 +28,13 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 
                 cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageAbility)ab, spellCard, target);
             }
+            if (ab is LifeGainAbility)
+            {
+                var owner = cardGame.GetOwnerOfCard(spellCard);
+
+                cardGame.HealingSystem.HealPlayer(cardGame,owner, ((LifeGainAbility)ab).Amount);
+
+            }
             //Figure out how to resolve abilities.
         }
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, player.DiscardPile);

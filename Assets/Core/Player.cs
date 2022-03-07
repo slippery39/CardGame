@@ -38,5 +38,14 @@ public class Player
     public DiscardPile DiscardPile { get => _discardPile; set => _discardPile = value; }
 
     #endregion
+
+    #region Public Methods
+
+    public bool IsOwnerOfCard(CardInstance card)
+    {
+        return Hand.Cards.Contains(card) || DiscardPile.Cards.Contains(card) || Lanes.SelectMany(l => l.Cards).Contains(card);
+    }
+
+    #endregion
 }
 
