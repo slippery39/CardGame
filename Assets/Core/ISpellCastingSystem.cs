@@ -27,14 +27,9 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
                 var target = validTargets.Randomize().First();
 
                 cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageAbility)ab, spellCard, target);
-
             }
             //Figure out how to resolve abilities.
         }
-
-        //TODO - Spell should move into the discard zone
-        Debug.Log("Moving Spell to Zone?");
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, player.DiscardPile);
-
     }
 }
