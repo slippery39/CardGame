@@ -31,9 +31,21 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
             if (ab is LifeGainAbility)
             {
                 var owner = cardGame.GetOwnerOfCard(spellCard);
-
                 cardGame.HealingSystem.HealPlayer(cardGame,owner, ((LifeGainAbility)ab).Amount);
 
+            }
+            if (ab is PumpUnitAbility)
+            {
+                var validTargets = cardGame.Player1.Lanes.Where(lane => lane.IsEmpty() == false).Select(lane => lane.UnitInLane).ToList();
+
+                if (validTargets.Count == 0)
+                {
+                    continue;
+                }
+
+                var target = validTargets.Randomize().First();
+
+                cardGame.UnitPumpSystem.PumpUnit(cardGame,target, (PumpUnitAbility)ab);
             }
             //Figure out how to resolve abilities.
         }

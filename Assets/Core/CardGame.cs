@@ -20,6 +20,7 @@ public class CardGame
     private IZoneChangeSystem _zoneChangeSystem;
     private IStateBasedEffectSystem _stateBasedEffectSystem;
     private ICardGameLogger _cardGameLogger;
+    private IUnitPumpSystem _unitPumpSystem;
     #endregion
 
 
@@ -37,6 +38,8 @@ public class CardGame
     public IHealingSystem HealingSystem { get => _healingSystem; set => _healingSystem = value; }
     public IZoneChangeSystem ZoneChangeSystem { get => _zoneChangeSystem; set => _zoneChangeSystem = value; }
     public IStateBasedEffectSystem StateBasedEffectSystem { get => _stateBasedEffectSystem; set => _stateBasedEffectSystem = value; }
+    public IUnitPumpSystem UnitPumpSystem { get => _unitPumpSystem; set => _unitPumpSystem = value; }
+
     #endregion
     #endregion
 
@@ -67,6 +70,7 @@ public class CardGame
         _spellCastingSystem = new DefaultSpellCastingSystem();
         _zoneChangeSystem = new DefaultZoneChangeSystem();
         _stateBasedEffectSystem = new DefaultStateBasedEffectSystem();
+        _unitPumpSystem = new DefaultUnitPumpSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 

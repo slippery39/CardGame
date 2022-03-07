@@ -124,3 +124,10 @@ public class LifeGainAbility : CardAbility
     public override string RulesText => $"Gain {Amount} Life";
     public int Amount { get; set; }
 }
+
+public class PumpUnitAbility:CardAbility
+{
+    public override string RulesText => $"Target Unit gets +{Power}/+{Toughness}";
+    public int Power { get; set; }
+    public int Toughness { get; set; }
+}

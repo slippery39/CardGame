@@ -132,6 +132,22 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Giant Growth",
+            ManaCost = "1",
+            ArtPath = "CardArt/GiantGrwoth",
+            Abilities = new List<CardAbility>()
+            {
+                new PumpUnitAbility()
+                {
+                    Power = 3,
+                    Toughness = 3
+                }
+            }
+        });
+
+
         /*
 
         _cards.Add(new SpellCardData()
