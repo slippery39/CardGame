@@ -22,6 +22,7 @@ public class CardGame
     private ICardGameLogger _cardGameLogger;
     private IUnitPumpSystem _unitPumpSystem;
     private ICardDrawSystem _cardDrawSystem;
+    private IManaSystem _manaSystem;
     #endregion
 
 
@@ -41,6 +42,7 @@ public class CardGame
     public IStateBasedEffectSystem StateBasedEffectSystem { get => _stateBasedEffectSystem; set => _stateBasedEffectSystem = value; }
     public IUnitPumpSystem UnitPumpSystem { get => _unitPumpSystem; set => _unitPumpSystem = value; }
     public ICardDrawSystem CardDrawSystem { get => _cardDrawSystem; set => _cardDrawSystem = value; }
+    public IManaSystem ManaSystem { get => _manaSystem; set => _manaSystem = value; }
 
     #endregion
     #endregion
@@ -74,6 +76,7 @@ public class CardGame
         _stateBasedEffectSystem = new DefaultStateBasedEffectSystem();
         _unitPumpSystem = new DefaultUnitPumpSystem();
         _cardDrawSystem = new DefaultCardDrawSystem();
+        _manaSystem = new DefaultManaSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 

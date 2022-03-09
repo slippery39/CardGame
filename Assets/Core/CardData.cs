@@ -161,6 +161,20 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Black Lotus",
+            ManaCost = "0",
+            ArtPath = "CardArt/BlackLotus",
+            Abilities = new List<CardAbility>()
+            {
+                new AddManaAbility()
+                {
+                    Amount = 3
+                }
+            }
+        });
+
         _cards.Add(new UnitCardData()
         {
             Name = "Storm Crow",

@@ -23,6 +23,11 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private TextMeshPro _turnIndicator;
 
+    [SerializeField]
+    private TextMeshPro _player1Mana;
+    [SerializeField]
+    private TextMeshPro _player2Mana;
+
     void Start()
     {
         _cardGame = new CardGame();
@@ -80,6 +85,7 @@ public class GameController : MonoBehaviour
         UpdateLanes(_player1Lanes, _cardGame.Player1.Lanes);
         UpdateLanes(_player2Lanes, _cardGame.Player2.Lanes);
         UpdateHand(_player1Hand,_cardGame.Player1.Hand);
+        UpdateMana();
         _player1HealthText.text = $"Player 1 Health : {_cardGame.Player1.Health}";
         _player2HealthText.text = $"Player 2 Health : {_cardGame.Player2.Health}";
         _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn";
@@ -121,6 +127,12 @@ public class GameController : MonoBehaviour
             }
             uiCards[i].GetComponent<UICard>().SetFromCardData(hand.Cards[i].CurrentCardData);
         }
+    }
+    
+    private void UpdateMana()
+    {
+        _player1Mana.text = "Player 1 Mana : " + _cardGame.Player1.Mana;
+        _player2Mana.text = "Player 2 Mana : " + _cardGame.Player2.Mana;
     }
     #endregion
 }

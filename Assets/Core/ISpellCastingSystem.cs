@@ -31,7 +31,7 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
             if (ab is LifeGainAbility)
             {
                 var owner = cardGame.GetOwnerOfCard(spellCard);
-                cardGame.HealingSystem.HealPlayer(cardGame,owner, ((LifeGainAbility)ab).Amount);
+                cardGame.HealingSystem.HealPlayer(cardGame, owner, ((LifeGainAbility)ab).Amount);
 
             }
             if (ab is PumpUnitAbility)
@@ -45,7 +45,7 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 
                 var target = validTargets.Randomize().First();
 
-                cardGame.UnitPumpSystem.PumpUnit(cardGame,target, (PumpUnitAbility)ab);
+                cardGame.UnitPumpSystem.PumpUnit(cardGame, target, (PumpUnitAbility)ab);
             }
             if (ab is DrawCardAbility)
             {
@@ -55,6 +55,12 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
                 {
                     cardGame.CardDrawSystem.DrawCard(cardGame, owner);
                 }
+            }
+            if (ab is AddManaAbility)
+            {
+                var ability = (AddManaAbility)ab;
+                var owner = cardGame.GetOwnerOfCard(spellCard);
+                cardGame.ManaSystem.AddMana(cardGame, owner, ability.Amount);
             }
             //Figure out how to resolve abilities.
         }

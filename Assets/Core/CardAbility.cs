@@ -137,3 +137,9 @@ public class DrawCardAbility : CardAbility
     public override string RulesText => $"Draw {Amount} Cards";
     public int Amount { get; set; }
 }
+
+public class AddManaAbility : CardAbility
+{
+    public override string RulesText => $"Gain {Amount} Mana";
+    public int Amount;
+}
