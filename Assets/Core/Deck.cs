@@ -23,8 +23,10 @@ public class Deck : IZone
         cards.Randomize();
     }
 
-    public CardInstance TakeTopCard()
+    public CardInstance GetTopCard()
     {
-        //TODO - is 0 the top of our deck?
+        //The top of our deck will be the last card added to the list.
+        var card = cards[cards.Count - 1];
+        return card;
     }
 }

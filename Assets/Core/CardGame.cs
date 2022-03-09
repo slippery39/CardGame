@@ -21,6 +21,7 @@ public class CardGame
     private IStateBasedEffectSystem _stateBasedEffectSystem;
     private ICardGameLogger _cardGameLogger;
     private IUnitPumpSystem _unitPumpSystem;
+    private ICardDrawSystem _cardDrawSystem;
     #endregion
 
 
@@ -39,6 +40,7 @@ public class CardGame
     public IZoneChangeSystem ZoneChangeSystem { get => _zoneChangeSystem; set => _zoneChangeSystem = value; }
     public IStateBasedEffectSystem StateBasedEffectSystem { get => _stateBasedEffectSystem; set => _stateBasedEffectSystem = value; }
     public IUnitPumpSystem UnitPumpSystem { get => _unitPumpSystem; set => _unitPumpSystem = value; }
+    public ICardDrawSystem CardDrawSystem { get => _cardDrawSystem; set => _cardDrawSystem = value; }
 
     #endregion
     #endregion
@@ -71,6 +73,7 @@ public class CardGame
         _zoneChangeSystem = new DefaultZoneChangeSystem();
         _stateBasedEffectSystem = new DefaultStateBasedEffectSystem();
         _unitPumpSystem = new DefaultUnitPumpSystem();
+        _cardDrawSystem = new DefaultCardDrawSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -110,11 +113,18 @@ public class CardGame
         //TODO - generalize this?
 
         List<IZone> zones = new List<IZone>();
+
         zones.Add(Player1.Hand);
         zones.Add(Player2.Hand);
 
         zones.AddRange(Player1.Lanes);
         zones.AddRange(Player2.Lanes);
+
+        zones.Add(Player1.Deck);
+        zones.Add(Player2.Deck);
+
+        zones.Add(Player1.DiscardPile);
+        zones.Add(Player2.DiscardPile);
 
         return zones;
     }

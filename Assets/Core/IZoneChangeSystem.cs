@@ -18,7 +18,10 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
 
         var currentZone = cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();
 
-        Debug.Log(currentZone);
+        if (currentZone == null)
+        {
+            throw new Exception("Could not find current zone of card in DefaultZoneChangeSystem");
+        }
 
         currentZone.Remove(card);
         zoneTo.Add(card);

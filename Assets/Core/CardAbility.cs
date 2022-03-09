@@ -131,3 +131,9 @@ public class PumpUnitAbility:CardAbility
     public int Power { get; set; }
     public int Toughness { get; set; }
 }
+
+public class DrawCardAbility : CardAbility
+{
+    public override string RulesText => "Draw {Amount} Cards";
+    public int Amount { get; set; }
+}

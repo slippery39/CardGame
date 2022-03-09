@@ -21,14 +21,10 @@ public class Player
         Hand = new Hand();
         Lanes = new List<Lane>();
         DiscardPile = new DiscardPile();
+        Deck = new Deck();
 
-        for (int i = 0; i < numberOfLanes; i++)
-        {
-            Lanes.Add(new Lane()
-            {
-                LaneId = (i + 1)
-            });
-        }
+        InitLanes(numberOfLanes);
+        InitDeck();
     }
 
     #region Public Properties
@@ -48,6 +44,30 @@ public class Player
         return Hand.Cards.Contains(card) || DiscardPile.Cards.Contains(card) || Lanes.SelectMany(l => l.Cards).Contains(card);
     }
 
+    #endregion
+
+    #region Private Methods
+    void InitLanes(int numberOfLanes)
+    {
+        for (int i = 0; i < numberOfLanes; i++)
+        {
+            Lanes.Add(new Lane()
+            {
+                LaneId = (i + 1)
+            });
+        }
+    }
+
+    void InitDeck()
+    {
+        var cardDB = new CardDatabase();
+        var spells = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
+        Deck = new Deck();
+        for (int i = 0; i < 60; i++)
+        {
+            Deck.Add( new CardInstance(spells.Randomize().ToList()[0]));
+        }
+    }
     #endregion
 }
 

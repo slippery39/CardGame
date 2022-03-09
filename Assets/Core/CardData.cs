@@ -146,9 +146,7 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
-
-
-        /*
+        
         _cards.Add(new SpellCardData()
         {
             Name = "Ancestral Recall",
@@ -162,9 +160,6 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
-
-        */
-
 
         _cards.Add(new UnitCardData()
         {

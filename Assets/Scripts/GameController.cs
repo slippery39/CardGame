@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject _uiCardTemplate;
     [SerializeField]
-    private CardGame _gameState;
+    private CardGame _cardGame;
     [SerializeField]
     private Transform _player1Lanes;
     [SerializeField]
@@ -25,7 +25,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        _gameState = new CardGame();
+        _cardGame = new CardGame();
         UpdateBoard();
     }
 
@@ -34,7 +34,7 @@ public class GameController : MonoBehaviour
         //Test Hotkey for testing our Battle System.
         if (Input.GetKeyDown(KeyCode.B))
         {
-            _gameState.BattleSystem.ExecuteBattles(_gameState);
+            _cardGame.BattleSystem.ExecuteBattles(_cardGame);
             UpdateBoard();
         }
 
@@ -50,14 +50,22 @@ public class GameController : MonoBehaviour
             KeyCode.Alpha9
         };
 
+        //Testing card drawing
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            _cardGame.CardDrawSystem.DrawCard(_cardGame, _cardGame.Player1);
+            UpdateBoard();
+            Debug.Log("Did we draw a card?");
+        }
+
         //Testing Keys for Casting our Spells.
         for (int i = 0; i < castingSpellKeys.Count; i++)
         {
             if (Input.GetKeyDown(castingSpellKeys[i]))
             {
-                if (_gameState.Player1.Hand.Cards.Count > i)
+                if (_cardGame.Player1.Hand.Cards.Count > i)
                 {
-                    _gameState.PlayCardFromHand(_gameState.Player1, _gameState.Player1.Hand.Cards[i]);
+                    _cardGame.PlayCardFromHand(_cardGame.Player1, _cardGame.Player1.Hand.Cards[i]);
                     UpdateBoard();
                 }         
             }
@@ -69,12 +77,12 @@ public class GameController : MonoBehaviour
 
     private void UpdateBoard()
     {
-        UpdateLanes(_player1Lanes, _gameState.Player1.Lanes);
-        UpdateLanes(_player2Lanes, _gameState.Player2.Lanes);
-        UpdateHand(_player1Hand,_gameState.Player1.Hand);
-        _player1HealthText.text = $"Player 1 Health : {_gameState.Player1.Health}";
-        _player2HealthText.text = $"Player 2 Health : {_gameState.Player2.Health}";
-        _turnIndicator.text = $"Player {_gameState.ActivePlayerId}'s Turn";
+        UpdateLanes(_player1Lanes, _cardGame.Player1.Lanes);
+        UpdateLanes(_player2Lanes, _cardGame.Player2.Lanes);
+        UpdateHand(_player1Hand,_cardGame.Player1.Hand);
+        _player1HealthText.text = $"Player 1 Health : {_cardGame.Player1.Health}";
+        _player2HealthText.text = $"Player 2 Health : {_cardGame.Player2.Health}";
+        _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn";
     }
     private void UpdateLanes(Transform laneInScene, List<Lane> lanes)
     {
