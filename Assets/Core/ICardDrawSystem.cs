@@ -6,9 +6,15 @@
 
 public class DefaultCardDrawSystem : ICardDrawSystem
 {
+
+    //TODO - What happens if we have too many cards in our hand?
+    //TODO - What happens if we draw a card with no cards left in our deck?
     public void DrawCard(CardGame cardGame, Player player)
     {
-        var card = player.Deck.GetTopCard();
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.Hand);
+        if (player.Deck.Cards.Count > 0)
+        {
+            var card = player.Deck.GetTopCard();
+            cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.Hand);
+        }
     }
 }

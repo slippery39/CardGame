@@ -47,6 +47,15 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 
                 cardGame.UnitPumpSystem.PumpUnit(cardGame,target, (PumpUnitAbility)ab);
             }
+            if (ab is DrawCardAbility)
+            {
+                var ability = (DrawCardAbility)ab;
+                var owner = cardGame.GetOwnerOfCard(spellCard);
+                for (int i = 0; i < ability.Amount; i++)
+                {
+                    cardGame.CardDrawSystem.DrawCard(cardGame, owner);
+                }
+            }
             //Figure out how to resolve abilities.
         }
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, player.DiscardPile);

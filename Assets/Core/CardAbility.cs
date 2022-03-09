@@ -134,6 +134,6 @@ public class PumpUnitAbility:CardAbility
 
 public class DrawCardAbility : CardAbility
 {
-    public override string RulesText => "Draw {Amount} Cards";
+    public override string RulesText => $"Draw {Amount} Cards";
     public int Amount { get; set; }
 }
