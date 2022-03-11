@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -11,6 +12,17 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 {
     public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard)
     {
+
+        //Do not cast the spell if there isn't enough mana.
+        if (!cardGame.ManaSystem.CanPlayCard(cardGame, player, spellCard))
+        {
+            cardGame.Log($"Could not play card {spellCard.Name}. Not enough mana.");
+            return;
+        }
+
+        //TODO - Handle mana costs better
+        cardGame.ManaSystem.SpendMana(cardGame, player, Convert.ToInt32(spellCard.ManaCost));
+
         //TODO - check if spell card is a spell card.
         foreach (var ab in spellCard.Abilities)
         {

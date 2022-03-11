@@ -60,7 +60,12 @@ public class GameController : MonoBehaviour
         {
             _cardGame.CardDrawSystem.DrawCard(_cardGame, _cardGame.Player1);
             UpdateBoard();
-            Debug.Log("Did we draw a card?");
+        }
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.Player1, 1);
+            UpdateBoard();
         }
 
         //Testing Keys for Casting our Spells.
