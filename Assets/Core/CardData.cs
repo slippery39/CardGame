@@ -136,7 +136,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Giant Growth",
             ManaCost = "1",
-            ArtPath = "CardArt/GiantGrwoth",
+            ArtPath = "CardArt/GiantGrowth",
             Abilities = new List<CardAbility>()
             {
                 new PumpUnitAbility()
