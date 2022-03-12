@@ -35,6 +35,12 @@ public class UICard : MonoBehaviour
         {
             cardCombatStatsText.gameObject.SetActive(false);
         }
+        //in case it has already been hidden previously.
+        else if (cardData is UnitCardData)
+        {
+            cardCombatStatsText.gameObject.SetActive(true);
+
+        }
 
         _cardData = cardData;
 

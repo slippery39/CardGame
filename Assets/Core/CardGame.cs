@@ -23,6 +23,7 @@ public class CardGame
     private IUnitPumpSystem _unitPumpSystem;
     private ICardDrawSystem _cardDrawSystem;
     private IManaSystem _manaSystem;
+    private IUnitSummoningSystem _unitSummoningSystem;
     #endregion
 
 
@@ -63,10 +64,11 @@ public class CardGame
         });
 
         //Create Random Cards in Each Lane 
-        AddRandomUnitsToLane(Player1);
+        //AddRandomUnitsToLane(Player1);
         AddRandomUnitsToLane(Player2);
 
-        AddRandomSpellsToHand(Player1);
+        AddRandomCardsToHand(Player1);
+        AddRandomCardsToDeck();
 
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
@@ -77,6 +79,7 @@ public class CardGame
         _unitPumpSystem = new DefaultUnitPumpSystem();
         _cardDrawSystem = new DefaultCardDrawSystem();
         _manaSystem = new DefaultManaSystem();
+        _unitSummoningSystem = new DefaultUnitSummoningSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -98,16 +101,14 @@ public class CardGame
 
     public void PlayCardFromHand(Player player, CardInstance cardFromHand)
     {
-        //TODO - Implement our ability to play cards from hand. 
-
-        //TODO - if its a spell, do its effect
-        
-        if (cardFromHand.CurrentCardData is SpellCardData)
+        if (cardFromHand.CurrentCardData is UnitCardData)
+        {
+            _unitSummoningSystem.SummonUnit(this, player, cardFromHand);
+        }        
+        else if (cardFromHand.CurrentCardData is SpellCardData)
         {
             _spellCastingSystem.CastSpell(this, player, cardFromHand);
         }
-
-        //TODO - later - if its a creature, put it in a lane
     }
 
     //Grab a master list of all zones in the game.
@@ -174,17 +175,27 @@ public class CardGame
         }
     }
 
-    private void AddRandomSpellsToHand(Player player)
+    private void AddRandomCardsToHand(Player player)
     {
         CardDatabase db = new CardDatabase();
-        var spellsOnly = db.GetAll().Where(c => c is SpellCardData).ToList();
+        var cards = db.GetAll().ToList();
 
         var rng = new Random();
 
         for (int i = 0; i < _startingHandSize; i++)
         {
-            var randomIndex = rng.Next(0, spellsOnly.Count());
-            AddCardToGame(player, spellsOnly[randomIndex], player.Hand);
+            AddCardToGame(player, cards.Randomize().ToList()[0], player.Hand);
+        }
+    }
+
+    void AddRandomCardsToDeck()
+    {
+        var cardDB = new CardDatabase();
+        var cards = cardDB.GetAll().ToList();
+        
+        for (int i = 0; i < 60; i++)
+        {
+            AddCardToGame(Player1,cards.Randomize().ToList()[0],Player1.Deck);
         }
     }
 }

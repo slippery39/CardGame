@@ -21,6 +21,7 @@ public class DefaultManaSystem : IManaSystem
 
     public bool CanPlayCard(CardGame cardGame,Player player, CardInstance card)
     {
+        //TODO - handle non integer mana costs.
         return player.Mana >= Convert.ToInt32(card.ManaCost);
     }
 }

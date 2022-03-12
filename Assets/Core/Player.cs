@@ -26,7 +26,6 @@ public class Player
         Mana = 0;
 
         InitLanes(numberOfLanes);
-        InitDeck();
     }
 
     #region Public Properties
@@ -58,17 +57,6 @@ public class Player
             {
                 LaneId = (i + 1)
             });
-        }
-    }
-
-    void InitDeck()
-    {
-        var cardDB = new CardDatabase();
-        var spells = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
-        Deck = new Deck();
-        for (int i = 0; i < 60; i++)
-        {
-            Deck.Add( new CardInstance(spells.Randomize().ToList()[0]));
         }
     }
     #endregion
