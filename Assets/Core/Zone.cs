@@ -30,6 +30,3 @@ public interface IZone
     void Remove(CardInstance card);
 }
 
-
-
-

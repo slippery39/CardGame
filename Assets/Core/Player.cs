@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class Player
+public class Player: CardGameEntity
 {
     #region Private Fields
     private int _playerId;

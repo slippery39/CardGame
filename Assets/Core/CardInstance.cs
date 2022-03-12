@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
-public class CardInstance
+public class CardInstance : CardGameEntity
 {
     private BaseCardData _originalCardData;
     private BaseCardData _currentCardData;

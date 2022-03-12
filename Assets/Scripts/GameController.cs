@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -28,6 +29,14 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private TextMeshPro _player2Mana;
 
+
+    [SerializeField]
+    private TextMeshPro _actionStateIndicator;
+
+    [SerializeField]
+    private bool _choosingLaneToSummon = false;
+    private CardInstance _unitChosenToSummon = null;
+
     void Start()
     {
         _cardGame = new CardGame();
@@ -43,19 +52,6 @@ public class GameController : MonoBehaviour
             UpdateBoard();
         }
 
-        var castingSpellKeys = new List<KeyCode>()
-        {
-            KeyCode.Alpha1,
-            KeyCode.Alpha2,
-            KeyCode.Alpha3,
-            KeyCode.Alpha4,
-            KeyCode.Alpha5,
-            KeyCode.Alpha6,
-            KeyCode.Alpha7,
-            KeyCode.Alpha8,
-            KeyCode.Alpha9
-        };
-
         //Testing card drawing
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -69,18 +65,16 @@ public class GameController : MonoBehaviour
             UpdateBoard();
         }
 
-        //Testing Keys for Casting our Spells.
-        for (int i = 0; i < castingSpellKeys.Count; i++)
+        if (_choosingLaneToSummon == false)
         {
-            if (Input.GetKeyDown(castingSpellKeys[i]))
-            {
-                if (_cardGame.Player1.Hand.Cards.Count > i)
-                {
-                    _cardGame.PlayCardFromHand(_cardGame.Player1, _cardGame.Player1.Hand.Cards[i]);
-                    UpdateBoard();
-                }         
-            }
+            HandlePlayingCardFromHandInput();
         }
+        else
+        {
+            HandleSummonUnitInput();
+        }
+
+    
 
     }
 
@@ -88,6 +82,14 @@ public class GameController : MonoBehaviour
 
     private void UpdateBoard()
     {
+        if (_choosingLaneToSummon)
+        {
+            _actionStateIndicator.text = $"Choose a lane to summon {_unitChosenToSummon.Name} to (use numeric keys)";
+        }
+        else
+        {
+            _actionStateIndicator.text = $"Play a card from your hand (using numeric keys) or press B to fight";
+        }
         UpdateLanes(_player1Lanes, _cardGame.Player1.Lanes);
         UpdateLanes(_player2Lanes, _cardGame.Player2.Lanes);
         UpdateHand(_player1Hand,_cardGame.Player1.Hand);
@@ -132,6 +134,79 @@ public class GameController : MonoBehaviour
                 uiCards[i].gameObject.SetActive(true);
             }
             uiCards[i].GetComponent<UICard>().SetFromCardData(hand.Cards[i].CurrentCardData);
+        }
+    }
+
+    private void HandleSummonUnitInput()
+    {
+        var keys = new List<KeyCode>()
+        {
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4,
+            KeyCode.Alpha5
+        };
+
+        var laneIds = _cardGame.Player1.Lanes.Select(x => x.EntityId).ToList();
+        
+
+        //Undo the action.
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            _choosingLaneToSummon = false;
+            _unitChosenToSummon = null;
+            return;
+        }
+
+        for (int i = 0; i < keys.Count; i++)
+        {
+            KeyCode keyCode = keys[i];
+            if (Input.GetKeyDown(keyCode))
+            {
+                _cardGame.PlayCardFromHand(_cardGame.Player1, _unitChosenToSummon,laneIds[i]);
+                _choosingLaneToSummon = false;
+                _unitChosenToSummon = null;
+                UpdateBoard();
+            }
+        }
+    }
+
+    private void HandlePlayingCardFromHandInput()
+    {
+        var keys = new List<KeyCode>()
+        {
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4,
+            KeyCode.Alpha5,
+            KeyCode.Alpha6,
+            KeyCode.Alpha7,
+            KeyCode.Alpha8,
+            KeyCode.Alpha9
+        };
+
+        //Testing Keys for Casting our Spells.
+        for (int i = 0; i < keys.Count; i++)
+        {
+            if (Input.GetKeyDown(keys[i]))
+            {
+                if (_cardGame.Player1.Hand.Cards.Count > i)
+                {
+                    if (_cardGame.Player1.Hand.Cards[i].CurrentCardData is UnitCardData)
+                    {
+                        _choosingLaneToSummon = true;
+                        _unitChosenToSummon = _cardGame.Player1.Hand.Cards[i];
+                        UpdateBoard();
+                    }
+                    else
+                    {
+                        _cardGame.PlayCardFromHand(_cardGame.Player1, _cardGame.Player1.Hand.Cards[i], 0);
+                        UpdateBoard();
+                    }
+                }
+            }
         }
     }
     

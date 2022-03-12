@@ -13,6 +13,8 @@ public class CardGame
     private int _numberOfLanes = 5;
     private int _startingPlayerHealth = 100;
     private int _startingHandSize = 5;
+    private int _nextEntityId = 1;
+    private int _nextPlayerId = 1;
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
     private IHealingSystem _healingSystem;
@@ -24,6 +26,7 @@ public class CardGame
     private ICardDrawSystem _cardDrawSystem;
     private IManaSystem _manaSystem;
     private IUnitSummoningSystem _unitSummoningSystem;
+    private ITargetSystem _targetSystem;
     #endregion
 
 
@@ -52,12 +55,13 @@ public class CardGame
     {
         _players = new List<Player>();
 
-        _players.Add(new Player(_numberOfLanes)
+        AddPlayerToGame(new Player(_numberOfLanes)
         {
             PlayerId = 1,
             Health = _startingPlayerHealth
         });
-        _players.Add(new Player(_numberOfLanes)
+
+        AddPlayerToGame(new Player(_numberOfLanes)
         {
             PlayerId = 2,
             Health = _startingPlayerHealth
@@ -80,6 +84,7 @@ public class CardGame
         _cardDrawSystem = new DefaultCardDrawSystem();
         _manaSystem = new DefaultManaSystem();
         _unitSummoningSystem = new DefaultUnitSummoningSystem();
+        _targetSystem = new DefaultTargetSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -92,18 +97,51 @@ public class CardGame
         return _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
     }
 
+    public int GetNextEntityId()
+    {
+        return _nextEntityId++;
+    }
+    public int GetNextPlayerId()
+    {
+        return _nextPlayerId++;
+    }
+
     public void AddCardToGame(Player player, BaseCardData data, IZone zone)
     {
         var cardInstance = new CardInstance(data);
         cardInstance.OwnerId = player.PlayerId;
+        cardInstance.EntityId = GetNextEntityId();
         zone.Add(cardInstance);
     }
 
-    public void PlayCardFromHand(Player player, CardInstance cardFromHand)
+    public void AddPlayerToGame(Player player)
+    {
+        _players.Add(player);
+        player.EntityId = GetNextEntityId();
+        player.Lanes.ForEach(lane =>
+        {
+            lane.EntityId = GetNextEntityId();
+        });
+        //TODO add other zones as needed.
+    }
+
+    public void PlayCardFromHand(Player player, CardInstance cardFromHand,int targetId)
     {
         if (cardFromHand.CurrentCardData is UnitCardData)
         {
-            _unitSummoningSystem.SummonUnit(this, player, cardFromHand);
+            var validTargets = _targetSystem.GetValidTargetsForCardFromHand(this, player, cardFromHand);
+
+            var validTargetInts = validTargets.Select(v => v.EntityId).ToList();
+
+
+            if (validTargetInts.Contains(targetId))
+            { 
+                _unitSummoningSystem.SummonUnit(this, player, cardFromHand);
+            }
+            else
+            {
+                Log("Invalid Lane chosen for summoning unit");
+            }
         }        
         else if (cardFromHand.CurrentCardData is SpellCardData)
         {
