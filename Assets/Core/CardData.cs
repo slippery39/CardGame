@@ -6,7 +6,7 @@ using System.Linq;
 public abstract class BaseCardData
 {
     public string Name { get; set; }
-    public string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)); } }
+    public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)); } }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
     public string ArtPath { get; set; }
@@ -60,7 +60,18 @@ public class SpellCardData : BaseCardData
 {
     public override string CardType => "Spell";
 
-    public SpellCardData(): base()
+    public List<Effect> Effects = new List<Effect>();
+    public override string RulesText
+    {
+        get
+        {
+            var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
+            var effectsText = string.Join("\r\n", Effects.Select(ef => ef.RulesText));
+            return abilitiesText + effectsText;
+        }
+    }
+
+    public SpellCardData() : base()
     {
 
     }
@@ -72,7 +83,8 @@ public class SpellCardData : BaseCardData
             Name = Name,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
-            Abilities = Abilities.ToList() //todo - potential deep clone.
+            Abilities = Abilities.ToList(), //todo - potential deep clone.
+            Effects = Effects.ToList()
         };
     }
 }
@@ -105,9 +117,9 @@ public class CardDatabase : ICardDatabase
             Name = "Lightning Bolt",
             ManaCost = "1",
             ArtPath = "CardArt/LightningBolt",
-            Abilities = new List<CardAbility>()
+            Effects = new List<Effect>()
             {
-                new DamageAbility()
+                new DamageEffect()
                 {
                     Amount = 3
                 }
@@ -118,14 +130,14 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Lightning Helix",
             ManaCost = "2",
-            ArtPath="CardArt/LightningHelix",
-            Abilities = new List<CardAbility>()
+            ArtPath = "CardArt/LightningHelix",
+            Effects = new List<Effect>()
             {
-                new DamageAbility()
+                new DamageEffect()
                 {
                     Amount = 3
                 },
-                new LifeGainAbility()
+                new LifeGainEffect()
                 {
                     Amount = 3
                 }
@@ -137,24 +149,24 @@ public class CardDatabase : ICardDatabase
             Name = "Giant Growth",
             ManaCost = "1",
             ArtPath = "CardArt/GiantGrowth",
-            Abilities = new List<CardAbility>()
+            Effects = new List<Effect>()
             {
-                new PumpUnitAbility()
+                new PumpUnitEffect()
                 {
                     Power = 3,
                     Toughness = 3
                 }
             }
         });
-        
+
         _cards.Add(new SpellCardData()
         {
             Name = "Ancestral Recall",
             ManaCost = "1",
             ArtPath = "CardArt/AncestralRecall",
-            Abilities = new List<CardAbility>()
+            Effects = new List<Effect>()
             {
-                new DrawCardAbility()
+                new DrawCardEffect()
                 {
                     Amount = 3
                 }
@@ -166,9 +178,9 @@ public class CardDatabase : ICardDatabase
             Name = "Black Lotus",
             ManaCost = "0",
             ArtPath = "CardArt/BlackLotus",
-            Abilities = new List<CardAbility>()
+            Effects = new List<Effect>()
             {
-                new AddManaAbility()
+                new AddManaEffect()
                 {
                     Amount = 3
                 }
@@ -289,4 +301,3 @@ public class CardDatabase : ICardDatabase
         return _cards.Find(c => c.Name == name);
     }
 }
- 

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class DefaultDamageSystem : IDamageSystem
 {
-    public void DealAbilityDamage(CardGame cardGame, DamageAbility abilitySource, CardInstance damagingCard, CardInstance damagedCard)
+    public void DealAbilityDamage(CardGame cardGame, DamageEffect abilitySource, CardInstance damagingCard, CardInstance damagedCard)
     {
         DealDamage(damagedCard, abilitySource.Amount);
         cardGame.Log($"{damagingCard.Name} dealt {abilitySource.Amount} damage to {damagedCard.Name}!");

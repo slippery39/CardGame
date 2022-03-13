@@ -10,10 +10,24 @@ public interface ITargetSystem
     /// <param name="card"></param>
     /// <returns></returns>
     List<CardGameEntity> GetValidTargetsForCardFromHand(CardGame cardGame,Player player, CardInstance card);
+
+    bool SpellNeedsTargets(CardGame cardGame, Player player, CardInstance card);
 }
 
 public class DefaultTargetSystem : ITargetSystem
 {
+
+    //Need to differentiate between spells with targets and spells that don't have targets.
+    //TODO - Make the non targetted spells work.
+    public bool SpellNeedsTargets(CardGame cardGame, Player player, CardInstance card)
+    {
+        var spellCard = (SpellCardData)card.CurrentCardData;
+        var targetTypes = new List<TargetType> { TargetType.Any, TargetType.Units };
+
+        var spellTargetTypes = spellCard.Effects.Select(effect => effect.TargetType);
+
+        return (spellTargetTypes.Where(tt => targetTypes.Contains(tt)).Count() > 0);
+    }
     public List<CardGameEntity> GetValidTargetsForCardFromHand(CardGame cardGame, Player player, CardInstance card)
     {
         if (card.CurrentCardData is UnitCardData)
@@ -26,4 +40,6 @@ public class DefaultTargetSystem : ITargetSystem
         }
         return null;        
     }
+
+
 }

@@ -145,7 +145,14 @@ public class CardGame
         }        
         else if (cardFromHand.CurrentCardData is SpellCardData)
         {
-            _spellCastingSystem.CastSpell(this, player, cardFromHand);
+            if (!_targetSystem.SpellNeedsTargets(this,player,cardFromHand))
+            {
+                _spellCastingSystem.CastSpell(this, player, cardFromHand);
+            }
+            else
+            {
+                Log("Have not implemented targetted spells yet");
+            }
         }
     }
 

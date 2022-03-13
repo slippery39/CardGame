@@ -10,9 +10,9 @@ public interface ISpellCastingSystem
 
 public class DefaultSpellCastingSystem : ISpellCastingSystem
 {
+    //TODO - this should have targets in the method signature.
     public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard)
     {
-
         //Do not cast the spell if there isn't enough mana.
         if (!cardGame.ManaSystem.CanPlayCard(cardGame, player, spellCard))
         {
@@ -23,10 +23,13 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
         //TODO - Handle mana costs better
         cardGame.ManaSystem.SpendMana(cardGame, player, Convert.ToInt32(spellCard.ManaCost));
 
+        var effects = ((SpellCardData)spellCard.CurrentCardData).Effects;
+
+
         //TODO - check if spell card is a spell card.
-        foreach (var ab in spellCard.Abilities)
+        foreach (var effect in effects)
         {
-            if (ab is DamageAbility)
+            if (effect is DamageEffect)
             {
                 //For now just grab a random target on the opponents side of the board.
                 var validTargets = cardGame.Player2.Lanes.Where(lane => lane.IsEmpty() == false).Select(lane => lane.UnitInLane).ToList();
@@ -38,15 +41,15 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 
                 var target = validTargets.Randomize().First();
 
-                cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageAbility)ab, spellCard, target);
+                cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageEffect)effect, spellCard, target);
             }
-            if (ab is LifeGainAbility)
+            if (effect is LifeGainEffect)
             {
                 var owner = cardGame.GetOwnerOfCard(spellCard);
-                cardGame.HealingSystem.HealPlayer(cardGame, owner, ((LifeGainAbility)ab).Amount);
+                cardGame.HealingSystem.HealPlayer(cardGame, owner, ((LifeGainEffect)effect).Amount);
 
             }
-            if (ab is PumpUnitAbility)
+            if (effect is PumpUnitEffect)
             {
                 var validTargets = cardGame.Player1.Lanes.Where(lane => lane.IsEmpty() == false).Select(lane => lane.UnitInLane).ToList();
 
@@ -57,20 +60,20 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 
                 var target = validTargets.Randomize().First();
 
-                cardGame.UnitPumpSystem.PumpUnit(cardGame, target, (PumpUnitAbility)ab);
+                cardGame.UnitPumpSystem.PumpUnit(cardGame, target, (PumpUnitEffect)effect);
             }
-            if (ab is DrawCardAbility)
+            if (effect is DrawCardEffect)
             {
-                var ability = (DrawCardAbility)ab;
+                var ability = (DrawCardEffect)effect;
                 var owner = cardGame.GetOwnerOfCard(spellCard);
                 for (int i = 0; i < ability.Amount; i++)
                 {
                     cardGame.CardDrawSystem.DrawCard(cardGame, owner);
                 }
             }
-            if (ab is AddManaAbility)
+            if (effect is AddManaEffect)
             {
-                var ability = (AddManaAbility)ab;
+                var ability = (AddManaEffect)effect;
                 var owner = cardGame.GetOwnerOfCard(spellCard);
                 cardGame.ManaSystem.AddMana(cardGame, owner, ability.Amount);
             }

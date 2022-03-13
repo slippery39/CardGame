@@ -112,34 +112,61 @@ public class UnblockableAbility : CardAbility, IModifyCanAttackDirectly
     }
 }
 
+
+
+public abstract class Effect
+{
+    public abstract string RulesText { get; }
+    public virtual TargetType TargetType { get; set; }
+
+
+}
+
+
+public enum TargetType
+{
+    None,
+    Any,
+    Self,
+    Opponent,
+    Units,
+}
+
 //Damage Abiltiies are handled by the DamageSystem themselves?
-public class DamageAbility : CardAbility
+public class DamageEffect : Effect
 {
     public override string RulesText => $"Deal {Amount} Damage";
     public int Amount { get; set; }
+
+    public override TargetType TargetType { get; set; } = TargetType.Any;
+
 }
 
-public class LifeGainAbility : CardAbility
+public class LifeGainEffect : Effect
 {
     public override string RulesText => $"Gain {Amount} Life";
     public int Amount { get; set; }
+    public override TargetType TargetType { get; set; } = TargetType.Self;
 }
 
-public class PumpUnitAbility:CardAbility
+public class PumpUnitEffect: Effect
 {
     public override string RulesText => $"Target Unit gets +{Power}/+{Toughness}";
     public int Power { get; set; }
     public int Toughness { get; set; }
+    public override TargetType TargetType { get; set; } = TargetType.Units;
 }
 
-public class DrawCardAbility : CardAbility
+public class DrawCardEffect : Effect
 {
     public override string RulesText => $"Draw {Amount} Cards";
     public int Amount { get; set; }
+    public override TargetType TargetType { get; set; } = TargetType.Self;
 }
 
-public class AddManaAbility : CardAbility
+public class AddManaEffect : Effect
 {
     public override string RulesText => $"Gain {Amount} Mana";
     public int Amount;
+    public override TargetType TargetType { get; set; } = TargetType.Self;
 }
