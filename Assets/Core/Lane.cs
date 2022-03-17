@@ -25,7 +25,7 @@ public class Lane : CardGameEntity, IZone
         }
     }
 
-    public string Name => "Lane";
+    public override string Name => "Lane";
     #endregion
 
     public Lane()

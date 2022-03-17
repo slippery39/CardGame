@@ -7,10 +7,10 @@ using UnityEngine;
 
 public class DefaultDamageSystem : IDamageSystem
 {
-    public void DealAbilityDamage(CardGame cardGame, DamageEffect abilitySource, CardInstance damagingCard, CardInstance damagedCard)
+    public void DealAbilityDamage(CardGame cardGame, DamageEffect abilitySource, CardInstance damagingCard, CardGameEntity damagedEntity)
     {
-        DealDamage(damagedCard, abilitySource.Amount);
-        cardGame.Log($"{damagingCard.Name} dealt {abilitySource.Amount} damage to {damagedCard.Name}!");
+        DealDamage(damagedEntity, abilitySource.Amount);
+        cardGame.Log($"{damagingCard.Name} dealt {abilitySource.Amount} damage to {damagedEntity.Name}!");
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
     }
 
@@ -63,7 +63,18 @@ public class DefaultDamageSystem : IDamageSystem
 
     private void DealDamage(CardInstance damagedUnit,int damage)
     {
-        damagedUnit.Toughness -= damage;
-        
+        damagedUnit.Toughness -= damage;        
+    }
+
+    private void DealDamage(CardGameEntity damagedEntity, int damage)
+    {
+        if (damagedEntity is Player)
+        {
+            ((Player)damagedEntity).Health -= damage;
+        }
+        if (damagedEntity is CardInstance)
+        {
+            DealDamage((CardInstance)damagedEntity, damage);
+        }
     }
 }

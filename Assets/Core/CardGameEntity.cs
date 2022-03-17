@@ -9,5 +9,6 @@
 
 public abstract class CardGameEntity
 {
+    public virtual string Name { get; set; }
     public int EntityId { get; set; }
 }

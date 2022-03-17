@@ -15,6 +15,9 @@ public class CardGame
     private int _startingHandSize = 5;
     private int _nextEntityId = 1;
     private int _nextPlayerId = 1;
+
+    private List<CardGameEntity> _registeredEntities;
+
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
     private IHealingSystem _healingSystem;
@@ -33,7 +36,7 @@ public class CardGame
     #region Public Properties
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
     public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
-
+    public List<Player> Players { get => _players; set => _players = value; }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
@@ -47,12 +50,16 @@ public class CardGame
     public IUnitPumpSystem UnitPumpSystem { get => _unitPumpSystem; set => _unitPumpSystem = value; }
     public ICardDrawSystem CardDrawSystem { get => _cardDrawSystem; set => _cardDrawSystem = value; }
     public IManaSystem ManaSystem { get => _manaSystem; set => _manaSystem = value; }
+    public IUnitSummoningSystem UnitSummoningSystem { get => _unitSummoningSystem; set => _unitSummoningSystem = value; }
+    public ITargetSystem TargetSystem { get => _targetSystem; set => _targetSystem = value; }
+
 
     #endregion
     #endregion
 
     public CardGame()
     {
+        _registeredEntities = new List<CardGameEntity>();
         _players = new List<Player>();
 
         AddPlayerToGame(new Player(_numberOfLanes)
@@ -110,26 +117,32 @@ public class CardGame
     {
         var cardInstance = new CardInstance(data);
         cardInstance.OwnerId = player.PlayerId;
-        cardInstance.EntityId = GetNextEntityId();
+        RegisterEntity(cardInstance);
         zone.Add(cardInstance);
     }
 
     public void AddPlayerToGame(Player player)
     {
         _players.Add(player);
-        player.EntityId = GetNextEntityId();
+        RegisterEntity(player);
         player.Lanes.ForEach(lane =>
         {
-            lane.EntityId = GetNextEntityId();
+            RegisterEntity(lane);
         });
         //TODO add other zones as needed.
+    }
+
+    private void RegisterEntity(CardGameEntity entity)
+    {
+        entity.EntityId = GetNextEntityId();
+        _registeredEntities.Add(entity);
     }
 
     public void PlayCardFromHand(Player player, CardInstance cardFromHand,int targetId)
     {
         if (cardFromHand.CurrentCardData is UnitCardData)
         {
-            var validTargets = _targetSystem.GetValidTargetsForCardFromHand(this, player, cardFromHand);
+            var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
 
             var validTargetInts = validTargets.Select(v => v.EntityId).ToList();
 
@@ -151,7 +164,15 @@ public class CardGame
             }
             else
             {
-                Log("Have not implemented targetted spells yet");
+                var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
+                var target = validTargets.Where(entity => entity.EntityId == targetId).FirstOrDefault();
+                var validTargetInts = validTargets.Select(x => x.EntityId).ToList();
+
+                if (validTargetInts.Contains(targetId))
+                {
+                    
+                    _spellCastingSystem.CastSpell(this, player, cardFromHand, target);
+                }
             }
         }
     }
@@ -176,6 +197,11 @@ public class CardGame
         zones.Add(Player2.DiscardPile);
 
         return zones;
+    }
+
+    public List<T> GetEntities<T>() where T : CardGameEntity
+    {
+        return _registeredEntities.Where(e => e is T).Cast<T>().ToList();
     }
 
     public Player GetOwnerOfCard(CardInstance card)

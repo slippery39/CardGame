@@ -112,24 +112,20 @@ public class UnblockableAbility : CardAbility, IModifyCanAttackDirectly
     }
 }
 
-
-
 public abstract class Effect
 {
     public abstract string RulesText { get; }
     public virtual TargetType TargetType { get; set; }
-
-
 }
-
 
 public enum TargetType
 {
     None,
-    Any,
     Self,
     Opponent,
-    Units,
+    TargetPlayers,
+    TargetUnits,
+    TargetUnitsOrPlayers
 }
 
 //Damage Abiltiies are handled by the DamageSystem themselves?
@@ -138,8 +134,7 @@ public class DamageEffect : Effect
     public override string RulesText => $"Deal {Amount} Damage";
     public int Amount { get; set; }
 
-    public override TargetType TargetType { get; set; } = TargetType.Any;
-
+    public override TargetType TargetType { get; set; } = TargetType.TargetUnitsOrPlayers;
 }
 
 public class LifeGainEffect : Effect
@@ -154,7 +149,7 @@ public class PumpUnitEffect: Effect
     public override string RulesText => $"Target Unit gets +{Power}/+{Toughness}";
     public int Power { get; set; }
     public int Toughness { get; set; }
-    public override TargetType TargetType { get; set; } = TargetType.Units;
+    public override TargetType TargetType { get; set; } = TargetType.TargetUnits;
 }
 
 public class DrawCardEffect : Effect
