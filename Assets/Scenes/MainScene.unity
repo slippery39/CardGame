@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1294,7 +1294,6 @@ MonoBehaviour:
   _player1Mana: {fileID: 586681516}
   _player2Mana: {fileID: 1972978232}
   _actionStateIndicator: {fileID: 2010053783}
-  _choosingLaneToSummon: 0
 --- !u!1001 &643336231
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3058,10 +3057,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 4.2
-  m_fontSizeBase: 1
+  m_fontSize: 3.5
+  m_fontSizeBase: 3.5
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 1
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3162,8 +3161,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -7.9931, y: 5.4}
-  m_SizeDelta: {x: 1.393, y: 0.3517}
+  m_AnchoredPosition: {x: -8, y: 3.3999}
+  m_SizeDelta: {x: 1.393, y: 3.2851}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2081537639
 GameObject:

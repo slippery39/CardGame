@@ -15,6 +15,7 @@ public class Player: CardGameEntity
     private DiscardPile _discardPile;
     private Deck _deck;
     private int _mana;
+    private string _name;
     #endregion
 
     public Player(int numberOfLanes)
@@ -36,6 +37,8 @@ public class Player: CardGameEntity
     public DiscardPile DiscardPile { get => _discardPile; set => _discardPile = value; }
     public Deck Deck { get => _deck; set => _deck = value; }
     public int Mana { get => _mana; set => _mana = value; }
+
+    public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 
     #endregion
 

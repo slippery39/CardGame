@@ -132,6 +132,8 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
                     cardGame.ManaSystem.AddMana(cardGame, (Player)entity, ability.Amount);
                 }
             }
+
+            cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, cardGame.GetOwnerOfCard(spellCard).DiscardPile);
         }
     }
     public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard)
