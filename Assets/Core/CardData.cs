@@ -121,6 +121,7 @@ public class CardDatabase : ICardDatabase
             {
                 new DamageEffect()
                 {
+                    TargetType = TargetType.TargetUnitsOrPlayers,
                     Amount = 3
                 }
             }
@@ -279,14 +280,28 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new UnitCardData()
         {
-            Name = "Unblockable Flying Dude",
-            ManaCost = "5",
-            Power = 4,
-            Toughness = 5,
+            Name = "Kalonian Behemoth",
+            ManaCost = "7",
+            Power = 9,
+            Toughness = 9,
+            ArtPath = "CardArt/KalonianBehemoth",
             Abilities = new List<CardAbility>()
-            {
-                new FlyingAbility(),
-                new UnblockableAbility()
+               {
+                   new ShroudAbility()
+               }
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Invisible Stalker",
+            ManaCost = "2",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/InvisibleStalker",
+            Abilities = new List<CardAbility>()
+               {
+                   new HexproofAbility(),
+                   new UnblockableAbility()
             }
         });
     }

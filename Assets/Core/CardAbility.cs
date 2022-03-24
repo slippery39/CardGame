@@ -112,6 +112,32 @@ public class UnblockableAbility : CardAbility, IModifyCanAttackDirectly
     }
 }
 
+public interface IModifyCanBeTargeted
+{
+    bool ModifyCanBeTargeted(CardGame cardGame, CardInstance unitWithAbility, Player ownerOfEffect);
+}
+
+
+public class ShroudAbility : CardAbility, IModifyCanBeTargeted
+{
+    public override string RulesText => "Shroud";
+
+    public bool ModifyCanBeTargeted(CardGame cardGame, CardInstance unitWithAbility, Player ownerOfEffect)
+    {
+        return false;
+    }
+}
+
+public class HexproofAbility : CardAbility, IModifyCanBeTargeted
+{
+    public override string RulesText => "Shroud";
+
+    public bool ModifyCanBeTargeted(CardGame cardGame, CardInstance unitWithAbility, Player ownerOfEffect)
+    {  
+        return cardGame.GetOwnerOfCard(unitWithAbility) == ownerOfEffect;
+    }
+}
+
 public abstract class Effect
 {
     public abstract string RulesText { get; }

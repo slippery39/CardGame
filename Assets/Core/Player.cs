@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class Player: CardGameEntity
+public class Player : CardGameEntity
 {
     #region Private Fields
     private int _playerId;
@@ -24,7 +24,7 @@ public class Player: CardGameEntity
         Lanes = new List<Lane>();
         DiscardPile = new DiscardPile();
         Deck = new Deck();
-        Mana = 0;
+        Mana = 999;
 
         InitLanes(numberOfLanes);
     }

@@ -23,6 +23,35 @@ public class DefaultTargetSystem : ITargetSystem
 
         return (spellTargetTypes.Where(tt => typesThatDontNeedTargets.Contains(tt) == false).Count() > 0);
     }
+
+    private List<CardGameEntity> GetValidUnitTargets(CardGame cardGame, Player player, CardInstance card)
+    {
+        var units =
+            cardGame
+            .GetEntities<Lane>()
+            .Where(lane => lane.IsEmpty() == false)
+            .Select(lane => lane.UnitInLane);
+
+        units = units.Where(unit =>
+        {
+            var modTargetAbilities = unit.GetAbilities<IModifyCanBeTargeted>();
+            var canBeTargeted = true;
+
+            foreach (var ability in modTargetAbilities)
+            {
+                canBeTargeted = ability.ModifyCanBeTargeted(cardGame, unit, player);
+            }
+
+            return canBeTargeted;
+        });
+
+        return units.Cast<CardGameEntity>().ToList();
+    }
+
+    private List<CardGameEntity> GetValidPlayerTargets(CardGame cardGame, Player player, CardInstance card)
+    {
+        return cardGame.Players.Cast<CardGameEntity>().ToList();
+    }
     public List<CardGameEntity> GetValidTargets(CardGame cardGame, Player player, CardInstance card)
     {
         if (card.CurrentCardData is UnitCardData)
@@ -45,23 +74,19 @@ public class DefaultTargetSystem : ITargetSystem
             {
                 if (effects.Contains(TargetType.TargetPlayers))
                 {
-                    return cardGame.Players.Cast<CardGameEntity>().ToList();
+                    return GetValidPlayerTargets(cardGame, player, card);
                 }
                 else if (effects.Contains(TargetType.TargetUnits))
                 {
-                    return cardGame.GetEntities<Lane>().Where(lane => lane.IsEmpty() == false).Select(lane=>lane.UnitInLane).Cast<CardGameEntity>().ToList();
+                    return GetValidUnitTargets(cardGame, player, card);
                 }
                 else if (effects.Contains(TargetType.TargetUnitsOrPlayers))
                 {
-                    var validTargets = cardGame.GetEntities<Lane>().Where(lane => lane.IsEmpty() == false).Select(lane => lane.UnitInLane).Cast<CardGameEntity>().ToList();
-                    var players = cardGame.Players.Cast<CardGameEntity>().ToList();
-
-                    validTargets.AddRange(players);
-
+                    var validTargets = GetValidUnitTargets(cardGame, player, card);
+                    validTargets.AddRange(GetValidPlayerTargets(cardGame, player, card));
                     return validTargets;
-
                 }
-            }          
+            }
         }
         return new List<CardGameEntity>();
     }
