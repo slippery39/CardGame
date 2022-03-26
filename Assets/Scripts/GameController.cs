@@ -8,6 +8,12 @@ public class GameController : MonoBehaviour
 {
 
     [SerializeField]
+    private UIPlayerAvatar _player1Avatar;
+
+    [SerializeField]
+    private UIPlayerAvatar _player2Avatar;
+
+    [SerializeField]
     private GameObject _uiCardTemplate;
     [SerializeField]
     private CardGame _cardGame;
@@ -18,17 +24,7 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private Transform _player1Hand;
     [SerializeField]
-    private TextMeshPro _player1HealthText;
-    [SerializeField]
-    private TextMeshPro _player2HealthText;
-    [SerializeField]
     private TextMeshPro _turnIndicator;
-
-    [SerializeField]
-    private TextMeshPro _player1Mana;
-    [SerializeField]
-    private TextMeshPro _player2Mana;
-
 
     [SerializeField]
     private TextMeshPro _actionStateIndicator;
@@ -76,8 +72,10 @@ public class GameController : MonoBehaviour
         UpdateLanes(_player2Lanes, _cardGame.Player2.Lanes);
         UpdateHand(_player1Hand, _cardGame.Player1.Hand);
         UpdateMana();
-        _player1HealthText.text = $"Player 1 Health : {_cardGame.Player1.Health}";
-        _player2HealthText.text = $"Player 2 Health : {_cardGame.Player2.Health}";
+
+        _player1Avatar.SetHealth(_cardGame.Player1.Health);
+        _player2Avatar.SetHealth(_cardGame.Player2.Health);
+
         _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn";
     }
     private void UpdateLanes(Transform laneInScene, List<Lane> lanes)
@@ -120,8 +118,8 @@ public class GameController : MonoBehaviour
     }
     private void UpdateMana()
     {
-        _player1Mana.text = "Player 1 Mana : " + _cardGame.Player1.Mana;
-        _player2Mana.text = "Player 2 Mana : " + _cardGame.Player2.Mana;
+        _player1Avatar.SetMana(_cardGame.Player1.Mana);
+        _player2Avatar.SetMana(_cardGame.Player2.Mana);
     }
     #endregion
 }
