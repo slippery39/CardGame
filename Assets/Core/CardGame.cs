@@ -149,7 +149,7 @@ public class CardGame
 
             if (validTargetInts.Contains(targetId))
             { 
-                _unitSummoningSystem.SummonUnit(this, player, cardFromHand);
+                _unitSummoningSystem.SummonUnit(this, player, cardFromHand,targetId);
             }
             else
             {

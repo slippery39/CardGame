@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-
     [SerializeField]
     private UIPlayerAvatar _player1Avatar;
 
@@ -33,11 +32,18 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameUIStateMachine _stateMachine;
 
+    public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
+
+
+    private void Awake()
+    {
+        _cardGame = new CardGame();
+    }
 
     void Start()
     {
-        _cardGame = new CardGame();
-        _stateMachine = new GameUIStateMachine(_cardGame);
+        _stateMachine = GetComponent<GameUIStateMachine>();
+        InitializeBoard();
         UpdateBoard();
     }
 
@@ -57,13 +63,55 @@ public class GameController : MonoBehaviour
         {
             _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.Player1, 1);
         }
-
         _stateMachine.CurrentState.HandleInput();
-
         UpdateBoard();
     }
 
+    public IEnumerable<UILane> GetUILanes()
+    {
+        return _player1Lanes.GetComponentsInChildren<UILane>(true).Concat(_player2Lanes.GetComponentsInChildren<UILane>(true));
+    }
+
+    public IEnumerable<UICard> GetUICardsInLane()
+    {
+        return _player1Lanes.GetComponentsInChildren<UICard>(true).Concat(_player2Lanes.GetComponentsInChildren<UICard>(true));
+    }
+
+    public IEnumerable<UIGameEntity> GetUIEntities()
+    {
+        var entities = new List<UIGameEntity>();
+
+        entities.Add(_player1Avatar);
+        entities.Add(_player2Avatar);
+        entities.AddRange(GetUILanes());
+        entities.AddRange(GetUICardsInLane());
+
+        return entities;
+    }
+
     #region Private Methods
+
+    private void InitializeBoard()
+    {
+        //Map the lanes on the board to lanes in the game.
+        var uiLanesPlayer1 = _player1Lanes.GetComponentsInChildren<UILane>(true);
+        for (int i = 0; i < uiLanesPlayer1.Length; i++)
+        {
+            uiLanesPlayer1[i].EntityId = CardGame.Player1.Lanes[i].EntityId;
+        }
+
+        var uiLanesPlayer2 = _player2Lanes.GetComponentsInChildren<UILane>(true);
+        for(int i = 0; i < uiLanesPlayer2.Length; i++)
+        {
+            uiLanesPlayer2[i].EntityId = CardGame.Player2.Lanes[i].EntityId;
+        }
+
+        //Initialize the Player Avatars entity ids
+        _player1Avatar.EntityId = CardGame.Player1.EntityId;
+        _player2Avatar.EntityId = CardGame.Player2.EntityId;
+
+        //Cards in lane entity ids are initialized via the UICard Monobehaviour.
+    }
 
     private void UpdateBoard()
     {
@@ -80,21 +128,17 @@ public class GameController : MonoBehaviour
     }
     private void UpdateLanes(Transform laneInScene, List<Lane> lanes)
     {
-        var uiCards = laneInScene.GetComponentsInChildren<UICard>(true);
+        var uiLanes = laneInScene.GetComponentsInChildren<UILane>(true);
         for (int i = 0; i < lanes.Count; i++)
         {
             //If there is no card in the game state for a lane, just hide the card.
             if (lanes[i].IsEmpty())
             {
-                uiCards[i].gameObject.SetActive(false);
+                uiLanes[i].SetEmpty();
                 continue;
             }
-            else
-            {
-                uiCards[i].gameObject.SetActive(true);
-            }
 
-            uiCards[i].GetComponent<UICard>().SetFromCardData(lanes[i].UnitInLane.CurrentCardData);
+            uiLanes[i].SetCard(lanes[i].UnitInLane);
         }
     }
 
@@ -113,7 +157,7 @@ public class GameController : MonoBehaviour
             {
                 uiCards[i].gameObject.SetActive(true);
             }
-            uiCards[i].GetComponent<UICard>().SetFromCardData(hand.Cards[i].CurrentCardData);
+            uiCards[i].GetComponent<UICard>().SetCardData(hand.Cards[i]);
         }
     }
     private void UpdateMana()

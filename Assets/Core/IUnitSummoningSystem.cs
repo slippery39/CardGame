@@ -3,12 +3,12 @@ using System.Linq;
 
 public interface IUnitSummoningSystem
 {
-    void SummonUnit(CardGame cardGame, Player player, CardInstance unitCard);
+    void SummonUnit(CardGame cardGame, Player player, CardInstance unitCard, int laneId);
 }
 
 public class DefaultUnitSummoningSystem : IUnitSummoningSystem
 {
-    public void SummonUnit(CardGame cardGame, Player player, CardInstance unitCard)
+    public void SummonUnit(CardGame cardGame, Player player, CardInstance unitCard, int laneId)
     {
         //Do not cast the spell if there isn't enough mana.
         if (!cardGame.ManaSystem.CanPlayCard(cardGame, player, unitCard))
@@ -19,7 +19,7 @@ public class DefaultUnitSummoningSystem : IUnitSummoningSystem
 
         cardGame.ManaSystem.SpendMana(cardGame, player, Convert.ToInt32(unitCard.ManaCost));
 
-        var emptyLanes = player.Lanes.Where(lane => lane.IsEmpty());
+        var emptyLanes = player.Lanes.Where(lane => lane.IsEmpty() && lane.EntityId == laneId);
 
         if (!emptyLanes.Any())
         {

@@ -3,58 +3,70 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UICard : MonoBehaviour
+public class UICard : UIGameEntity
 {
     //Unity Fields
     [SerializeField]
-    private TextMeshPro cardNameText;
+    private TextMeshPro _cardNameText;
     [SerializeField]
-    private TextMeshPro cardRulesText;
+    private TextMeshPro _cardRulesText;
     [SerializeField]
-    private TextMeshPro cardCombatStatsText;
+    private TextMeshPro _cardCombatStatsText;
     [SerializeField]
-    private TextMeshPro cardManaText;
+    private TextMeshPro _cardManaText;
     [SerializeField]
-    private TextMeshPro cardTypeText;
+    private TextMeshPro _cardTypeText;
     [SerializeField]
-    private SpriteRenderer cardArtRenderer;
+    private SpriteRenderer _cardArtRenderer;
 
-    private BaseCardData _cardData;
+    [SerializeField]
+    private SpriteRenderer _highlight;
+
+    [SerializeField]
+    private CardInstance _cardInstance;
     #region Public Properties
-    public SpriteRenderer CardArtRenderer { get => cardArtRenderer; set => cardArtRenderer = value; }
+    public SpriteRenderer CardArtRenderer { get => _cardArtRenderer; set => _cardArtRenderer = value; }
 
     #endregion
 
-
-
-    //TODO - could also have a SetFromCardInstance method which could do fancier stuff?
-    public void SetFromCardData(BaseCardData cardData)
+    public void SetCardData(CardInstance cardInstance)
     {
+        _cardInstance = cardInstance;
+        EntityId = cardInstance.EntityId;
+        var cardData = cardInstance.CurrentCardData;
 
         if (cardData is SpellCardData)
         {
-            cardCombatStatsText.gameObject.SetActive(false);
+            _cardCombatStatsText.gameObject.SetActive(false);
         }
         //in case it has already been hidden previously.
         else if (cardData is UnitCardData)
         {
-            cardCombatStatsText.gameObject.SetActive(true);
+            _cardCombatStatsText.gameObject.SetActive(true);
 
         }
 
-        _cardData = cardData;
-
-        cardNameText.text = cardData.Name;
-        cardRulesText.text = cardData.RulesText;
-        cardManaText.text = cardData.ManaCost;
-        cardTypeText.text = cardData.CardType;
+        _cardNameText.text = cardData.Name;
+        _cardRulesText.text = cardData.RulesText;
+        _cardManaText.text = cardData.ManaCost;
+        _cardTypeText.text = cardData.CardType;
 
         if (cardData is UnitCardData)
         {
             UnitCardData unitCardData = (UnitCardData)cardData;
-            cardCombatStatsText.text = unitCardData.Power + " / " + unitCardData.Toughness;
+            _cardCombatStatsText.text = unitCardData.Power + " / " + unitCardData.Toughness;
         }
         Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
-        cardArtRenderer.sprite = art;
+        _cardArtRenderer.sprite = art;
+    }
+
+    public override void Highlight()
+    {
+        _highlight.gameObject.SetActive(true);
+    }
+
+    public override void StopHighlight()
+    {
+        _highlight.gameObject.SetActive(false);
     }
 }
