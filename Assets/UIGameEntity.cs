@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 /// <summary>
 /// This MonoBehaviour should be inherited from any UI entity that corresponds to 
 /// an entity in the actual game that can be interacted with.
@@ -9,7 +10,7 @@ using UnityEngine;
 /// 
 /// Examples: Cards, Players, Lanes, etc...
 /// </summary>
-public class UIGameEntity : MonoBehaviour
+public class UIGameEntity : MonoBehaviour, IPointerClickHandler
 {
     [SerializeField]
     int _entityId;
@@ -26,4 +27,9 @@ public class UIGameEntity : MonoBehaviour
         Debug.Log($@"{EntityId} should stop being highlighted!");
     }
 
+    public void OnPointerClick(PointerEventData pointerEventData)
+    {
+        //Output to console the clicked GameObject's name and the following message. You can replace this with your own actions for when clicking the GameObject.
+        Debug.Log(name + " Game Object Clicked!");
+    }
 }

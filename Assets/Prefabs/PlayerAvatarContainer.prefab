@@ -439,6 +439,7 @@ GameObject:
   - component: {fileID: 1049671320685562654}
   - component: {fileID: 1049671320685562653}
   - component: {fileID: 1049671320685562655}
+  - component: {fileID: 1706071441327616578}
   m_Layer: 0
   m_Name: PlayerAvatarContainer
   m_TagString: Untagged
@@ -532,3 +533,16 @@ MonoBehaviour:
   _healthText: {fileID: 1049671320339882137}
   _manaText: {fileID: 1049671319763277930}
   _highlight: {fileID: 1049671320470456417}
+--- !u!65 &1706071441327616578
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1049671320685562652}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.99999994, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}

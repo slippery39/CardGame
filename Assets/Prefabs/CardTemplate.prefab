@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8276961568580900995}
   - component: {fileID: 8276961568580900996}
+  - component: {fileID: 1830185712125603268}
   m_Layer: 0
   m_Name: CardTemplate
   m_TagString: Untagged
@@ -144,6 +145,19 @@ MonoBehaviour:
   _cardTypeText: {fileID: 8276961569995114952}
   _cardArtRenderer: {fileID: 8276961569516339420}
   _highlight: {fileID: 4640011246040081690}
+--- !u!65 &1830185712125603268
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8276961568580900994}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.8046215, y: 5.3420978, z: 1}
+  m_Center: {x: -0.033790022, y: 1.0052714, z: 0}
 --- !u!1 &8276961569063541360
 GameObject:
   m_ObjectHideFlags: 0
