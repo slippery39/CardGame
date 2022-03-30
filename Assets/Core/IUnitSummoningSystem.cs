@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public interface IUnitSummoningSystem
@@ -28,5 +29,17 @@ public class DefaultUnitSummoningSystem : IUnitSummoningSystem
         }
 
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, unitCard,emptyLanes.First());
+
+        //Search for TriggeredAbilities with the SelfEntersPlay effect
+        var entersPlayAbilities = unitCard.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfEntersPlay);
+
+        if (entersPlayAbilities.Count() > 0)
+        {
+            foreach(var ability in entersPlayAbilities)
+            {
+                //Note, we do not support triggered abilities with targets yet.
+                cardGame.EffectsProcessor.ApplyEffects(cardGame, player, unitCard, ability.Effects, new List<CardGameEntity>());
+            }
+        }
     }
 }

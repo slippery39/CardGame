@@ -304,6 +304,26 @@ public class CardDatabase : ICardDatabase
                    new UnblockableAbility()
             }
         });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Mulldrifter",
+            ManaCost = "5",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/Mulldrifter",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility(
+                    TriggerType.SelfEntersPlay,
+                    new DrawCardEffect()
+                    {
+                        Amount = 2
+                    }
+                    ),
+                new FlyingAbility()
+            }
+        }); 
     }
 
     public List<BaseCardData> GetAll()

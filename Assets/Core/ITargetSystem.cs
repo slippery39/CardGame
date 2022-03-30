@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public interface ITargetSystem
 {
     List<CardGameEntity> GetValidTargets(CardGame cardGame, Player player, CardInstance card);
-
+    public List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, Effect effect);
     bool SpellNeedsTargets(CardGame cardGame, Player player, CardInstance card);
     bool EffectNeedsTargets(Effect effect);
 }
@@ -14,8 +15,27 @@ public class DefaultTargetSystem : ITargetSystem
 
     private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.Opponent, TargetType.None };
 
-    //Need to differentiate between spells with targets and spells that don't have targets.
-    //TODO - Make the non targetted spells work.
+    /// <summary>
+    /// Gets the correct entities to apply an effect to when there is no manual targets.
+    /// </summary>
+    /// <param name="cardGame">The card game</param>
+    /// <param name="player">The owner of the effect</param>
+    /// <param name="effect">The effect that is being applied</param>
+    /// <returns></returns>
+    /// 
+    public List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, Effect effect)
+    {
+        switch (effect.TargetType)
+        {
+            case TargetType.Self:
+                return new List<CardGameEntity> { player };
+            case TargetType.Opponent:
+                return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
+            default:
+                throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {effect.TargetType}");
+        }
+    }
+
     public bool SpellNeedsTargets(CardGame cardGame, Player player, CardInstance card)
     {
         var spellCard = (SpellCardData)card.CurrentCardData;

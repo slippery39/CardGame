@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class CardAbility
@@ -130,11 +131,68 @@ public class ShroudAbility : CardAbility, IModifyCanBeTargeted
 
 public class HexproofAbility : CardAbility, IModifyCanBeTargeted
 {
-    public override string RulesText => "Shroud";
+    public override string RulesText => "Hexproof";
 
     public bool ModifyCanBeTargeted(CardGame cardGame, CardInstance unitWithAbility, Player ownerOfEffect)
     {  
         return cardGame.GetOwnerOfCard(unitWithAbility) == ownerOfEffect;
+    }
+}
+
+
+public enum TriggerType
+{
+    SelfEntersPlay,
+    SelfDies,
+    SelfAttacks,
+}
+
+
+public class TriggeredAbility : CardAbility
+{
+    public override string RulesText
+    {
+        get
+        {
+            string text = "";
+
+            switch (TriggerType)
+            {
+                case TriggerType.SelfEntersPlay:
+                    text = "When this enters play ";
+                    break;
+                case TriggerType.SelfDies:
+                    text = "When this dies ";
+                    break;
+                case TriggerType.SelfAttacks:
+                    text = "When this attacks ";
+                    break;
+                default:
+                    text += "";
+                    break;                
+            }
+
+            foreach (var effect in Effects)
+            {
+                text += effect.RulesText;
+                text += ",";
+            }
+
+            //Get rid of the last ",";
+            text = text.Substring(0, text.Length - 1);
+
+            
+            return text;
+        }
+    }
+    public TriggerType TriggerType { get; set; }
+    public List<Effect> Effects { get; set; }
+
+    public TriggeredAbility(TriggerType triggerType,Effect effect)
+    {
+        TriggerType = triggerType;
+        Effects = new List<Effect>();
+        Effects.Add(effect);
     }
 }
 

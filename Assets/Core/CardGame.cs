@@ -30,6 +30,7 @@ public class CardGame
     private IManaSystem _manaSystem;
     private IUnitSummoningSystem _unitSummoningSystem;
     private ITargetSystem _targetSystem;
+    private IEffectsProcessor _effectsProcessor;
     #endregion
 
 
@@ -52,6 +53,7 @@ public class CardGame
     public IManaSystem ManaSystem { get => _manaSystem; set => _manaSystem = value; }
     public IUnitSummoningSystem UnitSummoningSystem { get => _unitSummoningSystem; set => _unitSummoningSystem = value; }
     public ITargetSystem TargetSystem { get => _targetSystem; set => _targetSystem = value; }
+    public IEffectsProcessor EffectsProcessor { get => _effectsProcessor; set => _effectsProcessor = value; }
 
 
     #endregion
@@ -92,6 +94,7 @@ public class CardGame
         _manaSystem = new DefaultManaSystem();
         _unitSummoningSystem = new DefaultUnitSummoningSystem();
         _targetSystem = new DefaultTargetSystem();
+        _effectsProcessor = new DefaultEffectsProcessor();
 
         _cardGameLogger = new UnityCardGameLogger();
 
