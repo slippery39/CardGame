@@ -18,49 +18,9 @@ public class GameUICastingSpellState : IGameUIState
         _actingPlayer = actingPlayer;
         _spellToCast = spellToCast;
     }
-
-    private List<KeyCode> inputKeys = new List<KeyCode>
-    {
-            KeyCode.Alpha0,
-            KeyCode.Alpha1,
-            KeyCode.Alpha2,
-            KeyCode.Alpha3,
-            KeyCode.Alpha4,
-            KeyCode.Alpha5,
-            KeyCode.Alpha6,
-            KeyCode.Alpha7,
-            KeyCode.Alpha8,
-            KeyCode.Alpha9,
-            KeyCode.Q,
-            KeyCode.W
-    };
-
-    public Dictionary<KeyCode, CardGameEntity> KeyCodeToEntityMap()
-    {
-        var validTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _spellToCast);
-        var keysToValidTargets = new Dictionary<KeyCode, CardGameEntity>();
-
-        if (inputKeys.Count < validTargets.Count)
-        {
-            throw new Exception("Not enough keys for the amount of targets");
-        }
-
-        for (var i = 0; i < validTargets.Count; i++)
-        {
-            keysToValidTargets.Add(inputKeys[i], validTargets[i]);
-        }
-
-        return keysToValidTargets;
-    }
-
     public string GetMessage()
     {
-        var targetsForMessage = KeyCodeToEntityMap().ToList().Select(keyValuePair =>
-        {
-            return $@"{Environment.NewLine} {keyValuePair.Key.ToString()} : {keyValuePair.Value.Name} ";
-        }).ToList();
-
-        return $@"Choose a target for spell {_spellToCast.Name}  to(use numeric keys) {String.Join(",", targetsForMessage)} ";
+        return $@"Choose a target for spell {_spellToCast.Name}";
     }
 
     public void HandleInput()
@@ -69,18 +29,6 @@ public class GameUICastingSpellState : IGameUIState
         {
             _stateMachine.ToIdle(_actingPlayer);
             return;
-        }
-
-        var keyValuePair = KeyCodeToEntityMap().ToList();
-
-        for (var i = 0; i < keyValuePair.Count; i++)
-        {
-            var keyCode = keyValuePair[i].Key;
-            if (Input.GetKeyDown(keyCode))
-            {
-                _cardGame.PlayCardFromHand(_actingPlayer, _spellToCast, keyValuePair[i].Value.EntityId);
-                _stateMachine.ToIdle(_actingPlayer);
-            }
         }
     }
 
@@ -111,6 +59,19 @@ public class GameUICastingSpellState : IGameUIState
         {
             entity.StopHighlight();
         }
+    }
+
+    public void HandleSelection(int entityId)
+    {
+        var validTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _spellToCast).Select(e => e.EntityId);
+
+        if (!validTargets.Contains(entityId))
+        {
+            return;
+        }
+
+        _cardGame.PlayCardFromHand(_actingPlayer, _spellToCast, entityId);
+        _stateMachine.ToIdle(_actingPlayer);
     }
 }
 

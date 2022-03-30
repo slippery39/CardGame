@@ -43,18 +43,23 @@ public class UILane : UIGameEntity, IPointerClickHandler
 
     public new void OnPointerClick(PointerEventData pointerEventData)
     {
-        Debug.Log(gameObject.name + " has been clicked");
 
+        base.OnPointerClick(pointerEventData);
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, raycastResults);
-        var newTarget = raycastResults[1].gameObject;
 
-        //Allow the click event to proprgate through to children that are covered by the parent.
-        if (newTarget.GetComponent<UIGameEntity>())
+        //Only going to propagate for the next available gameobject hit for now... perhaps it should be for all available game objects..
+        if (raycastResults.Count > 1)
         {
-            var gameEntity = newTarget.GetComponent<UIGameEntity>();
-            Debug.Log(newTarget.name + "has received the propagated click event");
-            gameEntity.OnPointerClick(pointerEventData);
+            var newTarget = raycastResults[1].gameObject;
+
+            //Allow the click event to proprgate through to children that are covered by the parent.
+            if (newTarget.GetComponent<UIGameEntity>())
+            {
+                var gameEntity = newTarget.GetComponent<UIGameEntity>();
+                Debug.Log(newTarget.name + "has received the propagated click event");
+                gameEntity.OnPointerClick(pointerEventData);
+            }
         }
     }
 }

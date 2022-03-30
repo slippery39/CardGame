@@ -10,14 +10,6 @@ public class GameUISummonUnitState : IGameUIState
     private GameUIStateMachine _stateMachine;
     private CardInstance _unitToSummon;
 
-    private List<KeyCode> _inputKeys = new List<KeyCode>
-    {
-        KeyCode.Alpha1,
-        KeyCode.Alpha2,
-        KeyCode.Alpha3,
-        KeyCode.Alpha4,
-        KeyCode.Alpha5
-    };
 
     public GameUISummonUnitState(GameUIStateMachine stateMachine, Player actingPlayer, CardInstance unitToSummon)
     {
@@ -41,23 +33,9 @@ public class GameUISummonUnitState : IGameUIState
         }
     }
 
-    private Dictionary<KeyCode, Lane> GetKeyCodeToLaneMap()
-    {
-
-        var map = new Dictionary<KeyCode, Lane>();
-
-        for (var i = 0; i < _inputKeys.Count; i++)
-        {
-            map.Add(_inputKeys[i], _actingPlayer.Lanes[i]);
-        }
-
-        return map;
-
-    }
-
     public string GetMessage()
     {
-        return $@"Choose a lane to summon {_unitToSummon.Name} to(use numeric keys)";
+        return $@"Choose a lane to summon {_unitToSummon.Name} to";
     }
 
     public void HandleInput()
@@ -67,19 +45,6 @@ public class GameUISummonUnitState : IGameUIState
             _stateMachine.ToIdle(_actingPlayer);
             return;
         }
-
-        var keyCodeToLaneMap = GetKeyCodeToLaneMap();
-
-        foreach (var key in keyCodeToLaneMap.Keys)
-        {
-            if (Input.GetKeyDown(key))
-            {
-                var lane = keyCodeToLaneMap[key];
-                //Try to summon the unit.
-                _cardGame.PlayCardFromHand(_cardGame.Player1, _unitToSummon, lane.EntityId);
-                _stateMachine.ToIdle(_actingPlayer);
-            }
-        }
     }
 
     public void OnDestroy()
@@ -88,6 +53,18 @@ public class GameUISummonUnitState : IGameUIState
         {
             uiLane.StopHighlight();
         }
+    }
+
+    public void HandleSelection(int entityId)
+    {
+        var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
+
+        if (!validLaneTargets.Contains(entityId))
+        {
+            return;
+        }
+        _cardGame.PlayCardFromHand(_cardGame.Player1, _unitToSummon, entityId);
+        _stateMachine.ToIdle(_actingPlayer);
     }
 }
 

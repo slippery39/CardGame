@@ -4,7 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class UIGameController : MonoBehaviour
 {
     [SerializeField]
     private UIPlayerAvatar _player1Avatar;
@@ -34,9 +34,13 @@ public class GameController : MonoBehaviour
 
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
 
+    //Singleton Pattern, should only be one game controller per unity scene.
+    public static UIGameController Instance;
+
 
     private void Awake()
     {
+        Instance = this;
         _cardGame = new CardGame();
     }
 
@@ -87,6 +91,12 @@ public class GameController : MonoBehaviour
         entities.AddRange(GetUICardsInLane());
 
         return entities;
+    }
+
+    public void HandleClick(UIGameControllerClickEvent clickInfo)
+    {
+        //Do something here?
+        _stateMachine.HandleSelection(clickInfo.EntityId);
     }
 
     #region Private Methods

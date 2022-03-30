@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -86,6 +87,19 @@ public class GameUIIdleState : IGameUIState
     }
     public void OnDestroy()
     {
+    }
+
+    public void HandleSelection(int entityId)
+    {
+        //we need to get the card from hand?
+        var cardFromHand = _actingPlayer.Hand.Cards.Where(card => card.EntityId == entityId).FirstOrDefault();
+
+        if (cardFromHand == null)
+        {
+            Debug.Log("Invalid Selection");
+            return;
+        }
+        HandleCardSelectedFromHand(cardFromHand);
     }
 }
 
