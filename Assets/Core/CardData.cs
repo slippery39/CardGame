@@ -305,6 +305,48 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+
+        /*
+        //Cards To Create for Activated Abilities
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Llanowar Elves",
+            ManaCost = "1",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/LlanowarElves",
+            Abilities = new List<CardAbility>()
+            {
+                new ActivatedAbility("0",new TemporaryManaEffect{Amount=1})
+            }
+        }); 
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Prodigal Sorcerer",
+            ManaCost = "3",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/ProdigalSorcerer",
+            Abilities = new List<CardAbility>()
+            {
+                new ActivatedAbility("0", new DamageEffect{Amount=1})
+            }
+        });
+
+        //TODO - think of more cards with activated abilities.
+        */
+
+
+
+
+
+        //Cards To Create for Triggered Abilities
+
+        //Mulldrifter
+
+        /*
         _cards.Add(new UnitCardData()
         {
             Name = "Mulldrifter",
@@ -323,7 +365,91 @@ public class CardDatabase : ICardDatabase
                     ),
                 new FlyingAbility()
             }
-        }); 
+        });
+
+        //Delver of Secrets
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Delver of Secrets",
+            ManaCost = "1",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/DelverOfSecrets",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility
+                (
+                    TriggerType.AtTurnStart,
+                    new TransformEffect()
+                    {
+                        new UnitCardData
+                        {
+                            Name = "Insectile Aberration",
+                            ManaCost = "1",
+                            Power = 3,
+                            Toughness = 2,
+                            ArtPath = "CardArt/InsectileAberration",
+                            Abilities = new List<CardAbility>()
+                            {
+                                new FlyingAbility()
+                            }
+                        }
+
+                    }
+
+                )
+            }
+        });
+
+        //Snapcaster Mage
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Snapcaster Mage",
+            ManaCost = "2",
+            Power = 2,
+            Toughness = 1,
+            ArtPath = "CardArt/SnapcasterMage",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility
+                (
+                    TriggerType.SelfEntersPlay,
+                    new CastSpellFromDiscardEffect()
+                )
+            }
+        });
+
+
+        //Geist of Saint Traft
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Geist of Saint Traft",
+            ManaCost = "3",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/GeistOfSaintTraft",
+            Abilities = new List<CardAbility>()
+                {
+                    new HexproofAbility(),
+                    new TriggeredAbility(TriggerType.SelfAttacks,
+                    new CreateTokenEffect( new UnitCardData(){
+                        Name = "Angel",
+                        ManaCost = "0",
+                        Power = 4,
+                        Toughness = 4,
+                        ArtPath = "CardArt/Tokens/Angel",
+                        Abilities = new List<CardAbility>()
+                        {
+                            new FlyingAbility(),
+                            new TriggeredAbility(TriggerType.AtEndOfTurn, new SacrificeSelfEffect())
+                        }
+                    }
+                    )
+                    )
+                }
+        });
+        */
+
     }
 
     public List<BaseCardData> GetAll()

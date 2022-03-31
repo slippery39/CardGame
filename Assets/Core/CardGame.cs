@@ -31,6 +31,7 @@ public class CardGame
     private IUnitSummoningSystem _unitSummoningSystem;
     private ITargetSystem _targetSystem;
     private IEffectsProcessor _effectsProcessor;
+    private ITurnSystem _turnSystem;
     #endregion
 
 
