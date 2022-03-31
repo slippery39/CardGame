@@ -14,7 +14,7 @@ public class GameUIStateMachine : MonoBehaviour
     {
         _gameController = GetComponent<UIGameController>();
         _cardGame = _gameController.CardGame;
-        ToIdle(_cardGame.ActivePlayer);
+        ToIdle();
     }
 
     public void ChangeState(IGameUIState stateTo)
@@ -38,9 +38,9 @@ public class GameUIStateMachine : MonoBehaviour
         CurrentState.HandleSelection(entityId);
     }
 
-    public void ToIdle(Player actingPlayer)
+    public void ToIdle()
     {
-        ChangeState(new GameUIIdleState(this, actingPlayer));
+        ChangeState(new GameUIIdleState(this));
     }
 }
 

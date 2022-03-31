@@ -55,6 +55,7 @@ public class CardGame
     public IUnitSummoningSystem UnitSummoningSystem { get => _unitSummoningSystem; set => _unitSummoningSystem = value; }
     public ITargetSystem TargetSystem { get => _targetSystem; set => _targetSystem = value; }
     public IEffectsProcessor EffectsProcessor { get => _effectsProcessor; set => _effectsProcessor = value; }
+    public ITurnSystem TurnSystem { get => _turnSystem; set => _turnSystem = value; }
 
 
     #endregion
@@ -79,9 +80,10 @@ public class CardGame
 
         //Create Random Cards in Each Lane 
         //AddRandomUnitsToLane(Player1);
-        AddRandomUnitsToLane(Player2);
+        //AddRandomUnitsToLane(Player2);
 
         AddRandomCardsToHand(Player1);
+        AddRandomCardsToHand(Player2);
         AddRandomCardsToDeck();
 
         _battleSystem = new DefaultBattleSystem();
@@ -96,6 +98,7 @@ public class CardGame
         _unitSummoningSystem = new DefaultUnitSummoningSystem();
         _targetSystem = new DefaultTargetSystem();
         _effectsProcessor = new DefaultEffectsProcessor();
+        _turnSystem = new DefaultTurnSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -136,13 +139,19 @@ public class CardGame
         //TODO add other zones as needed.
     }
 
+    public void NextTurn()
+    {
+        _turnSystem.EndTurn(this);
+        _turnSystem.StartTurn(this);
+    }
+
     private void RegisterEntity(CardGameEntity entity)
     {
         entity.EntityId = GetNextEntityId();
         _registeredEntities.Add(entity);
     }
 
-    public void PlayCardFromHand(Player player, CardInstance cardFromHand,int targetId)
+    public void PlayCardFromHand(Player player, CardInstance cardFromHand, int targetId)
     {
         if (cardFromHand.CurrentCardData is UnitCardData)
         {
@@ -152,17 +161,17 @@ public class CardGame
 
 
             if (validTargetInts.Contains(targetId))
-            { 
-                _unitSummoningSystem.SummonUnit(this, player, cardFromHand,targetId);
+            {
+                _unitSummoningSystem.SummonUnit(this, player, cardFromHand, targetId);
             }
             else
             {
                 Log("Invalid Lane chosen for summoning unit");
             }
-        }        
+        }
         else if (cardFromHand.CurrentCardData is SpellCardData)
         {
-            if (!_targetSystem.SpellNeedsTargets(this,player,cardFromHand))
+            if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand))
             {
                 _spellCastingSystem.CastSpell(this, player, cardFromHand);
             }
@@ -174,7 +183,7 @@ public class CardGame
 
                 if (validTargetInts.Contains(targetId))
                 {
-                    
+
                     _spellCastingSystem.CastSpell(this, player, cardFromHand, target);
                 }
             }
@@ -225,8 +234,8 @@ public class CardGame
     public List<CardInstance> GetUnitsInPlay()
     {
 
-        var player1Units = Player1.Lanes.Select(lane => lane.UnitInLane).Where(unit=>unit!=null);
-        var player2Units = Player2.Lanes.Select(lane => lane.UnitInLane).Where(unit=>unit!=null);
+        var player1Units = Player1.Lanes.Select(lane => lane.UnitInLane).Where(unit => unit != null);
+        var player2Units = Player2.Lanes.Select(lane => lane.UnitInLane).Where(unit => unit != null);
 
         return player1Units.Concat(player2Units).ToList();
     }
@@ -267,10 +276,15 @@ public class CardGame
     {
         var cardDB = new CardDatabase();
         var cards = cardDB.GetAll().ToList();
-        
+
         for (int i = 0; i < 60; i++)
         {
-            AddCardToGame(Player1,cards.Randomize().ToList()[0],Player1.Deck);
+            AddCardToGame(Player1, cards.Randomize().ToList()[0], Player1.Deck);
+        }
+
+        for (int i = 0; i < 60; i++)
+        {
+            AddCardToGame(Player2, cards.Randomize().ToList()[0], Player2.Deck);
         }
     }
 }

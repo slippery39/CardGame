@@ -31,8 +31,6 @@ public class DefaultBattleSystem : IBattleSystem
                 FightUnits(cardGame, attackingLane, defendingLane);
             }
         }
-        //Temporary hack for now. In the future we should have a seperate system which handles our turn logic.
-        _ = cardGame.ActivePlayerId == 1 ? cardGame.ActivePlayerId = 2 : cardGame.ActivePlayerId = 1;
     }
 
     #region Private Methods

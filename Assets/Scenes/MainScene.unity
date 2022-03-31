@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -774,7 +774,7 @@ GameObject:
   m_Component:
   - component: {fileID: 443730210}
   m_Layer: 0
-  m_Name: Player1Hand
+  m_Name: PlayerHand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1038,7 +1038,7 @@ MonoBehaviour:
   _uiCardTemplate: {fileID: 8276961568580900994, guid: 05f676cf4ad87c44a9619b147dd0d16f, type: 3}
   _player1Lanes: {fileID: 267746803}
   _player2Lanes: {fileID: 84781471}
-  _player1Hand: {fileID: 443730210}
+  _playerHand: {fileID: 443730210}
   _turnIndicator: {fileID: 1925819075}
   _actionStateIndicator: {fileID: 846670062}
   _stateMachine: {fileID: 0}
@@ -2381,7 +2381,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -0.7307074, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   _SortingLayer: 0

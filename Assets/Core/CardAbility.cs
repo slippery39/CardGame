@@ -249,3 +249,10 @@ public class AddManaEffect : Effect
     public int Amount;
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
+
+public class AddTempManaEffect : Effect
+{
+    public override string RulesText => $"Gain {Amount} Mana until end of turn";
+    public int Amount;
+    public override TargetType TargetType { get; set; } = TargetType.Self;
+}

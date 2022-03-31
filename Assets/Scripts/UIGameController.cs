@@ -21,7 +21,7 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private Transform _player2Lanes;
     [SerializeField]
-    private Transform _player1Hand;
+    private Transform _playerHand;
     [SerializeField]
     private TextMeshPro _turnIndicator;
 
@@ -56,16 +56,17 @@ public class UIGameController : MonoBehaviour
         //Test Hotkey for testing our Battle System.
         if (Input.GetKeyDown(KeyCode.B))
         {
-            _cardGame.BattleSystem.ExecuteBattles(_cardGame);
+            _cardGame.NextTurn();
+            _stateMachine.ToIdle();
         }
         //Testing card drawing
         if (Input.GetKeyDown(KeyCode.D))
         {
-            _cardGame.CardDrawSystem.DrawCard(_cardGame, _cardGame.Player1);
+            _cardGame.CardDrawSystem.DrawCard(_cardGame, _cardGame.ActivePlayer);
         }
         if (Input.GetKeyDown(KeyCode.M))
         {
-            _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.Player1, 1);
+            _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.ActivePlayer, 1);
         }
         _stateMachine.CurrentState.HandleInput();
         UpdateBoard();
@@ -128,13 +129,13 @@ public class UIGameController : MonoBehaviour
         _actionStateIndicator.text = _stateMachine.GetMessage();
         UpdateLanes(_player1Lanes, _cardGame.Player1.Lanes);
         UpdateLanes(_player2Lanes, _cardGame.Player2.Lanes);
-        UpdateHand(_player1Hand, _cardGame.Player1.Hand);
+        UpdateHand(_playerHand, _cardGame.ActivePlayer.Hand);
         UpdateMana();
 
         _player1Avatar.SetHealth(_cardGame.Player1.Health);
         _player2Avatar.SetHealth(_cardGame.Player2.Health);
 
-        _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn";
+        _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
     }
     private void UpdateLanes(Transform laneInScene, List<Lane> lanes)
     {

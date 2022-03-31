@@ -14,6 +14,7 @@ public class Player : CardGameEntity
     private Hand _hand;
     private DiscardPile _discardPile;
     private Deck _deck;
+    private int _totalMana;
     private int _mana;
     private string _name;
     #endregion
@@ -24,7 +25,8 @@ public class Player : CardGameEntity
         Lanes = new List<Lane>();
         DiscardPile = new DiscardPile();
         Deck = new Deck();
-        Mana = 999;
+        TotalMana = 1;
+        Mana = TotalMana;
 
         InitLanes(numberOfLanes);
     }
@@ -39,6 +41,8 @@ public class Player : CardGameEntity
     public int Mana { get => _mana; set => _mana = value; }
 
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
+
+    public int TotalMana { get => _totalMana; set => _totalMana = value; }
 
     #endregion
 

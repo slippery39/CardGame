@@ -181,7 +181,7 @@ public class CardDatabase : ICardDatabase
             ArtPath = "CardArt/BlackLotus",
             Effects = new List<Effect>()
             {
-                new AddManaEffect()
+                new AddTempManaEffect()
                 {
                     Amount = 3
                 }

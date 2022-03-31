@@ -6,23 +6,21 @@ using UnityEngine;
 public class GameUISummonUnitState : IGameUIState
 {
     private CardGame _cardGame;
-    private Player _actingPlayer;
+    private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _unitToSummon;
 
 
-    public GameUISummonUnitState(GameUIStateMachine stateMachine, Player actingPlayer, CardInstance unitToSummon)
+    public GameUISummonUnitState(GameUIStateMachine stateMachine, CardInstance unitToSummon)
     {
         _stateMachine = stateMachine;
         _cardGame = stateMachine.CardGame;
-        _actingPlayer = actingPlayer;
         _unitToSummon = unitToSummon;
     }
 
 
     public void OnApply()
     {
-
         var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
         foreach (UIGameEntity entity in _stateMachine.GameController.GetUIEntities())
         {
@@ -42,7 +40,7 @@ public class GameUISummonUnitState : IGameUIState
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            _stateMachine.ToIdle(_actingPlayer);
+            _stateMachine.ToIdle();
             return;
         }
     }
@@ -63,8 +61,8 @@ public class GameUISummonUnitState : IGameUIState
         {
             return;
         }
-        _cardGame.PlayCardFromHand(_cardGame.Player1, _unitToSummon, entityId);
-        _stateMachine.ToIdle(_actingPlayer);
+        _cardGame.PlayCardFromHand(_cardGame.ActivePlayer, _unitToSummon, entityId);
+        _stateMachine.ToIdle();
     }
 }
 

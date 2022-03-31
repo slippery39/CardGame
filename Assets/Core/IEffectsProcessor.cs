@@ -84,6 +84,19 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 cardGame.ManaSystem.AddMana(cardGame, (Player)entity, ability.Amount);
             }
         }
+        if (effect is AddTempManaEffect)
+        {
+            var ability = (AddTempManaEffect)effect;
+
+            foreach (var entity in entitiesToEffect)
+            {
+                if (!(entity is Player))
+                {
+                    throw new Exception("Error : only players can gain man");
+                }
+                cardGame.ManaSystem.AddTemporaryMana(cardGame, (Player)entity, ability.Amount);
+            }
+        }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {

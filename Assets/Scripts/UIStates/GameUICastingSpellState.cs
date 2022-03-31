@@ -7,15 +7,14 @@ public class GameUICastingSpellState : IGameUIState
 {
 
     private CardGame _cardGame;
-    private Player _actingPlayer;
+    private Player _actingPlayer=>_cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _spellToCast;
 
-    public GameUICastingSpellState(GameUIStateMachine stateMachine, Player actingPlayer, CardInstance spellToCast)
+    public GameUICastingSpellState(GameUIStateMachine stateMachine,CardInstance spellToCast)
     {
         _stateMachine = stateMachine;
         _cardGame = stateMachine.CardGame;
-        _actingPlayer = actingPlayer;
         _spellToCast = spellToCast;
     }
     public string GetMessage()
@@ -27,7 +26,7 @@ public class GameUICastingSpellState : IGameUIState
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            _stateMachine.ToIdle(_actingPlayer);
+            _stateMachine.ToIdle();
             return;
         }
     }
@@ -71,7 +70,7 @@ public class GameUICastingSpellState : IGameUIState
         }
 
         _cardGame.PlayCardFromHand(_actingPlayer, _spellToCast, entityId);
-        _stateMachine.ToIdle(_actingPlayer);
+        _stateMachine.ToIdle();
     }
 }
 
