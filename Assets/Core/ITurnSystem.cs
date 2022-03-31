@@ -12,7 +12,7 @@ public enum TurnPhase
     StartOfTurn,
     Main,
     Battle,
-    EndOfTurkjn
+    EndOfTurn
 }
 
 public class DefaultTurnSystem
