@@ -1,10 +1,13 @@
-﻿public interface ITurnSystem
+﻿using System.Linq;
+
+public interface ITurnSystem
 {
     int TurnId { get; set; }
     void StartTurn(CardGame cardGame);
     void EndTurn(CardGame cardGame);
 }
 
+//Not in use right now, but keep in mind these phases as we add more functionality.
 public enum TurnPhase
 {
     StartOfTurn,
@@ -23,13 +26,16 @@ public class DefaultTurnSystem : ITurnSystem
     }
     public void StartTurn(CardGame cardGame)
     {
-        
+        //Reset any summoning sick units
+        var nonSummoningSickUnits = cardGame.GetUnitsInPlay().Where(unit=>cardGame.GetOwnerOfUnit(unit) == cardGame.ActivePlayer);
+        foreach(var unit in nonSummoningSickUnits)
+        {
+            unit.IsSummoningSick = false;
+        }
         //Reset any spent mana
         cardGame.ManaSystem.ResetMana(cardGame, cardGame.ActivePlayer);
         //Active Player Gains A Mana
         cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
-        //Reset any variables that track per turn       
-
         //Active Player draws a card
         cardGame.CardDrawSystem.DrawCard(cardGame, cardGame.ActivePlayer);
     }

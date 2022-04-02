@@ -305,6 +305,20 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Rorix, Bladewing",
+            ManaCost = "6",
+            Power = 6,
+            Toughness = 5,
+            ArtPath = "CardArt/RorixBladewing",
+            Abilities = new List<CardAbility>()
+            {
+                new FlyingAbility(),
+                new HasteAbility()
+            }
+        });
+
 
         /*
         //Cards To Create for Activated Abilities
@@ -364,6 +378,37 @@ public class CardDatabase : ICardDatabase
                     }
                     ),
                 new FlyingAbility()
+            }
+        });
+
+        //Dark Confidant
+        _cards.Add(new UnitCardData() {
+            Name = "Dark Confidant",
+            ManaCost = "2",
+            Power = 2,
+            Toughness = 1,
+            ArtPath = "CardArt/DarkConfidant",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility(
+                    TriggerType.AtTurnStart,
+                    new DarkConfidantEffect()
+                )
+            }
+        });
+
+        //Ball Lightning
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Ball Lightning",
+            ManaCost = "3",
+            Power = 6,
+            Toughness = 1,
+            ArtPath = "CardArt/Ball Lightning",
+            Abilities = new List<CardAbility>()
+            {
+                new HasteAbility(),
+                new TriggeredAbility(TriggerType.AtEndOfTurn, new SacrificeSelfEffect())
             }
         });
 

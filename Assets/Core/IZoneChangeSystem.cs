@@ -23,6 +23,9 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
             throw new Exception("Could not find current zone of card in DefaultZoneChangeSystem");
         }
 
+        //reset summoning sickness when changing zones.
+        card.IsSummoningSick = true;
+
         currentZone.Remove(card);
         zoneTo.Add(card);
         

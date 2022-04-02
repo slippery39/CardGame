@@ -11,15 +11,17 @@ public class CardInstance : CardGameEntity
     private BaseCardData _originalCardData;
     private BaseCardData _currentCardData;
     private int _ownerId;
+    private bool _isSummoningSick = true;
 
     #region Public Properties
     public BaseCardData CurrentCardData { get => _currentCardData; set => _currentCardData = value; }
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
-
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
     public string RulesText { get => _currentCardData.RulesText; set => _currentCardData.Name = value; }
     public string ManaCost { get => _currentCardData.ManaCost; set => _currentCardData.ManaCost = value; }
     public string CardType { get => _currentCardData.CardType; }
+    
+    public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
     public List<CardAbility> Abilities { get => _currentCardData.Abilities; }
 
 

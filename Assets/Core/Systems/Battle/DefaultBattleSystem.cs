@@ -12,11 +12,27 @@ public class DefaultBattleSystem : IBattleSystem
         for (int i = 0; i < attackingLanes.Count; i++)
         {
             var attackingLane = attackingLanes[i];
+
+
+
             var defendingLane = defendingLanes[i];
 
             //Attacking Player does not have a unit in lane, so we should skip.
             if (attackingLane.IsEmpty())
             {
+                continue;
+            }
+
+            //Determine whether or not the unit can attack.
+            var unitCanAttack = attackingLane.UnitInLane.IsSummoningSick ? false : true;
+            foreach (var canAttackAb in attackingLane.UnitInLane.GetAbilities<IModifyCanAttack>())
+            {
+                unitCanAttack = canAttackAb.CanAttack(cardGame, attackingLane.UnitInLane);
+            };
+
+            if (!unitCanAttack)
+            {
+                cardGame.Log($@"{attackingLane.UnitInLane.Name} cannot attack!");
                 continue;
             }
             //Attacking an empty lane
@@ -50,7 +66,7 @@ public class DefaultBattleSystem : IBattleSystem
         cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
         //Both lanes have units, they will attack eachother.
         cardGame.DamageSystem.DealCombatDamageToUnits(cardGame, attackingUnit, defendingUnit);
-        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);        
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
     }
 
     //Note - this method can be hooked into from Abilities.
