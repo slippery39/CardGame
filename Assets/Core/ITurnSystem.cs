@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 public interface ITurnSystem
 {
@@ -20,6 +21,8 @@ public class DefaultTurnSystem : ITurnSystem
 {
     public int TurnId { get; set;}
 
+    
+
     public DefaultTurnSystem()
     {
         TurnId = 1;
@@ -27,11 +30,23 @@ public class DefaultTurnSystem : ITurnSystem
     public void StartTurn(CardGame cardGame)
     {
         //Reset any summoning sick units
-        var nonSummoningSickUnits = cardGame.GetUnitsInPlay().Where(unit=>cardGame.GetOwnerOfUnit(unit) == cardGame.ActivePlayer);
-        foreach(var unit in nonSummoningSickUnits)
+        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit=>cardGame.GetOwnerOfUnit(unit) == cardGame.ActivePlayer);
+        foreach(var unit in activePlayersUnits)
         {
             unit.IsSummoningSick = false;
         }
+       
+       //Trigger any Start of Turn abilities.
+       foreach(var unit in activePlayersUnits)
+        {
+            var startOfTurnAbilities = unit.GetAbilities<TriggeredAbility>().Where(ab=>ab.TriggerType == TriggerType.AtTurnStart);
+
+            foreach(var ab in startOfTurnAbilities)
+            {
+                cardGame.EffectsProcessor.ApplyEffects(cardGame,cardGame.ActivePlayer,unit,ab.Effects, new List<CardGameEntity>());
+            }
+        }
+
         //Reset any spent mana
         cardGame.ManaSystem.ResetMana(cardGame, cardGame.ActivePlayer);
         //Active Player Gains A Mana

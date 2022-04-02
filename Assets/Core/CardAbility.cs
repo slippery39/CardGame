@@ -168,6 +168,7 @@ public enum TriggerType
     SelfEntersPlay,
     SelfDies,
     SelfAttacks,
+    AtTurnStart
 }
 
 
@@ -189,6 +190,9 @@ public class TriggeredAbility : CardAbility
                     break;
                 case TriggerType.SelfAttacks:
                     text = "When this attacks ";
+                    break;
+                case TriggerType.AtTurnStart:
+                    text = "At the start of your turn ";
                     break;
                 default:
                     text += "";
@@ -277,5 +281,11 @@ public class AddTempManaEffect : Effect
 {
     public override string RulesText => $"Gain {Amount} Mana until end of turn";
     public int Amount;
+    public override TargetType TargetType { get; set; } = TargetType.Self;
+}
+
+public class DarkConfidantEffect: Effect
+{
+    public override string RulesText => $"Draw a card and lose life equal to its mana cost";
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }

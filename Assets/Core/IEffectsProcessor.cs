@@ -97,6 +97,19 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 cardGame.ManaSystem.AddTemporaryMana(cardGame, (Player)entity, ability.Amount);
             }
         }
+        if (effect is DarkConfidantEffect)
+        {
+            foreach(var entity in entitiesToEffect)
+            {
+                if (!(entity is Player))
+                {
+                    throw new Exception("Error : only players can be effected with the dark confidant effect");
+                }
+                var cardDrawn = cardGame.CardDrawSystem.DrawCard(cardGame, player);
+                cardGame.DamageSystem.DealDamage(cardGame, source, player, Convert.ToInt32(cardDrawn.ManaCost));
+                cardGame.Log($@"Dark confidant effect : Drawn a card and you have lost {Convert.ToInt32(cardDrawn.ManaCost)} life.");                
+            }
+        }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {
