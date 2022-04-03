@@ -242,6 +242,8 @@ public enum TargetType
     Self, //Player
     Opponent,
     AllUnits,
+    OurUnits,
+    OpponentUnits,
     UnitSelf, //Self Unit
     TargetPlayers,
     TargetUnits,
@@ -257,6 +259,8 @@ public static class TargetTypeHelper
         switch (targetType)
         {
             case TargetType.AllUnits: return "each unit";
+            case TargetType.OurUnits: return "each unit you control";
+            case TargetType.OpponentUnits: return "each unit your opponent controls";
             case TargetType.TargetUnits: return "target unit";
             case TargetType.TargetPlayers: return "target player";
             case TargetType.TargetUnitsOrPlayers: return "target unit or player";
@@ -283,7 +287,17 @@ public class LifeGainEffect : Effect
 
 public class PumpUnitEffect : Effect
 {
-    public override string RulesText => $"Target Unit gets +{Power}/+{Toughness}";
+    public override string RulesText
+    {
+        get
+        {
+            var powerSymbol = Power >= 0 ? "+" : "-";
+            var toughnessSymbol = Toughness > 0 ? "+" : "-";
+            var rulesText = $"Give {powerSymbol}{Power}/{toughnessSymbol}{Toughness} to {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
+            return rulesText;
+        }
+
+    }
     public int Power { get; set; }
     public int Toughness { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.TargetUnits;

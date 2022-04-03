@@ -11,4 +11,4 @@ public class DefaultDestroySystem : IDestroySystem
         var owner = cardGame.GetOwnerOfCard(target);
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, target, owner.DiscardPile);
     }
-}
+}                                                      
