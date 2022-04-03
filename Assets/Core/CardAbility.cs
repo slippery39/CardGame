@@ -6,7 +6,7 @@ public abstract class CardAbility
 {
     public string Type;
     public int Priority { get; set; }
-    public abstract string RulesText { get;}
+    public abstract string RulesText { get; }
 }
 
 public interface IModifyCanBlock
@@ -134,7 +134,7 @@ public class HexproofAbility : CardAbility, IModifyCanBeTargeted
     public override string RulesText => "Hexproof";
 
     public bool ModifyCanBeTargeted(CardGame cardGame, CardInstance unitWithAbility, Player ownerOfEffect)
-    {  
+    {
         return cardGame.GetOwnerOfCard(unitWithAbility) == ownerOfEffect;
     }
 }
@@ -145,17 +145,17 @@ public interface IModifyCanAttack
 
 }
 
-public class HasteAbility: CardAbility, IModifyCanAttack
+public class HasteAbility : CardAbility, IModifyCanAttack
 {
-    public override string RulesText => "Haste"; 
-    
+    public override string RulesText => "Haste";
+
     public HasteAbility()
     {
         //should always apply before any other effects, if something external causes the unit to not be able to attack then it should take preference.
-        Priority = -1; 
+        Priority = -1;
     }
-     
-    public bool CanAttack(CardGame cardGame,CardInstance card)
+
+    public bool CanAttack(CardGame cardGame, CardInstance card)
     {
         return true;
     }
@@ -163,7 +163,7 @@ public class HasteAbility: CardAbility, IModifyCanAttack
 }
 
 //The logic of trample will be handled directly in the DefaultBattleSystem.cs class.
-public class TrampleAbility: CardAbility
+public class TrampleAbility : CardAbility
 {
     public override string RulesText => "Trample";
 }
@@ -203,7 +203,7 @@ public class TriggeredAbility : CardAbility
                     break;
                 default:
                     text += "";
-                    break;                
+                    break;
             }
 
             foreach (var effect in Effects)
@@ -215,14 +215,14 @@ public class TriggeredAbility : CardAbility
             //Get rid of the last ",";
             text = text.Substring(0, text.Length - 1);
 
-            
+
             return text;
         }
     }
     public TriggerType TriggerType { get; set; }
     public List<Effect> Effects { get; set; }
 
-    public TriggeredAbility(TriggerType triggerType,Effect effect)
+    public TriggeredAbility(TriggerType triggerType, Effect effect)
     {
         TriggerType = triggerType;
         Effects = new List<Effect>();
@@ -244,7 +244,9 @@ public enum TargetType
     UnitSelf, //Self Unit
     TargetPlayers,
     TargetUnits,
-    TargetUnitsOrPlayers
+    TargetUnitsOrPlayers,
+    OpenLane,
+    OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
 }
 
 //Damage Abiltiies are handled by the DamageSystem themselves?
@@ -263,7 +265,7 @@ public class LifeGainEffect : Effect
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
 
-public class PumpUnitEffect: Effect
+public class PumpUnitEffect : Effect
 {
     public override string RulesText => $"Target Unit gets +{Power}/+{Toughness}";
     public int Power { get; set; }
@@ -292,7 +294,7 @@ public class AddTempManaEffect : Effect
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
 
-public class DarkConfidantEffect: Effect
+public class DarkConfidantEffect : Effect
 {
     public override string RulesText => $"Draw a card and lose life equal to its mana cost";
     public override TargetType TargetType { get; set; } = TargetType.Self;
@@ -303,4 +305,15 @@ public class SacrificeSelfEffect : Effect
     public override string RulesText => "Sacrifice this unit";
     public override TargetType TargetType { get; set; } = TargetType.UnitSelf; //Should never need to change.
 }
-    
+
+public class CreateTokenEffect : Effect
+{
+    public override string RulesText => $"Create a {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} token with {TokenData.RulesText}";
+    public UnitCardData TokenData { get; set; }
+    public override TargetType TargetType { get; set; } = TargetType.OpenLane;
+
+    public CreateTokenEffect(UnitCardData cardData)
+    {
+        TokenData = cardData;
+    }
+}

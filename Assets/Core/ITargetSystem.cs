@@ -33,6 +33,7 @@ public class DefaultTargetSystem : ITargetSystem
                 return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
                 return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
+
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {effect.TargetType}");
         }

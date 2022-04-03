@@ -465,7 +465,7 @@ public class CardDatabase : ICardDatabase
                 )
             }
         });
-
+        */
 
         //Geist of Saint Traft
         _cards.Add(new UnitCardData()
@@ -488,14 +488,15 @@ public class CardDatabase : ICardDatabase
                         Abilities = new List<CardAbility>()
                         {
                             new FlyingAbility(),
-                            new TriggeredAbility(TriggerType.AtEndOfTurn, new SacrificeSelfEffect())
+                            new HasteAbility(), //haste is needed to make sure it attacks.
+                            new TriggeredAbility(TriggerType.AtTurnEnd, new SacrificeSelfEffect())
                         }
-                    }
+                    }, TargetType.OpenLane
                     )
                     )
                 }
-        });
-        */
+        });;
+        
 
     }
 
