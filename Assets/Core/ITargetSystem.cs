@@ -27,13 +27,14 @@ public class DefaultTargetSystem : ITargetSystem
     {
         switch (effect.TargetType)
         {
+            case TargetType.None:
+                return new List<CardGameEntity> { effectSource };
             case TargetType.Self:
                 return new List<CardGameEntity> { player };
             case TargetType.UnitSelf:
                 return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
                 return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
-
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {effect.TargetType}");
         }

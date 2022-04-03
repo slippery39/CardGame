@@ -413,7 +413,8 @@ public class CardDatabase : ICardDatabase
                 new TriggeredAbility(TriggerType.AtTurnEnd, new SacrificeSelfEffect())
             }
         });
-        /*
+
+        
         //Delver of Secrets
         _cards.Add(new UnitCardData()
         {
@@ -427,9 +428,9 @@ public class CardDatabase : ICardDatabase
                 new TriggeredAbility
                 (
                     TriggerType.AtTurnStart,
-                    new TransformEffect()
+                    new TransformEffect
                     {
-                        new UnitCardData
+                        TransformData = new UnitCardData
                         {
                             Name = "Insectile Aberration",
                             ManaCost = "1",
@@ -441,13 +442,11 @@ public class CardDatabase : ICardDatabase
                                 new FlyingAbility()
                             }
                         }
-
                     }
-
                 )
             }
         });
-
+/*
         //Snapcaster Mage
         _cards.Add(new UnitCardData()
         {
@@ -467,6 +466,8 @@ public class CardDatabase : ICardDatabase
         });
         */
 
+
+        /*
         //Geist of Saint Traft
         _cards.Add(new UnitCardData()
         {
@@ -496,6 +497,7 @@ public class CardDatabase : ICardDatabase
                     )
                 }
         });;
+        */
         
 
     }

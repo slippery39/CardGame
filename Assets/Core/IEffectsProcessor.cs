@@ -122,6 +122,20 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 cardGame.SacrificeSystem.SacrificeUnit(cardGame, player, card);
             }
         }
+        if (effect is TransformEffect)
+        {
+            foreach(var entity in entitiesToEffect)
+            {
+                if (!(entity is CardInstance))
+                {
+                    throw new Exception("Error : only units can be effected with the sacrifice self effect");
+                }
+
+                var card = (CardInstance)entity;
+                var transFormEffect = (TransformEffect)effect;
+                card.CurrentCardData = transFormEffect.TransformData.Clone();
+            }
+        }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {
