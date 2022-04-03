@@ -19,9 +19,7 @@ public enum TurnPhase
 
 public class DefaultTurnSystem : ITurnSystem
 {
-    public int TurnId { get; set;}
-
-    
+    public int TurnId { get; set;}   
 
     public DefaultTurnSystem()
     {

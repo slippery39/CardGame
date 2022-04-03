@@ -12,9 +12,6 @@ public class DefaultBattleSystem : IBattleSystem
         for (int i = 0; i < attackingLanes.Count; i++)
         {
             var attackingLane = attackingLanes[i];
-
-
-
             var defendingLane = defendingLanes[i];
 
             //Attacking Player does not have a unit in lane, so we should skip.

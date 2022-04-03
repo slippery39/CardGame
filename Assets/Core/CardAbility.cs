@@ -356,8 +356,6 @@ public class TransformEffect : Effect
     public override TargetType TargetType { get; set; } = TargetType.None;
 }
 
-
-
 public class DestroyEffect : Effect
 {
     public override string RulesText => $"Destroy {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
