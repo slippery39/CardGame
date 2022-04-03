@@ -446,6 +446,50 @@ public class CardDatabase : ICardDatabase
                 )
             }
         });
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Murder",
+            ManaCost = "3",
+            ArtPath = "CardArt/Murder",
+            Effects = new List<Effect>()
+            {
+                new DestroyEffect()
+                {
+                    TargetType = TargetType.TargetUnits
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Day of Judgment",
+            ManaCost = "4",
+            ArtPath = "CardArt/DayofJudgment",
+            Effects = new List<Effect>()
+            {
+                new DestroyEffect()
+                {
+                   TargetType = TargetType.AllUnits
+                }
+            }
+        });
+
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Pyroclasm",
+            ManaCost = "2",
+            ArtPath = "CardArt/Pyroclasm",
+            Effects = new List<Effect>()
+            {
+                new DamageEffect()
+                {
+                    Amount = 2,
+                    TargetType = TargetType.AllUnits
+                }
+            }
+        });
 /*
         //Snapcaster Mage
         _cards.Add(new UnitCardData()

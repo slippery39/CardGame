@@ -241,6 +241,7 @@ public enum TargetType
     None,
     Self, //Player
     Opponent,
+    AllUnits,
     UnitSelf, //Self Unit
     TargetPlayers,
     TargetUnits,
@@ -249,10 +250,25 @@ public enum TargetType
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
 }
 
+public static class TargetTypeHelper
+{
+    public static string TargetTypeToRulesText(TargetType targetType)
+    {
+        switch (targetType)
+        {
+            case TargetType.AllUnits: return "each unit";
+            case TargetType.TargetUnits: return "target unit";
+            case TargetType.TargetPlayers: return "target player";
+            case TargetType.TargetUnitsOrPlayers: return "target unit or player";
+            default: return "";
+        }
+    }
+}
+
 //Damage Abiltiies are handled by the DamageSystem themselves?
 public class DamageEffect : Effect
 {
-    public override string RulesText => $"Deal {Amount} Damage";
+    public override string RulesText => $"Deal {Amount} Damage to {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
     public int Amount { get; set; }
 
     public override TargetType TargetType { get; set; } = TargetType.TargetUnitsOrPlayers;
@@ -324,4 +340,12 @@ public class TransformEffect : Effect
     public UnitCardData TransformData { get; set; }
 
     public override TargetType TargetType { get; set; } = TargetType.None;
+}
+
+
+
+public class DestroyEffect : Effect
+{
+    public override string RulesText => $"Destroy {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
+    public override TargetType TargetType { get; set; } = TargetType.TargetUnits;
 }

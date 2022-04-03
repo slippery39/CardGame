@@ -13,7 +13,7 @@ public interface ITargetSystem
 public class DefaultTargetSystem : ITargetSystem
 {
 
-    private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.UnitSelf,TargetType.Opponent, TargetType.None };
+    private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.UnitSelf,TargetType.Opponent, TargetType.None };
 
     /// <summary>
     /// Gets the correct entities to apply an effect to when there is no manual targets.
@@ -31,6 +31,8 @@ public class DefaultTargetSystem : ITargetSystem
                 return new List<CardGameEntity> { effectSource };
             case TargetType.Self:
                 return new List<CardGameEntity> { player };
+            case TargetType.AllUnits:
+                return cardGame.GetUnitsInPlay().Cast<CardGameEntity>().ToList();
             case TargetType.UnitSelf:
                 return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
