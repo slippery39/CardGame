@@ -32,6 +32,7 @@ public class CardGame
     private ITargetSystem _targetSystem;
     private IEffectsProcessor _effectsProcessor;
     private ITurnSystem _turnSystem;
+    private ISacrificeSystem _sacrificeSystem;
     #endregion
 
 
@@ -56,6 +57,7 @@ public class CardGame
     public ITargetSystem TargetSystem { get => _targetSystem; set => _targetSystem = value; }
     public IEffectsProcessor EffectsProcessor { get => _effectsProcessor; set => _effectsProcessor = value; }
     public ITurnSystem TurnSystem { get => _turnSystem; set => _turnSystem = value; }
+    public ISacrificeSystem SacrificeSystem { get => _sacrificeSystem; set => _sacrificeSystem = value; }
 
 
     #endregion
@@ -99,6 +101,7 @@ public class CardGame
         _targetSystem = new DefaultTargetSystem();
         _effectsProcessor = new DefaultEffectsProcessor();
         _turnSystem = new DefaultTurnSystem();
+        _sacrificeSystem = new DefaultSacrificeSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 

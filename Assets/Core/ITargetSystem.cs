@@ -5,7 +5,7 @@ using System.Linq;
 public interface ITargetSystem
 {
     List<CardGameEntity> GetValidTargets(CardGame cardGame, Player player, CardInstance card);
-    public List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, Effect effect);
+    public List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, CardGameEntity source, Effect effect);
     bool SpellNeedsTargets(CardGame cardGame, Player player, CardInstance card);
     bool EffectNeedsTargets(Effect effect);
 }
@@ -13,7 +13,7 @@ public interface ITargetSystem
 public class DefaultTargetSystem : ITargetSystem
 {
 
-    private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.Opponent, TargetType.None };
+    private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.UnitSelf,TargetType.Opponent, TargetType.None };
 
     /// <summary>
     /// Gets the correct entities to apply an effect to when there is no manual targets.
@@ -23,12 +23,14 @@ public class DefaultTargetSystem : ITargetSystem
     /// <param name="effect">The effect that is being applied</param>
     /// <returns></returns>
     /// 
-    public List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, Effect effect)
+    public List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player,CardGameEntity effectSource, Effect effect)
     {
         switch (effect.TargetType)
         {
             case TargetType.Self:
                 return new List<CardGameEntity> { player };
+            case TargetType.UnitSelf:
+                return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
                 return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
             default:

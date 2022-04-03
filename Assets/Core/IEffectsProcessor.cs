@@ -18,7 +18,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         List<CardGameEntity> entitiesToEffect;
         if (!cardGame.TargetSystem.EffectNeedsTargets(effect))
         {
-            entitiesToEffect = cardGame.TargetSystem.GetEntitiesToApplyEffect(cardGame, player, effect);
+            entitiesToEffect = cardGame.TargetSystem.GetEntitiesToApplyEffect(cardGame, player, source, effect);
         }
         else
         {
@@ -99,7 +99,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         }
         if (effect is DarkConfidantEffect)
         {
-            foreach(var entity in entitiesToEffect)
+            foreach (var entity in entitiesToEffect)
             {
                 if (!(entity is Player))
                 {
@@ -107,13 +107,25 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 }
                 var cardDrawn = cardGame.CardDrawSystem.DrawCard(cardGame, player);
                 cardGame.DamageSystem.DealDamage(cardGame, source, player, Convert.ToInt32(cardDrawn.ManaCost));
-                cardGame.Log($@"Dark confidant effect : Drawn a card and you have lost {Convert.ToInt32(cardDrawn.ManaCost)} life.");                
+                cardGame.Log($@"Dark confidant effect : Drawn a card and you have lost {Convert.ToInt32(cardDrawn.ManaCost)} life.");
+            }
+        }
+        if (effect is SacrificeSelfEffect)
+        {
+            foreach (var entity in entitiesToEffect)
+            {
+                if (!(entity is CardInstance))
+                {
+                    throw new Exception("Error : only units can be effected with the sacrifice self effect");
+                }
+                var card = (CardInstance)entity;
+                cardGame.SacrificeSystem.SacrificeUnit(cardGame, player, card);
             }
         }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {
-        foreach(var effect in effects)
+        foreach (var effect in effects)
         {
             ApplyEffect(cardGame, player, source, effect, targets);
         }

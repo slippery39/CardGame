@@ -360,7 +360,7 @@ public class CardDatabase : ICardDatabase
 
         //Mulldrifter
 
-        
+
         _cards.Add(new UnitCardData()
         {
             Name = "Mulldrifter",
@@ -382,7 +382,8 @@ public class CardDatabase : ICardDatabase
         });
 
         //Dark Confidant
-        _cards.Add(new UnitCardData() {
+        _cards.Add(new UnitCardData()
+        {
             Name = "Dark Confidant",
             ManaCost = "2",
             Power = 2,
@@ -396,7 +397,7 @@ public class CardDatabase : ICardDatabase
                 )
             }
         });
-/*
+
         //Ball Lightning
         _cards.Add(new UnitCardData()
         {
@@ -408,10 +409,11 @@ public class CardDatabase : ICardDatabase
             Abilities = new List<CardAbility>()
             {
                 new HasteAbility(),
-                new TriggeredAbility(TriggerType.AtEndOfTurn, new SacrificeSelfEffect())
+                new TrampleAbility(),
+                new TriggeredAbility(TriggerType.AtTurnEnd, new SacrificeSelfEffect())
             }
         });
-
+        /*
         //Delver of Secrets
         _cards.Add(new UnitCardData()
         {

@@ -38,11 +38,32 @@ public class DefaultDamageSystem : IDamageSystem
         var attackingDamage = attackingUnit.Power;
         var defendingDamage = defendingUnit.Power;
 
-        DealDamage(attackingUnit, defendingDamage);
-        DealDamage(defendingUnit, attackingDamage);
 
-        cardGame.Log($"{defendingUnit.Name} took {attackingDamage} combat damage");
-        cardGame.Log($"{attackingUnit.Name} took {defendingDamage} combat damage");
+        //IF UNIT HAS TRAMPLE
+        if (attackingUnit.GetAbilities<TrampleAbility>().Count > 0)
+        {
+            var damageToUnit = Math.Min(attackingDamage, defendingUnit.Toughness);
+            var damageToPlayer = attackingUnit.Power - damageToUnit;
+
+            if (damageToPlayer > 0)
+            {
+                var defendingPlayer = cardGame.GetOwnerOfUnit(defendingUnit);
+                DealDamage(cardGame.GetOwnerOfUnit(defendingUnit), damageToPlayer);
+                cardGame.Log($"{defendingPlayer.Name} took {damageToPlayer} trample damage!");
+            }
+            DealDamage(attackingUnit, defendingDamage);
+            DealDamage(defendingUnit, damageToUnit);
+            cardGame.Log($"{defendingUnit.Name} took {damageToUnit} combat damage");
+            cardGame.Log($"{attackingUnit.Name} took {defendingDamage} combat damage");
+        }
+        //IF UNIT DOES NOT HAVE TRAMPLE
+        else
+        {
+            DealDamage(attackingUnit, defendingDamage);
+            DealDamage(defendingUnit, attackingDamage);
+            cardGame.Log($"{defendingUnit.Name} took {attackingDamage} combat damage");
+            cardGame.Log($"{attackingUnit.Name} took {defendingDamage} combat damage");
+        }
 
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
 
@@ -66,9 +87,9 @@ public class DefaultDamageSystem : IDamageSystem
         DealDamage(target, amount);
     }
 
-    private void DealDamage(CardInstance damagedUnit,int damage)
+    private void DealDamage(CardInstance damagedUnit, int damage)
     {
-        damagedUnit.Toughness -= damage;        
+        damagedUnit.Toughness -= damage;
     }
 
     private void DealDamage(CardGameEntity damagedEntity, int damage)

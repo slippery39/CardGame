@@ -162,13 +162,20 @@ public class HasteAbility: CardAbility, IModifyCanAttack
     //The ability should let the unit attack the same turn it comes into play, but it should not override any "Can't Attack" effects.
 }
 
+//The logic of trample will be handled directly in the DefaultBattleSystem.cs class.
+public class TrampleAbility: CardAbility
+{
+    public override string RulesText => "Trample";
+}
+
 
 public enum TriggerType
 {
     SelfEntersPlay,
     SelfDies,
     SelfAttacks,
-    AtTurnStart
+    AtTurnStart,
+    AtTurnEnd
 }
 
 
@@ -232,8 +239,9 @@ public abstract class Effect
 public enum TargetType
 {
     None,
-    Self,
+    Self, //Player
     Opponent,
+    UnitSelf, //Self Unit
     TargetPlayers,
     TargetUnits,
     TargetUnitsOrPlayers
@@ -289,3 +297,10 @@ public class DarkConfidantEffect: Effect
     public override string RulesText => $"Draw a card and lose life equal to its mana cost";
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
+
+public class SacrificeSelfEffect : Effect
+{
+    public override string RulesText => "Sacrifice this unit";
+    public override TargetType TargetType { get; set; } = TargetType.UnitSelf; //Should never need to change.
+}
+    

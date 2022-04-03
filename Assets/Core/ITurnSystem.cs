@@ -59,6 +59,22 @@ public class DefaultTurnSystem : ITurnSystem
     {
         //Execute our battles:
         cardGame.BattleSystem.ExecuteBattles(cardGame);
+
+
+        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfUnit(unit) == cardGame.ActivePlayer);
+
+        //Trigger any End of turn abilities
+        foreach (var unit in activePlayersUnits)
+        {
+            var startOfTurnAbilities = unit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.AtTurnEnd);
+
+            foreach (var ab in startOfTurnAbilities)
+            {
+                cardGame.EffectsProcessor.ApplyEffects(cardGame, cardGame.ActivePlayer, unit, ab.Effects, new List<CardGameEntity>());
+            }
+        }
+
+
         //Change the active player
         _ = cardGame.ActivePlayerId == 1 ? cardGame.ActivePlayerId = 2 : cardGame.ActivePlayerId = 1;
         TurnId++;
