@@ -148,7 +148,10 @@ public class CardGame
     public void NextTurn()
     {
         _turnSystem.EndTurn(this);
+        _stateBasedEffectSystem.CheckStateBasedEffects(this);
         _turnSystem.StartTurn(this);
+        _stateBasedEffectSystem.CheckStateBasedEffects(this);
+
     }
 
     private void RegisterEntity(CardGameEntity entity)
@@ -169,6 +172,8 @@ public class CardGame
             if (validTargetInts.Contains(targetId))
             {
                 _unitSummoningSystem.SummonUnit(this, player, cardFromHand, targetId);
+                _stateBasedEffectSystem.CheckStateBasedEffects(this);
+
             }
             else
             {
@@ -180,6 +185,7 @@ public class CardGame
             if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand))
             {
                 _spellCastingSystem.CastSpell(this, player, cardFromHand);
+                _stateBasedEffectSystem.CheckStateBasedEffects(this);
             }
             else
             {
@@ -191,6 +197,8 @@ public class CardGame
                 {
 
                     _spellCastingSystem.CastSpell(this, player, cardFromHand, target);
+                    _stateBasedEffectSystem.CheckStateBasedEffects(this);
+
                 }
             }
         }
