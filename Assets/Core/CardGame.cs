@@ -16,6 +16,8 @@ public class CardGame
     private int _nextEntityId = 1;
     private int _nextPlayerId = 1;
 
+    private IStack _stack;
+
     private List<CardGameEntity> _registeredEntities;
 
     private IBattleSystem _battleSystem;
@@ -34,6 +36,9 @@ public class CardGame
     private ITurnSystem _turnSystem;
     private ISacrificeSystem _sacrificeSystem;
     private IDestroySystem _destroySystem;
+
+    private IResolvingSystem _resolvingSystem;
+
     #endregion
 
 
@@ -59,8 +64,8 @@ public class CardGame
     public IEffectsProcessor EffectsProcessor { get => _effectsProcessor; set => _effectsProcessor = value; }
     public ITurnSystem TurnSystem { get => _turnSystem; set => _turnSystem = value; }
     public ISacrificeSystem SacrificeSystem { get => _sacrificeSystem; set => _sacrificeSystem = value; }
-    public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }
-
+    public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }  
+ 
 
     #endregion
     #endregion
@@ -107,7 +112,6 @@ public class CardGame
         _destroySystem = new DefaultDestroySystem();
 
         _cardGameLogger = new UnityCardGameLogger();
-
         //TODO - some sort of check to make sure all systems are initialized?
         //maybe have 
     }

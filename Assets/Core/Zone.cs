@@ -25,8 +25,9 @@ using System.Threading.Tasks;
 public interface IZone
 {
     string Name { get; }
-    List<CardInstance> Cards { get;}
+    List<CardInstance> Cards { get; }
     void Add(CardInstance card);
     void Remove(CardInstance card);
 }
+
 
