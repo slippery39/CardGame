@@ -1,4 +1,4 @@
-﻿internal interface IDestroySystem
+﻿public interface IDestroySystem
 {
     void DestroyUnit(CardGame cardGame, CardGameEntity source, CardInstance target);
 }

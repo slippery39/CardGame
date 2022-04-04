@@ -17,12 +17,6 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 
     public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard, List<CardGameEntity> targets)
     {
-        if (!cardGame.ManaSystem.CanPlayCard(cardGame, player, spellCard))
-        {
-            cardGame.Log($"Could not play card {spellCard.Name}. Not enough mana.");
-            return;
-        }
-
         //TODO - Handle mana costs better
         cardGame.ManaSystem.SpendMana(cardGame, player, Convert.ToInt32(spellCard.ManaCost));
 
