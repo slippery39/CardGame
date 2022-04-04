@@ -59,7 +59,7 @@ public class CardGame
     public IEffectsProcessor EffectsProcessor { get => _effectsProcessor; set => _effectsProcessor = value; }
     public ITurnSystem TurnSystem { get => _turnSystem; set => _turnSystem = value; }
     public ISacrificeSystem SacrificeSystem { get => _sacrificeSystem; set => _sacrificeSystem = value; }
-    internal IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }
+    public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }
 
 
     #endregion
@@ -164,10 +164,12 @@ public class CardGame
     {
         if (cardFromHand.CurrentCardData is UnitCardData)
         {
+            if (!ManaSystem.CanPlayCard(this, player, cardFromHand))
+            {
+                Log($"Not enouugh mana to play {cardFromHand.Name}");
+            }
             var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
-
             var validTargetInts = validTargets.Select(v => v.EntityId).ToList();
-
 
             if (validTargetInts.Contains(targetId))
             {
@@ -182,12 +184,12 @@ public class CardGame
         }
         else if (cardFromHand.CurrentCardData is SpellCardData)
         {
-            if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand))
+            if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand) &&  ManaSystem.CanPlayCard(this, player, cardFromHand))
             {
                 _spellCastingSystem.CastSpell(this, player, cardFromHand);
                 _stateBasedEffectSystem.CheckStateBasedEffects(this);
             }
-            else
+            else if (ManaSystem.CanPlayCard(this, player, cardFromHand))
             {
                 var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
                 var target = validTargets.Where(entity => entity.EntityId == targetId).FirstOrDefault();
@@ -200,6 +202,10 @@ public class CardGame
                     _stateBasedEffectSystem.CheckStateBasedEffects(this);
 
                 }
+            }
+            else
+            {
+                Log($"Not enough mana to play {cardFromHand.Name}");
             }
         }
     }
