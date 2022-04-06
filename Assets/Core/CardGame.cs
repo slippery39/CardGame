@@ -16,8 +16,6 @@ public class CardGame
     private int _nextEntityId = 1;
     private int _nextPlayerId = 1;
 
-    private IStack _stack;
-
     private List<CardGameEntity> _registeredEntities;
 
     private IBattleSystem _battleSystem;
@@ -64,8 +62,9 @@ public class CardGame
     public IEffectsProcessor EffectsProcessor { get => _effectsProcessor; set => _effectsProcessor = value; }
     public ITurnSystem TurnSystem { get => _turnSystem; set => _turnSystem = value; }
     public ISacrificeSystem SacrificeSystem { get => _sacrificeSystem; set => _sacrificeSystem = value; }
-    public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }  
- 
+    public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }
+    public ISpellCastingSystem SpellCastingSystem { get => _spellCastingSystem; set => _spellCastingSystem = value; }
+
 
     #endregion
     #endregion

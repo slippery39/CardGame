@@ -513,6 +513,21 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        /*
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Doomed Traveler",
+            ManaCost = "1",
+            ArtPath = "CardArt/Doomed Traveler",
+            Power = 1,
+            Toughness = 1,
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility(TriggerType.SelfDies)
+            }
+        });
+        */
+
 /*
         //Snapcaster Mage
         _cards.Add(new UnitCardData()
