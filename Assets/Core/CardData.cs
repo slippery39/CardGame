@@ -398,6 +398,20 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        //Colossal Dreadmaw
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Colossal Dreadmaw",
+            ManaCost = "6",
+            Power = 6,
+            Toughness = 6,
+            ArtPath = "CardArt/ColossalDreadmaw",
+            Abilities = new List<CardAbility>()
+            {
+                new TrampleAbility()
+            }
+        });
+
         //Ball Lightning
         _cards.Add(new UnitCardData()
         {
