@@ -358,6 +358,25 @@ public class CardDatabase : ICardDatabase
 
         //Cards To Create for Triggered Abilities
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Elvish Visionary",
+            ManaCost = "2",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/ElvishVisionary",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility(
+                    TriggerType.SelfEntersPlay,
+                    new DrawCardEffect()
+                    {
+                        Amount = 1
+                    }
+                )
+            }
+        });
+
         //Mulldrifter
 
 
