@@ -64,9 +64,9 @@ public class DefaultTurnSystem : ITurnSystem
         //Trigger any End of turn abilities
         foreach (var unit in activePlayersUnits)
         {
-            var startOfTurnAbilities = unit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.AtTurnEnd);
+            var endOfTurnAbilities = unit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.AtTurnEnd);
 
-            foreach (var ab in startOfTurnAbilities)
+            foreach (var ab in endOfTurnAbilities)
             {
                 cardGame.EffectsProcessor.ApplyEffects(cardGame, cardGame.ActivePlayer, unit, ab.Effects, new List<CardGameEntity>());
             }
