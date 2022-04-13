@@ -3,17 +3,25 @@ using System.Linq;
 
 public interface IResolvingSystem
 {
-    public void Add(ResolvingEntity entity);
+    public void Add(CardInstance cardInstance);
+    public void Add(TriggeredAbility triggered);
     public void ResolveNext(CardGame cardGame);
 }
 
 public class DefaultResolvingSystem: IResolvingSystem
 {
     private List<ResolvingEntity> _stack = new List<ResolvingEntity>();
-    
-    public void Add(ResolvingEntity entity)
+
+    public void Add(CardInstance cardInstance)
     {
-        _stack.Add(entity);
+        var resolvingCardInstance = new ResolvingCardInstance { CardInstance = cardInstance };
+        _stack.Add(resolvingCardInstance);
+    }
+    
+    public void Add(TriggeredAbility triggeredAbility)
+    {
+        var resolvingAbility = new ResolvingAbility { Ability = triggeredAbility };
+        _stack.Add(resolvingAbility);
     }
 
     public void ResolveNext(CardGame cardGame)
@@ -29,6 +37,10 @@ public class DefaultResolvingSystem: IResolvingSystem
 
         if (resolvingThing is ResolvingAbility)
         {
+            var resolvingAbility = (ResolvingAbility)resolvingThing;
+            var triggeredAbility = (TriggeredAbility)(resolvingAbility.Ability);
+
+            cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, triggeredAbility.Effects, new List<CardGameEntity>());
             //todo - handle the resolving of abilities.
             //todo - handle what happens if there are no legal targets
         }
@@ -43,7 +55,7 @@ public class DefaultResolvingSystem: IResolvingSystem
 
             }
             //Handle the resolving of a spell
-            else if (resolvingCardInstance.CardInstance is SpellCardData)
+            else if (resolvingCardInstance.CardInstance.CurrentCardData is SpellCardData)
             {
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
                 cardGame.SpellCastingSystem.CastSpell(cardGame, player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets);
@@ -80,6 +92,8 @@ public class DefaultResolvingSystem: IResolvingSystem
 
 public class ResolvingEntity
 {
+    public Player Owner { get; set; }
+    public CardInstance Source { get; set; }
     public List<CardGameEntity> Targets { get; set; }
 }
 
