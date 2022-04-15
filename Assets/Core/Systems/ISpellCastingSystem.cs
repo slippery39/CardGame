@@ -17,9 +17,6 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
 
     public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard, List<CardGameEntity> targets)
     {
-        //TODO - Handle mana costs better
-        cardGame.ManaSystem.SpendMana(cardGame, player, Convert.ToInt32(spellCard.ManaCost));
-
         var effects = ((SpellCardData)spellCard.CurrentCardData).Effects;
 
         if (targets.Count > 1)

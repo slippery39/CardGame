@@ -68,6 +68,7 @@ public class UIGameController : MonoBehaviour
         {
             _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.ActivePlayer, 1);
         }
+
         _stateMachine.CurrentState.HandleInput();
         UpdateBoard();
     }
@@ -112,7 +113,7 @@ public class UIGameController : MonoBehaviour
         }
 
         var uiLanesPlayer2 = _player2Lanes.GetComponentsInChildren<UILane>(true);
-        for(int i = 0; i < uiLanesPlayer2.Length; i++)
+        for (int i = 0; i < uiLanesPlayer2.Length; i++)
         {
             uiLanesPlayer2[i].EntityId = CardGame.Player2.Lanes[i].EntityId;
         }

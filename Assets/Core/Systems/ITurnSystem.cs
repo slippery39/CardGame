@@ -28,23 +28,13 @@ public class DefaultTurnSystem : ITurnSystem
     public void StartTurn(CardGame cardGame)
     {
         //Reset any summoning sick units
-        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit=>cardGame.GetOwnerOfUnit(unit) == cardGame.ActivePlayer);
+        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit=>cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
         foreach(var unit in activePlayersUnits)
         {
             unit.IsSummoningSick = false;
         }
-       
-       //Trigger any Start of Turn abilities.
-       foreach(var unit in activePlayersUnits)
-        {
-            var startOfTurnAbilities = unit.GetAbilities<TriggeredAbility>().Where(ab=>ab.TriggerType == TriggerType.AtTurnStart);
 
-            foreach(var ab in startOfTurnAbilities)
-            {
-                cardGame.EffectsProcessor.ApplyEffects(cardGame,cardGame.ActivePlayer,unit,ab.Effects, new List<CardGameEntity>());
-            }
-        }
-
+        cardGame.HandleTriggeredAbilities(activePlayersUnits,TriggerType.AtTurnStart);
         //Reset any spent mana
         cardGame.ManaSystem.ResetMana(cardGame, cardGame.ActivePlayer);
         //Active Player Gains A Mana
@@ -59,19 +49,10 @@ public class DefaultTurnSystem : ITurnSystem
         cardGame.BattleSystem.ExecuteBattles(cardGame);
 
 
-        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfUnit(unit) == cardGame.ActivePlayer);
+        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
 
         //Trigger any End of turn abilities
-        foreach (var unit in activePlayersUnits)
-        {
-            var endOfTurnAbilities = unit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.AtTurnEnd);
-
-            foreach (var ab in endOfTurnAbilities)
-            {
-                cardGame.EffectsProcessor.ApplyEffects(cardGame, cardGame.ActivePlayer, unit, ab.Effects, new List<CardGameEntity>());
-            }
-        }
-
+        cardGame.HandleTriggeredAbilities(activePlayersUnits,TriggerType.AtTurnEnd);
 
         //Change the active player
         _ = cardGame.ActivePlayerId == 1 ? cardGame.ActivePlayerId = 2 : cardGame.ActivePlayerId = 1;

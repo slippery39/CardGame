@@ -48,7 +48,7 @@ public class Player : CardGameEntity
 
     #region Public Methods
 
-    public bool IsOwnerOfCard(CardInstance card)
+    public bool IsOwnerOfCard(CardGame cardGame, CardInstance card)
     {
         return Hand.Cards.Contains(card) || DiscardPile.Cards.Contains(card) || Lanes.SelectMany(l => l.Cards).Contains(card);
     }

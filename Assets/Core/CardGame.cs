@@ -64,6 +64,7 @@ public class CardGame
     public ISacrificeSystem SacrificeSystem { get => _sacrificeSystem; set => _sacrificeSystem = value; }
     public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }
     public ISpellCastingSystem SpellCastingSystem { get => _spellCastingSystem; set => _spellCastingSystem = value; }
+    public IResolvingSystem ResolvingSystem { get => _resolvingSystem; set => _resolvingSystem = value; }
 
 
     #endregion
@@ -109,15 +110,23 @@ public class CardGame
         _turnSystem = new DefaultTurnSystem();
         _sacrificeSystem = new DefaultSacrificeSystem();
         _destroySystem = new DefaultDestroySystem();
+        _resolvingSystem = new DefaultResolvingSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
         //TODO - some sort of check to make sure all systems are initialized?
         //maybe have 
     }
 
-    public Player GetOwnerOfUnit(CardInstance unitInstance)
+    public Player GetOwnerOfCard(CardInstance unitInstance)
     {
-        return _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
+        var owner = _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
+
+        if (owner == null)
+        {
+            throw new Exception("Could not find owner for card");
+        }
+
+        return owner;
     }
 
     public int GetNextEntityId()
@@ -127,6 +136,24 @@ public class CardGame
     public int GetNextPlayerId()
     {
         return _nextPlayerId++;
+    }
+
+    public IZone GetZoneOfCard(CardInstance card)
+    {
+        return GetZones().Where(zone => zone.Cards.Select(c => c.EntityId).Contains(card.EntityId)).FirstOrDefault();
+    }
+
+    public void HandleTriggeredAbilities(IEnumerable<CardInstance> units, TriggerType triggerType)
+    {
+        foreach (var unit in units)
+        {
+            var abilities = unit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == triggerType);
+
+            foreach (var ab in abilities)
+            {
+                ResolvingSystem.Add(this, ab, unit);
+            }
+        }
     }
 
     public void AddCardToGame(Player player, BaseCardData data, IZone zone)
@@ -163,6 +190,13 @@ public class CardGame
         _registeredEntities.Add(entity);
     }
 
+    /*
+    public void ResolveNext()
+    {
+        ResolvingSystem.ResolveNext(this);
+    }
+    */
+
     public void PlayCardFromHand(Player player, CardInstance cardFromHand, int targetId)
     {
         if (cardFromHand.CurrentCardData is UnitCardData)
@@ -170,40 +204,43 @@ public class CardGame
             if (!ManaSystem.CanPlayCard(this, player, cardFromHand))
             {
                 Log($"Not enouugh mana to play {cardFromHand.Name}");
+                return;
             }
             var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
-            var validTargetInts = validTargets.Select(v => v.EntityId).ToList();
 
-            if (validTargetInts.Contains(targetId))
+            var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
+
+            if (targetAsEntity != null)
             {
-                _unitSummoningSystem.SummonUnit(this, player, cardFromHand, targetId);
+                ManaSystem.SpendMana(this, player, Convert.ToInt32(cardFromHand.ManaCost));
+                ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
                 _stateBasedEffectSystem.CheckStateBasedEffects(this);
-
             }
             else
             {
                 Log("Invalid Lane chosen for summoning unit");
+                return;
             }
         }
         else if (cardFromHand.CurrentCardData is SpellCardData)
         {
-            if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand) &&  ManaSystem.CanPlayCard(this, player, cardFromHand))
+            if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand) && ManaSystem.CanPlayCard(this, player, cardFromHand))
             {
-                _spellCastingSystem.CastSpell(this, player, cardFromHand);
+                ManaSystem.SpendMana(this, player, Convert.ToInt32(cardFromHand.ManaCost));
+                ResolvingSystem.Add(this, cardFromHand, null);
                 _stateBasedEffectSystem.CheckStateBasedEffects(this);
             }
             else if (ManaSystem.CanPlayCard(this, player, cardFromHand))
             {
                 var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
-                var target = validTargets.Where(entity => entity.EntityId == targetId).FirstOrDefault();
-                var validTargetInts = validTargets.Select(x => x.EntityId).ToList();
 
-                if (validTargetInts.Contains(targetId))
+                var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
+
+                if (targetAsEntity != null)
                 {
-
-                    _spellCastingSystem.CastSpell(this, player, cardFromHand, target);
+                    ManaSystem.SpendMana(this, player, Convert.ToInt32(cardFromHand.ManaCost));
+                    ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
                     _stateBasedEffectSystem.CheckStateBasedEffects(this);
-
                 }
             }
             else
@@ -232,6 +269,8 @@ public class CardGame
         zones.Add(Player1.DiscardPile);
         zones.Add(Player2.DiscardPile);
 
+        zones.Add(ResolvingSystem.Stack);
+
         return zones;
     }
 
@@ -239,21 +278,6 @@ public class CardGame
     {
         return _registeredEntities.Where(e => e is T).Cast<T>().ToList();
     }
-
-    public Player GetOwnerOfCard(CardInstance card)
-    {
-        if (Player1.IsOwnerOfCard(card))
-        {
-            return Player1;
-        }
-        else if (Player2.IsOwnerOfCard(card))
-        {
-            return Player2;
-        }
-
-        throw new Exception("No owner for this card");
-    }
-
     public List<CardInstance> GetUnitsInPlay()
     {
 

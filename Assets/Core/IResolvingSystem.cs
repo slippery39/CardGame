@@ -3,43 +3,87 @@ using System.Linq;
 
 public interface IResolvingSystem
 {
-    public void Add(CardInstance cardInstance);
-    public void Add(TriggeredAbility triggered);
+    public void Add(CardGame cardGame, CardInstance cardInstance, CardGameEntity target);
+
+    public IZone Stack { get; }
+    public void Add(CardGame cardGame,TriggeredAbility triggeredAbility,CardInstance source);    
     public void ResolveNext(CardGame cardGame);
 }
 
-public class DefaultResolvingSystem: IResolvingSystem
-{
-    private List<ResolvingEntity> _stack = new List<ResolvingEntity>();
 
-    public void Add(CardInstance cardInstance)
+public class ResolvingStack : IZone
+{
+    public string Name => "Stack";
+
+    public List<CardInstance> Cards { get; set; }
+
+    public ResolvingStack()
     {
-        var resolvingCardInstance = new ResolvingCardInstance { CardInstance = cardInstance };
-        _stack.Add(resolvingCardInstance);
+        Cards = new List<CardInstance>();
     }
-    
-    public void Add(TriggeredAbility triggeredAbility)
+
+    public void Add(CardInstance card)
     {
-        var resolvingAbility = new ResolvingAbility { Ability = triggeredAbility };
-        _stack.Add(resolvingAbility);
+        Cards.Add(card);
+    }
+
+    public void Remove(CardInstance card)
+    {
+        Cards.Remove(card);
+    }
+}
+
+public class DefaultResolvingSystem : IResolvingSystem
+{
+    //Can hold card instances and abilities
+    private List<ResolvingEntity> _internalStack = new List<ResolvingEntity>();
+    //Can only hold card instances.
+    private IZone stackZone = new ResolvingStack();
+
+    public IZone Stack { get { return stackZone; } }
+
+    public void Add(CardGame cardGame, CardInstance cardInstance, CardGameEntity target)
+    {
+        cardGame.ZoneChangeSystem.MoveToZone(cardGame, cardInstance, stackZone);
+        //TODO - remove card instance from zone
+        var resolvingCardInstance = new ResolvingCardInstance { CardInstance = cardInstance, Targets = new List<CardGameEntity> { target } };
+        //remove the card instance from its zone
+        _internalStack.Add(resolvingCardInstance);
+
+        //Our abilities auto resolve.
+        this.ResolveNext(cardGame);
+    }
+
+    public void Add(CardGame cardGame, TriggeredAbility triggeredAbility, CardInstance source)
+    {
+        var resolvingAbility = new ResolvingAbility
+        {
+            Ability = triggeredAbility,
+            Owner = cardGame.GetOwnerOfCard(source),
+            Source = source
+        };
+
+        _internalStack.Add(resolvingAbility);
+
+        //Our abilities auto resolve.
+        this.ResolveNext(cardGame);
     }
 
     public void ResolveNext(CardGame cardGame)
     {
-        if (_stack.Count == 0)
+        if (_internalStack.Count == 0)
         {
             return;
         }
 
-        var nextIndex = _stack.Count - 1;
-        var resolvingThing = _stack[nextIndex];
-        _stack.RemoveAt(nextIndex);
+        var nextIndex = _internalStack.Count - 1;
+        var resolvingThing = _internalStack[nextIndex];
+        _internalStack.RemoveAt(nextIndex);
 
         if (resolvingThing is ResolvingAbility)
         {
             var resolvingAbility = (ResolvingAbility)resolvingThing;
             var triggeredAbility = (TriggeredAbility)(resolvingAbility.Ability);
-
             cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, triggeredAbility.Effects, new List<CardGameEntity>());
             //todo - handle the resolving of abilities.
             //todo - handle what happens if there are no legal targets
@@ -60,33 +104,9 @@ public class DefaultResolvingSystem: IResolvingSystem
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
                 cardGame.SpellCastingSystem.CastSpell(cardGame, player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets);
             }
-                /*
-                 * if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand) &&  ManaSystem.CanPlayCard(this, player, cardFromHand))
-            {
-                _spellCastingSystem.CastSpell(this, player, cardFromHand);
-                _stateBasedEffectSystem.CheckStateBasedEffects(this);
-            }
-            else if (ManaSystem.CanPlayCard(this, player, cardFromHand))
-            {
-                var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
-                var target = validTargets.Where(entity => entity.EntityId == targetId).FirstOrDefault();
-                var validTargetInts = validTargets.Select(x => x.EntityId).ToList();
 
-                if (validTargetInts.Contains(targetId))
-                {
-
-                    _spellCastingSystem.CastSpell(this, player, cardFromHand, target);
-                    _stateBasedEffectSystem.CheckStateBasedEffects(this);
-
-                }
-            }
-                 * 
-                 */
-
-            }
-            //todo - handle the resolving of a card instance. 
-            //todo - handle what happens if there are no legal targets - i.e. place in graveyard if its a spell.
-        
+        }
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
     }
 }
 
@@ -102,5 +122,6 @@ public class ResolvingAbility : ResolvingEntity
     public CardAbility Ability { get; set; }
 }
 public class ResolvingCardInstance : ResolvingEntity
-{    public CardInstance CardInstance { get; set; }
+{
+    public CardInstance CardInstance { get; set; }
 }

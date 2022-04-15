@@ -47,8 +47,8 @@ public class DefaultDamageSystem : IDamageSystem
 
             if (damageToPlayer > 0)
             {
-                var defendingPlayer = cardGame.GetOwnerOfUnit(defendingUnit);
-                DealDamage(cardGame.GetOwnerOfUnit(defendingUnit), damageToPlayer);
+                var defendingPlayer = cardGame.GetOwnerOfCard(defendingUnit);
+                DealDamage(cardGame.GetOwnerOfCard(defendingUnit), damageToPlayer);
                 cardGame.Log($"{defendingPlayer.Name} took {damageToPlayer} trample damage!");
             }
             DealDamage(attackingUnit, defendingDamage);
