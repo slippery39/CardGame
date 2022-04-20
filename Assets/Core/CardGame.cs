@@ -66,6 +66,7 @@ public class CardGame
     public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }
     public ISpellCastingSystem SpellCastingSystem { get => _spellCastingSystem; set => _spellCastingSystem = value; }
     public IResolvingSystem ResolvingSystem { get => _resolvingSystem; set => _resolvingSystem = value; }
+    public IContinuousEffectSystem ContinuousEffectSystem { get => _continuousEffectSystem; set => _continuousEffectSystem = value; }
 
 
     #endregion
@@ -112,6 +113,7 @@ public class CardGame
         _sacrificeSystem = new DefaultSacrificeSystem();
         _destroySystem = new DefaultDestroySystem();
         _resolvingSystem = new DefaultResolvingSystem();
+        _continuousEffectSystem = new DefaultContinousEffectSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
         //TODO - some sort of check to make sure all systems are initialized?
@@ -323,7 +325,7 @@ public class CardGame
     void AddRandomCardsToDeck()
     {
         var cardDB = new CardDatabase();
-        var cards = cardDB.GetAll().ToList();
+        var cards = cardDB.GetAll().Where(card=>card is UnitCardData).ToList();
 
         for (int i = 0; i < 60; i++)
         {

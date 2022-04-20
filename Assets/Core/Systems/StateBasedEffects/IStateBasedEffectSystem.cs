@@ -17,7 +17,6 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
     {
         var units = cardGame.GetUnitsInPlay();
 
-
         //Apply any static effects
         foreach (var unit in units)
         {

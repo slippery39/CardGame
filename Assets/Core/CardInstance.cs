@@ -20,10 +20,16 @@ public class CardInstance : CardGameEntity
     public string RulesText { get => _currentCardData.RulesText; set => _currentCardData.Name = value; }
     public string ManaCost { get => _currentCardData.ManaCost; set => _currentCardData.ManaCost = value; }
     public string CardType { get => _currentCardData.CardType; }
-    
+
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
     public List<CardAbility> Abilities { get => _currentCardData.Abilities; }
 
+    //How do we figure this out?
+    public List<ContinuousEffect> ContinuousEffects { get; set; }
+
+
+    private int _powerWithoutMods;
+    private int _toughnessWithoutMods;
 
     //Temporary sort of unsafe properties for accessing Unit Power and Toughness,
     //While I figure out how I actually want to do this properly in a more type safe way.
@@ -78,6 +84,7 @@ public class CardInstance : CardGameEntity
 
     public CardInstance(BaseCardData cardData)
     {
+        ContinuousEffects = new List<ContinuousEffect>();
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();
     }

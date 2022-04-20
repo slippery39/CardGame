@@ -447,7 +447,7 @@ public class CardDatabase : ICardDatabase
             }
         });
 
-        
+
         //Delver of Secrets
         _cards.Add(new UnitCardData()
         {
@@ -550,6 +550,8 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Benalish Marshall",
             ManaCost = "3",
+            Power = 3,
+            Toughness = 3,
             ArtPath = "CardArt/BenalishMarshall",
             Abilities = new List<CardAbility>
             {
@@ -583,25 +585,25 @@ public class CardDatabase : ICardDatabase
         });
         */
 
-/*
-        //Snapcaster Mage
-        _cards.Add(new UnitCardData()
-        {
-            Name = "Snapcaster Mage",
-            ManaCost = "2",
-            Power = 2,
-            Toughness = 1,
-            ArtPath = "CardArt/SnapcasterMage",
-            Abilities = new List<CardAbility>()
-            {
-                new TriggeredAbility
-                (
-                    TriggerType.SelfEntersPlay,
-                    new CastSpellFromDiscardEffect()
-                )
-            }
-        });
-        */
+        /*
+                //Snapcaster Mage
+                _cards.Add(new UnitCardData()
+                {
+                    Name = "Snapcaster Mage",
+                    ManaCost = "2",
+                    Power = 2,
+                    Toughness = 1,
+                    ArtPath = "CardArt/SnapcasterMage",
+                    Abilities = new List<CardAbility>()
+                    {
+                        new TriggeredAbility
+                        (
+                            TriggerType.SelfEntersPlay,
+                            new CastSpellFromDiscardEffect()
+                        )
+                    }
+                });
+                */
 
 
         /*
@@ -635,7 +637,7 @@ public class CardDatabase : ICardDatabase
                 }
         });;
         */
-        
+
 
     }
 

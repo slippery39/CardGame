@@ -26,6 +26,16 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         //reset summoning sickness when changing zones.
         card.IsSummoningSick = true;
 
+        //remove any continuous effects on the card
+        card.ContinuousEffects = new List<ContinuousEffect>();
+
+        //remove any continuous effects in play that are from the associated card
+        var unitsInPlay = cardGame.GetUnitsInPlay();
+        foreach (var unit in unitsInPlay)
+        {
+            unit.ContinuousEffects = unit.ContinuousEffects.Where(ce => ce.SourceCard != card).ToList();
+        }
+
         currentZone.Remove(card);
         zoneTo.Add(card);
         
