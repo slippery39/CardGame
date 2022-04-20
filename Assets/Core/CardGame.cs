@@ -36,6 +36,7 @@ public class CardGame
     private IDestroySystem _destroySystem;
 
     private IResolvingSystem _resolvingSystem;
+    private IContinuousEffectSystem _continuousEffectSystem;
 
     #endregion
 

@@ -546,6 +546,28 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Benalish Marshall",
+            ManaCost = "3",
+            ArtPath = "CardArt/BenalishMarshall",
+            Abilities = new List<CardAbility>
+            {
+                new StaticAbility
+                {
+                    EffectType = StaticAbilityType.OtherCreaturesYouControl,
+                    Effects = new List<StaticAbilityEffect>
+                    {
+                        new StaticPumpEffect
+                        {
+                            Power = 1,
+                            Toughness = 1
+                        }
+                    }
+                }
+            }
+        });
+
         /*
         _cards.Add(new UnitCardData()
         {
