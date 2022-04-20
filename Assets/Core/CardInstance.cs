@@ -31,6 +31,9 @@ public class CardInstance : CardGameEntity
     private int _powerWithoutMods;
     private int _toughnessWithoutMods;
 
+    //Will need to update our damage systems for this.
+    private int _damageTaken = 0;
+
     //Temporary sort of unsafe properties for accessing Unit Power and Toughness,
     //While I figure out how I actually want to do this properly in a more type safe way.
     //I was casting CardInstance.CurrentCardData all over my code base anyways,
@@ -41,7 +44,19 @@ public class CardInstance : CardGameEntity
         {
             if (_currentCardData is UnitCardData)
             {
-                return ((UnitCardData)_currentCardData).Power;
+                //return - power without mods, + mods power;
+                int calculatedPower = _powerWithoutMods;
+
+                var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
+                if (pumpContinuousEffects.Any())
+                {
+                    foreach (var pumpEffect in pumpContinuousEffects)
+                    {
+                        calculatedPower += pumpEffect.Power;
+                    }
+                }
+
+                return calculatedPower;
             }
             else
             {
@@ -52,7 +67,7 @@ public class CardInstance : CardGameEntity
         {
             if (_currentCardData is UnitCardData)
             {
-                ((UnitCardData)_currentCardData).Power = value;
+                _powerWithoutMods = value;
             }
         }
     }
@@ -63,7 +78,19 @@ public class CardInstance : CardGameEntity
         {
             if (_currentCardData is UnitCardData)
             {
-                return ((UnitCardData)_currentCardData).Toughness;
+                //return - power without mods, + mods power;
+                int calculatedToughness = _toughnessWithoutMods;
+
+                var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
+                if (pumpContinuousEffects.Any())
+                {
+                    foreach (var pumpEffect in pumpContinuousEffects)
+                    {
+                        calculatedToughness += pumpEffect.Toughness;
+                    }
+                }
+
+                return calculatedToughness;
             }
             else
             {
@@ -74,7 +101,7 @@ public class CardInstance : CardGameEntity
         {
             if (_currentCardData is UnitCardData)
             {
-                ((UnitCardData)_currentCardData).Toughness = value;
+                _toughnessWithoutMods = value;
             }
         }
 
@@ -87,6 +114,13 @@ public class CardInstance : CardGameEntity
         ContinuousEffects = new List<ContinuousEffect>();
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();
+
+        if (_currentCardData is UnitCardData)
+        {
+            var unitCardData = (UnitCardData)_currentCardData;
+            _powerWithoutMods = unitCardData.Power;
+            _toughnessWithoutMods = unitCardData.Toughness;
+        }
     }
 
     #region Public Methods

@@ -312,7 +312,7 @@ public class CardGame
     private void AddRandomCardsToHand(Player player)
     {
         CardDatabase db = new CardDatabase();
-        var cards = db.GetAll().ToList();
+        var cards = db.GetAll().Where(c=>c.Name == "Benalish Marshall").ToList();
 
         var rng = new Random();
 
