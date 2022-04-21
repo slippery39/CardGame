@@ -32,7 +32,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         if (sourceAbility.EffectType == StaticAbilityType.OtherCreaturesYouControl)
         {
             var owner = cardGame.GetOwnerOfCard((CardInstance)source);
-            return cardGame.GetUnitsInPlay().Where(u => u.OwnerId == owner.EntityId && u.EntityId!= source.EntityId).ToList();
+            return cardGame.GetUnitsInPlay().Where(u => u.OwnerId == owner.PlayerId && u.EntityId!= source.EntityId).ToList();
         }
 
         throw new System.Exception("Invalid Static Effect Type in call to get EntitiesToApplyAbility");
