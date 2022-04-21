@@ -35,7 +35,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
         //Keep checking until there is no more to check?
         foreach (var unit in units)
         {
-            //State Based effect, all units with toughness 0 or less get moved to the discard pile.
+            //State Based effect, all units with current toughness 0 or less get moved to the discard pile.
             if (unit.Toughness <= 0)
             {
                 var owner = cardGame.GetOwnerOfCard(unit);

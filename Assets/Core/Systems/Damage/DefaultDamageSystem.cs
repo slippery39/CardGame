@@ -89,7 +89,7 @@ public class DefaultDamageSystem : IDamageSystem
 
     private void DealDamage(CardInstance damagedUnit, int damage)
     {
-        damagedUnit.Toughness -= damage;
+        damagedUnit.DamageTaken += damage;
     }
 
     private void DealDamage(CardGameEntity damagedEntity, int damage)

@@ -90,6 +90,8 @@ public class CardInstance : CardGameEntity
                     }
                 }
 
+                calculatedToughness = calculatedToughness - DamageTaken;
+
                 return calculatedToughness;
             }
             else
@@ -107,6 +109,8 @@ public class CardInstance : CardGameEntity
 
     }
 
+    public int DamageTaken { get => _damageTaken; set => _damageTaken = value; }
+     
     #endregion
 
     public CardInstance(BaseCardData cardData)
