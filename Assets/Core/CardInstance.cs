@@ -31,9 +31,6 @@ public class CardInstance : CardGameEntity
     private int _powerWithoutMods;
     private int _toughnessWithoutMods;
 
-    //Will need to update our damage systems for this.
-    private int _damageTaken = 0;
-
     //Temporary sort of unsafe properties for accessing Unit Power and Toughness,
     //While I figure out how I actually want to do this properly in a more type safe way.
     //I was casting CardInstance.CurrentCardData all over my code base anyways,
@@ -109,8 +106,8 @@ public class CardInstance : CardGameEntity
 
     }
 
-    public int DamageTaken { get => _damageTaken; set => _damageTaken = value; }
-     
+    public int DamageTaken { get; set; }
+
     #endregion
 
     public CardInstance(BaseCardData cardData)

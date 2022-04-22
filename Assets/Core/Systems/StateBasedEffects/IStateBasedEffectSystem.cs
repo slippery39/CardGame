@@ -39,9 +39,13 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
             if (unit.Toughness <= 0)
             {
                 var owner = cardGame.GetOwnerOfCard(unit);
-                cardGame.ZoneChangeSystem.MoveToZone(cardGame, unit, owner.DiscardPile);
+                cardGame.ZoneChangeSystem.MoveToZone(cardGame, unit, owner.DiscardPile);                
+
+                var continousEffects = units.SelectMany(u => u.ContinuousEffects).Where(ce => ce.SourceCard == unit);
+                cardGame.ContinuousEffectSystem.RemoveContinousEffects(cardGame,unit);
             }
         }
     }
 }
+
 
