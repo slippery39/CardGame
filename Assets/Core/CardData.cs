@@ -557,7 +557,7 @@ public class CardDatabase : ICardDatabase
             {
                 new StaticAbility
                 {
-                    EffectType = StaticAbilityType.OtherCreaturesYouControl,
+                    AffectedEntities = StaticAbilityEntitiesAffected.OtherCreaturesYouControl,
                     Effects = new List<StaticAbilityEffect>
                     {
                         new StaticPumpEffect
