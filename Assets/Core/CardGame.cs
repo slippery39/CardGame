@@ -37,6 +37,7 @@ public class CardGame
 
     private IResolvingSystem _resolvingSystem;
     private IContinuousEffectSystem _continuousEffectSystem;
+    private IActivatedAbilitySystem _activatedAbilitySystem;
 
     #endregion
 
@@ -67,6 +68,8 @@ public class CardGame
     public ISpellCastingSystem SpellCastingSystem { get => _spellCastingSystem; set => _spellCastingSystem = value; }
     public IResolvingSystem ResolvingSystem { get => _resolvingSystem; set => _resolvingSystem = value; }
     public IContinuousEffectSystem ContinuousEffectSystem { get => _continuousEffectSystem; set => _continuousEffectSystem = value; }
+
+    public IActivatedAbilitySystem ActivatedAbilitySystem { get => _activatedAbilitySystem; set => _activatedAbilitySystem = value; }
 
 
     #endregion
@@ -114,6 +117,7 @@ public class CardGame
         _destroySystem = new DefaultDestroySystem();
         _resolvingSystem = new DefaultResolvingSystem();
         _continuousEffectSystem = new DefaultContinousEffectSystem();
+        _activatedAbilitySystem = new DefaultActivatedAbilitySystem();
 
         _cardGameLogger = new UnityCardGameLogger();
         //TODO - some sort of check to make sure all systems are initialized?

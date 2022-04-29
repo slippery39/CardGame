@@ -13,7 +13,7 @@ public interface ITargetSystem
 public class DefaultTargetSystem : ITargetSystem
 {
 
-    private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits,TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
+    private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
 
     /// <summary>
     /// Gets the correct entities to apply an effect to when there is no manual targets.
@@ -30,11 +30,17 @@ public class DefaultTargetSystem : ITargetSystem
             case TargetType.None:
                 return new List<CardGameEntity> { effectSource };
             case TargetType.Self:
-                return new List<CardGameEntity> { player };
+                {
+                    if (effect is PumpUnitEffect)
+                    {
+                        return new List<CardGameEntity> { effectSource };
+                    }
+                    return new List<CardGameEntity> { player };
+                }
             case TargetType.AllUnits:
                 return cardGame.GetUnitsInPlay().Cast<CardGameEntity>().ToList();
             case TargetType.OurUnits:
-                return player.Lanes.Where(l => !l.IsEmpty()).Select(l=>l.UnitInLane).Cast<CardGameEntity>().ToList();
+                return player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
             case TargetType.OpponentUnits:
                 return cardGame.Players.Where(p => player.PlayerId != p.PlayerId).First().Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
             case TargetType.UnitSelf:

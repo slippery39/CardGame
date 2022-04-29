@@ -4,4 +4,3 @@
     public string ManaCost { get; set; }
     public Effect AbilityEffect { get; set; }
 }
-

@@ -42,6 +42,18 @@ public class GameUIIdleState : IGameUIState
         }
     }
 
+    private void HandleCardActivatedAbility(CardInstance card)
+    {
+        if (_cardGame.ActivatedAbilitySystem.CanActivateAbility(_cardGame, ActingPlayer, card))
+        {
+            _cardGame.ActivatedAbilitySystem.AcivateAbility(_cardGame, ActingPlayer, card);
+        }
+        else
+        {
+            _cardGame.Log("That card does not have an activated ability");
+        }
+    }
+
     public void HandleInput()
     {
     }
@@ -55,6 +67,16 @@ public class GameUIIdleState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
+        //check if its a card in play
+
+        var cardInPlay = ActingPlayer.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Where(card => card.EntityId == entityId).FirstOrDefault();
+
+        if (cardInPlay != null)
+        {
+            HandleCardActivatedAbility(cardInPlay);
+            return;
+        }
+
         //we need to get the card from hand?
         var cardFromHand = ActingPlayer.Hand.Cards.Where(card => card.EntityId == entityId).FirstOrDefault();
 
