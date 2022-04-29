@@ -570,11 +570,34 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Shivan Dragon",
+            ManaCost = "6",
+            Power = 5,
+            Toughness = 5,
+            ArtPath = "CardArt/ShivanDragon",
+            Abilities = new List<CardAbility>
+            {
+                new FlyingAbility(),
+                new ActivatedAbility()
+                {
+                    ManaCost = "1",
+                    AbilityEffect = new PumpUnitEffect()
+                    {
+                        Power = 1,
+                        Toughness = 0,
+                        TargetType = TargetType.Self
+                    }
+                }
+            }
+        });
+
         /*
         _cards.Add(new UnitCardData()
         {
             Name = "Doomed Traveler",
-            ManaCost = "1",
+            ManaCost = "1"
             ArtPath = "CardArt/Doomed Traveler",
             Power = 1,
             Toughness = 1,

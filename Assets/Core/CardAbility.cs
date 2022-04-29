@@ -264,6 +264,7 @@ public static class TargetTypeHelper
             case TargetType.TargetUnits: return "target unit";
             case TargetType.TargetPlayers: return "target player";
             case TargetType.TargetUnitsOrPlayers: return "target unit or player";
+            case TargetType.Self: return "to itself";
             default: return "";
         }
     }
@@ -296,7 +297,6 @@ public class PumpUnitEffect : Effect
             var rulesText = $"Give {powerSymbol}{Power}/{toughnessSymbol}{Toughness} to {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
             return rulesText;
         }
-
     }
     public int Power { get; set; }
     public int Toughness { get; set; }
