@@ -106,8 +106,8 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     throw new Exception("Error : only players can be effected with the dark confidant effect");
                 }
                 var cardDrawn = cardGame.CardDrawSystem.DrawCard(cardGame, player);
-                cardGame.DamageSystem.DealDamage(cardGame, source, player, Convert.ToInt32(cardDrawn.ManaCost));
-                cardGame.Log($@"Dark confidant effect : Drawn a card and you have lost {Convert.ToInt32(cardDrawn.ManaCost)} life.");
+                cardGame.DamageSystem.DealDamage(cardGame, source, player, cardDrawn.ConvertedManaCost);
+                cardGame.Log($@"Dark confidant effect : Drawn a card and you have lost {cardDrawn.ConvertedManaCost} life.");
             }
         }
         if (effect is SacrificeSelfEffect)

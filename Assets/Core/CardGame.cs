@@ -219,7 +219,7 @@ public class CardGame
 
             if (targetAsEntity != null)
             {
-                ManaSystem.SpendMana(this, player, Convert.ToInt32(cardFromHand.ManaCost));
+                ManaSystem.SpendMana(this, player,cardFromHand.ConvertedManaCost);
                 ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
                 _stateBasedEffectSystem.CheckStateBasedEffects(this);
             }
@@ -233,7 +233,7 @@ public class CardGame
         {
             if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand) && ManaSystem.CanPlayCard(this, player, cardFromHand))
             {
-                ManaSystem.SpendMana(this, player, Convert.ToInt32(cardFromHand.ManaCost));
+                ManaSystem.SpendMana(this, player, cardFromHand.ConvertedManaCost);
                 ResolvingSystem.Add(this, cardFromHand, null);
                 _stateBasedEffectSystem.CheckStateBasedEffects(this);
             }
@@ -245,7 +245,7 @@ public class CardGame
 
                 if (targetAsEntity != null)
                 {
-                    ManaSystem.SpendMana(this, player, Convert.ToInt32(cardFromHand.ManaCost));
+                    ManaSystem.SpendMana(this, player,cardFromHand.ConvertedManaCost);
                     ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
                     _stateBasedEffectSystem.CheckStateBasedEffects(this);
                 }
