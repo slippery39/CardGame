@@ -54,8 +54,13 @@ public class DefaultTurnSystem : ITurnSystem
         //Trigger any End of turn abilities
         cardGame.HandleTriggeredAbilities(activePlayersUnits,TriggerType.AtTurnEnd);
 
+        //Reset the players mana played this turn.
+        cardGame.ActivePlayer.ManaPlayedThisTurn = 0;
+
         //Change the active player
         _ = cardGame.ActivePlayerId == 1 ? cardGame.ActivePlayerId = 2 : cardGame.ActivePlayerId = 1;
+        
+
         TurnId++;
     }
 }
