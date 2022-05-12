@@ -38,12 +38,18 @@ public class UICard : UIGameEntity
         if (cardData is SpellCardData)
         {
             _cardCombatStatsText.gameObject.SetActive(false);
+            _cardManaText.gameObject.SetActive(true);
         }
         //in case it has already been hidden previously.
         else if (cardData is UnitCardData)
         {
             _cardCombatStatsText.gameObject.SetActive(true);
-
+            _cardManaText.gameObject.SetActive(true);
+        }
+        else if (cardData is ManaCardData)
+        {
+            _cardCombatStatsText.gameObject.SetActive(false);
+            _cardManaText.gameObject.SetActive(false);
         }
 
         _cardNameText.text = cardData.Name;

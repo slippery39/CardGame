@@ -39,6 +39,9 @@ public class Player : CardGameEntity
     public DiscardPile DiscardPile { get => _discardPile; set => _discardPile = value; }
     public Deck Deck { get => _deck; set => _deck = value; }
     public int Mana { get => _mana; set => _mana = value; }
+    public int ManaPlayedThisTurn { get; set; } = 0;
+    public int TotalManaThatCanBePlayedThisTurn { get; set; } = 1;
+
 
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 

@@ -89,6 +89,23 @@ public class SpellCardData : BaseCardData
     }
 }
 
+
+public class ManaCardData : BaseCardData
+{
+    public override string CardType => "Mana";
+    public string ManaAdded { get; set; } = "!";
+
+    public override string RulesText => $"Add {ManaAdded} to your mana";
+    public override BaseCardData Clone()
+    {
+        return new ManaCardData()
+        {
+            ManaAdded = ManaAdded,
+            Name = Name
+        };
+    }
+}
+
 public interface ICardDatabase
 {
     List<BaseCardData> GetAll();
@@ -591,6 +608,12 @@ public class CardDatabase : ICardDatabase
                     }
                 }
             }
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Wastes",
+            ManaAdded = "1"
         });
 
         /*

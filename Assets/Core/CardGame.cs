@@ -206,6 +206,18 @@ public class CardGame
 
     public void PlayCardFromHand(Player player, CardInstance cardFromHand, int targetId)
     {
+
+        if (cardFromHand.CurrentCardData is ManaCardData)
+        {
+            if (!ManaSystem.CanPlayManaCard(this, player, cardFromHand))
+            {
+                Log("$Cannot play mana");
+                return;
+            }
+
+            //var manaCard = (ManaCardData)cardFromHand.CurrentCardData;
+            ManaSystem.PlayManaCard(this, player, cardFromHand);
+        }
         if (cardFromHand.CurrentCardData is UnitCardData)
         {
             if (!ManaSystem.CanPlayCard(this, player, cardFromHand))
@@ -316,7 +328,7 @@ public class CardGame
     private void AddRandomCardsToHand(Player player)
     {
         CardDatabase db = new CardDatabase();
-        var cards = db.GetAll().Where(c=>c.Name == "Shivan Dragon").ToList();
+        var cards = db.GetAll().Where(c=>c.Name == "Wastes").ToList();
 
         var rng = new Random();
 

@@ -7,6 +7,9 @@ public interface IManaSystem
     void SpendMana(CardGame cardGame, Player player, int amount);
     void ResetMana(CardGame cardGame, Player player);
     bool CanPlayCard(CardGame cardGame, Player player, CardInstance card);
+    bool CanPlayManaCard(CardGame cardGame, Player player, CardInstance card);
+    void PlayManaCard(CardGame cardGame, Player player, CardInstance card);
+
 }
 
 public class DefaultManaSystem : IManaSystem
@@ -36,5 +39,18 @@ public class DefaultManaSystem : IManaSystem
     {
         //TODO - handle non integer mana costs.
         return player.Mana >= card.ConvertedManaCost;
+    }
+
+    public bool CanPlayManaCard(CardGame cardGame, Player player, CardInstance card)
+    {
+        return player.ManaPlayedThisTurn < player.TotalManaThatCanBePlayedThisTurn; 
+    }
+
+    public void PlayManaCard(CardGame cardGame, Player player, CardInstance card)
+    {
+        player.ManaPlayedThisTurn++;
+        var manaCard = card.CurrentCardData as ManaCardData;
+        AddMana(cardGame, player, Convert.ToInt32(manaCard.ManaAdded));
+        cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.DiscardPile);        
     }
 }

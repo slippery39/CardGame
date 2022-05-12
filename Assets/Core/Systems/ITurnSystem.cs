@@ -37,8 +37,8 @@ public class DefaultTurnSystem : ITurnSystem
         cardGame.HandleTriggeredAbilities(activePlayersUnits,TriggerType.AtTurnStart);
         //Reset any spent mana
         cardGame.ManaSystem.ResetMana(cardGame, cardGame.ActivePlayer);
-        //Active Player Gains A Mana
-        cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
+        //Active Player Gains A Mana - not anymore.
+        //cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
         //Active Player draws a card
         cardGame.CardDrawSystem.DrawCard(cardGame, cardGame.ActivePlayer);
     }

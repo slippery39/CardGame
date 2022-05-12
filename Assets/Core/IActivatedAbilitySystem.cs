@@ -39,6 +39,5 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
             return true;
         }
         return false;
-        //Need to check if the player has enough mana to activate the ability
     }
 }

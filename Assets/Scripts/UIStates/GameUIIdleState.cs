@@ -28,7 +28,14 @@ public class GameUIIdleState : IGameUIState
         {
             _stateMachine.ChangeState(new GameUISummonUnitState(_stateMachine, card));
         }
-        else
+        else if (card.CurrentCardData is ManaCardData)
+        {
+            if (_cardGame.ManaSystem.CanPlayManaCard(_cardGame, ActingPlayer, card))
+            {
+                _cardGame.ManaSystem.PlayManaCard(_cardGame, ActingPlayer, card);
+            }
+        }
+        else if (card.CurrentCardData is SpellCardData)
         {
             //TODO - need to update this.
             if (_cardGame.TargetSystem.SpellNeedsTargets(_cardGame, ActingPlayer, card))
