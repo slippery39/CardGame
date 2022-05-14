@@ -19,7 +19,41 @@ public class CardInstance : CardGameEntity
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
     public string RulesText { get => _currentCardData.RulesText; set => _currentCardData.Name = value; }
 
-    public int ConvertedManaCost => Convert.ToInt32(ManaCost);
+    public int ConvertedManaCost
+    {
+        get
+        {
+            //From Left To Right
+            //Count the number of colors symbols (i.e. should be letters)
+            //Then Count the number as the generic symbol
+
+            //Mana Costs should be in Magic Format (i.e. 3U, 5BB) with the generic mana cost first.
+            var manaChars = ManaCost.ToCharArray();
+            int convertedCost = 0;
+            string currentNumber = ""; //should only be 1 currentNumber
+            for (int i = 0; i < manaChars.Length; i++)
+            {
+                if (manaChars[i].IsNumeric())
+                {
+                    currentNumber += manaChars[i].ToString();
+                    //We can't just convert to an int, as it will give us the char code not the numeric value... 
+                    //Calling Char.GetNumericValue gives us the actual numeric value of the char in question.
+                    convertedCost += Convert.ToInt32(Char.GetNumericValue(manaChars[i]));
+                }
+                else
+                {
+                    if (currentNumber.Length > 0)
+                    {
+                        convertedCost += Convert.ToInt32(currentNumber);
+                        currentNumber = "";
+                    }
+                    convertedCost++; //if its not a numeric symbol than it should be a colored symbol and we just add 1.
+                }
+            }
+            return convertedCost;
+        }
+    }
+
 
     public string ManaCost { get => _currentCardData.ManaCost; set => _currentCardData.ManaCost = value; }
     public string CardType { get => _currentCardData.CardType; }
