@@ -123,7 +123,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Grizzly Bear",
-            ManaCost = "2",
+            ManaCost = "1G",
             Power = 2,
             Toughness = 2,
             ArtPath = "CardArt/GrizzlyBear"
@@ -132,7 +132,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new SpellCardData()
         {
             Name = "Lightning Bolt",
-            ManaCost = "1",
+            ManaCost = "R",
             ArtPath = "CardArt/LightningBolt",
             Effects = new List<Effect>()
             {
