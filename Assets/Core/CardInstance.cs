@@ -36,9 +36,6 @@ public class CardInstance : CardGameEntity
                 if (manaChars[i].IsNumeric())
                 {
                     currentNumber += manaChars[i].ToString();
-                    //We can't just convert to an int, as it will give us the char code not the numeric value... 
-                    //Calling Char.GetNumericValue gives us the actual numeric value of the char in question.
-                    convertedCost += Convert.ToInt32(Char.GetNumericValue(manaChars[i]));
                 }
                 else
                 {
