@@ -33,11 +33,6 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
     {
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
         if (activatedAbility == null) { return false; }
-
-        if (player.Mana >= Convert.ToInt32(activatedAbility.ManaCost))
-        {
-            return true;
-        }
-        return false;
+        return cardGame.ManaSystem.CanPayManaCost(cardGame, player, activatedAbility.ManaCost);
     }
 }
