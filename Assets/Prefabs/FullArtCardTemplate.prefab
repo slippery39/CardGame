@@ -145,6 +145,14 @@ MonoBehaviour:
   _cardTypeText: {fileID: 8276961569995114952}
   _cardArtRenderer: {fileID: 8276961569516339420}
   _highlight: {fileID: 4640011246040081690}
+  _cardFrame: {fileID: 8276961569369583191}
+  colorlessCardFrame: {fileID: 21300000, guid: 06767faded318c648a02269b8078eace, type: 3}
+  whiteCardFrame: {fileID: 21300000, guid: aab8081bea730444285694555cbee845, type: 3}
+  blueCardFrame: {fileID: 21300000, guid: e0ef56f3ebff0884a966615915f7fe3a, type: 3}
+  greenCardFrame: {fileID: 21300000, guid: 6d284fed05f2deb4583eb4c0db436489, type: 3}
+  redCardFrame: {fileID: 21300000, guid: 1c9602036ba00a543a1849251202e2a8, type: 3}
+  blackCardFrame: {fileID: 21300000, guid: 2ec3d52bf18705c4db75c5cd5f30c0d2, type: 3}
+  multiColorCardFrame: {fileID: 21300000, guid: 0a1d7baac4f679d4fa732b01cfe9139c, type: 3}
 --- !u!65 &1830185712125603268
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -439,8 +447,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8276961569516339418}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0126, y: 0.9, z: 0}
-  m_LocalScale: {x: 0.7182159, y: 0.6028611, z: 1}
+  m_LocalPosition: {x: -0.014, y: 0.918, z: 0}
+  m_LocalScale: {x: 0.8050892, y: 0.65984637, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8276961568580900995}

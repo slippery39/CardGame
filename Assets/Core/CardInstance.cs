@@ -18,6 +18,7 @@ public class CardInstance : CardGameEntity
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
     public string RulesText { get => _currentCardData.RulesText; set => _currentCardData.Name = value; }
+    public List<CardColor> Colors { get => _currentCardData.Colors;}
 
     public int ConvertedManaCost
     {

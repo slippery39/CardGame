@@ -51,6 +51,7 @@ public class UnitCardData : BaseCardData
             ArtPath = ArtPath,
             Power = Power,
             Toughness = Toughness,
+            Colors = Colors,
             Abilities = Abilities.ToList() //todo - potential deep clone.
         };
     }
@@ -84,6 +85,7 @@ public class SpellCardData : BaseCardData
             Name = Name,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
+            Colors = Colors,
             Abilities = Abilities.ToList(), //todo - potential deep clone.
             Effects = Effects.ToList()
         };

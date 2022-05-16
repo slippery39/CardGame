@@ -341,7 +341,7 @@ public class CardGame
     void AddRandomCardsToDeck()
     {
         var cardDB = new CardDatabase();
-        var cards = cardDB.GetAll().Where(card => new List<string> { "Grizzly Bear", "Lightning Bolt" }.Contains(card.Name)).ToList();
+        var cards = cardDB.GetAll().ToList();
 
         for (int i = 0; i < 60; i++)
         {
