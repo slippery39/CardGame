@@ -104,7 +104,8 @@ public class ManaCardData : BaseCardData
         return new ManaCardData()
         {
             ManaAdded = ManaAdded,
-            Name = Name
+            Name = Name,
+            ArtPath = ArtPath
         };
     }
 }
@@ -508,10 +509,11 @@ public class CardDatabase : ICardDatabase
                         TransformData = new UnitCardData
                         {
                             Name = "Insectile Aberration",
-                            ManaCost = "1",
+                            ManaCost = "U",
                             Power = 3,
                             Toughness = 2,
                             ArtPath = "CardArt/InsectileAberration",
+                            Colors = new List<CardColor>{CardColor.Blue},
                             Abilities = new List<CardAbility>()
                             {
                                 new FlyingAbility()
@@ -644,7 +646,8 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Wastes",
-            ManaAdded = "1"
+            ManaAdded = "1",
+            ArtPath = "CardArt/Wastes",
         });
 
         /*

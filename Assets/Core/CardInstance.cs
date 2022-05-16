@@ -14,11 +14,25 @@ public class CardInstance : CardGameEntity
     private bool _isSummoningSick = true;
 
     #region Public Properties
-    public BaseCardData CurrentCardData { get => _currentCardData; set => _currentCardData = value; }
+    public BaseCardData CurrentCardData
+    {
+        get => _currentCardData;
+        set
+        {
+            _currentCardData = value;
+
+            if (_currentCardData is UnitCardData)
+            {
+                _powerWithoutMods = ((UnitCardData)_currentCardData).Power;
+                _toughnessWithoutMods = ((UnitCardData)_currentCardData).Toughness;
+            }
+        }
+    }
+
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
     public string RulesText { get => _currentCardData.RulesText; set => _currentCardData.Name = value; }
-    public List<CardColor> Colors { get => _currentCardData.Colors;}
+    public List<CardColor> Colors { get => _currentCardData.Colors; }
 
     public int ConvertedManaCost
     {
