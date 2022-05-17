@@ -479,7 +479,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "RRR",
             Power = 6,
             Toughness = 1,
-            ArtPath = "CardArt/Ball Lightning",
+            ArtPath = "CardArt/BallLightning",
             Colors = new List<CardColor>() { CardColor.Red },
             Abilities = new List<CardAbility>()
             {

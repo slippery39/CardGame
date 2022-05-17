@@ -46,6 +46,11 @@ public class UIGameController : MonoBehaviour
 
     void Start()
     {
+
+
+        //Check to see if any cards exist that don't have images.
+        CheckForCardsWithoutImages();
+
         _stateMachine = GetComponent<GameUIStateMachine>();
         InitializeBoard();
         UpdateBoard();
@@ -177,6 +182,22 @@ public class UIGameController : MonoBehaviour
         _player1Avatar.SetMana(_cardGame.Player1.Mana);
         _player2Avatar.SetMana(_cardGame.Player2.Mana);
     }
+
+    //TEST METHODS
+    private void CheckForCardsWithoutImages()
+    {
+        var allCards = new CardDatabase().GetAll();
+        foreach (var card in allCards)
+        {
+            Sprite art = Resources.Load<Sprite>(card.ArtPath);
+
+            if (art == null)
+            {
+                Debug.LogWarning($@"Warning: Could not find card art for {card.Name}");
+            }
+        }
+    }
+
     #endregion
 }
 

@@ -88,6 +88,8 @@ public class UICard : UIGameEntity
         SetCardFrame();
     }
 
+
+
     private void SetCardFrame()
     {
         if (_cardInstance == null)
