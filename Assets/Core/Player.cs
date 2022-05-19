@@ -14,6 +14,11 @@ public class Player : CardGameEntity
     private Hand _hand;
     private DiscardPile _discardPile;
     private Deck _deck;
+
+
+    private ManaPool _manaPool;
+
+    //TODO - replace these.
     private int _totalMana;
     private int _mana;
     private string _name;
