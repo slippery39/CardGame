@@ -650,6 +650,14 @@ public class CardDatabase : ICardDatabase
             ArtPath = "CardArt/Wastes",
         });
 
+        _cards.Add(new ManaCardData()
+        {
+            Name = "City of Brass",
+            ManaAdded = "*",
+            ArtPath = "CardArt/CityOfBrass"
+        });
+
+
         /*
         _cards.Add(new UnitCardData()
         {

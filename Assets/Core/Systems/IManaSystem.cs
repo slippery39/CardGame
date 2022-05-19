@@ -29,6 +29,8 @@ public class DefaultManaSystem : IManaSystem
     }
     public void AddMana(CardGame cardGame,Player player,int amount)
     {
+        //TODO - Player will now have a mana pool.
+        //We need to handle more than just an amount;
         player.Mana += amount;
         player.TotalMana += amount;
     }
