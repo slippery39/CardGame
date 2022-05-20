@@ -87,7 +87,7 @@ public class ManaPool
 
     public void AddTemporaryMana(ManaType type, int amount)
     {
-        ManaByType[type] += amount;
+        CurrentManaByType[type] += amount;
     }
 
     public void ResetMana()

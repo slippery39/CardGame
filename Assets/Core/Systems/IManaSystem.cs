@@ -2,8 +2,8 @@
 
 public interface IManaSystem
 {
-    void AddMana(CardGame cardGame,Player player, int amount);
-    void AddTemporaryMana(CardGame cardGame, Player player, int amount);
+    void AddMana(CardGame cardGame, Player player, int amount);
+    void AddTemporaryMana(CardGame cardGame, Player player, ManaType manaType, int amount);
     void SpendMana(CardGame cardGame, Player player, int amount);
     void ResetMana(CardGame cardGame, Player player);
     bool CanPlayCard(CardGame cardGame, Player player, CardInstance card);
@@ -23,12 +23,12 @@ public interface IManaSystem
 public class DefaultManaSystem : IManaSystem
 {
     //Adds mana to the mana pool without effecting the total amount.
-    public void AddTemporaryMana(CardGame cardGame,Player player, int amount)
+    public void AddTemporaryMana(CardGame cardGame, Player player, ManaType manaType, int amount)
     {
-        player.ManaPool.AddTemporaryMana(ManaType.Any,amount);
-        //player.Mana += amount;
+        player.ManaPool.AddTemporaryMana(ManaType.Any, amount);
     }
-    public void AddMana(CardGame cardGame,Player player,int amount)
+
+    public void AddMana(CardGame cardGame, Player player, int amount)
     {
         //TODO - Player will now have a mana pool.
         //We need to handle more than just an amount;
@@ -45,7 +45,7 @@ public class DefaultManaSystem : IManaSystem
         player.ManaPool.ResetMana();
     }
 
-    public bool CanPlayCard(CardGame cardGame,Player player, CardInstance card)
+    public bool CanPlayCard(CardGame cardGame, Player player, CardInstance card)
     {
         //TODO - handle non integer mana costs.
         return player.Mana >= card.ConvertedManaCost;
@@ -53,7 +53,7 @@ public class DefaultManaSystem : IManaSystem
 
     public bool CanPlayManaCard(CardGame cardGame, Player player, CardInstance card)
     {
-        return player.ManaPlayedThisTurn < player.TotalManaThatCanBePlayedThisTurn; 
+        return player.ManaPlayedThisTurn < player.TotalManaThatCanBePlayedThisTurn;
     }
 
     public void PlayManaCard(CardGame cardGame, Player player, CardInstance card)
@@ -61,12 +61,12 @@ public class DefaultManaSystem : IManaSystem
         player.ManaPlayedThisTurn++;
         var manaCard = card.CurrentCardData as ManaCardData;
         AddMana(cardGame, player, Convert.ToInt32(manaCard.ManaAdded));
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.DiscardPile);        
+        cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.DiscardPile);
     }
 
     public bool CanPayManaCost(CardGame cardGame, Player player, string manaCost)
     {
-        return (player.Mana >= GetConvertedManaCost(cardGame,manaCost));
+        return (player.Mana >= GetConvertedManaCost(cardGame, manaCost));
     }
 
     /// <summary>
@@ -81,7 +81,7 @@ public class DefaultManaSystem : IManaSystem
     /// <param name="cardGame"></param>
     /// <param name="manaCost"></param>
     /// <returns></returns>
-    public int GetConvertedManaCost(CardGame cardGame,string manaCost)
+    public int GetConvertedManaCost(CardGame cardGame, string manaCost)
     {
         //From Left To Right
         //Count the number of colors symbols (i.e. should be letters)

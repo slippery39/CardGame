@@ -210,6 +210,7 @@ public class CardDatabase : ICardDatabase
             {
                 new AddTempManaEffect()
                 {
+                    ManaType = ManaType.Any,
                     Amount = 3
                 }
             }

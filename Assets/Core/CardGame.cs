@@ -328,7 +328,7 @@ public class CardGame
     private void AddRandomCardsToHand(Player player)
     {
         CardDatabase db = new CardDatabase();
-        var cards = db.GetAll().Where(c => c.Name == "Wastes").ToList();
+        var cards = db.GetAll().Where(c => c.Name == "Black Lotus").ToList();
 
         var rng = new Random();
 
