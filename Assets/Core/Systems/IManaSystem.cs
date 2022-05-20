@@ -38,6 +38,7 @@ public class DefaultManaSystem : IManaSystem
 
     public void SpendMana(CardGame cardGame, Player player, int amount)
     {
+        //TODO - change this.
         player.ManaPool.SpendMana(ManaType.Any, amount);
     }
 
@@ -109,9 +110,6 @@ public class DefaultManaSystem : IManaSystem
             if (manaChars[i].IsNumeric())
             {
                 currentNumber += manaChars[i].ToString();
-                //We can't just convert to an int, as it will give us the char code not the numeric value... 
-                //Calling Char.GetNumericValue gives us the actual numeric value of the char in question.
-                convertedCost += Convert.ToInt32(Char.GetNumericValue(manaChars[i]));
             }
             else
             {
@@ -122,6 +120,11 @@ public class DefaultManaSystem : IManaSystem
                 }
                 convertedCost++; //if its not a numeric symbol than it should be a colored symbol and we just add 1.
             }
+        }
+
+        if (currentNumber.Length > 0)
+        {
+            convertedCost += Convert.ToInt32(currentNumber); 
         }
         return convertedCost;
     }

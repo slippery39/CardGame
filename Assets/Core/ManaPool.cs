@@ -67,6 +67,11 @@ public static class ManaHelper
                 }
             }
         }
+        //Need this for colorless only strings..
+        if (currentNumber.Length > 0)
+        {
+            colorCounts[ManaType.Colorless] = Convert.ToInt32(currentNumber);
+        }
         return colorCounts;
     }
 }

@@ -179,8 +179,8 @@ public class UIGameController : MonoBehaviour
     }
     private void UpdateMana()
     {
-        _player1Avatar.SetMana(_cardGame.Player1.Mana);
-        _player2Avatar.SetMana(_cardGame.Player2.Mana);
+        _player1Avatar.SetMana(_cardGame.Player1.ManaPool);
+        _player2Avatar.SetMana(_cardGame.Player2.ManaPool);
     }
 
     //TEST METHODS
