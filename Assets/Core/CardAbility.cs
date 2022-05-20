@@ -314,6 +314,7 @@ public class AddManaEffect : Effect
 {
     public override string RulesText => $"Gain {Amount} Mana";
     public int Amount;
+    public ManaType ManaType { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
 

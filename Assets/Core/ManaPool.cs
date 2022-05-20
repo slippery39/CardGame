@@ -2,6 +2,75 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
+public static class ManaHelper
+{
+    private static List<ManaType> _manaTypes;
+    public static List<ManaType> GetManaTypes()
+    {
+        //Cache the result, since it shouldn't change at runtime.
+        if (_manaTypes == null)
+        {
+            _manaTypes = Enum.GetValues(typeof(ManaType)).Cast<ManaType>().ToList();
+        }
+        return _manaTypes;
+    }
+
+    public static Dictionary<ManaType, int> CreateManaDict()
+    {
+        Dictionary<ManaType, int> manaDict = new Dictionary<ManaType, int>();
+
+        foreach (var manaType in GetManaTypes())
+        {
+            manaDict.Add(manaType, 0);
+        }
+
+        return manaDict;
+    }
+    public static Dictionary<ManaType, int> ManaStringToColorCounts(string manaCost)
+    {
+        var colorCounts = CreateManaDict();
+        //Need to process the string...
+
+        //From Left To Right
+        //Count the number of colors symbols (i.e. should be letters)
+        //Then Count the number as the generic symbol
+
+        //Mana Costs should be in Magic Format (i.e. 3U, 5BB) with the generic mana cost first.
+        var manaChars = manaCost.ToCharArray();
+        string currentNumber = ""; //should only be 1 currentNumber
+
+        for (int i = 0; i < manaChars.Length; i++)
+        {
+            if (manaChars[i].IsNumeric())
+            {
+                currentNumber += manaChars[i].ToString();
+            }
+            else
+            {
+                if (currentNumber.Length > 0)
+                {
+                    colorCounts[ManaType.Colorless] = Convert.ToInt32(currentNumber);
+                    currentNumber = "";
+                }
+
+                //Add the color type
+                switch (manaChars[i].ToString().ToUpper())
+                {
+                    case "W": colorCounts[ManaType.White]++; break;
+                    case "U": colorCounts[ManaType.Blue]++; break;
+                    case "B": colorCounts[ManaType.Black]++; break;
+                    case "R": colorCounts[ManaType.Red]++; break;
+                    case "G": colorCounts[ManaType.Green]++; break;
+                    case "*": colorCounts[ManaType.Any]++; break;
+                    default: throw new Exception($@"Unaccounted for mana symbol {manaChars[i].ToString().ToUpper()}");
+                }
+            }
+        }
+        return colorCounts;
+    }
+}
+
 public class ManaPool
 {
 
@@ -12,17 +81,6 @@ public class ManaPool
     //To Reset we just set CurrentManaByType to the same values as ManaByType.
     //If we want temp mana we can just add to the CurrentManaByType without addinf to the ManaByType.
 
-    private static List<ManaType> _manaTypes;
-
-    public static List<ManaType> GetManaTypes()
-    {
-        //Cache the result, since it shouldn't change at runtime.
-        if (_manaTypes == null)
-        {
-            _manaTypes = Enum.GetValues(typeof(ManaType)).Cast<ManaType>().ToList();
-        }
-        return _manaTypes;
-    }
     /// <summary>
     /// The total converted mana in the pool.
     /// </summary>
@@ -61,15 +119,8 @@ public class ManaPool
 
     public ManaPool()
     {
-        ManaByType = new Dictionary<ManaType, int>();
-        CurrentManaByType = new Dictionary<ManaType, int>();
-
-        //init the mana by type and temp mana by type dictionaries
-        foreach (var manaType in ManaPool.GetManaTypes())
-        {
-            ManaByType.Add(manaType, 0);
-            CurrentManaByType.Add(manaType, 0);
-        }
+        ManaByType = ManaHelper.CreateManaDict();
+        CurrentManaByType = ManaHelper.CreateManaDict();
     }
     public void SpendMana(ManaType type, int amount)
     {
@@ -82,7 +133,6 @@ public class ManaPool
         //If they don't need access to it, then 
         CurrentManaByType[type] += amount;
         ManaByType[type] += amount;
-
     }
 
     public void AddTemporaryMana(ManaType type, int amount)
@@ -93,7 +143,7 @@ public class ManaPool
     public void ResetMana()
     {
         //init the mana by type and temp mana by type dictionaries
-        foreach (var manaType in ManaPool.GetManaTypes())
+        foreach (var manaType in ManaHelper.GetManaTypes())
         {
             CurrentManaByType[manaType] = ManaByType[manaType];
         }

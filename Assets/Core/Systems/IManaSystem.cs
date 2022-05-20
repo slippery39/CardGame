@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Linq;
 
 public interface IManaSystem
 {
-    void AddMana(CardGame cardGame, Player player, int amount);
+    void AddMana(CardGame cardGame, Player player, ManaType manaType, int amount);
     void AddTemporaryMana(CardGame cardGame, Player player, ManaType manaType, int amount);
     void SpendMana(CardGame cardGame, Player player, int amount);
     void ResetMana(CardGame cardGame, Player player);
@@ -25,14 +26,14 @@ public class DefaultManaSystem : IManaSystem
     //Adds mana to the mana pool without effecting the total amount.
     public void AddTemporaryMana(CardGame cardGame, Player player, ManaType manaType, int amount)
     {
-        player.ManaPool.AddTemporaryMana(ManaType.Any, amount);
+        player.ManaPool.AddTemporaryMana(manaType, amount);
     }
 
-    public void AddMana(CardGame cardGame, Player player, int amount)
+    public void AddMana(CardGame cardGame, Player player, ManaType manaType, int amount)
     {
         //TODO - Player will now have a mana pool.
         //We need to handle more than just an amount;
-        player.ManaPool.AddMana(ManaType.Any, amount);
+        player.ManaPool.AddMana(manaType, amount);
     }
 
     public void SpendMana(CardGame cardGame, Player player, int amount)
@@ -60,7 +61,19 @@ public class DefaultManaSystem : IManaSystem
     {
         player.ManaPlayedThisTurn++;
         var manaCard = card.CurrentCardData as ManaCardData;
-        AddMana(cardGame, player, Convert.ToInt32(manaCard.ManaAdded));
+
+        var manaCounts = ManaHelper.ManaStringToColorCounts(manaCard.ManaAdded);
+
+        var manaAdded = manaCounts.Keys.Where(k => manaCounts[k] > 0);
+
+        foreach (var manaType in manaCounts.Keys)
+        {
+            if (manaCounts[manaType] > 0)
+            {
+                AddMana(cardGame, player, manaType, manaCounts[manaType]);
+            }
+        }
+
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.DiscardPile);
     }
 

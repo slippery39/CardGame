@@ -96,7 +96,8 @@ public class SpellCardData : BaseCardData
 public class ManaCardData : BaseCardData
 {
     public override string CardType => "Mana";
-    public string ManaAdded { get; set; } = "!";
+    //TODO - We need to revamp this somehow
+    public string ManaAdded { get; set; } = "*";
 
     public override string RulesText => $"Add {ManaAdded} to your mana";
     public override BaseCardData Clone()
