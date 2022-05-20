@@ -19,19 +19,20 @@ public class Player : CardGameEntity
     private ManaPool _manaPool;
 
     //TODO - replace these.
-    private int _totalMana;
-    private int _mana;
+    //private int _totalMana;
+    // private int _mana;
     private string _name;
     #endregion
 
     public Player(int numberOfLanes)
     {
+        _manaPool = new ManaPool();
         Hand = new Hand();
         Lanes = new List<Lane>();
         DiscardPile = new DiscardPile();
         Deck = new Deck();
-        TotalMana = 1;
-        Mana = TotalMana;
+        //TotalMana = 1;
+        // Mana = TotalMana;
 
         InitLanes(numberOfLanes);
     }
@@ -43,14 +44,14 @@ public class Player : CardGameEntity
     public Hand Hand { get => _hand; set => _hand = value; }
     public DiscardPile DiscardPile { get => _discardPile; set => _discardPile = value; }
     public Deck Deck { get => _deck; set => _deck = value; }
-    public int Mana { get => _mana; set => _mana = value; }
+    //public int Mana { get => _mana; set => _mana = value; }
     public int ManaPlayedThisTurn { get; set; } = 0;
     public int TotalManaThatCanBePlayedThisTurn { get; set; } = 1;
-
-
+    public int Mana => _manaPool.CurrentTotalMana;    
+    public ManaPool ManaPool { get => _manaPool; }
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 
-    public int TotalMana { get => _totalMana; set => _totalMana = value; }
+    //public int TotalMana { get => _totalMana; set => _totalMana = value; }
 
     #endregion
 

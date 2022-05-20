@@ -260,7 +260,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Typhoid Rats",
-            ManaCost = "1B",
+            ManaCost = "B",
             Power = 1,
             Toughness = 1,
             ArtPath = "CardArt/TyphoidRats",

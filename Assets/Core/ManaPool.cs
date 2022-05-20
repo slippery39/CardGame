@@ -61,6 +61,9 @@ public class ManaPool
 
     public ManaPool()
     {
+        ManaByType = new Dictionary<ManaType, int>();
+        CurrentManaByType = new Dictionary<ManaType, int>();
+
         //init the mana by type and temp mana by type dictionaries
         foreach (var manaType in ManaPool.GetManaTypes())
         {
@@ -73,7 +76,21 @@ public class ManaPool
         CurrentManaByType[type] -= amount;
     }
 
-    public void ResetCurrentMana()
+    public void AddMana(ManaType type, int amount)
+    {
+        //Need to add to both so they have access to it in the same turn.
+        //If they don't need access to it, then 
+        CurrentManaByType[type] += amount;
+        ManaByType[type] += amount;
+
+    }
+
+    public void AddTemporaryMana(ManaType type, int amount)
+    {
+        ManaByType[type] += amount;
+    }
+
+    public void ResetMana()
     {
         //init the mana by type and temp mana by type dictionaries
         foreach (var manaType in ManaPool.GetManaTypes())

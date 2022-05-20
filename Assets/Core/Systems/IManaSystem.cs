@@ -25,24 +25,24 @@ public class DefaultManaSystem : IManaSystem
     //Adds mana to the mana pool without effecting the total amount.
     public void AddTemporaryMana(CardGame cardGame,Player player, int amount)
     {
-        player.Mana += amount;
+        player.ManaPool.AddTemporaryMana(ManaType.Any,amount);
+        //player.Mana += amount;
     }
     public void AddMana(CardGame cardGame,Player player,int amount)
     {
         //TODO - Player will now have a mana pool.
         //We need to handle more than just an amount;
-        player.Mana += amount;
-        player.TotalMana += amount;
+        player.ManaPool.AddMana(ManaType.Any, amount);
     }
 
     public void SpendMana(CardGame cardGame, Player player, int amount)
     {
-        player.Mana -= amount;
+        player.ManaPool.SpendMana(ManaType.Any, amount);
     }
 
     public void ResetMana(CardGame cardGame, Player player)
     {
-        player.Mana = player.TotalMana; 
+        player.ManaPool.ResetMana();
     }
 
     public bool CanPlayCard(CardGame cardGame,Player player, CardInstance card)
