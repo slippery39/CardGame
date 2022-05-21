@@ -27,6 +27,7 @@ public abstract class BaseCardData
 
     public BaseCardData()
     {
+        Colors = new List<CardColor>();
         Abilities = new List<CardAbility>();
     }
 }
@@ -98,7 +99,6 @@ public class ManaCardData : BaseCardData
     public override string CardType => "Mana";
     //TODO - We need to revamp this somehow
     public string ManaAdded { get; set; } = "*";
-
     public override string RulesText => $"Add {ManaAdded} to your mana";
     public override BaseCardData Clone()
     {
@@ -106,6 +106,7 @@ public class ManaCardData : BaseCardData
         {
             ManaAdded = ManaAdded,
             Name = Name,
+            Colors = Colors,
             ArtPath = ArtPath
         };
     }
@@ -656,9 +657,49 @@ public class CardDatabase : ICardDatabase
         {
             Name = "City of Brass",
             ManaAdded = "*",
+            Colors = new List<CardColor>() { CardColor.Red, CardColor.White, CardColor.Blue, CardColor.Black, CardColor.Green },
             ArtPath = "CardArt/CityOfBrass"
         });
 
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Plains",
+            ManaAdded = "W",
+            ArtPath = "CardArt/Plains",
+            Colors = new List<CardColor> { CardColor.White }
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Island",
+            ManaAdded = "U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            ArtPath = "CardArt/Island"
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Swamp",
+            ManaAdded = "B",
+            Colors = new List<CardColor> { CardColor.Black },
+            ArtPath = "CardArt/Swamp"
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Mountain",
+            ManaAdded = "R",
+            Colors = new List<CardColor> { CardColor.Red },
+            ArtPath = "CardArt/Mountain"
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Forest",
+            ManaAdded = "G",
+            Colors = new List<CardColor> { CardColor.Green },
+            ArtPath = "CardArt/Forest"
+        });
 
         /*
         _cards.Add(new UnitCardData()

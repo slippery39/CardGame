@@ -34,45 +34,6 @@ public class CardInstance : CardGameEntity
     public string RulesText { get => _currentCardData.RulesText; set => _currentCardData.Name = value; }
     public List<CardColor> Colors { get => _currentCardData.Colors; }
 
-    public int ConvertedManaCost
-    {
-        get
-        {
-            //From Left To Right
-            //Count the number of colors symbols (i.e. should be letters)
-            //Then Count the number as the generic symbol
-
-            //Mana Costs should be in Magic Format (i.e. 3U, 5BB) with the generic mana cost first.
-            var manaChars = ManaCost.ToCharArray();
-            int convertedCost = 0;
-            string currentNumber = ""; //should only be 1 currentNumber
-            for (int i = 0; i < manaChars.Length; i++)
-            {
-                if (manaChars[i].IsNumeric())
-                {
-                    currentNumber += manaChars[i].ToString();
-                }
-                else
-                {
-                    if (currentNumber.Length > 0)
-                    {
-                        convertedCost += Convert.ToInt32(currentNumber);
-                        currentNumber = "";
-                    }
-                    convertedCost++; //if its not a numeric symbol than it should be a colored symbol and we just add 1.
-                }
-            }
-
-            if (currentNumber.Length > 0)
-            {
-                convertedCost += Convert.ToInt32(currentNumber);
-            }
-
-            return convertedCost;
-        }
-    }
-
-
     public string ManaCost { get => _currentCardData.ManaCost; set => _currentCardData.ManaCost = value; }
     public string CardType { get => _currentCardData.CardType; }
 
@@ -158,7 +119,6 @@ public class CardInstance : CardGameEntity
                 _toughnessWithoutMods = value;
             }
         }
-
     }
 
     public int DamageTaken { get; set; }

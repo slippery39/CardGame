@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 public class Deck : IZone
 {
@@ -20,7 +21,7 @@ public class Deck : IZone
 
     public void Shuffle()
     {
-        cards.Randomize();
+        cards = cards.Randomize().ToList();
     }
 
     public CardInstance GetTopCard()

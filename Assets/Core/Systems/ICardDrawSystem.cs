@@ -1,6 +1,9 @@
-﻿public interface ICardDrawSystem
+﻿using System.Linq;
+
+public interface ICardDrawSystem
 {
     CardInstance DrawCard(CardGame cardGame, Player player);
+    void DrawOpeningHand(CardGame cardGame, Player player);
 }
 
 
@@ -18,5 +21,30 @@ public class DefaultCardDrawSystem : ICardDrawSystem
             return card;
         }
         return null;
+    }
+
+    public void DrawOpeningHand(CardGame cardGame, Player player)
+    {
+        int cardsToDraw = 3;
+        int manaToDraw = 3;
+        //Should grab 3 mana cards automatically
+        var manaCards = player.Deck.Cards.Where(card => card.CurrentCardData is ManaCardData).Randomize();
+        var nonManaCards = player.Deck.Cards.Where(card => !(card.CurrentCardData is ManaCardData)).Randomize();
+
+        if (manaCards.Count() < manaToDraw)
+        {
+            throw new System.Exception("There is not enough mana cards to draw the opening hand with!");
+        }
+
+        for (int i = 0; i < manaToDraw; i++)
+        {
+            cardGame.ZoneChangeSystem.MoveToZone(cardGame, manaCards.ToList()[i], player.Hand);
+        }
+
+
+        for (int i = 0; i < cardsToDraw; i++)
+        {
+            cardGame.ZoneChangeSystem.MoveToZone(cardGame, nonManaCards.ToList()[i], player.Hand);
+        }
     }
 }

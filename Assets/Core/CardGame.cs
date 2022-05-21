@@ -77,29 +77,6 @@ public class CardGame
 
     public CardGame()
     {
-        _registeredEntities = new List<CardGameEntity>();
-        _players = new List<Player>();
-
-        AddPlayerToGame(new Player(_numberOfLanes)
-        {
-            PlayerId = 1,
-            Health = _startingPlayerHealth
-        });
-
-        AddPlayerToGame(new Player(_numberOfLanes)
-        {
-            PlayerId = 2,
-            Health = _startingPlayerHealth
-        });
-
-        //Create Random Cards in Each Lane 
-        //AddRandomUnitsToLane(Player1);
-        //AddRandomUnitsToLane(Player2);
-
-        AddRandomCardsToHand(Player1);
-        AddRandomCardsToHand(Player2);
-        AddRandomCardsToDeck();
-
         _battleSystem = new DefaultBattleSystem();
         _damageSystem = new DefaultDamageSystem();
         _healingSystem = new DefaultHealingSystem();
@@ -120,8 +97,26 @@ public class CardGame
         _activatedAbilitySystem = new DefaultActivatedAbilitySystem();
 
         _cardGameLogger = new UnityCardGameLogger();
-        //TODO - some sort of check to make sure all systems are initialized?
-        //maybe have 
+
+        _registeredEntities = new List<CardGameEntity>();
+        _players = new List<Player>();
+
+        AddPlayerToGame(new Player(_numberOfLanes)
+        {
+            PlayerId = 1,
+            Health = _startingPlayerHealth
+        });
+
+        AddPlayerToGame(new Player(_numberOfLanes)
+        {
+            PlayerId = 2,
+            Health = _startingPlayerHealth
+        });
+        AddRandomCardsToDeck();
+
+        //Need to use the card draw system to draw the opening hand.
+        _cardDrawSystem.DrawOpeningHand(this, Player1);
+        _cardDrawSystem.DrawOpeningHand(this, Player2);
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)
@@ -338,19 +333,51 @@ public class CardGame
         }
     }
 
+
+
+
+    void BuildDeck(Player player, CardColor deckColor, string manaName)
+    {
+        var cardDB = new CardDatabase();
+        var redCards = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
+
+        var cardsToAdd = 45;
+
+        for (int i = 0; i < cardsToAdd; i++)
+        {
+            AddCardToGame(player, redCards.Randomize().ToList()[0], player.Deck);
+        }
+
+        for (int i = 0; i < 60 - cardsToAdd; i++)
+        {
+            AddCardToGame(player, cardDB.GetCardData(manaName), player.Deck);
+        }
+
+        player.Deck.Shuffle();
+    }
+
     void AddRandomCardsToDeck()
     {
         var cardDB = new CardDatabase();
         var cards = cardDB.GetAll().ToList();
 
-        for (int i = 0; i < 60; i++)
+        var manaNameLookup = new Dictionary<CardColor, string>()
         {
-            AddCardToGame(Player1, cards.Randomize().ToList()[0], Player1.Deck);
-        }
+            { CardColor.White, "Plains" },
+            { CardColor.Black, "Swamp" },
+            { CardColor.Blue,"Island" },
+            {CardColor.Green,"Forest" },
+            {CardColor.Red,"Mountain" }
+        };
 
-        for (int i = 0; i < 60; i++)
-        {
-            AddCardToGame(Player2, cards.Randomize().ToList()[0], Player2.Deck);
-        }
+        var deckColor = new List<CardColor>() { CardColor.White, CardColor.Blue, CardColor.Black, CardColor.Red, CardColor.Green }
+        .Randomize().ToList()[0];
+
+        BuildDeck(Player1, deckColor, manaNameLookup[deckColor]);
+
+        var deckColor2 = new List<CardColor>() { CardColor.White, CardColor.Blue, CardColor.Black, CardColor.Red, CardColor.Green }
+        .Randomize().ToList()[0];
+        BuildDeck(Player2, deckColor2, manaNameLookup[deckColor2]);
+
     }
 }
