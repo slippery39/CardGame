@@ -3,10 +3,12 @@ using System.Linq;
 
 public interface IManaSystem
 {
-    void AddMana(CardGame cardGame, Player player, ManaType manaType, int amount);
-    void AddTemporaryMana(CardGame cardGame, Player player, ManaType manaType, int amount);
-    void SpendMana(CardGame cardGame, Player player, int amount);
-    void ResetMana(CardGame cardGame, Player player);
+    void AddMana(CardGame cardGame, Player player, int amount);
+    void AddEssence(CardGame cardGame, Player player, EssenceType essenceType, int amount);
+    void AddTemporaryManaAndEssence(CardGame cardGame, Player player, EssenceType manaType, int amount);
+    void AddTemporaryEssence(CardGame cardGame, Player player, EssenceType essenceType, int amount);
+    void SpendManaAndEssence(CardGame cardGame, Player player, string cost);
+    void ResetManaAndEssence(CardGame cardGame, Player player);
     bool CanPlayCard(CardGame cardGame, Player player, CardInstance card);
     bool CanPlayManaCard(CardGame cardGame, Player player, CardInstance card);
     void PlayManaCard(CardGame cardGame, Player player, CardInstance card);
@@ -24,33 +26,54 @@ public interface IManaSystem
 public class DefaultManaSystem : IManaSystem
 {
     //Adds mana to the mana pool without effecting the total amount.
-    public void AddTemporaryMana(CardGame cardGame, Player player, ManaType manaType, int amount)
+    public void AddTemporaryManaAndEssence(CardGame cardGame, Player player, EssenceType manaType, int amount)
     {
-        player.ManaPool.AddTemporaryMana(manaType, amount);
+        player.ManaPool.AddTemporaryEssenceAndMana(manaType, amount);
     }
 
-    public void AddMana(CardGame cardGame, Player player, ManaType manaType, int amount)
+    public void AddMana(CardGame cardGame, Player player, int amount)
     {
-        //TODO - Player will now have a mana pool.
-        //We need to handle more than just an amount;
-        player.ManaPool.AddMana(manaType, amount);
+        player.ManaPool.AddMana(amount);
     }
 
-    public void SpendMana(CardGame cardGame, Player player, int amount)
+    public void SpendManaAndEssence(CardGame cardGame, Player player, string cost)
     {
         //TODO - change this.
-        player.ManaPool.SpendMana(ManaType.Any, amount);
+
+        var costInManaAndEssence = new ManaAndEssence(cost);
+
+        //Spend the mana;
+        if (costInManaAndEssence.Mana > 0)
+        {
+            player.ManaPool.SpendMana(costInManaAndEssence.Mana);
+        }
+
+        if (costInManaAndEssence.TotalSumOfEssence > 0)
+        {
+            //Spend the essence.
+            foreach (var color in costInManaAndEssence.Essence.Keys)
+            {
+                player.ManaPool.SpendEssence(color, costInManaAndEssence.Essence[color]);
+            }
+        }
     }
 
-    public void ResetMana(CardGame cardGame, Player player)
+    public void ResetManaAndEssence(CardGame cardGame, Player player)
     {
-        player.ManaPool.ResetMana();
+        player.ManaPool.ResetManaAndEssence();
+    }
+
+
+    //How to we convert a costToPay into a ManaPool?
+    public bool CanPayManaCost(ManaAndEssence costToPay, ManaAndEssence payingPool)
+    {
+        return payingPool.IsEnoughToPayCost(costToPay);
     }
 
     public bool CanPlayCard(CardGame cardGame, Player player, CardInstance card)
     {
-        //TODO - handle non integer mana costs.
-        return player.Mana >= card.ConvertedManaCost;
+        //TODO - Handle Non Integer Mana Costs.
+        return CanPayManaCost(new ManaAndEssence(card.ManaCost), player.ManaPool.CurrentManaAndEssence);
     }
 
     public bool CanPlayManaCard(CardGame cardGame, Player player, CardInstance card)
@@ -63,69 +86,40 @@ public class DefaultManaSystem : IManaSystem
         player.ManaPlayedThisTurn++;
         var manaCard = card.CurrentCardData as ManaCardData;
 
-        var manaCounts = ManaHelper.ManaStringToColorCounts(manaCard.ManaAdded);
+        var manaAndEssenceCounts = new ManaAndEssence(manaCard.ManaAdded);
 
-        var manaAdded = manaCounts.Keys.Where(k => manaCounts[k] > 0);
+        //Mana is easy enough, just add the mana count stated in the ManaAndEssence object
 
-        foreach (var manaType in manaCounts.Keys)
+        //For now, we are going to make our mana cards simple, they will always just add the total essence as mana.
+        AddMana(cardGame, player, manaAndEssenceCounts.TotalSumOfEssence);
+
+        var essence = manaAndEssenceCounts.Essence;
+
+        var essenceAdded = essence.Keys.Where(k => essence[k] > 0);
+
+        foreach (var essenceType in essence.Keys)
         {
-            if (manaCounts[manaType] > 0)
+            if (manaAndEssenceCounts.Essence[essenceType] > 0)
             {
-                AddMana(cardGame, player, manaType, manaCounts[manaType]);
+                AddEssence(cardGame, player, essenceType, essence[essenceType]);
             }
         }
 
         cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.DiscardPile);
     }
 
-    public bool CanPayManaCost(CardGame cardGame, Player player, string manaCost)
+    public void AddEssence(CardGame cardGame, Player player, EssenceType essenceType, int amount)
     {
-        return (player.Mana >= GetConvertedManaCost(cardGame, manaCost));
+        player.ManaPool.AddEssence(essenceType, amount);
     }
 
-    /// <summary>
-    /// Get the converted mana cost from a mana cost in string format.
-    /// Converted mana cost is the total integer value of the mana cost.
-    /// For example, a mana cost of 2 would have a converted mana cost of 2.
-    /// A mana cost of 4UU would have a converted mana cost of 6.
-    /// 
-    /// NOTE - a copy of this method is also located in the CardInstance.ConvertedManaCost property.
-    /// A strong consideration is that we should only grab converted mana costs from here.
-    /// </summary>
-    /// <param name="cardGame"></param>
-    /// <param name="manaCost"></param>
-    /// <returns></returns>
-    public int GetConvertedManaCost(CardGame cardGame, string manaCost)
+    public bool CanPayManaCost(CardGame cardGame, Player player, string manaCost)
     {
-        //From Left To Right
-        //Count the number of colors symbols (i.e. should be letters)
-        //Then Count the number as the generic symbol
+        return (player.ManaPool.CurrentManaAndEssence.IsEnoughToPayCost(new ManaAndEssence(manaCost))); ;
+    }
 
-        //Mana Costs should be in Magic Format (i.e. 3U, 5BB) with the generic mana cost first.
-        var manaChars = manaCost.ToCharArray();
-        int convertedCost = 0;
-        string currentNumber = ""; //should only be 1 currentNumber
-        for (int i = 0; i < manaChars.Length; i++)
-        {
-            if (manaChars[i].IsNumeric())
-            {
-                currentNumber += manaChars[i].ToString();
-            }
-            else
-            {
-                if (currentNumber.Length > 0)
-                {
-                    convertedCost += Convert.ToInt32(currentNumber);
-                    currentNumber = "";
-                }
-                convertedCost++; //if its not a numeric symbol than it should be a colored symbol and we just add 1.
-            }
-        }
-
-        if (currentNumber.Length > 0)
-        {
-            convertedCost += Convert.ToInt32(currentNumber); 
-        }
-        return convertedCost;
+    public void AddTemporaryEssence(CardGame cardGame, Player player, EssenceType essenceType, int amount)
+    {
+        player.ManaPool.AddTemporaryEssence(essenceType, amount);
     }
 }

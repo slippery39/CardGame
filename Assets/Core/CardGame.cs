@@ -231,7 +231,7 @@ public class CardGame
 
             if (targetAsEntity != null)
             {
-                ManaSystem.SpendMana(this, player, cardFromHand.ConvertedManaCost);
+                ManaSystem.SpendManaAndEssence(this, player, cardFromHand.ManaCost);
                 ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
                 _stateBasedEffectSystem.CheckStateBasedEffects(this);
             }
@@ -245,7 +245,7 @@ public class CardGame
         {
             if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand) && ManaSystem.CanPlayCard(this, player, cardFromHand))
             {
-                ManaSystem.SpendMana(this, player, cardFromHand.ConvertedManaCost);
+                ManaSystem.SpendManaAndEssence(this, player, cardFromHand.ManaCost);
                 ResolvingSystem.Add(this, cardFromHand, null);
                 _stateBasedEffectSystem.CheckStateBasedEffects(this);
             }
@@ -257,7 +257,7 @@ public class CardGame
 
                 if (targetAsEntity != null)
                 {
-                    ManaSystem.SpendMana(this, player, cardFromHand.ConvertedManaCost);
+                    ManaSystem.SpendManaAndEssence(this, player, cardFromHand.ManaCost);
                     ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
                     _stateBasedEffectSystem.CheckStateBasedEffects(this);
                 }
@@ -328,7 +328,7 @@ public class CardGame
     private void AddRandomCardsToHand(Player player)
     {
         CardDatabase db = new CardDatabase();
-        var cards = db.GetAll().Where(c => c.Name == "Wastes").ToList();
+        var cards = db.GetAll().Where(c => c.Name == "City of Brass").ToList();
 
         var rng = new Random();
 

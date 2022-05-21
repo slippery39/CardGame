@@ -81,7 +81,8 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 {
                     throw new Exception("Error : only players can gain man");
                 }
-                cardGame.ManaSystem.AddMana(cardGame, (Player)entity, ability.ManaType, ability.Amount);
+                cardGame.ManaSystem.AddMana(cardGame, (Player)entity, ability.Amount);
+                cardGame.ManaSystem.AddEssence(cardGame, (Player)entity, ability.ManaType, ability.Amount);
             }
         }
         if (effect is AddTempManaEffect)
@@ -94,7 +95,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 {
                     throw new Exception("Error : only players can gain man");
                 }
-                cardGame.ManaSystem.AddTemporaryMana(cardGame, (Player)entity, ability.ManaType, ability.Amount);
+                cardGame.ManaSystem.AddTemporaryManaAndEssence(cardGame, (Player)entity, ability.ManaType, ability.Amount);
             }
         }
         if (effect is DarkConfidantEffect)

@@ -19,7 +19,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         if (activatedAbility == null) { return; }
 
 
-        cardGame.ManaSystem.SpendMana(cardGame, player, Convert.ToInt32(activatedAbility.ManaCost));
+        cardGame.ManaSystem.SpendManaAndEssence(cardGame, player, activatedAbility.ManaCost);
 
         cardGame.EffectsProcessor.ApplyEffects(
             cardGame,

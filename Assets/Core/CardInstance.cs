@@ -62,6 +62,12 @@ public class CardInstance : CardGameEntity
                     convertedCost++; //if its not a numeric symbol than it should be a colored symbol and we just add 1.
                 }
             }
+
+            if (currentNumber.Length > 0)
+            {
+                convertedCost += Convert.ToInt32(currentNumber);
+            }
+
             return convertedCost;
         }
     }

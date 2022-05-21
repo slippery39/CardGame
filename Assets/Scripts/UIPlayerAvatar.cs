@@ -23,14 +23,12 @@ public class UIPlayerAvatar : UIGameEntity
     public void SetMana(ManaPool manaPool)
     {
         var totalMana = manaPool.CurrentTotalMana;
-        var colorsCount = manaPool.CurrentManaByType;
+        var colorsCount = manaPool.CurrentEssence;
 
         string text = $@"Total Mana : {totalMana}";
 
         foreach (var manaType in colorsCount.Keys)
         {
-            if (manaType == ManaType.Colorless) continue;
-
             if (colorsCount[manaType] == 0) continue;
 
             text += $@"{Environment.NewLine} {manaType.ToString()}:{colorsCount[manaType]}";
