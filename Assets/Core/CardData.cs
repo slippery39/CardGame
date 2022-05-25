@@ -704,6 +704,99 @@ public class CardDatabase : ICardDatabase
         /*
         _cards.Add(new UnitCardData()
         {
+            Name = "Mogg Fanatic",
+            ManaCost = "R",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Mogg Fanatic",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                 new ActivatedAbility()
+                {
+                    ManaCost = "0",
+                    OtherCost = "Sacrifice #this#",
+                    AbilityEffect = new DamageEffect()
+                    {
+                       Amount = 1,
+                       TargetType = TargetType.TargetUnitsOrPlayers
+                    }
+                }
+            }
+        });*/
+
+
+
+        /*
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Fume Spitter",
+            ManaCost = "B",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Fume Spitter",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility(){
+                ManaCost = "0",
+                OtherCost = "Sacrifice #this#",
+                AbilityEffect = new PumpUnitEffect
+                {
+                    Power = -1,
+                    Toughness = -1,
+                    TargetType = TargetType.TargetUnits
+                }
+        });*/
+
+        //need to create temp ability effects.
+        /*
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Crimson Mage",
+            Power = 2,
+            Toughness = 1,
+            ArtPath = "CardArt/CrimsonMage",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost = "R",
+                    AbilityEffect = new GiveTempAbilityEffect
+                    {
+                        TargetType = TargetType.TargetUnits,
+                        Ability = new HasteAbility()
+                    }
+                }
+            }
+        });*/
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Masticore",
+            Power = 4,
+            Toughness = 4,
+            ArtPath = "CardArt/Masticore",
+            Colors = new List<CardColor> { CardColor.Colorless },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                  ManaCost = "2",
+                  AbilityEffect = new DamageEffect
+                  {
+                      TargetType = TargetType.TargetUnits,
+                      Amount = 1
+
+                  }
+                }
+            }
+        });
+
+        /*
+        _cards.Add(new UnitCardData()
+        {
             Name = "Doomed Traveler",
             ManaCost = "1"
             ArtPath = "CardArt/Doomed Traveler",
