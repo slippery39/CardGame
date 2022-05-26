@@ -38,7 +38,7 @@ public class CardInstance : CardGameEntity
     public string CardType { get => _currentCardData.CardType; }
 
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
-    public List<CardAbility> Abilities { get => _currentCardData.Abilities; }
+    public List<CardAbility> Abilities { get => _currentCardData.Abilities; set => _currentCardData.Abilities = value; }
 
     //How do we figure this out?
     public List<ContinuousEffect> ContinuousEffects { get; set; }

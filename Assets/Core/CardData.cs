@@ -750,10 +750,11 @@ public class CardDatabase : ICardDatabase
         });*/
 
         //need to create temp ability effects.
-        /*
+
         _cards.Add(new UnitCardData()
         {
             Name = "Crimson Mage",
+            ManaCost = "1R",
             Power = 2,
             Toughness = 1,
             ArtPath = "CardArt/CrimsonMage",
@@ -763,14 +764,10 @@ public class CardDatabase : ICardDatabase
                 new ActivatedAbility()
                 {
                     ManaCost = "R",
-                    AbilityEffect = new GiveTempAbilityEffect
-                    {
-                        TargetType = TargetType.TargetUnits,
-                        Ability = new HasteAbility()
-                    }
+                    AbilityEffect = new AddTempAbilityEffect(new HasteAbility())
                 }
             }
-        });*/
+        }); 
 
         _cards.Add(new UnitCardData()
         {

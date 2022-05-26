@@ -150,6 +150,21 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 cardGame.DestroySystem.DestroyUnit(cardGame, source, card);
             }
         }
+        if (effect is AddTempAbilityEffect)
+        {
+            foreach (var entity in entitiesToEffect)
+            {
+                if (! (entity is CardInstance))
+                {
+                    throw new Exception("Error : only units can be effected with the sacrifice self effect");
+                }
+
+                var card = (CardInstance)entity;
+                var tempAbilityEffect = effect as AddTempAbilityEffect;
+                //note, ideally the temp ability would be cloned from the AddTempAbilityEffect...
+                card.Abilities.Add(tempAbilityEffect.TempAbility);
+            }
+        }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {

@@ -339,8 +339,9 @@ public class CardGame
     void BuildDeck(Player player, CardColor deckColor, string manaName)
     {
         var cardDB = new CardDatabase();
+        
         var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        cardsToSelectFrom = cardsToSelectFrom.Where(card => card.Name == "Masticore");
+        cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Crimson Mage");
 
         var cardsToAdd = 45;
 

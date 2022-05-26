@@ -7,6 +7,7 @@ public abstract class CardAbility
     public string Type;
     public int Priority { get; set; }
     public abstract string RulesText { get; }
+    public bool ThisTurnOnly { get; set; } = false;
 }
 
 public interface IModifyCanBlock
@@ -362,4 +363,16 @@ public class DestroyEffect : Effect
 {
     public override string RulesText => $"Destroy {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
     public override TargetType TargetType { get; set; } = TargetType.TargetUnits;
+}
+
+public class AddTempAbilityEffect : Effect
+{
+    public override string RulesText => TempAbility.RulesText;
+    public CardAbility TempAbility { get; set; }
+    public override TargetType TargetType {get; set;} = TargetType.TargetUnits;    
+    public AddTempAbilityEffect(CardAbility tempAbility)
+    {
+        TempAbility = tempAbility;
+        TempAbility.ThisTurnOnly = true;
+    }
 }

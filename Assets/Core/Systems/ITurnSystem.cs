@@ -19,7 +19,7 @@ public enum TurnPhase
 
 public class DefaultTurnSystem : ITurnSystem
 {
-    public int TurnId { get; set;}   
+    public int TurnId { get; set; }
 
     public DefaultTurnSystem()
     {
@@ -28,13 +28,13 @@ public class DefaultTurnSystem : ITurnSystem
     public void StartTurn(CardGame cardGame)
     {
         //Reset any summoning sick units
-        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit=>cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
-        foreach(var unit in activePlayersUnits)
+        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
+        foreach (var unit in activePlayersUnits)
         {
             unit.IsSummoningSick = false;
         }
 
-        cardGame.HandleTriggeredAbilities(activePlayersUnits,TriggerType.AtTurnStart);
+        cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnStart);
         //Reset any spent mana
         cardGame.ManaSystem.ResetManaAndEssence(cardGame, cardGame.ActivePlayer);
         //Active Player Gains A Mana - not anymore.
@@ -52,14 +52,20 @@ public class DefaultTurnSystem : ITurnSystem
         var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
 
         //Trigger any End of turn abilities
-        cardGame.HandleTriggeredAbilities(activePlayersUnits,TriggerType.AtTurnEnd);
+        cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnEnd);
+
+        //Remove any temporary abilities
+        cardGame.GetUnitsInPlay().ForEach(c =>
+        c.Abilities = c.Abilities
+       .Where(c => c.ThisTurnOnly == false)
+       .ToList());
 
         //Reset the players mana played this turn.
         cardGame.ActivePlayer.ManaPlayedThisTurn = 0;
 
         //Change the active player
         _ = cardGame.ActivePlayerId == 1 ? cardGame.ActivePlayerId = 2 : cardGame.ActivePlayerId = 1;
-        
+
 
         TurnId++;
     }
