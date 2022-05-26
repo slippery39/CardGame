@@ -53,7 +53,16 @@ public class GameUIIdleState : IGameUIState
     {
         if (_cardGame.ActivatedAbilitySystem.CanActivateAbility(_cardGame, ActingPlayer, card))
         {
-            _cardGame.ActivatedAbilitySystem.AcivateAbility(_cardGame, ActingPlayer, card);
+            //check if it has targets.
+
+            if (_cardGame.TargetSystem.ActivatedAbilityNeedsTargets(_cardGame, ActingPlayer, card))
+            {
+                this._stateMachine.ChangeState(new GameUIActivatedAbilityState(_stateMachine, card));
+            }
+            else
+            {
+                _cardGame.ActivatedAbilitySystem.AcivateAbility(_cardGame, ActingPlayer, card);
+            }
         }
         else
         {

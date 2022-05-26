@@ -339,13 +339,14 @@ public class CardGame
     void BuildDeck(Player player, CardColor deckColor, string manaName)
     {
         var cardDB = new CardDatabase();
-        var redCards = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
+        cardsToSelectFrom = cardsToSelectFrom.Where(card => card.Name == "Masticore");
 
         var cardsToAdd = 45;
 
         for (int i = 0; i < cardsToAdd; i++)
         {
-            AddCardToGame(player, redCards.Randomize().ToList()[0], player.Deck);
+            AddCardToGame(player, cardsToSelectFrom.Randomize().ToList()[0], player.Deck);
         }
 
         for (int i = 0; i < 60 - cardsToAdd; i++)

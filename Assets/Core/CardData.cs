@@ -775,6 +775,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData()
         {
             Name = "Masticore",
+            ManaCost = "4",
             Power = 4,
             Toughness = 4,
             ArtPath = "CardArt/Masticore",

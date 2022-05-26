@@ -5,15 +5,22 @@ using System.Linq;
 public interface IActivatedAbilitySystem
 {
     //Assumes the card only has 1 activated ability.
-    public void AcivateAbility(CardGame cardGame, Player player, CardInstance card);
-    public bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card);
+    void AcivateAbility(CardGame cardGame, Player player, CardInstance card);
+    void ActivateAbilityWithTargets(CardGame cardGame, Player player, CardInstance card, List<CardGameEntity> targets);
+    bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card);
 }
 
 public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 {
+
+    //Need one with targets
     public void AcivateAbility(CardGame cardGame, Player player, CardInstance card)
     {
-        //Grab the card's first result of an activated ability
+        ActivateAbilityWithTargets(cardGame,player,card,new List<CardGameEntity>());
+    }
+
+    public void ActivateAbilityWithTargets(CardGame cardGame, Player player, CardInstance card,List<CardGameEntity> targets)
+    {
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
 
         if (activatedAbility == null) { return; }
@@ -26,7 +33,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
             player,
             card,
             new List<Effect> { activatedAbility.AbilityEffect },
-            new List<CardGameEntity> { });
+            targets);
     }
 
     public bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card)

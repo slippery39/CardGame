@@ -50,6 +50,7 @@ public class UIGameController : MonoBehaviour
 
         //Check to see if any cards exist that don't have images.
         CheckForCardsWithoutImages();
+        CheckForCardsWithoutManaCosts();
 
         _stateMachine = GetComponent<GameUIStateMachine>();
         InitializeBoard();
@@ -195,6 +196,17 @@ public class UIGameController : MonoBehaviour
             if (art == null)
             {
                 Debug.LogWarning($@"Warning: Could not find card art for {card.Name}");
+            }
+        }
+    }
+
+    private void CheckForCardsWithoutManaCosts()
+    {
+        var allCards = new CardDatabase().GetAll();
+        foreach (var card in allCards)
+        {
+            if (card.ManaCost == null) { 
+                Debug.LogWarning($@"Warning: Mana cost is null for {card.Name}");
             }
         }
     }
