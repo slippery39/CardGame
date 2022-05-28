@@ -61,7 +61,23 @@ public class GameUIIdleState : IGameUIState
             }
             else
             {
-                _cardGame.ActivatedAbilitySystem.AcivateAbility(_cardGame, ActingPlayer, card);
+                //handle additional costs, does not work for targetted abilities for now.
+                var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+
+                if (activatedAbility.HasAdditionalCost())
+                {
+                    _cardGame.Log("Card has ability with additional cost");
+                    //Assume the cost is automatic for now.
+                    if (_cardGame.ActivatedAbilitySystem.CanPayAdditionalCost(_cardGame, ActingPlayer, card, activatedAbility.AdditionalCost))
+                    {
+                        _cardGame.ActivatedAbilitySystem.PayAdditionalCost(_cardGame, ActingPlayer, card, activatedAbility.AdditionalCost);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                _cardGame.ActivatedAbilitySystem.ActivateAbility(_cardGame, ActingPlayer, card);
             }
         }
         else

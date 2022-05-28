@@ -145,6 +145,11 @@ public class CardInstance : CardGameEntity
     {
         return _currentCardData.GetAbilities<T>();
     }
+
+    public bool HasActivatedAbility()
+    {
+        return GetAbilities<ActivatedAbility>().Any();
+    }
     #endregion
 }
 

@@ -341,7 +341,7 @@ public class CardGame
         var cardDB = new CardDatabase();
         
         var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Crimson Mage");
+        cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Griselbrand");
 
         var cardsToAdd = 45;
 

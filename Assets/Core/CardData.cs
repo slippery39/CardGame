@@ -701,33 +701,89 @@ public class CardDatabase : ICardDatabase
             ArtPath = "CardArt/Forest"
         });
 
+        /*    
+            _cards.Add(new UnitCardData()
+            {
+                Name = "Mogg Fanatic",
+                ManaCost = "R",
+                Power = 1,
+                Toughness = 1,
+                ArtPath = "CardArt/Mogg Fanatic",
+                Colors = new List<CardColor> { CardColor.Red },
+                Abilities = new List<CardAbility>
+                {
+                     new ActivatedAbility()
+                    {
+                        ManaCost = "0",
+                        //this needs to have rules text automatically generated.
+                        AdditionalCost = "{Sacrifice}{}{#this#}",
+                        AbilityEffect = new DamageEffect()
+                        {
+                           Amount = 1,
+                           TargetType = TargetType.TargetUnitsOrPlayers
+                        }
+                    }
+                }
+            });
+        */
+
         /*
         _cards.Add(new UnitCardData()
         {
-            Name = "Mogg Fanatic",
-            ManaCost = "R",
-            Power = 1,
-            Toughness = 1,
-            ArtPath = "CardArt/Mogg Fanatic",
-            Colors = new List<CardColor> { CardColor.Red },
+            Name = "Wild Mongrel",
+            ManaCost = "1G",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/Wild Mongrel",
+            Colors = new List<CardColor> { CardColor.Green },
             Abilities = new List<CardAbility>
             {
-                 new ActivatedAbility()
+                new ActivatedAbility()
                 {
                     ManaCost = "0",
-                    OtherCost = "Sacrifice #this#",
-                    AbilityEffect = new DamageEffect()
+                    AdditionalCost = "{Discard}{1}{Card}",
+                    AbilityEffect = new PumpUnitEffect
                     {
-                       Amount = 1,
-                       TargetType = TargetType.TargetUnitsOrPlayers
+                        Power = 1,
+                        Toughness = 1,
                     }
                 }
             }
         });*/
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Griselbrand",
+            ManaCost = "5BBB",
+            Power = 7,
+            Toughness = 7,
+            ArtPath = "CardArt/Griselbrand",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>
+            {
+                new LifelinkAbility(),
+                new ActivatedAbility()
+                {
+                    ManaCost = "0",
+                    AdditionalCost =  new PayLifeAdditionalCost()
+                    {
+                        Type = AdditionalCostType.PayLife,
+                        Amount = 7
+                    },
+                    AbilityEffect = new DrawCardEffect()
+                    {
+                        Amount = 7
+                    }
+                }
+            }
+        });
 
+        //Sacrifice a Unit,
+        //Pay
+        //Discard
+        //Exile
 
-        /*
+      /*  
         _cards.Add(new UnitCardData()
         {
             Name = "Fume Spitter",

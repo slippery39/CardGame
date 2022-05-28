@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class GameUIActivatedAbilityState : IGameUIState
 {
-
     private CardGame _cardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _cardWithAbility;
+
+
+    private bool isPayingAdditionalCost = false;
+
+
+    //How to pay additional costs?
 
     public GameUIActivatedAbilityState(GameUIStateMachine stateMachine, CardInstance cardWithAbility)
     {
@@ -19,7 +24,12 @@ public class GameUIActivatedAbilityState : IGameUIState
     }
     public string GetMessage()
     {
-        return $@"Choose a target for {_cardWithAbility.Name}'s ability";
+        if (!isPayingAdditionalCost)
+        {
+            return $@"Choose a target for {_cardWithAbility.Name}'s ability";
+        }
+
+        return "Please pay the additional cost";
     }
 
     public void HandleInput()
@@ -79,6 +89,7 @@ public class GameUIActivatedAbilityState : IGameUIState
         {
             return;
         }
+
         //We still need a card here?.
         _cardGame.ActivatedAbilitySystem.ActivateAbilityWithTargets(_cardGame, _actingPlayer, _cardWithAbility, new List<CardGameEntity> { targetAsEntity });
         _stateMachine.ToIdle();
