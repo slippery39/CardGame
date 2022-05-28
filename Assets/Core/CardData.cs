@@ -778,32 +778,58 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Greedy Merchant",
+            ManaCost = "BBB",
+            Power = 3,
+            Toughness = 3,
+            ArtPath = "CardArt/Greedy Merchant",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost = "1B",
+                    AdditionalCost = new PayLifeAdditionalCost()
+                    {
+                        Type = AdditionalCostType.PayLife,
+                        Amount = 1,
+                    },
+                    AbilityEffect = new DrawCardEffect()
+                    {
+                        Amount = 1
+                    }
+                }
+            }
+        });
+
         //Sacrifice a Unit,
         //Pay
         //Discard
         //Exile
 
-      /*  
-        _cards.Add(new UnitCardData()
-        {
-            Name = "Fume Spitter",
-            ManaCost = "B",
-            Power = 1,
-            Toughness = 1,
-            ArtPath = "CardArt/Fume Spitter",
-            Colors = new List<CardColor> { CardColor.Black },
-            Abilities = new List<CardAbility>
-            {
-                new ActivatedAbility(){
-                ManaCost = "0",
-                OtherCost = "Sacrifice #this#",
-                AbilityEffect = new PumpUnitEffect
-                {
-                    Power = -1,
-                    Toughness = -1,
-                    TargetType = TargetType.TargetUnits
-                }
-        });*/
+        /*  
+          _cards.Add(new UnitCardData()
+          {
+              Name = "Fume Spitter",
+              ManaCost = "B",
+              Power = 1,
+              Toughness = 1,
+              ArtPath = "CardArt/Fume Spitter",
+              Colors = new List<CardColor> { CardColor.Black },
+              Abilities = new List<CardAbility>
+              {
+                  new ActivatedAbility(){
+                  ManaCost = "0",
+                  OtherCost = "Sacrifice #this#",
+                  AbilityEffect = new PumpUnitEffect
+                  {
+                      Power = -1,
+                      Toughness = -1,
+                      TargetType = TargetType.TargetUnits
+                  }
+          });*/
 
         //need to create temp ability effects.
 
@@ -823,7 +849,7 @@ public class CardDatabase : ICardDatabase
                     AbilityEffect = new AddTempAbilityEffect(new HasteAbility())
                 }
             }
-        }); 
+        });
 
         _cards.Add(new UnitCardData()
         {
