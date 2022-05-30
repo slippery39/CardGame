@@ -726,6 +726,34 @@ public class CardDatabase : ICardDatabase
                 }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Unspeakable Symbolite",
+            ManaCost = "1BB",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/UnspeakableSymbolite",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>
+            {
+                    new ActivatedAbility()
+                    {
+                        ManaCost = "0",
+                        //this needs to have rules text automatically generated.
+                        AdditionalCost = new PayLifeAdditionalCost()
+                        {
+                            Amount = 3,
+                        },
+                        AbilityEffect = new PumpUnitEffect()
+                        {
+                           Power = 1,
+                           Toughness = 1
+                        }
+                    }
+            }
+
+        });
+
 
         /*
         _cards.Add(new UnitCardData()

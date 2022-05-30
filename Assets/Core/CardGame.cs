@@ -341,7 +341,7 @@ public class CardGame
         var cardDB = new CardDatabase();
         
         var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Mogg Fanatic");
+        cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Unspeakable Symbolite");
 
         var cardsToAdd = 45;
 
