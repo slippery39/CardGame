@@ -701,22 +701,22 @@ public class CardDatabase : ICardDatabase
             ArtPath = "CardArt/Forest"
         });
 
-        /*    
-            _cards.Add(new UnitCardData()
-            {
-                Name = "Mogg Fanatic",
-                ManaCost = "R",
-                Power = 1,
-                Toughness = 1,
-                ArtPath = "CardArt/Mogg Fanatic",
-                Colors = new List<CardColor> { CardColor.Red },
-                Abilities = new List<CardAbility>
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Mogg Fanatic",
+            ManaCost = "R",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Mogg Fanatic",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
                 {
                      new ActivatedAbility()
                     {
                         ManaCost = "0",
                         //this needs to have rules text automatically generated.
-                        AdditionalCost = "{Sacrifice}{}{#this#}",
+                        AdditionalCost = new SacrificeSelfAdditionalCost(),
                         AbilityEffect = new DamageEffect()
                         {
                            Amount = 1,
@@ -724,8 +724,8 @@ public class CardDatabase : ICardDatabase
                         }
                     }
                 }
-            });
-        */
+        });
+
 
         /*
         _cards.Add(new UnitCardData()

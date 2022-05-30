@@ -42,6 +42,11 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
         if (activatedAbility == null) { return; }
 
+        //Assuming additional costs are auto payed for now, for ones that need choices, we will need to change this.
+        if (activatedAbility.HasAdditionalCost())
+        {
+            PayAdditionalCost(cardGame, player, card, activatedAbility.AdditionalCost);
+        }
 
         cardGame.ManaSystem.SpendManaAndEssence(cardGame, player, activatedAbility.ManaCost);
 
