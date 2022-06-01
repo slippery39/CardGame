@@ -51,38 +51,22 @@ public class GameUIIdleState : IGameUIState
 
     private void HandleCardActivatedAbility(CardInstance card)
     {
-        if (_cardGame.ActivatedAbilitySystem.CanActivateAbility(_cardGame, ActingPlayer, card))
+        var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+
+        if (activatedAbility == null)
         {
-            //check if it has targets.
+            _cardGame.Log("The card does not have an activated ability");
+        }
 
-            if (_cardGame.TargetSystem.ActivatedAbilityNeedsTargets(_cardGame, ActingPlayer, card))
-            {
-                this._stateMachine.ChangeState(new GameUIActivatedAbilityState(_stateMachine, card));
-            }
-            else
-            {
-                //handle additional costs, does not work for targetted abilities for now.
-                var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+        var canActivateAbility = _cardGame.ActivatedAbilitySystem.CanActivateAbility(_cardGame, ActingPlayer, card);
 
-                if (activatedAbility.HasAdditionalCost())
-                {
-                    _cardGame.Log("Card has ability with additional cost");
-                    //Assume the cost is automatic for now.
-                    if (_cardGame.ActivatedAbilitySystem.CanPayAdditionalCost(_cardGame, ActingPlayer, card, activatedAbility.AdditionalCost))
-                    {
-                        _cardGame.ActivatedAbilitySystem.PayAdditionalCost(_cardGame, ActingPlayer, card, activatedAbility.AdditionalCost);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                }
-                _cardGame.ActivatedAbilitySystem.ActivateAbility(_cardGame, ActingPlayer, card);
-            }
+        if (canActivateAbility)
+        {
+            this._stateMachine.ChangeState(new GameUIActivatedAbilityState(_stateMachine, card));
         }
         else
         {
-            _cardGame.Log("That card does not have an activated ability");
+            _cardGame.Log("You cannot pay the mana or costs to activate that ability");
         }
     }
 

@@ -76,7 +76,7 @@ public class UIGameController : MonoBehaviour
             _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.ActivePlayer, 1);
         }
 
-        _stateMachine.CurrentState.HandleInput();
+        _stateMachine.CurrentState.HandleInput(); 
         UpdateBoard();
     }
 

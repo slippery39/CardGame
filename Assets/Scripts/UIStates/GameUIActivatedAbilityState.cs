@@ -10,26 +10,53 @@ public class GameUIActivatedAbilityState : IGameUIState
     private GameUIStateMachine _stateMachine;
     private CardInstance _cardWithAbility;
 
+    //TODO - we will be using internal state to determine which messages to show and what not
+    private IGameUIState _internalState;
 
-    private bool isPayingAdditionalCost = false;
 
+    public bool NeedsTargets { get; set; } = false;
+    public bool NeedsCostChoices { get; set; } = false;
+
+    public bool AutomaticCostChoice { get; set; } = false;
+
+    public List<CardGameEntity> SelectedTargets { get; set; }
+    public List<CardGameEntity> SelectedChoices { get; set; }
 
     //How to pay additional costs?
 
     public GameUIActivatedAbilityState(GameUIStateMachine stateMachine, CardInstance cardWithAbility)
     {
+        SelectedTargets = new List<CardGameEntity>();
+
         _stateMachine = stateMachine;
         _cardGame = stateMachine.CardGame;
         _cardWithAbility = cardWithAbility;
+
+        //Determine whether the ability has targets
+        NeedsTargets = GetActivatedAbility().HasTargets();
+        //Determine whether the ability needs cost choices
+        NeedsCostChoices = GetActivatedAbility().HasChoices();
+        //The way it should work - if we don't need targets and we don't need cost choices
+        //then we should just immediatley fire the ability and revert to the idle state.
+
+        if (NeedsTargets)
+        {
+            ChangeToSelectTargetState();          
+        }
+        else if (NeedsCostChoices)
+        {
+            ChangeToCostChoosingState();
+        }
+        else
+        {
+            //no targets and no additional costs, just fire the ability as is
+            ActivateAbility();
+        }
     }
+
     public string GetMessage()
     {
-        if (!isPayingAdditionalCost)
-        {
-            return $@"Choose a target for {_cardWithAbility.Name}'s ability";
-        }
-
-        return "Please pay the additional cost";
+        return _internalState?.GetMessage();
     }
 
     public void HandleInput()
@@ -43,56 +70,50 @@ public class GameUIActivatedAbilityState : IGameUIState
 
     public void OnApply()
     {
-        var validTargets = _cardGame.TargetSystem.GetValidAbilityTargets(
-            _cardGame,
-            _actingPlayer,
-            _cardWithAbility)
-            .Select(e => e.EntityId);
+        //Due to the logic of how abilities get activated, we may not have a state to apply.
+        _internalState?.OnApply();
+    }
 
-        if (validTargets.Count() == 0)
-        {
-            return;
-        }
-
-        var uiEntities = _stateMachine.GameController.GetUIEntities();
-        //Highlight all entities that share an entity id with the valid targets of the spell        
-
-        var entitiesToHighlight = uiEntities.Where(e => validTargets.Contains(e.EntityId));
-
-        foreach (var entity in entitiesToHighlight)
-        {
-            entity.Highlight();
-        }
+    private ActivatedAbility GetActivatedAbility()
+    {
+        return _cardWithAbility.GetAbilities<ActivatedAbility>().First();
     }
 
     public void OnDestroy()
     {
-        var uiEntities = _stateMachine.GameController.GetUIEntities();
-        foreach (var entity in uiEntities)
-        {
-            entity.StopHighlight();
-        }
+        _internalState?.OnDestroy();
     }
 
     public void HandleSelection(int entityId)
     {
-        var validTargets = _cardGame.TargetSystem.GetValidAbilityTargets(_cardGame, _actingPlayer, _cardWithAbility); ;
+        _internalState?.HandleSelection(entityId);
+    }
 
-        if (!validTargets.Select(e => e.EntityId).Contains(entityId))
+    public void ChangeState(IGameUIState stateTo)
+    {
+        _internalState?.OnDestroy();
+        _internalState = stateTo;
+        stateTo.OnApply();
+    }
+
+    public void ChangeToCostChoosingState()
+    {
+        ChangeState(new GameUIActivatedAbilityCostChoosingState(_stateMachine, this, _cardWithAbility));
+    }
+
+    public void ChangeToSelectTargetState()
+    {
+        ChangeState(new GameUIActivatedAbilitySelectTargetsState(_stateMachine, this, _cardWithAbility));
+    }
+
+    public void ActivateAbility()
+    {
+        _cardGame.ActivatedAbilitySystem.ActivateAbility(_cardGame, _actingPlayer, _cardWithAbility, new ActivateAbilityInfo
         {
-            return;
-        }
-
-        var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == entityId);
-
-        if (targetAsEntity == null)
-        {
-            return;
-        }
-
-        //We still need a card here?.
-        _cardGame.ActivatedAbilitySystem.ActivateAbilityWithTargets(_cardGame, _actingPlayer, _cardWithAbility, new List<CardGameEntity> { targetAsEntity });
+            Targets = SelectedTargets,
+            Choices = SelectedChoices
+        });
+        
         _stateMachine.ToIdle();
     }
 }
-

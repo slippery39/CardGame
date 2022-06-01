@@ -1,8 +1,9 @@
-﻿public class ActivatedAbility : CardAbility
+﻿using System.Collections.Generic;
+
+public class ActivatedAbility : CardAbility
 {
     public override string RulesText
     {
-
         get
         {
             string manaCostStr = "";
@@ -31,5 +32,15 @@
     public bool HasAdditionalCost()
     {
         return AdditionalCost != null;
+    }
+
+    public bool HasChoices()
+    {
+        return HasAdditionalCost() && AdditionalCost.NeedsChoice;
+    }
+
+    public bool HasTargets()
+    {
+        return TargetHelper.NeedsTargets(this);
     }
 }

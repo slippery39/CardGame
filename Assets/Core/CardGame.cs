@@ -333,15 +333,12 @@ public class CardGame
         }
     }
 
-
-
-
     void BuildDeck(Player player, CardColor deckColor, string manaName)
     {
         var cardDB = new CardDatabase();
         
         var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Unspeakable Symbolite");
+        cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Count() > 0);
 
         var cardsToAdd = 45;
 

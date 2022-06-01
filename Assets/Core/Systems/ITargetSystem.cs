@@ -12,9 +12,22 @@ public interface ITargetSystem
     bool ActivatedAbilityNeedsTargets(CardGame cardGame, Player player, CardInstance cardWithAbility);
 }
 
+public static class TargetHelper
+{
+    private static List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
+
+    public static bool NeedsTargets(ActivatedAbility ability)
+    {
+        var abilityTargets = ability.AbilityEffect.TargetType;
+
+        return typesThatDontNeedTargets.Contains(abilityTargets) == false;
+    }
+}
+
+
 public class DefaultTargetSystem : ITargetSystem
 {
-
+    
     private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
 
     /// <summary>

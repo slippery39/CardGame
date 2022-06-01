@@ -754,6 +754,30 @@ public class CardDatabase : ICardDatabase
 
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Nantuko Husk",
+            ManaCost = "2B",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/Nantuko Husk",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost = "0",
+                    AdditionalCost = new SacrificeCreatureAdditionalCost(),
+                    AbilityEffect = new PumpUnitEffect()
+                    {
+                        Power = 2,
+                        Toughness = 2,
+                        TargetType = TargetType.UnitSelf
+                    }
+                 }
+            }
+        });
+
 
         /*
         _cards.Add(new UnitCardData()
