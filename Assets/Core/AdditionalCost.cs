@@ -93,7 +93,7 @@ public class SacrificeSelfAdditionalCost: AdditionalCost
 
     public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {
-        throw new NotImplementedException();
+        PayCost(cardGame, player, sourceCard);
     }
 }
 

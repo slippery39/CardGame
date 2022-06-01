@@ -36,22 +36,6 @@ public class GameUIActivatedAbilityState : IGameUIState
         NeedsTargets = GetActivatedAbility().HasTargets();
         //Determine whether the ability needs cost choices
         NeedsCostChoices = GetActivatedAbility().HasChoices();
-        //The way it should work - if we don't need targets and we don't need cost choices
-        //then we should just immediatley fire the ability and revert to the idle state.
-
-        if (NeedsTargets)
-        {
-            ChangeToSelectTargetState();          
-        }
-        else if (NeedsCostChoices)
-        {
-            ChangeToCostChoosingState();
-        }
-        else
-        {
-            //no targets and no additional costs, just fire the ability as is
-            ActivateAbility();
-        }
     }
 
     public string GetMessage()
@@ -70,6 +54,20 @@ public class GameUIActivatedAbilityState : IGameUIState
 
     public void OnApply()
     {
+        //TODO - I think the bug is because this is activating before the state machine above it gets to do anything.
+        if (NeedsTargets)
+        {
+            ChangeToSelectTargetState();
+        }
+        else if (NeedsCostChoices)
+        {
+            ChangeToCostChoosingState();
+        }
+        else
+        {
+            //no targets and no additional costs, just fire the ability as is
+            ActivateAbility();
+        }
         //Due to the logic of how abilities get activated, we may not have a state to apply.
         _internalState?.OnApply();
     }
@@ -113,7 +111,7 @@ public class GameUIActivatedAbilityState : IGameUIState
             Targets = SelectedTargets,
             Choices = SelectedChoices
         });
-        
+
         _stateMachine.ToIdle();
     }
 }
