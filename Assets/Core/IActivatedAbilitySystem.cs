@@ -4,16 +4,8 @@ using System.Linq;
 
 public interface IActivatedAbilitySystem
 {
-    //Assumes the card only has 1 activated ability.
-    //void ActivateAbility(CardGame cardGame, Player player, CardInstance card);
-    //void ActivateAbilityWithTargets(CardGame cardGame, Player player, CardInstance card, List<CardGameEntity> targets);
     public void ActivateAbility(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
     bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card);
-    //public void ActivateAbilityWithAdditionalCosts(CardGame cardGame, Player player, CardInstance card);
-
-    //public void ActivateAbilityWithAdditionalCosts(CardGame cardGame, Player player, CardInstance card,CostInfo additionalCostInfo);
-    /*public void PayAdditionalCost(CardGame cardGame, Player player, CardInstance card, AdditionalCost additionalCost);*/
-    /*public void PayAdditionalCost(CardGame cardGame, Player player, CardInstance card, AdditionalCost additionalCost, CostInfo additionalCostInfo);*/
     public bool CanPayAdditionalCost(CardGame cardGame, Player player, CardInstance source, AdditionalCost cost);
 }
 
@@ -61,34 +53,10 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
             ActivateAbility(cardGame, player, card);
         }
     }
-    public void ActivateAbilityWithAdditionalCosts(CardGame cardGame, Player player, CardInstance card)
-    {
-        //This assumes we have already checked to see if the cost can be payed.
-        //This is also for non choice costs (i.e. like paying life).
-        var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
-        var additionalCost = activatedAbility.AdditionalCost;
-        PayAdditionalCost(cardGame, player, card, additionalCost);
-        ActivateAbility(cardGame, player, card);
-    }
-
-    public void ActivateAbilityWithAdditionalCosts(CardGame cardGame, Player player, CardInstance card,CostInfo additionalCostInfo)
-    {
-        //This assumes we have already checked to see if the cost can be payed.
-        //This is also for non choice costs (i.e. like paying life).
-        var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
-        var additionalCost = activatedAbility.AdditionalCost;
-        PayAdditionalCost(cardGame, player, card, additionalCost,additionalCostInfo);
-        ActivateAbility(cardGame, player, card);
-    }
 
     private void PayAdditionalCost(CardGame cardGame, Player player, CardInstance card, AdditionalCost additionalCost, CostInfo costInfo)
     {
         additionalCost.PayCost(cardGame, player, card,costInfo);
-    }
-
-    private void PayAdditionalCost(CardGame cardGame, Player player, CardInstance card, AdditionalCost additionalCost)
-    {
-        additionalCost.PayCost(cardGame, player, card);
     }
 
     public void ActivateAbilityWithTargets(CardGame cardGame, Player player, CardInstance card, List<CardGameEntity> targets)
@@ -96,12 +64,6 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
 
         if (activatedAbility == null) { return; }
-
-        //Assuming additional costs are auto payed for now, for ones that need choices, we will need to change this.
-        if (activatedAbility.HasAdditionalCost() && !(activatedAbility.AdditionalCost.NeedsChoice))
-        {
-            PayAdditionalCost(cardGame, player, card, activatedAbility.AdditionalCost);
-        }
 
         cardGame.ManaSystem.SpendManaAndEssence(cardGame, player, activatedAbility.ManaCost);
 
