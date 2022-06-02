@@ -11,20 +11,24 @@ using System.Linq;
 /// 
 /// </summary>
 public class CostInfo
-{   
+{
     //do we need other information here??
     public List<CardGameEntity> EntitiesChosen { get; set; }
-    
+
 }
 
 public abstract class AdditionalCost
-{    public AdditionalCostType Type { get; set; }
-     public int Amount { get; set; }    
+{
+    public AdditionalCostType Type { get; set; }
+    public int Amount { get; set; }
 
     public abstract string RulesText { get; }
     public abstract bool CanPay(CardGame cardGame, Player player, CardGameEntity source);
 
-    public abstract void PayCost(CardGame cardGame, Player player,CardGameEntity sourceCard);
+    //NOTE - we should get rid of this one, always implement the one with CostInfo.
+    //public abstract void PayCost(CardGame cardGame, Player player,CardGameEntity sourceCard);
+
+    //NOTE - we should always implement this one going forward.
     public abstract void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo);
 
 
@@ -36,7 +40,7 @@ public abstract class AdditionalCost
     }
 };
 
-public class PayLifeAdditionalCost: AdditionalCost
+public class PayLifeAdditionalCost : AdditionalCost
 {
     public override string RulesText => $@"Pay {Amount} Life";
 
@@ -50,18 +54,13 @@ public class PayLifeAdditionalCost: AdditionalCost
         return player.Health >= Amount;
     }
 
-    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard)
+    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {
         player.Health -= Amount;
     }
-
-    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
-    {
-        PayCost(cardGame, player, sourceCard);
-    }
 }
 
-public class SacrificeSelfAdditionalCost: AdditionalCost
+public class SacrificeSelfAdditionalCost : AdditionalCost
 {
     public override string RulesText => $@"Sacrifice #this#"; //#this needs to be replaced with the name of the unit.
 
@@ -80,29 +79,23 @@ public class SacrificeSelfAdditionalCost: AdditionalCost
         }
         return cardGame.GetZoneOfCard(source as CardInstance).Name.ToLower() == "lane";
     }
-
-    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard)
+    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {
         if (!(sourceCard is CardInstance))
         {
             throw new Exception("Source should be a card instance for a SacrificeSelfAdditionalCost");
         }
 
-        cardGame.SacrificeSystem.SacrificeUnit(cardGame,player,sourceCard as CardInstance);
-    }
-
-    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
-    {
-        PayCost(cardGame, player, sourceCard);
+        cardGame.SacrificeSystem.SacrificeUnit(cardGame, player, sourceCard as CardInstance);
     }
 }
 
 public class SacrificeCreatureAdditionalCost : AdditionalCost
 {
-   public override string RulesText => $@"Sacrifice a creature:"; //#this needs to be replaced with the name of the unit.
+    public override string RulesText => $@"Sacrifice a creature:"; //#this needs to be replaced with the name of the unit.
 
     public SacrificeCreatureAdditionalCost()
-    {        
+    {
         Type = AdditionalCostType.Sacrifice;
         NeedsChoice = true;
     }
@@ -112,12 +105,6 @@ public class SacrificeCreatureAdditionalCost : AdditionalCost
         //check to see if we have any units that can be sacrificed
         return player.Lanes.Where(l => !l.IsEmpty()).Any();
     }
-
-    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard)
-    {
-        throw new Exception("We need cost info for a SacrificeCreatureAdditionalCost");
-    }
-
     public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {
         //Creature to sacrifice should be in the cost info.
@@ -125,14 +112,14 @@ public class SacrificeCreatureAdditionalCost : AdditionalCost
 
         foreach (var entity in entitiesToSacrifice)
         {
-            cardGame.SacrificeSystem.SacrificeUnit(cardGame,player,entity);
+            cardGame.SacrificeSystem.SacrificeUnit(cardGame, player, entity);
         }
     }
 
     public override List<CardGameEntity> GetValidChoices(CardGame cardGame, Player player, CardGameEntity sourceEntity)
     {
         //The valid choices are the players units in play
-        var choices = player.Lanes.Where(l => !(l.IsEmpty())).Select(l=>l.UnitInLane).Cast<CardGameEntity>();
+        var choices = player.Lanes.Where(l => !(l.IsEmpty())).Select(l => l.UnitInLane).Cast<CardGameEntity>();
         return choices.ToList();
     }
 }
