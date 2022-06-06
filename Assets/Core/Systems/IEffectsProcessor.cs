@@ -154,7 +154,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         {
             foreach (var entity in entitiesToEffect)
             {
-                if (! (entity is CardInstance))
+                if (!(entity is CardInstance))
                 {
                     throw new Exception("Error : only units can be effected with the sacrifice self effect");
                 }
@@ -163,6 +163,22 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 var tempAbilityEffect = effect as AddTempAbilityEffect;
                 //note, ideally the temp ability would be cloned from the AddTempAbilityEffect...
                 card.Abilities.Add(tempAbilityEffect.TempAbility);
+            }
+        }
+
+        if (effect is CreateTokenEffect)
+        {
+            var tokenEffect = effect as CreateTokenEffect;
+            //put in open lanes. 
+
+            var emptyLanes = player.GetEmptyLanes();
+            for (var i = 0; i < tokenEffect.AmountOfTokens; i++)
+            {
+                var emptyLane = player.GetEmptyLanes().FirstOrDefault();
+                if (emptyLanes != null)
+                {
+                    cardGame.AddCardToGame(player, tokenEffect.TokenData, emptyLane);
+                }
             }
         }
     }

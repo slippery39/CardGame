@@ -241,6 +241,7 @@ public class CardDatabase : ICardDatabase
             Power = 2,
             Toughness = 2,
             ArtPath = "CardArt/GoblinRaider",
+            CreatureType = "Goblin",
             Colors = new List<CardColor>() { CardColor.Red },
             Abilities = new List<CardAbility>()
             {
@@ -711,6 +712,7 @@ public class CardDatabase : ICardDatabase
             Power = 1,
             Toughness = 1,
             ArtPath = "CardArt/Mogg Fanatic",
+            CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
                 {
@@ -791,7 +793,7 @@ public class CardDatabase : ICardDatabase
             Toughness = 1,
             ArtPath = "CardArt/Skirk Prospector",
             CreatureType = "Goblin",
-            Colors =  new List<CardColor> { CardColor.Red},
+            Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
             {
                 new ActivatedAbility()
@@ -808,6 +810,82 @@ public class CardDatabase : ICardDatabase
                     {
                         ManaType = EssenceType.Red,
                         Amount = 1
+                    },
+                 }
+            }
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Goblin Sledder",
+            ManaCost = "R",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Goblin Sledder",
+            CreatureType = "Goblin",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost = "0",
+                    AdditionalCost = new SacrificeCreatureAdditionalCost()
+                    {
+                        Filter = new CardFilter
+                        {
+                            CreatureType = "Goblin"
+                        }
+                    },
+                    AbilityEffect = new PumpUnitEffect()
+                    {
+                        Power = 1,
+                        Toughness =1
+                    },
+                 }
+            }
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Siege Gang Commander",
+            ManaCost = "3RR",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/Siege Gang Commander",
+            CreatureType = "Goblin",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility(TriggerType.SelfEntersPlay
+                ,new CreateTokenEffect(new UnitCardData()
+                            {
+                                Name = "Goblin Token",
+                                ManaCost = "0",
+                                Power = 1,
+                                Toughness =1,
+                                ArtPath = "CardArt/Goblin Token",
+                                CreatureType = "Goblin",
+                                Colors = new List<CardColor>{CardColor.Red }
+                            })
+                        {
+                            AmountOfTokens = 3,
+
+                        }
+                   ),
+                new ActivatedAbility()
+                {
+                    ManaCost = "1R",
+                    AdditionalCost = new SacrificeCreatureAdditionalCost()
+                    {
+                        Filter = new CardFilter
+                        {
+                            CreatureType = "Goblin"
+                        }
+                    },
+                    AbilityEffect = new DamageEffect()
+                    {
+                        Amount = 2,
+                        TargetType = TargetType.TargetUnitsOrPlayers
                     },
                  }
             }

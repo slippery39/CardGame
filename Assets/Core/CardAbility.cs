@@ -344,6 +344,7 @@ public class CreateTokenEffect : Effect
     public override string RulesText => $"Create a {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} token with {TokenData.RulesText}";
     public UnitCardData TokenData { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.OpenLane;
+    public int AmountOfTokens { get; set; } = 1;
 
     public CreateTokenEffect(UnitCardData cardData)
     {
@@ -376,3 +377,6 @@ public class AddTempAbilityEffect : Effect
         TempAbility.ThisTurnOnly = true;
     }
 }
+
+
+

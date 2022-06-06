@@ -75,6 +75,11 @@ public class Player : CardGameEntity
             });
         }
     }
+
+    public List<Lane> GetEmptyLanes()
+    {
+        return _lanes.Where(l => l.IsEmpty()).ToList();
+    }
     #endregion
 }
 
