@@ -38,6 +38,7 @@ public class UnitCardData : BaseCardData
     public int Power { get; set; }
     public int Toughness { get; set; }
     public override string CardType => "Unit";
+    public string CreatureType { get; set; } = "";
 
     public UnitCardData() : base()
     {
@@ -53,7 +54,8 @@ public class UnitCardData : BaseCardData
             Power = Power,
             Toughness = Toughness,
             Colors = Colors,
-            Abilities = Abilities.ToList() //todo - potential deep clone.
+            Abilities = Abilities.ToList(), //todo - potential deep clone.
+            CreatureType = CreatureType
         };
     }
 }
@@ -777,6 +779,52 @@ public class CardDatabase : ICardDatabase
                  }
             }
         });
+
+        //Things needed - creature types.
+
+        //Skirk Prospector
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Skirk Prospector",
+            ManaCost = "R",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Skirk Prospector",
+            CreatureType = "Goblin",
+            Colors =  new List<CardColor> { CardColor.Red},
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost = "0",
+                    AdditionalCost = new SacrificeCreatureAdditionalCost()
+                    {
+                        Filter = new CardFilter
+                        {
+                            CreatureType = "Goblin"
+                        }
+                    },
+                    AbilityEffect = new AddTempManaEffect()
+                    {
+                        ManaType = EssenceType.Red,
+                        Amount = 1
+                    },
+                 }
+            }
+        });
+        //Mogg War Marshall -things needed - OnDeath - Create Token
+        //Goblin Piledriver - things needed - count creature types
+        //Goblin Warchief - things needed - mana cost reduction, static ability gainers
+        //Goblin Matron - things needed - grabbing cards from library
+        //Goblin Sharpshooter - things needed - activate ability only once per turn
+        //Goblin Sledder - things needed (nothing)
+        //Seething Song - nothing
+        //Goblin Ringleader - things needed - conditional draw from deck
+        //Gempalm Incinerator - things needed (cycling?? - maybe don't implement this)
+        //Goblin King - things needed - static effects (mountainwalk doesn't matter?)
+        //Goblin Burrows - things needed - ability on land?
+
+
 
 
         /*

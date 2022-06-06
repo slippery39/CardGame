@@ -17,10 +17,33 @@ public class CostInfo
 
 }
 
+
+public class CardFilter
+{
+    public string CreatureType { get; set; }
+
+    public static List<CardInstance> ApplyFilter(List<CardInstance> list,CardFilter filter)
+    {
+        if (filter.CreatureType != null)
+        {
+            //Things to consider: 
+            //Should have a method for if a card is a creature, we shouldn't be checking strings directly?
+            //Should also have a method to check what type a card is?
+            //Should also have a method to automatically filter a list of CardInstances based off of its type and return the proper cast.
+            //i.e. List.GetOfType<UnitCard>()
+            list = list.Where(x=>x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType).ToList();
+        }
+
+        return list;
+    }
+}
+
 public abstract class AdditionalCost
 {
     public AdditionalCostType Type { get; set; }
     public int Amount { get; set; }
+
+    public CardFilter Filter { get; set; }
 
     public abstract string RulesText { get; }
     public abstract bool CanPay(CardGame cardGame, Player player, CardGameEntity source);
@@ -92,8 +115,8 @@ public class SacrificeSelfAdditionalCost : AdditionalCost
 
 public class SacrificeCreatureAdditionalCost : AdditionalCost
 {
-    public override string RulesText => $@"Sacrifice a creature:"; //#this needs to be replaced with the name of the unit.
-
+    public override string RulesText => $@"Sacrifice a creature:"; //#this needs to be replaced with the name of the unit.  
+    
     public SacrificeCreatureAdditionalCost()
     {
         Type = AdditionalCostType.Sacrifice;
@@ -102,8 +125,17 @@ public class SacrificeCreatureAdditionalCost : AdditionalCost
 
     public override bool CanPay(CardGame cardGame, Player player, CardGameEntity source)
     {
-        //check to see if we have any units that can be sacrificed
-        return player.Lanes.Where(l => !l.IsEmpty()).Any();
+        var unitsToSacrifice = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane);
+
+        if (Filter != null)
+        {
+            unitsToSacrifice = CardFilter.ApplyFilter(unitsToSacrifice.ToList(), Filter);
+        }
+
+        //TODO - apply the filter.
+
+        return unitsToSacrifice.Any();
+
     }
     public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {
@@ -120,6 +152,12 @@ public class SacrificeCreatureAdditionalCost : AdditionalCost
     {
         //The valid choices are the players units in play
         var choices = player.Lanes.Where(l => !(l.IsEmpty())).Select(l => l.UnitInLane).Cast<CardGameEntity>();
+
+        if (Filter != null)
+        {
+            choices = CardFilter.ApplyFilter(choices.Cast<CardInstance>().ToList(), Filter).Cast<CardGameEntity>();
+        }
+
         return choices.ToList();
     }
 }

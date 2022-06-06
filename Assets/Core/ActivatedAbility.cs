@@ -28,6 +28,7 @@ public class ActivatedAbility : CardAbility
     public string ManaCost { get; set; }
     public AdditionalCost AdditionalCost { get; set; } = null;
     public Effect AbilityEffect { get; set; }
+    public CardFilter Filter { get; internal set; }
 
     public bool HasAdditionalCost()
     {

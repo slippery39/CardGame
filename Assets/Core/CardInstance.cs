@@ -12,7 +12,7 @@ public class CardInstance : CardGameEntity
     private BaseCardData _currentCardData;
     private int _ownerId;
     private bool _isSummoningSick = true;
-
+ 
     #region Public Properties
     public BaseCardData CurrentCardData
     {
@@ -29,10 +29,39 @@ public class CardInstance : CardGameEntity
         }
     }
 
+    //Testing out this method for getting the card data
+    public T GetCardData<T>() where T: BaseCardData
+    {
+        return _currentCardData as T;
+    }
+
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
     public string RulesText { get => _currentCardData.RulesText; set => _currentCardData.Name = value; }
     public List<CardColor> Colors { get => _currentCardData.Colors; }
+
+    public string CreatureType
+    {
+        get
+        {
+            if (_currentCardData is UnitCardData)
+            {
+                return (_currentCardData as UnitCardData).CreatureType;
+            }
+            else
+            {
+                return "";
+            }
+        }
+        set
+        {
+            if (_currentCardData is UnitCardData)
+            {
+                (_currentCardData as UnitCardData).CreatureType = value;
+            }
+        }
+
+    }
 
     public string ManaCost { get => _currentCardData.ManaCost; set => _currentCardData.ManaCost = value; }
     public string CardType { get => _currentCardData.CardType; }

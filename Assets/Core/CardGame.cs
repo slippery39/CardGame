@@ -338,7 +338,7 @@ public class CardGame
         var cardDB = new CardDatabase();
         
         var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Count() > 0);
+        cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Skirk Prospector" || card.Name == "Benalish Marshall");
 
         var cardsToAdd = 45;
 
