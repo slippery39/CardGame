@@ -341,6 +341,7 @@ public class SacrificeSelfEffect : Effect
 
 public class CreateTokenEffect : Effect
 {
+    //TODO - change the rules text to take into account the amount of tokens created.
     public override string RulesText => $"Create a {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} token with {TokenData.RulesText}";
     public UnitCardData TokenData { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.OpenLane;

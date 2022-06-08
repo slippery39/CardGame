@@ -6,7 +6,7 @@ using System.Linq;
 public abstract class BaseCardData
 {
     public string Name { get; set; }
-    public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)); } }
+    public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#",Name); } }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
     public List<CardColor> Colors { get; set; }
