@@ -22,7 +22,7 @@ public class CardFilter
 {
     public string CreatureType { get; set; }
 
-    public static List<CardInstance> ApplyFilter(List<CardInstance> list,CardFilter filter)
+    public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)
     {
         if (filter.CreatureType != null)
         {
@@ -31,7 +31,7 @@ public class CardFilter
             //Should also have a method to check what type a card is?
             //Should also have a method to automatically filter a list of CardInstances based off of its type and return the proper cast.
             //i.e. List.GetOfType<UnitCard>()
-            list = list.Where(x=>x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType).ToList();
+            list = list.Where(x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType).ToList();
         }
 
         return list;
@@ -115,8 +115,22 @@ public class SacrificeSelfAdditionalCost : AdditionalCost
 
 public class SacrificeCreatureAdditionalCost : AdditionalCost
 {
-    public override string RulesText => $@"Sacrifice a creature:"; //#this needs to be replaced with the name of the unit.  
-    
+    //TODO - the rules text should take into account the filter requirements if applicable
+    //public override string RulesText => $@"Sacrifice a creature"; //#this needs to be replaced with the name of the unit.  
+
+    public override string RulesText
+    {
+        get
+        {
+            if (Filter?.CreatureType != null)
+            {
+                return $"Sacrifice a {Filter.CreatureType}";
+            }
+            return "Sacrifice a creature";
+        }
+    }
+
+
     public SacrificeCreatureAdditionalCost()
     {
         Type = AdditionalCostType.Sacrifice;
