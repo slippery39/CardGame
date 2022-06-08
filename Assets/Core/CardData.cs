@@ -3,10 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 
 
+public static class TokenHelper
+{
+    public static UnitCardData GoblinToken()
+    {
+        return new UnitCardData()
+        {
+            Name = "Goblin Token",
+            ManaCost = "0",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Goblin Token",
+            CreatureType = "Goblin",
+            Colors = new List<CardColor> { CardColor.Red }
+        };
+    }
+}
+
+
 public abstract class BaseCardData
 {
     public string Name { get; set; }
-    public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#",Name); } }
+    public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name); } }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
     public List<CardColor> Colors { get; set; }
@@ -891,6 +909,28 @@ public class CardDatabase : ICardDatabase
             }
         });
         //Mogg War Marshall -things needed - OnDeath - Create Token
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Mogg War Marshall",
+            ManaCost = "1R",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Mogg War Marshall",
+            CreatureType = "Goblin",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility(
+                    TriggerType.SelfEntersPlay,
+                    new CreateTokenEffect(TokenHelper.GoblinToken())),
+
+                new TriggeredAbility(TriggerType.SelfDies,
+                new CreateTokenEffect(TokenHelper.GoblinToken()))
+            }
+        });
+
+
+
         //Goblin Piledriver - things needed - count creature types
         //Goblin Warchief - things needed - mana cost reduction, static ability gainers
         //Goblin Matron - things needed - grabbing cards from library

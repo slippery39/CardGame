@@ -115,9 +115,6 @@ public class SacrificeSelfAdditionalCost : AdditionalCost
 
 public class SacrificeCreatureAdditionalCost : AdditionalCost
 {
-    //TODO - the rules text should take into account the filter requirements if applicable
-    //public override string RulesText => $@"Sacrifice a creature"; //#this needs to be replaced with the name of the unit.  
-
     public override string RulesText
     {
         get
