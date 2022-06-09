@@ -15,6 +15,12 @@ public class ManaAndEssence
     public ManaAndEssence(string manaCost)
     {
         Essence = ManaAndEssenceHelper.CreateManaDict();
+
+        if (manaCost == null)
+        {
+            //edge case if for whatever reason trying to initialize as null.
+            return;
+        }
         //Need to process the string...
 
         //From Left To Right
@@ -89,10 +95,49 @@ public class ManaAndEssence
         return hasEnoughColor && hasEnoughTotalMana;
     }
 
+    public string ToManaString()
+    {
+        var str = "";
+
+        if (Mana == 0 && TotalSumOfEssence == 0)
+        {
+            return "0";
+        }
+
+        //We should not show 0 for mana costs that also have an essence component.
+        if (Mana != 0)
+        {
+            str = Mana.ToString();
+        }
+
+        foreach(var essence in Essence)
+        {
+            var essenceTypeAsString = EssenceTypeToString(essence.Key);
+            str += string.Concat(Enumerable.Repeat(essenceTypeAsString, essence.Value));
+        }
+
+        return str;
+    }
+
     private bool CanPayEssenceWithAny(ManaAndEssence cost)
     {
         return Essence[EssenceType.Any] >= cost.TotalSumOfEssence;
     }
+
+    private string EssenceTypeToString(EssenceType type)
+    {
+        var dictionary = new Dictionary<EssenceType, string>();
+        dictionary.Add(EssenceType.Blue, "U");
+        dictionary.Add(EssenceType.Green, "G");
+        dictionary.Add(EssenceType.Red, "R");
+        dictionary.Add(EssenceType.Black, "B");
+        dictionary.Add(EssenceType.White, "W");
+        dictionary.Add(EssenceType.Any, "*");
+
+        return dictionary[type];
+    }
+
+
 }
 
 

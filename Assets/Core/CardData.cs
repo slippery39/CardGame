@@ -929,6 +929,7 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        //Goblin Piledriver - things needed - count creature types / (protection?) (we will do protection later)
         _cards.Add(new UnitCardData()
         {
             Name = "Goblin Piledriver",
@@ -947,9 +948,61 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Goblin Warchief",
+            ManaCost = "1RR",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/Goblin Warchief",
+            CreatureType = "Goblin",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new HasteAbility(),
+                new StaticAbility()
+                {
+                    AffectedEntities = StaticAbilityEntitiesAffected.CardsInHand,
+                    Effects = new List<StaticAbilityEffect>
+                    {
+                        new StaticManaReductionEffect
+                        {
+                            Filter = new CardFilter{CreatureType = "Goblin"},
+                            ReductionAmount = "1"
+                        }
+                    }
+                },
+                /*
+                new StaticAbility
+                {
+                    AffectedEntities = StaticAbilityEntitiesAffected.OtherCreaturesYouControl,
+                    Filter = new CardFilter{CreatureType = "Goblin"},
+                    Effects = new List<StaticAbilityEffect>
+                    {
+                        new StaticGiveAbilityEffect
+                        {
+                            Ability = new HasteAbility()
+                        }
+                    }
+                }
+                */
 
-
-        //Goblin Piledriver - things needed - count creature types / (protection?)
+                /*
+                new StaticAbility
+                {
+                    AffectedEntities = StaticAbilityEntitiesAffected.OtherCreaturesYouControl,
+                    Effects = new List<StaticAbilityEffect>
+                    {
+                        new StaticGiveAbilityEffect
+                        {
+                            Ability = new HasteAbility()
+                        }
+                    }
+                }
+                */
+            }
+        }) ;
+        
         //Goblin Warchief - things needed - mana cost reduction, static ability gainers
         //Goblin Matron - things needed - grabbing cards from library
         //Goblin Sharpshooter - things needed - activate ability only once per turn

@@ -30,7 +30,8 @@ public class StaticAbility : CardAbility
 public enum StaticAbilityEntitiesAffected
 {
     Self,
-    OtherCreaturesYouControl
+    OtherCreaturesYouControl,
+    CardsInHand
 }
 
 //each unit should have an instance of the effect
@@ -45,6 +46,13 @@ public class StaticPumpEffect : StaticAbilityEffect
     public override string RulesText => $"gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
     public int Power { get; set; }
     public int Toughness { get; set; }
+}
+
+public class StaticManaReductionEffect : StaticAbilityEffect
+{
+    public override string RulesText => "**Fix this - Reduce mana cost by 1 ";
+    public string ReductionAmount { get; set; }
+    public CardFilter Filter { get; set; }
 }
 
 

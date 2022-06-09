@@ -73,9 +73,10 @@ public class UICard : UIGameEntity
             _cardManaText.gameObject.SetActive(false);
         }
 
+        //Warning: we might want to update this to the CardInstanceAttributes..
         _cardNameText.text = cardData.Name;
         _cardRulesText.text = cardData.RulesText;
-        _cardManaText.text = cardData.ManaCost;
+        _cardManaText.text = cardInstance.ManaCost;
         _cardTypeText.text = cardData.CardType;
 
         if (cardData is UnitCardData)

@@ -231,6 +231,8 @@ public class TriggeredAbility : CardAbility
     }
 }
 
+
+
 public abstract class Effect
 {
     public abstract string RulesText { get; }

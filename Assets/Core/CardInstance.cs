@@ -62,7 +62,35 @@ public class CardInstance : CardGameEntity
 
     }
 
-    public string ManaCost { get => _currentCardData.ManaCost; set => _currentCardData.ManaCost = value; }
+    public string ManaCost
+    {
+        get
+        {
+            var originalCost = _currentCardData.ManaCost;
+
+            var costAsCounts = new ManaAndEssence(originalCost);
+
+            var allCostReductions = ContinuousEffects.SelectMany(ce => ce.SourceAbility.Effects).Where(ab => ab is StaticManaReductionEffect).Cast<StaticManaReductionEffect>();
+
+            foreach (var effect in allCostReductions)
+            {
+                var costAsDict = new ManaAndEssence(effect.ReductionAmount);
+
+                costAsCounts.Mana -= costAsDict.Mana;
+                costAsCounts.Mana = Math.Max(0, costAsCounts.Mana);
+
+                foreach (var essenceType in costAsDict.Essence)
+                {
+                    costAsCounts.Essence[essenceType.Key] -= essenceType.Value;
+                    costAsCounts.Essence[essenceType.Key] = Math.Max(0, costAsCounts.Essence[essenceType.Key]);
+                }
+            }
+
+            var modifiedCost = costAsCounts.ToManaString();
+            return modifiedCost;
+        }
+    }
+
     public string CardType { get => _currentCardData.CardType; }
 
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
@@ -98,8 +126,6 @@ public class CardInstance : CardGameEntity
                         calculatedPower += pumpEffect.Power;
                     }
                 }
-
-
                 foreach (var modification in Modifications)
                 {
                     calculatedPower += modification.Power;

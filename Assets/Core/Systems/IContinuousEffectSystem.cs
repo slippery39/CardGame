@@ -49,11 +49,15 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
                     var owner = cardGame.GetOwnerOfCard((CardInstance)source);
                     return cardGame.GetUnitsInPlay().Where(u => u.OwnerId == owner.PlayerId && u.EntityId != source.EntityId).ToList();
                 }
+            case StaticAbilityEntitiesAffected.CardsInHand:
+                {
+                    var owner = cardGame.GetOwnerOfCard((CardInstance)source);
+                    return owner.Hand.Cards;
+                }
             default:
                 {
                     throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {sourceAbility.AffectedEntities} is not handled");
                 }
-
         }
     }
 }
