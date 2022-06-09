@@ -60,6 +60,12 @@ public class DefaultTurnSystem : ITurnSystem
        .Where(c => c.ThisTurnOnly == false)
        .ToList());
 
+        //Remove any temporary modifications
+        cardGame.GetUnitsInPlay().ForEach(c =>
+        c.Modifications = c.Modifications
+        .Where(c => c.OneTurnOnly == false)
+        .ToList());
+
         //Reset the players mana played this turn.
         cardGame.ActivePlayer.ManaPlayedThisTurn = 0;
 

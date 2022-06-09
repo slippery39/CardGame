@@ -12,7 +12,7 @@ public class CardInstance : CardGameEntity
     private BaseCardData _currentCardData;
     private int _ownerId;
     private bool _isSummoningSick = true;
- 
+
     #region Public Properties
     public BaseCardData CurrentCardData
     {
@@ -30,7 +30,7 @@ public class CardInstance : CardGameEntity
     }
 
     //Testing out this method for getting the card data
-    public T GetCardData<T>() where T: BaseCardData
+    public T GetCardData<T>() where T : BaseCardData
     {
         return _currentCardData as T;
     }
@@ -71,6 +71,8 @@ public class CardInstance : CardGameEntity
     //How do we figure this out?
     public List<ContinuousEffect> ContinuousEffects { get; set; }
 
+    public List<ModAddToPowerToughness> Modifications { get; set; } = new List<ModAddToPowerToughness>();
+
 
     private int _powerWithoutMods;
     private int _toughnessWithoutMods;
@@ -95,6 +97,12 @@ public class CardInstance : CardGameEntity
                     {
                         calculatedPower += pumpEffect.Power;
                     }
+                }
+
+
+                foreach (var modification in Modifications)
+                {
+                    calculatedPower += modification.Power;
                 }
 
                 return calculatedPower;
@@ -131,6 +139,13 @@ public class CardInstance : CardGameEntity
                     }
                 }
 
+                //Add any modifications to the unit as well.
+
+                foreach (var modification in Modifications)
+                {
+                    calculatedToughness += modification.Toughness;
+                }
+
                 calculatedToughness = calculatedToughness - DamageTaken;
 
                 return calculatedToughness;
@@ -140,16 +155,14 @@ public class CardInstance : CardGameEntity
                 throw new Exception("Card Instance is not a creature, cannot access the power property");
             }
         }
-        set
-        {
-            if (_currentCardData is UnitCardData)
-            {
-                _toughnessWithoutMods = value;
-            }
-        }
     }
 
     public int DamageTaken { get; set; }
+    public int BaseToughness
+    {
+        get { return _toughnessWithoutMods; }
+        set { _toughnessWithoutMods = value; }
+    }
 
     #endregion
 
@@ -177,6 +190,11 @@ public class CardInstance : CardGameEntity
     public bool HasActivatedAbility()
     {
         return GetAbilities<ActivatedAbility>().Any();
+    }
+
+    public void AddModification(ModAddToPowerToughness mod)
+    {
+        Modifications.Add(mod);
     }
     #endregion
 }

@@ -7,13 +7,29 @@ public class DefaultUnitPumpSystem: IUnitPumpSystem
 {
     public void PumpUnit(CardGame cardGame, CardInstance unit, PumpUnitEffect pumpAbility)
     {
-        if (pumpAbility.Power > 0)
+        unit.AddModification(new ModAddToPowerToughness
         {
-            unit.Power += pumpAbility.Power;
-        }
-        if (pumpAbility.Toughness > 0)
-        {
-            unit.Toughness += pumpAbility.Toughness;
-        }
+            Power = pumpAbility.Power,
+            Toughness = pumpAbility.Toughness,
+            OneTurnOnly = true            
+        });
     }
 }
+
+//TemporaryInPlayEffects
+//  -could just have a "remove at end of turn flag"
+//
+
+//Modifications - Card Instances can now have "modifications" which will allow us to add temporary or permanent modifications to CardInstances.
+
+public class ModAddToPowerToughness
+{
+    public bool OneTurnOnly { get; set; } = true;
+    public int Power { get; set; }
+    public int Toughness { get; set; }
+}
+
+
+
+//ContinuousAbilities
+//-another source is giving the unit the ability.
