@@ -940,13 +940,7 @@ public class CardDatabase : ICardDatabase
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
             {
-                /*
-                new ProtectionAbility
-                {
-                    CardColor = CardColor.Blue
-                },
-                */
-                new TriggeredAbility(
+                 new TriggeredAbility(
                     TriggerType.SelfAttacks,
                     new GoblinPiledriverEffect()
                     )

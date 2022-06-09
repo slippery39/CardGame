@@ -7,7 +7,6 @@ public interface IContinuousEffectSystem
     void RemoveContinousEffects(CardGame cardGame, CardInstance effectSource);
 }
 
-
 public class DefaultContinousEffectSystem : IContinuousEffectSystem
 {
     public void Apply(CardGame cardGame, CardInstance source, StaticAbility sourceAbility)
