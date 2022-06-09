@@ -929,9 +929,33 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Goblin Piledriver",
+            ManaCost = "1R",
+            Power = 1,
+            Toughness = 2,
+            ArtPath = "CardArt/Goblin Piledriver",
+            CreatureType = "Goblin",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                /*
+                new ProtectionAbility
+                {
+                    CardColor = CardColor.Blue
+                },
+                */
+                new TriggeredAbility(
+                    TriggerType.SelfAttacks,
+                    new GoblinPiledriverEffect()
+                    )
+            }
+        });
 
 
-        //Goblin Piledriver - things needed - count creature types
+
+        //Goblin Piledriver - things needed - count creature types / (protection?)
         //Goblin Warchief - things needed - mana cost reduction, static ability gainers
         //Goblin Matron - things needed - grabbing cards from library
         //Goblin Sharpshooter - things needed - activate ability only once per turn

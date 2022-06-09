@@ -32,14 +32,32 @@ public class DefaultBattleSystem : IBattleSystem
                 cardGame.Log($@"{attackingLane.UnitInLane.Name} cannot attack!");
                 continue;
             }
-            //Attacking an empty lane
+
             else if (defendingLane.IsEmpty() || !DefenderCanBlock(cardGame, attackingLane, defendingLane))
             {
+                //Attacking an empty lane trigger any on attack abilities
+
+                var attackingUnit = attackingLane.UnitInLane;
+                var onAttackAbilities = attackingUnit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfAttacks);
+                var owner = cardGame.GetOwnerOfCard(attackingUnit);
+                foreach (var onAttackAb in onAttackAbilities)
+                {
+                    cardGame.EffectsProcessor.ApplyEffects(cardGame, owner, attackingUnit, onAttackAb.Effects, new List<CardGameEntity>());
+                };
                 cardGame.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(i + 1)}");
                 DirectAttack(cardGame, attackingLane, defendingLane);
             }
             else
             {
+                //Attacking an empty lane trigger any on attack abilities
+
+                var attackingUnit = attackingLane.UnitInLane;
+                var onAttackAbilities = attackingUnit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfAttacks);
+                var owner = cardGame.GetOwnerOfCard(attackingUnit);
+                foreach (var onAttackAb in onAttackAbilities)
+                {
+                    cardGame.EffectsProcessor.ApplyEffects(cardGame, owner, attackingUnit, onAttackAb.Effects, new List<CardGameEntity>());
+                };
                 cardGame.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(i + 1)}");
                 FightUnits(cardGame, attackingLane, defendingLane);
             }

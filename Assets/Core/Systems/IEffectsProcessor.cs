@@ -181,6 +181,11 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 }
             }
         }
+        if (effect is GoblinPiledriverEffect)
+        {
+            var goblinsInPlay = player.Lanes.Where(l => l.IsEmpty() == false).Select(l => l.UnitInLane).Where(u => u!=source && u.CreatureType == "Goblin").Count();
+            cardGame.UnitPumpSystem.PumpUnit(cardGame, source, new PumpUnitEffect { Power = 2 * goblinsInPlay, Toughness = 0 });
+        }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {
