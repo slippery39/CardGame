@@ -38,25 +38,49 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         }
     }
 
+    private List<CardInstance> ApplyFilter (List<CardInstance> originalList, CardFilter filter)
+    {
+
+        if (filter == null)
+        {
+            return originalList;
+        }
+
+        var filteredList = new List<CardInstance>();
+
+        if (filter.CreatureType != null)
+        {
+             filteredList = originalList.Where(ol=>ol.CreatureType == filter.CreatureType).ToList();
+        }
+
+        return filteredList;
+    }
+
+    //TODO - fix this.
     private List<CardInstance> GetUnitsToApplyAbility(CardGame cardGame, CardInstance source, StaticAbility sourceAbility)
     {
-        switch (sourceAbility.AffectedEntities)
+        var filter = sourceAbility.EntitiesAffectedInfo.Filter;
+        var entitiesAffected = sourceAbility.EntitiesAffectedInfo.EntitiesAffected;
+
+        switch (entitiesAffected)
         {
-            case StaticAbilityEntitiesAffected.Self:
+            case EntityType.Self:
                 return new List<CardInstance> { source };
-            case StaticAbilityEntitiesAffected.OtherCreaturesYouControl:
+            case EntityType.OtherCreaturesYouControl:
                 {
                     var owner = cardGame.GetOwnerOfCard((CardInstance)source);
-                    return cardGame.GetUnitsInPlay().Where(u => u.OwnerId == owner.PlayerId && u.EntityId != source.EntityId).ToList();
+                    return ApplyFilter(
+                        cardGame.GetUnitsInPlay().Where(u => u.OwnerId == owner.PlayerId && u.EntityId != source.EntityId).ToList(),
+                        filter);
                 }
-            case StaticAbilityEntitiesAffected.CardsInHand:
+            case EntityType.CardsInHand:
                 {
                     var owner = cardGame.GetOwnerOfCard((CardInstance)source);
-                    return owner.Hand.Cards;
+                    return ApplyFilter(owner.Hand.Cards,filter);
                 }
             default:
                 {
-                    throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {sourceAbility.AffectedEntities} is not handled");
+                    throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {sourceAbility.EntitiesAffectedInfo.EntitiesAffected} is not handled");
                 }
         }
     }

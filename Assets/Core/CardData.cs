@@ -630,7 +630,10 @@ public class CardDatabase : ICardDatabase
             {
                 new StaticAbility
                 {
-                    AffectedEntities = StaticAbilityEntitiesAffected.OtherCreaturesYouControl,
+                    EntitiesAffectedInfo = new EntitiesAffectedInfo
+                    {
+                        EntitiesAffected = EntityType.OtherCreaturesYouControl
+                    },
                     Effects = new List<StaticAbilityEffect>
                     {
                         new StaticPumpEffect
@@ -962,16 +965,32 @@ public class CardDatabase : ICardDatabase
                 new HasteAbility(),
                 new StaticAbility()
                 {
-                    AffectedEntities = StaticAbilityEntitiesAffected.CardsInHand,
+                    EntitiesAffectedInfo= new EntitiesAffectedInfo{
+                        EntitiesAffected = EntityType.CardsInHand,
+                        Filter = new CardFilter{CreatureType = "Goblin"}
+                    },
                     Effects = new List<StaticAbilityEffect>
                     {
                         new StaticManaReductionEffect
                         {
-                            Filter = new CardFilter{CreatureType = "Goblin"},
                             ReductionAmount = "1"
                         }
                     }
                 },
+                new StaticAbility()
+                {
+                    EntitiesAffectedInfo = new EntitiesAffectedInfo{
+                        EntitiesAffected = EntityType.OtherCreaturesYouControl,
+                        Filter = new CardFilter{CreatureType = "Goblin"}
+                    },
+                    Effects = new List<StaticAbilityEffect>
+                    {
+                        new StaticGiveAbilityEffect
+                        {
+                            Ability = new HasteAbility()
+                        }
+                    }
+                }
                 /*
                 new StaticAbility
                 {
