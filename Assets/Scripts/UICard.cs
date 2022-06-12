@@ -75,7 +75,7 @@ public class UICard : UIGameEntity
 
         //Warning: we might want to update this to the CardInstanceAttributes..
         _cardNameText.text = cardData.Name;
-        _cardRulesText.text = cardData.RulesText;
+        _cardRulesText.text = cardInstance.RulesText;
         _cardManaText.text = cardInstance.ManaCost;
         _cardTypeText.text = cardData.CardType;
 

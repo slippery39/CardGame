@@ -37,6 +37,9 @@ public class CardInstance : CardGameEntity
 
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
+
+    public string RulesText => string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name);
+
     //NOTE - we do not have a rules text property here... seems weird why we don't.
     public List<CardColor> Colors { get => _currentCardData.Colors; }
     public string CreatureType
@@ -94,7 +97,8 @@ public class CardInstance : CardGameEntity
     public string CardType { get => _currentCardData.CardType; }
 
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
-    public List<CardAbility> Abilities { get => _currentCardData.Abilities; set => _currentCardData.Abilities = value; }
+    public List<CardAbility> Abilities { get; set; } = new List<CardAbility>();
+
 
     //How do we figure this out?
     public List<ContinuousEffect> ContinuousEffects { get; set; }
@@ -194,9 +198,10 @@ public class CardInstance : CardGameEntity
 
     public CardInstance(BaseCardData cardData)
     {
-        ContinuousEffects = new List<ContinuousEffect>();
+        ContinuousEffects = new List<ContinuousEffect>();        
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();
+        Abilities = _currentCardData.Abilities;
 
         if (_currentCardData is UnitCardData)
         {
@@ -210,7 +215,7 @@ public class CardInstance : CardGameEntity
 
     public List<T> GetAbilities<T>()
     {
-        return _currentCardData.GetAbilities<T>();
+        return Abilities.Where(a => a is T).Cast<T>().ToList();
     }
 
     public bool HasActivatedAbility()

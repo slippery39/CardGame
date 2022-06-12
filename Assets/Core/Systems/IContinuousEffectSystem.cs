@@ -24,9 +24,41 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
                     SourceCard = source,
                     SourceAbility = sourceAbility
                 };
-                unit.ContinuousEffects.Add(continuousEffect);
+
+                //This way each effect can be responsible for how it needs to apply and remove from the uni.
+                ApplyTo(continuousEffect, unit);
             }
         }
+    }
+
+    private void ApplyTo(ContinuousEffect effect, CardInstance unit)
+    {
+        unit.ContinuousEffects.Add(effect);
+
+        var sourceEffect = effect.SourceAbility.Effects.First();
+
+        if (sourceEffect is StaticGiveAbilityEffect)
+        {
+            var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
+            unit.Abilities.Add(new ContinuousAbility(effect, giveAbilityEffect.Ability));
+        }
+
+        //Pump Effects don't need any additional special processing.
+    }
+
+    private void RemoveFrom(ContinuousEffect effect, CardInstance unit)
+    {
+        unit.ContinuousEffects.Remove(effect);
+
+        var sourceEffect = effect.SourceAbility.Effects.First();
+
+        if (sourceEffect is StaticGiveAbilityEffect)
+        {
+            var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
+            unit.GetAbilities<ContinuousAbility>().RemoveAll(ca => ca.SourceEffect == effect);
+        }
+
+        //Pump Effects don't need any additional special processing.
     }
 
     public void RemoveContinousEffects(CardGame cardGame, CardInstance effectSource)
@@ -34,11 +66,15 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         //Remove all continuous effects from a source
         foreach (var unit in cardGame.GetUnitsInPlay())
         {
-            unit.ContinuousEffects.RemoveAll(effect => effect.SourceCard == effectSource);
+            var effectsToRemove = unit.ContinuousEffects.Where(effect => effect.SourceCard == effectSource);
+            foreach (var effect in effectsToRemove)
+            {
+                RemoveFrom(effect, unit);
+            }
         }
     }
 
-    private List<CardInstance> ApplyFilter (List<CardInstance> originalList, CardFilter filter)
+    private List<CardInstance> ApplyFilter(List<CardInstance> originalList, CardFilter filter)
     {
 
         if (filter == null)
@@ -50,7 +86,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
 
         if (filter.CreatureType != null)
         {
-             filteredList = originalList.Where(ol=>ol.CreatureType == filter.CreatureType).ToList();
+            filteredList = originalList.Where(ol => ol.CreatureType == filter.CreatureType).ToList();
         }
 
         return filteredList;
@@ -76,12 +112,26 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
             case EntityType.CardsInHand:
                 {
                     var owner = cardGame.GetOwnerOfCard((CardInstance)source);
-                    return ApplyFilter(owner.Hand.Cards,filter);
+                    return ApplyFilter(owner.Hand.Cards, filter);
                 }
             default:
                 {
                     throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {sourceAbility.EntitiesAffectedInfo.EntitiesAffected} is not handled");
                 }
+        }
+    }
+
+    public class ContinuousAbility : CardAbility
+    {
+
+        private CardAbility _ability { get; set; }
+        public ContinuousEffect SourceEffect { get; set; }
+        public override string RulesText => _ability.RulesText;
+
+        public ContinuousAbility(ContinuousEffect sourceEffect, CardAbility ability)
+        {
+            _ability = ability;
+            SourceEffect = sourceEffect;
         }
     }
 }

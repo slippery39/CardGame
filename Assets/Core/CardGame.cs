@@ -338,7 +338,7 @@ public class CardGame
         var cardDB = new CardDatabase();
         
         var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<StaticAbility>().Count() > 0);
+        cardsToSelectFrom = cardDB.GetAll().Where(card => card is UnitCardData && (card as UnitCardData).CreatureType == "Goblin" );
         //cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Goblin Piledriver");
 
         var cardsToAdd = 45;
