@@ -229,6 +229,11 @@ public class TriggeredAbility : CardAbility
         Effects = new List<Effect>();
         Effects.Add(effect);
     }
+
+    public TriggeredAbility()
+    {
+
+    }
 }
 
 
@@ -385,6 +390,14 @@ public class GoblinPiledriverEffect : Effect
 {
     public override string RulesText => $@"Gets +2/+0 for each goblin you control"; 
     public override TargetType TargetType { get; set; } = TargetType.UnitSelf;
+}
+
+public class GetFromDeckEffect: Effect
+{
+    public override string RulesText => $@"Get a random card from your deck";
+    public override TargetType TargetType { get; set; } = TargetType.None;
+
+    public CardFilter Filter { get; set; }
 }
 
 
