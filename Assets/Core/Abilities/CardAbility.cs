@@ -378,7 +378,7 @@ public class AddTempAbilityEffect : Effect
 {
     public override string RulesText => $@"Give {TempAbility.RulesText} to {TargetTypeHelper.TargetTypeToRulesText(TargetType)} until end of turn";
     public CardAbility TempAbility { get; set; }
-    public override TargetType TargetType {get; set;} = TargetType.TargetUnits;    
+    public override TargetType TargetType { get; set; } = TargetType.TargetUnits;
     public AddTempAbilityEffect(CardAbility tempAbility)
     {
         TempAbility = tempAbility;
@@ -388,13 +388,29 @@ public class AddTempAbilityEffect : Effect
 
 public class GoblinPiledriverEffect : Effect
 {
-    public override string RulesText => $@"Gets +2/+0 for each goblin you control"; 
+    public override string RulesText => $@"Gets +2/+0 for each goblin you control";
     public override TargetType TargetType { get; set; } = TargetType.UnitSelf;
 }
 
-public class GetFromDeckEffect: Effect
+public class GetRandomCardFromDeckEffect : Effect
 {
-    public override string RulesText => $@"Get a random card from your deck";
+
+    public override string RulesText
+    {
+        get
+        {
+            var str = "draw a random #cardType# from your deck";
+
+            if (Filter?.CreatureType != null)
+            {
+                return str.Replace("#cardType#", Filter.CreatureType);
+            }
+            else
+            {
+                return str.Replace("#cardType#", "card");
+            }
+        }
+    }
     public override TargetType TargetType { get; set; } = TargetType.None;
 
     public CardFilter Filter { get; set; }

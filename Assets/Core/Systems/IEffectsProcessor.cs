@@ -187,9 +187,9 @@ public class DefaultEffectsProcessor : IEffectsProcessor
             cardGame.UnitPumpSystem.PumpUnit(cardGame, source, new PumpUnitEffect { Power = 2 * goblinsInPlay, Toughness = 0 });
         }
 
-        if (effect is GetFromDeckEffect)
+        if (effect is GetRandomCardFromDeckEffect)
         {
-            var fromDeckEffect = effect as GetFromDeckEffect;
+            var fromDeckEffect = effect as GetRandomCardFromDeckEffect;
 
 
 
@@ -202,6 +202,8 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                }
                return true;
            });
+
+            cardGame.CardDrawSystem.GrabRandomCardFromDeck(cardGame, player, fromDeckEffect.Filter);
 
 
         }

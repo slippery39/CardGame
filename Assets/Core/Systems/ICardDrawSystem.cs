@@ -4,6 +4,7 @@ public interface ICardDrawSystem
 {
     CardInstance DrawCard(CardGame cardGame, Player player);
     void DrawOpeningHand(CardGame cardGame, Player player);
+    void GrabRandomCardFromDeck(CardGame cardGame, Player player, CardFilter filter);
 }
 
 
@@ -47,4 +48,29 @@ public class DefaultCardDrawSystem : ICardDrawSystem
             cardGame.ZoneChangeSystem.MoveToZone(cardGame, nonManaCards.ToList()[i], player.Hand);
         }
     }
+
+    public void GrabRandomCardFromDeck(CardGame cardGame, Player player, CardFilter filter)
+    {
+        var validCardsToGet = player.Deck.Cards.Where(card =>
+        {
+
+            if (filter.CreatureType != null)
+            {
+                return card.CreatureType == filter.CreatureType;
+            }
+            return true;
+        });
+
+
+        if (!validCardsToGet.Any())
+        {
+            cardGame.Log("No Valid cards to grab");
+            return;
+        }
+
+        cardGame.Log("Grabbed random card from deck");
+        cardGame.ZoneChangeSystem.MoveToZone(cardGame, validCardsToGet.Randomize().ToList()[0], player.Hand);
+    }
+
+
 }

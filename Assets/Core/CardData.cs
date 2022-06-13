@@ -951,6 +951,7 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        //Goblin Warchief - things needed - mana cost reduction, static ability gainers
         _cards.Add(new UnitCardData()
         {
             Name = "Goblin Warchief",
@@ -991,38 +992,38 @@ public class CardDatabase : ICardDatabase
                         }
                     }
                 }
-                /*
-                new StaticAbility
-                {
-                    AffectedEntities = StaticAbilityEntitiesAffected.OtherCreaturesYouControl,
-                    Filter = new CardFilter{CreatureType = "Goblin"},
-                    Effects = new List<StaticAbilityEffect>
-                    {
-                        new StaticGiveAbilityEffect
-                        {
-                            Ability = new HasteAbility()
-                        }
-                    }
-                }
-                */
-
-                /*
-                new StaticAbility
-                {
-                    AffectedEntities = StaticAbilityEntitiesAffected.OtherCreaturesYouControl,
-                    Effects = new List<StaticAbilityEffect>
-                    {
-                        new StaticGiveAbilityEffect
-                        {
-                            Ability = new HasteAbility()
-                        }
-                    }
-                }
-                */
             }
         }) ;
-        
-        //Goblin Warchief - things needed - mana cost reduction, static ability gainers
+
+        _cards.Add(
+            new UnitCardData
+            {
+                Name = "Goblin Matron",
+                ManaCost = "2R",
+                Power = 1,
+                Toughness = 1,
+                ArtPath = "CardArt/Goblin Matron",
+                CreatureType = "Goblin",
+                Colors = new List<CardColor> { CardColor.Red },
+                Abilities = new List<CardAbility>
+                {
+                    new TriggeredAbility
+                    {
+                        TriggerType = TriggerType.SelfEntersPlay,
+                        Effects = new List<Effect>
+                        {
+                            new GetRandomCardFromDeckEffect
+                            {
+                                Filter = new CardFilter
+                                {
+                                    CreatureType = "Goblin"
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+       
         //Goblin Matron - things needed - grabbing cards from library
         //Goblin Sharpshooter - things needed - activate ability only once per turn
         //Goblin Sledder - things needed (nothing)
