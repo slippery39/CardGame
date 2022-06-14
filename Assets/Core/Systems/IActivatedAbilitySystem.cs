@@ -73,6 +73,8 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
             card,
             new List<Effect> { activatedAbility.AbilityEffect },
             targets);
+
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
     }
 
     public bool CanPayAdditionalCost(CardGame cardGame, Player player, CardInstance source, AdditionalCost cost)

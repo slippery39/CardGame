@@ -17,6 +17,18 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
     {
         var units = cardGame.GetUnitsInPlay();
 
+        //Check Toughness of all creatures in play.
+        //Keep checking until there is no more to check?
+        foreach (var unit in units)
+        {
+            //State Based effect, all units with current toughness 0 or less get moved to the discard pile.
+            if (unit.Toughness <= 0)
+            {
+                var owner = cardGame.GetOwnerOfCard(unit);
+                cardGame.ZoneChangeSystem.MoveToZone(cardGame, unit, owner.DiscardPile);
+            }
+        }
+
         //Apply any static effects
         foreach (var unit in units)
         {
@@ -31,19 +43,34 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
             }
         }
 
-        //Check Toughness of all creatures in play.
-        //Keep checking until there is no more to check?
+        //Remove any static effects
+
         foreach (var unit in units)
         {
-            //State Based effect, all units with current toughness 0 or less get moved to the discard pile.
-            if (unit.Toughness <= 0)
-            {
-                var owner = cardGame.GetOwnerOfCard(unit);
-                cardGame.ZoneChangeSystem.MoveToZone(cardGame, unit, owner.DiscardPile);                
+            var continousEffectsOnUnit = unit.ContinuousEffects;
 
-                var continousEffects = units.SelectMany(u => u.ContinuousEffects).Where(ce => ce.SourceCard == unit);
-                cardGame.ContinuousEffectSystem.RemoveContinousEffects(cardGame,unit);
+            if (continousEffectsOnUnit.Count == 0)
+            {
+                continue;
             }
+
+            var continousEffectsToRemove = continousEffectsOnUnit.Where(ce => (!(units.Contains(ce.SourceCard)))).ToList();
+
+            foreach(var effect in continousEffectsToRemove)
+            {
+                cardGame.ContinuousEffectSystem.RemoveContinousEffects(cardGame, effect.SourceCard);
+            };          
+
+
+            /*
+            continousEffectsOnUnit.ForEach(effect =>
+            {
+                if (!units.Contains(effect.SourceCard))
+                {
+                    cardGame.Log("Do i ever reach the point where I am removing continous effects?");
+                    cardGame.ContinuousEffectSystem.RemoveContinousEffects(cardGame, effect.SourceCard);
+                }
+            });*/
         }
     }
 }

@@ -8,6 +8,19 @@ public abstract class CardAbility
     public int Priority { get; set; }
     public abstract string RulesText { get; }
     public bool ThisTurnOnly { get; set; } = false;
+    public List<AbilityComponent> Components { get; set; } = new List<AbilityComponent>();
+
+    public CardAbility Clone()
+    {
+        CardAbility clone = (CardAbility)MemberwiseClone();
+        clone.Components = Components.ToList();
+        return clone;
+    }
+}
+
+public abstract class AbilityComponent
+{
+
 }
 
 public interface IModifyCanBlock

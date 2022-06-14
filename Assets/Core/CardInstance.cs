@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static DefaultContinousEffectSystem;
 
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
@@ -201,7 +202,7 @@ public class CardInstance : CardGameEntity
         ContinuousEffects = new List<ContinuousEffect>();        
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();
-        Abilities = _currentCardData.Abilities;
+        Abilities = _currentCardData.Abilities.ToList();
 
         if (_currentCardData is UnitCardData)
         {

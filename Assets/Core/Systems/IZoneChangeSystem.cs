@@ -30,10 +30,14 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
 
         //remove any continuous effects in play that are from the associated card
         var unitsInPlay = cardGame.GetUnitsInPlay();
+
+        //Its right here?? yay.
+        /*
         foreach (var unit in unitsInPlay)
         {
             unit.ContinuousEffects = unit.ContinuousEffects.Where(ce => ce.SourceCard != card).ToList();
         }
+        */
 
         currentZone.Remove(card);
         zoneTo.Add(card);

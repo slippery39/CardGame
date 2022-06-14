@@ -40,7 +40,16 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         if (sourceEffect is StaticGiveAbilityEffect)
         {
             var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
-            unit.Abilities.Add(new ContinuousAbility(effect, giveAbilityEffect.Ability));
+
+            var abilityToGive = giveAbilityEffect.Ability;
+
+            abilityToGive.Components.Add(new ContinuousAblityComponent
+            {
+                SourceEffect = effect
+            });
+
+            //Warning, we are doing a shallow clone here... may run into issues if we need a deep clone done.
+            unit.Abilities.Add(giveAbilityEffect.Ability.Clone());
         }
 
         //Pump Effects don't need any additional special processing.
@@ -55,7 +64,23 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         if (sourceEffect is StaticGiveAbilityEffect)
         {
             var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
-            unit.GetAbilities<ContinuousAbility>().RemoveAll(ca => ca.SourceEffect == effect);
+
+            //Remove all abilities which have a continous ability component that point to the effect.
+
+            unit.Abilities = unit.Abilities.Where(ab =>
+            {
+                var components = ab.Components.Where(comp => comp is ContinuousAblityComponent).Cast<ContinuousAblityComponent>();
+
+                if (components.Where(comp => comp.SourceEffect == effect).Any())
+                {
+                    return false;
+                }
+
+                return true;
+
+            }).ToList();
+
+            var i = 0;
         }
 
         //Pump Effects don't need any additional special processing.
@@ -66,9 +91,12 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         //Remove all continuous effects from a source
         foreach (var unit in cardGame.GetUnitsInPlay())
         {
-            var effectsToRemove = unit.ContinuousEffects.Where(effect => effect.SourceCard == effectSource);
+            var effectsToRemove = unit.ContinuousEffects.Where(effect => effect.SourceCard == effectSource).ToList();
+
+            //
             foreach (var effect in effectsToRemove)
             {
+                //todo - we are modifying the list in a loop. this is giving us a might be modified error. Fix this by removing them all at once.
                 RemoveFrom(effect, unit);
             }
         }
@@ -120,18 +148,10 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
                 }
         }
     }
+}
 
-    public class ContinuousAbility : CardAbility
-    {
 
-        private CardAbility _ability { get; set; }
-        public ContinuousEffect SourceEffect { get; set; }
-        public override string RulesText => _ability.RulesText;
-
-        public ContinuousAbility(ContinuousEffect sourceEffect, CardAbility ability)
-        {
-            _ability = ability;
-            SourceEffect = sourceEffect;
-        }
-    }
+public class ContinuousAblityComponent : AbilityComponent
+{
+    public ContinuousEffect SourceEffect { get; set; }
 }

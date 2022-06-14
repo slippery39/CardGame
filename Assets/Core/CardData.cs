@@ -64,8 +64,13 @@ public class UnitCardData : BaseCardData
 
     public override BaseCardData Clone()
     {
+
+        BaseCardData card = this.MemberwiseClone() as BaseCardData;
+        Abilities = Abilities.Select(ab => ab.Clone()).ToList();
         return new UnitCardData()
         {
+
+            
             Name = Name,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
