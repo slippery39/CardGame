@@ -70,7 +70,7 @@ public class UnitCardData : BaseCardData
         return new UnitCardData()
         {
 
-            
+
             Name = Name,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
@@ -998,7 +998,7 @@ public class CardDatabase : ICardDatabase
                     }
                 }
             }
-        }) ;
+        });
 
         _cards.Add(
             new UnitCardData
@@ -1028,16 +1028,43 @@ public class CardDatabase : ICardDatabase
                     }
                 }
             });
-       
-        //Goblin Matron - things needed - grabbing cards from library
-        //Goblin Sharpshooter - things needed - activate ability only once per turn
-        //Goblin Sledder - things needed (nothing)
+
+
+     _cards.Add(
+            new UnitCardData
+            {
+                Name = "Goblin Ringleader",
+                ManaCost = "3R",
+                Power = 2,
+                Toughness = 2,
+                ArtPath = "CardArt/Goblin Ringleader",
+                CreatureType = "Goblin",
+                Colors = new List<CardColor> { CardColor.Red },
+                Abilities = new List<CardAbility>
+                {
+                    new HasteAbility(),
+                    new TriggeredAbility
+                    {
+                        TriggerType = TriggerType.SelfEntersPlay,
+                        Effects = new List<Effect>
+                        {
+                            new GrabFromTopOfDeckEffect
+                            {
+                                CardsToLookAt = 5,
+                                Filter = new CardFilter{ CreatureType = "Goblin" },
+                                Amount = 9999 //need a way to say as many as possible.
+
+                            }
+                        }
+                    }
+                }
+            });
+
+        //Goblin Sharpshooter - things needed - activate ability only once per turn + reset?
         //Seething Song - nothing
         //Goblin Ringleader - things needed - conditional draw from deck
-        //Gempalm Incinerator - things needed (cycling?? - maybe don't implement this)
-        //Goblin King - things needed - static effects (mountainwalk doesn't matter?)
-        //Goblin Burrows - things needed - ability on land?
-
+        //Gempalm Incinerator - things needed (cycling?? - maybe don't implement this) - counting goblins for damage.
+        //Goblin King - things needed - static effects
 
 
 

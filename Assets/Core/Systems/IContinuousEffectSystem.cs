@@ -59,7 +59,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
     {
         unit.ContinuousEffects.Remove(effect);
 
-        var sourceEffect = effect.SourceAbility.Effects.First();
+            var sourceEffect = effect.SourceAbility.Effects.First();
 
         if (sourceEffect is StaticGiveAbilityEffect)
         {

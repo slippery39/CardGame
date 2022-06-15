@@ -207,6 +207,34 @@ public class DefaultEffectsProcessor : IEffectsProcessor
 
 
         }
+
+        if (effect is GrabFromTopOfDeckEffect)
+        {
+            var topOfDeckEffect = effect as GrabFromTopOfDeckEffect;
+
+            var cardsFromTopOfDeck = player.Deck.Cards.Take(topOfDeckEffect.CardsToLookAt).ToList();
+
+
+            var validCardsToGet = player.Deck.Cards.Take(topOfDeckEffect.CardsToLookAt)
+                .Where(card =>
+                {
+
+                    if (topOfDeckEffect.Filter.CreatureType != null)
+                    {
+                        return card.CreatureType == topOfDeckEffect.Filter.CreatureType;
+                    }
+                    return true;
+                });
+    
+
+            if (validCardsToGet.Any())
+            {
+                validCardsToGet.ToList().ForEach(card =>
+                {
+                    cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.Hand);
+                });
+            }
+        }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {
