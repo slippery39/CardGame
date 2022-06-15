@@ -175,7 +175,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
             for (var i = 0; i < tokenEffect.AmountOfTokens; i++)
             {
                 var emptyLane = player.GetEmptyLanes().FirstOrDefault();
-                if (emptyLanes != null)
+                if (emptyLane != null)
                 {
                     cardGame.AddCardToGame(player, tokenEffect.TokenData, emptyLane);
                 }
