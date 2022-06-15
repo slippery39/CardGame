@@ -26,6 +26,7 @@ public class Lane : CardGameEntity, IZone
     }
 
     public override string Name => "Lane";
+    public ZoneType ZoneType => ZoneType.InPlay;
     #endregion
 
     public Lane()

@@ -47,6 +47,13 @@ public class CardGame
     public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
     public List<Player> Players { get => _players; set => _players = value; }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
+
+    internal bool IsInZone(CardInstance unit, ZoneType zoneType)
+    {
+        var zone = GetZoneOfCard(unit);
+        return zone.ZoneType == zoneType;
+    }
+
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
     public ICardGameLogger Logger { get => _cardGameLogger; }
@@ -337,12 +344,7 @@ public class CardGame
     {
         var cardDB = new CardDatabase();
 
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        cardsToSelectFrom = cardDB.GetAll()
-            .Where(card => card.Name == "Siege Gang Commander" /* card is UnitCardData && (card as UnitCardData).CreatureType == "Goblin"*/ );
-        //cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Goblin Piledriver");
-
-
+        var cardsToSelectFrom = cardDB.GetAll();//.Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
 
         var cardsToAdd = 45;
 

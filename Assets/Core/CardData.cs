@@ -1030,18 +1030,18 @@ public class CardDatabase : ICardDatabase
             });
 
 
-     _cards.Add(
-            new UnitCardData
-            {
-                Name = "Goblin Ringleader",
-                ManaCost = "3R",
-                Power = 2,
-                Toughness = 2,
-                ArtPath = "CardArt/Goblin Ringleader",
-                CreatureType = "Goblin",
-                Colors = new List<CardColor> { CardColor.Red },
-                Abilities = new List<CardAbility>
-                {
+        _cards.Add(
+               new UnitCardData
+               {
+                   Name = "Goblin Ringleader",
+                   ManaCost = "3R",
+                   Power = 2,
+                   Toughness = 2,
+                   ArtPath = "CardArt/Goblin Ringleader",
+                   CreatureType = "Goblin",
+                   Colors = new List<CardColor> { CardColor.Red },
+                   Abilities = new List<CardAbility>
+                   {
                     new HasteAbility(),
                     new TriggeredAbility
                     {
@@ -1057,14 +1057,73 @@ public class CardDatabase : ICardDatabase
                             }
                         }
                     }
-                }
-            });
+                   }
+               });
 
         //Goblin Sharpshooter - things needed - activate ability only once per turn + reset?
         //Seething Song - nothing
         //Goblin Ringleader - things needed - conditional draw from deck
         //Gempalm Incinerator - things needed (cycling?? - maybe don't implement this) - counting goblins for damage.
         //Goblin King - things needed - static effects
+
+
+        //Implementing the UG Madness Deck:
+        /*
+                Creature(21)
+        3 Wonder - applying static effects from the graveyard / other zones.
+        4 Aquamoeba - discarding cards as a choice / switching power and toughness
+        2 Merfolk Looter - discarding cards as a choice
+        4 Wild Mongrel - discarding cards as a choice
+        4 Basking Rootwalla - playing when discarded
+        4 Arrogant Wurm - playing when discarded
+        Sorcery(11) 
+        4 Deep Analysis - playing cards from graveyard
+        4 Careful Study - discarding cards as a choice
+        3 Roar of the Wurm - playing cards from graveyard
+        Instant(6) 
+        4 Circular Logic - N/A
+        2 Unsummon - bouncing cards (new effect, but should be ok)
+        Land(22)
+
+        2 Centaur Garden
+        6 Forest
+        10 Island
+        4 Yavimaya Coast - Dual Lands.
+        60 Cards
+        */
+
+        _cards.Add(
+       new UnitCardData
+       {
+           Name = "Wonder",
+           ManaCost = "3U",
+           Power = 2,
+           Toughness = 2,
+           ArtPath = "CardArt/Wonder",
+           CreatureType = "Incarnation",
+           Colors = new List<CardColor> { CardColor.Blue },
+           Abilities = new List<CardAbility>
+           {
+                    new FlyingAbility(),
+                    new StaticAbility
+                    {
+                        ApplyWhenIn = ZoneType.Discard,
+                        EntitiesAffectedInfo = new EntitiesAffectedInfo
+                        {
+                            EntitiesAffected = EntityType.OtherCreaturesYouControl,
+
+                        },
+                        Effects = new List<StaticAbilityEffect>()
+                        {
+                            new StaticGiveAbilityEffect
+                            {
+                                Ability = new FlyingAbility(),
+
+                            }
+                        }
+                    }
+           }
+       });
 
 
 

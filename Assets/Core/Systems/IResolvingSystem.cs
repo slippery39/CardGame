@@ -17,6 +17,8 @@ public class ResolvingStack : IZone
 
     public List<CardInstance> Cards { get; set; }
 
+    public ZoneType ZoneType => ZoneType.Stack;
+
     public ResolvingStack()
     {
         Cards = new List<CardInstance>();

@@ -30,7 +30,13 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
         }
 
         //Apply any static effects
-        foreach (var unit in units)
+
+        //TODO - Static Effects can also be applied from the graveyard and potentially other zones now...
+        //need to check graveyard for static abilitys.
+
+        var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard=>discard.Cards);
+
+        foreach (var unit in units.Concat(cardsInGraveyards))
         {
             var unitStaticAbilities = unit.GetAbilities<StaticAbility>();
             if (unitStaticAbilities.Count > 0)
@@ -38,7 +44,15 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
                 foreach (var sAbility in unitStaticAbilities)
                 {
                     //cardGame, source, ability.
-                    cardGame.ContinuousEffectSystem.Apply(cardGame, unit, sAbility);
+
+                    //Check to see if the card is in the correct zone.
+
+
+                    //TODO - IsInZone(ZoneType.Discard);
+
+                    if (cardGame.IsInZone(unit, sAbility.ApplyWhenIn)){
+                        cardGame.ContinuousEffectSystem.Apply(cardGame, unit, sAbility);
+                    }
                 }
             }
         }
@@ -54,7 +68,23 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
                 continue;
             }
 
-            var continousEffectsToRemove = continousEffectsOnUnit.Where(ce => (!(units.Contains(ce.SourceCard)))).ToList();
+
+            //This is looking for effects where the unit is not in play.
+
+            //What we need is to look for effects where the unit is not in the ability effect zone.
+
+            //Working on this.
+
+           Func<ContinuousEffect, bool> GetContinuousEffectsToRemove = (ContinuousEffect ce) =>
+           {
+               var cardsInPlayAndDiscard = units.Concat(cardsInGraveyards);
+               var zoneOfSourceCard= cardGame.GetZoneOfCard(ce.SourceCard);
+               return zoneOfSourceCard.ZoneType != ce.SourceAbility.ApplyWhenIn;
+           };        
+
+           var continousEffectsToRemove = continousEffectsOnUnit
+                .Where(ce => GetContinuousEffectsToRemove(ce)              
+           ).ToList();
 
             foreach(var effect in continousEffectsToRemove)
             {

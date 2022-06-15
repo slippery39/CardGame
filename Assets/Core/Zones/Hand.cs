@@ -6,6 +6,8 @@ public class Hand : IZone
     private List<CardInstance> _cards = new List<CardInstance>();
     public string Name => "Hand";
     public List<CardInstance> Cards { get { return _cards; } }
+    public ZoneType ZoneType => ZoneType.Hand;
+
     public void Add(CardInstance card)
     {
         _cards.Add(card);

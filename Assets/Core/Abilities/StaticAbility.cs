@@ -68,6 +68,8 @@ public class StaticAbility : CardAbility
 
     public List<StaticAbilityEffect> Effects { get; set; }
 
+    public ZoneType ApplyWhenIn { get; set; } = ZoneType.Discard;
+
     private EntityType EntitiesAffected => EntitiesAffectedInfo.EntitiesAffected;
     private CardFilter Filter => EntitiesAffectedInfo.Filter;
 }

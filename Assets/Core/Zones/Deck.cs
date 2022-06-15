@@ -6,8 +6,8 @@ public class Deck : IZone
     public string Name => "Deck";
 
     private List<CardInstance> cards = new List<CardInstance>();
-
     public List<CardInstance> Cards => cards;
+    public ZoneType ZoneType { get => ZoneType.Deck; }
 
     public void Add(CardInstance card)
     {

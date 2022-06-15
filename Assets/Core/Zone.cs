@@ -24,10 +24,20 @@ using System.Threading.Tasks;
 
 public interface IZone
 {
+    ZoneType ZoneType { get; }
     string Name { get; }
     List<CardInstance> Cards { get; }
     void Add(CardInstance card);
     void Remove(CardInstance card);
+}
+
+public enum ZoneType
+{
+    Discard,
+    Hand,
+    InPlay,
+    Deck,
+    Stack
 }
 
 
