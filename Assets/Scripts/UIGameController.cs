@@ -90,6 +90,11 @@ public class UIGameController : MonoBehaviour
         return _player1Lanes.GetComponentsInChildren<UICard>(true).Concat(_player2Lanes.GetComponentsInChildren<UICard>(true));
     }
 
+    public IEnumerable<UICard> GetUICardsInHand()
+    {
+        return _playerHand.GetComponentsInChildren<UICard>(true);
+    }
+
     public IEnumerable<UIGameEntity> GetUIEntities()
     {
         var entities = new List<UIGameEntity>();
@@ -98,6 +103,7 @@ public class UIGameController : MonoBehaviour
         entities.Add(_player2Avatar);
         entities.AddRange(GetUILanes());
         entities.AddRange(GetUICardsInLane());
+        entities.AddRange(GetUICardsInHand());
 
         return entities;
     }
