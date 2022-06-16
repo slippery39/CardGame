@@ -235,6 +235,28 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 });
             }
         }
+
+        if (effect is DiscardCardEffect)
+        {
+            var discardCardEffect = effect as DiscardCardEffect;
+
+            var validCardsToDiscard = player.Hand.Cards;
+
+            if (validCardsToDiscard.Count() < discardCardEffect.Amount)
+            {
+                foreach(var card in validCardsToDiscard)
+                {
+                    cardGame.DiscardSystem.Discard(cardGame, player, card);
+                }
+            }
+            else
+            {
+                foreach(var card in validCardsToDiscard.Randomize().Take(discardCardEffect.Amount))
+                {
+                    cardGame.DiscardSystem.Discard(cardGame, player, card);
+                }
+            }
+        }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {

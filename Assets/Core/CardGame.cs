@@ -34,6 +34,7 @@ public class CardGame
     private ITurnSystem _turnSystem;
     private ISacrificeSystem _sacrificeSystem;
     private IDestroySystem _destroySystem;
+    private IDiscardSystem _discardSystem;
 
     private IResolvingSystem _resolvingSystem;
     private IContinuousEffectSystem _continuousEffectSystem;
@@ -77,6 +78,7 @@ public class CardGame
     public IContinuousEffectSystem ContinuousEffectSystem { get => _continuousEffectSystem; set => _continuousEffectSystem = value; }
 
     public IActivatedAbilitySystem ActivatedAbilitySystem { get => _activatedAbilitySystem; set => _activatedAbilitySystem = value; }
+    public IDiscardSystem DiscardSystem { get => _discardSystem; set => _discardSystem = value; }
 
 
     #endregion
@@ -102,6 +104,7 @@ public class CardGame
         _resolvingSystem = new DefaultResolvingSystem();
         _continuousEffectSystem = new DefaultContinousEffectSystem();
         _activatedAbilitySystem = new DefaultActivatedAbilitySystem();
+        _discardSystem = new DefaultDiscardSystem();
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -345,7 +348,8 @@ public class CardGame
         var cardDB = new CardDatabase();
 
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Wild Mongrel");
+        //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Careful Study");
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData);
         var cardsToAdd = 45;
 
         for (int i = 0; i < cardsToAdd; i++)

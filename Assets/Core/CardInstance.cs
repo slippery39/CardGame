@@ -39,7 +39,22 @@ public class CardInstance : CardGameEntity
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
-    public string RulesText => string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name);
+    public string RulesText
+    {
+        get
+        {
+            var str = string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name);
+
+            if (_currentCardData is SpellCardData)
+            {
+                var spellData = _currentCardData as SpellCardData;
+                str += string.Join("\r\n", spellData.Effects.Select(ab => ab.RulesText)).Replace("#this#", Name);
+            }
+
+            return str;
+        }
+    }
+
 
     //NOTE - we do not have a rules text property here... seems weird why we don't.
     public List<CardColor> Colors { get => _currentCardData.Colors; }
@@ -199,10 +214,11 @@ public class CardInstance : CardGameEntity
 
     public CardInstance(BaseCardData cardData)
     {
-        ContinuousEffects = new List<ContinuousEffect>();        
+        ContinuousEffects = new List<ContinuousEffect>();
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();
         Abilities = _currentCardData.Abilities.ToList();
+
 
         if (_currentCardData is UnitCardData)
         {

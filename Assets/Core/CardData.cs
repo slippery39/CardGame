@@ -1074,8 +1074,8 @@ public class CardDatabase : ICardDatabase
                 Creature(21)
         3 Wonder - applying static effects from the graveyard / other zones.
         4 Aquamoeba - discarding cards as a choice / switching power and toughness
-        2 Merfolk Looter - discarding cards as a choice
-        4 Wild Mongrel - discarding cards as a choice
+        2 Merfolk Looter - discarding cards as a choice as resolving an ability. -Need to have an in between state where costs are still being resolved.
+        4 Wild Mongrel - discarding cards as a choice as a cost for an ability.
         4 Basking Rootwalla - playing when discarded
         4 Arrogant Wurm - playing when discarded
         Sorcery(11) 
@@ -1211,32 +1211,56 @@ _cards.Add(new UnitCardData()
     }
 });
 
-//Sacrifice a Unit,
-//Pay
-//Discard
-//Exile
 
-/*  
-  _cards.Add(new UnitCardData()
-  {
-      Name = "Fume Spitter",
-      ManaCost = "B",
-      Power = 1,
-      Toughness = 1,
-      ArtPath = "CardArt/Fume Spitter",
-      Colors = new List<CardColor> { CardColor.Black },
-      Abilities = new List<CardAbility>
-      {
-          new ActivatedAbility(){
-          ManaCost = "0",
-          OtherCost = "Sacrifice #this#",
-          AbilityEffect = new PumpUnitEffect
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Careful Study",
+            ManaCost = "U",
+            ArtPath = "CardArt/Careful Study",
+            Colors= new List<CardColor> { CardColor.Blue },
+            Effects = new List<Effect>
+            {
+                new DrawCardEffect()
+                {
+                    TargetType = TargetType.Self,
+                    Amount = 2
+                },
+                new DiscardCardEffect()
+                {
+                    TargetType= TargetType.Self,
+                    Amount = 2
+                }
+            }
+        });
+
+
+
+        //Sacrifice a Unit,
+        //Pay
+        //Discard
+        //Exile
+
+        /*  
+          _cards.Add(new UnitCardData()
           {
-              Power = -1,
-              Toughness = -1,
-              TargetType = TargetType.TargetUnits
-          }
-  });*/
+              Name = "Fume Spitter",
+              ManaCost = "B",
+              Power = 1,
+              Toughness = 1,
+              ArtPath = "CardArt/Fume Spitter",
+              Colors = new List<CardColor> { CardColor.Black },
+              Abilities = new List<CardAbility>
+              {
+                  new ActivatedAbility(){
+                  ManaCost = "0",
+                  OtherCost = "Sacrifice #this#",
+                  AbilityEffect = new PumpUnitEffect
+                  {
+                      Power = -1,
+                      Toughness = -1,
+                      TargetType = TargetType.TargetUnits
+                  }
+          });*/
 
         //need to create temp ability effects.
 
