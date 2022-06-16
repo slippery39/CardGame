@@ -344,8 +344,8 @@ public class CardGame
     {
         var cardDB = new CardDatabase();
 
-        var cardsToSelectFrom = cardDB.GetAll();//.Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-
+        //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Wild Mongrel");
         var cardsToAdd = 45;
 
         for (int i = 0; i < cardsToAdd; i++)

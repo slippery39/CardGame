@@ -113,6 +113,49 @@ public class SacrificeSelfAdditionalCost : AdditionalCost
     }
 }
 
+
+public class DiscardCardAdditionalCost : AdditionalCost
+{
+    public override string RulesText
+    {
+        get
+        {
+            return "Discard a card";
+        }
+    }
+
+    public DiscardCardAdditionalCost()
+    {
+        Type = AdditionalCostType.Discard;
+        NeedsChoice = true;
+    }
+
+    public override bool CanPay(CardGame cardGame, Player player, CardGameEntity source)
+    {
+        var cardsInHand = player.Hand.Cards;
+
+        return cardsInHand.Any();
+    }
+
+    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
+    {
+        //Creature to sacrifice should be in the cost info.
+        var cardsToDiscard = costInfo.EntitiesChosen.Cast<CardInstance>().ToList();
+
+        foreach (var entity in cardsToDiscard)
+        {
+            cardGame.ZoneChangeSystem.MoveToZone(cardGame, entity, player.DiscardPile);
+        }
+    }
+    public override List<CardGameEntity> GetValidChoices(CardGame cardGame, Player player, CardGameEntity sourceEntity)
+    {
+        //The valid choices are the players units in play
+        var choices = player.Hand.Cards;
+
+        return choices.Cast<CardGameEntity>().ToList();
+    }
+}
+
 public class SacrificeCreatureAdditionalCost : AdditionalCost
 {
     public override string RulesText

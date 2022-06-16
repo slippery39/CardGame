@@ -285,6 +285,7 @@ public static class TargetTypeHelper
             case TargetType.TargetUnits: return "target unit";
             case TargetType.TargetPlayers: return "target player";
             case TargetType.TargetUnitsOrPlayers: return "target unit or player";
+            case TargetType.UnitSelf: return "to itself";
             case TargetType.Self: return "to itself";
             default: return "";
         }

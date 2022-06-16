@@ -2,5 +2,6 @@
 {
     Sacrifice,
     SacrificeSelf,
-    PayLife
+    PayLife,
+    Discard
 }

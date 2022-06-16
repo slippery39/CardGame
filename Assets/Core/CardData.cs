@@ -1060,6 +1060,8 @@ public class CardDatabase : ICardDatabase
                    }
                });
 
+
+
         //Goblin Sharpshooter - things needed - activate ability only once per turn + reset?
         //Seething Song - nothing
         //Goblin Ringleader - things needed - conditional draw from deck
@@ -1125,111 +1127,116 @@ public class CardDatabase : ICardDatabase
            }
        });
 
-
-
-        /*
-        _cards.Add(new UnitCardData()
+        
+_cards.Add(new UnitCardData()
+{
+    Name = "Wild Mongrel",
+    ManaCost = "1G",
+    Power = 2,
+    Toughness = 2,
+    ArtPath = "CardArt/Wild Mongrel",
+    Colors = new List<CardColor> { CardColor.Green },
+    Abilities = new List<CardAbility>
+    {
+        new ActivatedAbility()
         {
-            Name = "Wild Mongrel",
-            ManaCost = "1G",
-            Power = 2,
-            Toughness = 2,
-            ArtPath = "CardArt/Wild Mongrel",
-            Colors = new List<CardColor> { CardColor.Green },
-            Abilities = new List<CardAbility>
+            ManaCost = "0",
+            AdditionalCost = new DiscardCardAdditionalCost
             {
-                new ActivatedAbility()
-                {
-                    ManaCost = "0",
-                    AdditionalCost = "{Discard}{1}{Card}",
-                    AbilityEffect = new PumpUnitEffect
-                    {
-                        Power = 1,
-                        Toughness = 1,
-                    }
-                }
+            },
+            AbilityEffect = new PumpUnitEffect
+            {
+                Power = 1,
+                Toughness = 1,
+                TargetType = TargetType.UnitSelf
             }
-        });*/
+        }
+    }
+});
 
-        _cards.Add(new UnitCardData()
+
+
+
+
+_cards.Add(new UnitCardData()
+{
+    Name = "Griselbrand",
+    ManaCost = "5BBB",
+    Power = 7,
+    Toughness = 7,
+    ArtPath = "CardArt/Griselbrand",
+    Colors = new List<CardColor> { CardColor.Black },
+    Abilities = new List<CardAbility>
+    {
+        new LifelinkAbility(),
+        new ActivatedAbility()
         {
-            Name = "Griselbrand",
-            ManaCost = "5BBB",
-            Power = 7,
-            Toughness = 7,
-            ArtPath = "CardArt/Griselbrand",
-            Colors = new List<CardColor> { CardColor.Black },
-            Abilities = new List<CardAbility>
+            ManaCost = "0",
+            AdditionalCost =  new PayLifeAdditionalCost()
             {
-                new LifelinkAbility(),
-                new ActivatedAbility()
-                {
-                    ManaCost = "0",
-                    AdditionalCost =  new PayLifeAdditionalCost()
-                    {
-                        Type = AdditionalCostType.PayLife,
-                        Amount = 7
-                    },
-                    AbilityEffect = new DrawCardEffect()
-                    {
-                        Amount = 7
-                    }
-                }
+                Type = AdditionalCostType.PayLife,
+                Amount = 7
+            },
+            AbilityEffect = new DrawCardEffect()
+            {
+                Amount = 7
             }
-        });
+        }
+    }
+});
 
-        _cards.Add(new UnitCardData()
+_cards.Add(new UnitCardData()
+{
+    Name = "Greedy Merchant",
+    ManaCost = "BBB",
+    Power = 3,
+    Toughness = 3,
+    ArtPath = "CardArt/Greedy Merchant",
+    Colors = new List<CardColor> { CardColor.Black },
+    Abilities = new List<CardAbility>
+    {
+        new ActivatedAbility()
         {
-            Name = "Greedy Merchant",
-            ManaCost = "BBB",
-            Power = 3,
-            Toughness = 3,
-            ArtPath = "CardArt/Greedy Merchant",
-            Colors = new List<CardColor> { CardColor.Black },
-            Abilities = new List<CardAbility>
+            ManaCost = "1B",
+            AdditionalCost = new PayLifeAdditionalCost()
             {
-                new ActivatedAbility()
-                {
-                    ManaCost = "1B",
-                    AdditionalCost = new PayLifeAdditionalCost()
-                    {
-                        Type = AdditionalCostType.PayLife,
-                        Amount = 1,
-                    },
-                    AbilityEffect = new DrawCardEffect()
-                    {
-                        Amount = 1
-                    }
-                }
+                Type = AdditionalCostType.PayLife,
+                Amount = 1,
+            },
+            AbilityEffect = new DrawCardEffect()
+            {
+                Amount = 1
             }
-        });
+        }
+    }
+});
 
-        //Sacrifice a Unit,
-        //Pay
-        //Discard
-        //Exile
+//Sacrifice a Unit,
+//Pay
+//Discard
+//Exile
 
-        /*  
-          _cards.Add(new UnitCardData()
+/*  
+  _cards.Add(new UnitCardData()
+  {
+      Name = "Fume Spitter",
+      ManaCost = "B",
+      Power = 1,
+      Toughness = 1,
+      ArtPath = "CardArt/Fume Spitter",
+      Colors = new List<CardColor> { CardColor.Black },
+      Abilities = new List<CardAbility>
+      {
+          new ActivatedAbility(){
+          ManaCost = "0",
+          OtherCost = "Sacrifice #this#",
+          AbilityEffect = new PumpUnitEffect
           {
-              Name = "Fume Spitter",
-              ManaCost = "B",
-              Power = 1,
-              Toughness = 1,
-              ArtPath = "CardArt/Fume Spitter",
-              Colors = new List<CardColor> { CardColor.Black },
-              Abilities = new List<CardAbility>
-              {
-                  new ActivatedAbility(){
-                  ManaCost = "0",
-                  OtherCost = "Sacrifice #this#",
-                  AbilityEffect = new PumpUnitEffect
-                  {
-                      Power = -1,
-                      Toughness = -1,
-                      TargetType = TargetType.TargetUnits
-                  }
-          });*/
+              Power = -1,
+              Toughness = -1,
+              TargetType = TargetType.TargetUnits
+          }
+  });*/
 
         //need to create temp ability effects.
 
