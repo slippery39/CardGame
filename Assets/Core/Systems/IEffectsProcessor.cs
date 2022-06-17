@@ -239,6 +239,8 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         if (effect is DiscardCardEffect)
         {
             var discardCardEffect = effect as DiscardCardEffect;
+            //This does not happen here unless its a random discard.. it needs to happen at the choice level...
+            return;
 
             var validCardsToDiscard = player.Hand.Cards;
 

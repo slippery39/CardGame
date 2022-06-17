@@ -59,25 +59,34 @@ public class UIGameController : MonoBehaviour
 
     private void Update()
     {
-        //Test Hotkey for testing our Battle System.
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            _cardGame.NextTurn();
-            _stateMachine.ToIdle();
-        }
-        //Testing card drawing
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            _cardGame.CardDrawSystem.DrawCard(_cardGame, _cardGame.ActivePlayer);
-        }
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            _cardGame.ManaSystem.AddEssence(_cardGame, _cardGame.ActivePlayer, EssenceType.Any, 1);
-            _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.ActivePlayer, 1);
-        }
 
-        _stateMachine.CurrentState.HandleInput(); 
-        UpdateBoard();
+        if (_cardGame.CurrentGameState == GameState.WaitingForAction)
+        {
+            //Test Hotkey for testing our Battle System.
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                _cardGame.NextTurn();
+                _stateMachine.ToIdle();
+            }
+            //Testing card drawing
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                _cardGame.CardDrawSystem.DrawCard(_cardGame, _cardGame.ActivePlayer);
+            }
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                _cardGame.ManaSystem.AddEssence(_cardGame, _cardGame.ActivePlayer, EssenceType.Any, 1);
+                _cardGame.ManaSystem.AddMana(_cardGame, _cardGame.ActivePlayer, 1);
+            }
+
+            _stateMachine.CurrentState.HandleInput();
+            UpdateBoard();
+        }
+        else if (_cardGame.CurrentGameState == GameState.WaitingForChoice)
+        {
+            _stateMachine.ChangeState(new GameUIResolvedSpellChoiceState(_stateMachine, _cardGame.ChoiceInfoNeeded));
+            UpdateBoard();
+        }
     }
 
     public IEnumerable<UILane> GetUILanes()
@@ -211,7 +220,8 @@ public class UIGameController : MonoBehaviour
         var allCards = new CardDatabase().GetAll();
         foreach (var card in allCards)
         {
-            if (card.ManaCost == null) { 
+            if (card.ManaCost == null)
+            {
                 Debug.LogWarning($@"Warning: Mana cost is null for {card.Name}");
             }
         }

@@ -4,7 +4,6 @@ using System.Linq;
 public interface IResolvingSystem
 {
     public void Add(CardGame cardGame, CardInstance cardInstance, CardGameEntity target);
-
     public IZone Stack { get; }
     public void Add(CardGame cardGame,TriggeredAbility triggeredAbility,CardInstance source);    
     public void ResolveNext(CardGame cardGame);
@@ -103,8 +102,22 @@ public class DefaultResolvingSystem : IResolvingSystem
             //Handle the resolving of a spell
             else if (resolvingCardInstance.CardInstance.CurrentCardData is SpellCardData)
             {
+                //if doesn't need a choice:
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
                 cardGame.SpellCastingSystem.CastSpell(cardGame, player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets);
+
+                var spellCardData = resolvingCardInstance.CardInstance.CurrentCardData as SpellCardData;
+
+                //if does need a choice upon resolution, the game needs to account for that.
+                //For now we are just considering discard effects
+                var effectsWithChoices = spellCardData.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.Self);
+
+                if (effectsWithChoices.Any())
+                {
+                    cardGame.PromptPlayerForChoice(player,effectsWithChoices.First());
+                }
+                //TODO - Handle choices that must be made upon resolving spells.
+
             }
 
         }

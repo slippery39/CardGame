@@ -55,6 +55,20 @@ public class CardGame
         return zone.ZoneType == zoneType;
     }
 
+    internal void MakeChoice(CardInstance entitySelected)
+    {
+        if (CurrentGameState != GameState.WaitingForChoice)
+        {
+            return;
+        }
+
+        //For now we are just handling discard choices....
+        //In the future we might have other choices, like choosing a creature to sacrifice or perhaps something?
+        DiscardSystem.Discard(this, ActivePlayer, entitySelected);
+
+        CurrentGameState = GameState.WaitingForAction;
+    }
+
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
     public ICardGameLogger Logger { get => _cardGameLogger; }
@@ -79,7 +93,8 @@ public class CardGame
 
     public IActivatedAbilitySystem ActivatedAbilitySystem { get => _activatedAbilitySystem; set => _activatedAbilitySystem = value; }
     public IDiscardSystem DiscardSystem { get => _discardSystem; set => _discardSystem = value; }
-
+    public GameState CurrentGameState { get; set; }
+    public Effect ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
 
     #endregion
     #endregion
@@ -111,6 +126,11 @@ public class CardGame
         _registeredEntities = new List<CardGameEntity>();
         _players = new List<Player>();
 
+
+        //TODO - GameState Stuff:
+        CurrentGameState = GameState.WaitingForAction;
+
+
         AddPlayerToGame(new Player(_numberOfLanes)
         {
             PlayerId = 1,
@@ -127,6 +147,8 @@ public class CardGame
         //Need to use the card draw system to draw the opening hand.
         _cardDrawSystem.DrawOpeningHand(this, Player1);
         _cardDrawSystem.DrawOpeningHand(this, Player2);
+
+
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)
@@ -211,6 +233,10 @@ public class CardGame
 
     public void PlayCardFromHand(Player player, CardInstance cardFromHand, int targetId)
     {
+        if (CurrentGameState != GameState.WaitingForAction)
+        {
+            return;
+        }
 
         if (cardFromHand.CurrentCardData is ManaCardData)
         {
@@ -273,6 +299,14 @@ public class CardGame
             }
         }
     }
+
+
+    public void PromptPlayerForChoice(Player player, Effect effectThatNeedsChoice)
+    {
+        CurrentGameState = GameState.WaitingForChoice;//GameState.WaitingForChoice;
+        ChoiceInfoNeeded = effectThatNeedsChoice;
+    }
+
 
     //Grab a master list of all zones in the game.
     public List<IZone> GetZones()
