@@ -84,7 +84,7 @@ public class UIGameController : MonoBehaviour
         }
         else if (_cardGame.CurrentGameState == GameState.WaitingForChoice)
         {
-            _stateMachine.ChangeState(new GameUIResolvedSpellChoiceState(_stateMachine, _cardGame.ChoiceInfoNeeded));
+            _stateMachine.ChangeState(new GameUIDiscardAsPartOfSpellState(_stateMachine, _cardGame.ChoiceInfoNeeded));
             UpdateBoard();
         }
     }

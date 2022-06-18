@@ -39,7 +39,6 @@ public class CardGame
     private IResolvingSystem _resolvingSystem;
     private IContinuousEffectSystem _continuousEffectSystem;
     private IActivatedAbilitySystem _activatedAbilitySystem;
-
     #endregion
 
 
@@ -48,27 +47,6 @@ public class CardGame
     public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
     public List<Player> Players { get => _players; set => _players = value; }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
-
-    internal bool IsInZone(CardInstance unit, ZoneType zoneType)
-    {
-        var zone = GetZoneOfCard(unit);
-        return zone.ZoneType == zoneType;
-    }
-
-    internal void MakeChoice(CardInstance entitySelected)
-    {
-        if (CurrentGameState != GameState.WaitingForChoice)
-        {
-            return;
-        }
-
-        //For now we are just handling discard choices....
-        //In the future we might have other choices, like choosing a creature to sacrifice or perhaps something?
-        DiscardSystem.Discard(this, ActivePlayer, entitySelected);
-
-        CurrentGameState = GameState.WaitingForAction;
-    }
-
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
     public ICardGameLogger Logger { get => _cardGameLogger; }
@@ -147,8 +125,6 @@ public class CardGame
         //Need to use the card draw system to draw the opening hand.
         _cardDrawSystem.DrawOpeningHand(this, Player1);
         _cardDrawSystem.DrawOpeningHand(this, Player2);
-
-
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)
@@ -222,6 +198,26 @@ public class CardGame
     {
         entity.EntityId = GetNextEntityId();
         _registeredEntities.Add(entity);
+    }
+
+    internal bool IsInZone(CardInstance unit, ZoneType zoneType)
+    {
+        var zone = GetZoneOfCard(unit);
+        return zone.ZoneType == zoneType;
+    }
+
+    internal void MakeChoice(CardInstance entitySelected)
+    {
+        if (CurrentGameState != GameState.WaitingForChoice)
+        {
+            return;
+        }
+
+        //For now we are just handling discard choices....
+        //In the future we might have other choices, like choosing a creature to sacrifice or perhaps some other choice like choosing a type to destroy?
+        DiscardSystem.Discard(this, ActivePlayer, entitySelected);
+
+        CurrentGameState = GameState.WaitingForAction;
     }
 
     /*

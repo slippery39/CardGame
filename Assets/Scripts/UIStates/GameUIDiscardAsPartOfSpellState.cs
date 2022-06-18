@@ -1,17 +1,21 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 //Note currently we are only handling discard choices.
-public class GameUIResolvedSpellChoiceState : IGameUIState
+public class GameUIDiscardAsPartOfSpellState : IGameUIState
 {
     private CardGame _cardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
-    private Effect _sourceEffect;
-    public GameUIResolvedSpellChoiceState(GameUIStateMachine stateMachine, Effect sourceEffect)
+    private DiscardCardEffect _sourceEffect;
+
+    public List<CardInstance> _cardsChosen;
+    public GameUIDiscardAsPartOfSpellState(GameUIStateMachine stateMachine, DiscardCardEffect sourceEffect)
     {
         _cardGame = stateMachine.CardGame;
         _stateMachine = stateMachine;
         _sourceEffect = sourceEffect;
+        _cardsChosen = new List<CardInstance>();
     }
 
     public void HandleInput()
@@ -69,8 +73,13 @@ public class GameUIResolvedSpellChoiceState : IGameUIState
             return;
         }
 
-        //Otherwise let's send the choice over to the card game.
-        _cardGame.MakeChoice(entitySelected);
-        _stateMachine.ToIdle();
+        _cardsChosen.Add(entitySelected);
+
+        if (_cardsChosen.Count == _sourceEffect.Amount)
+        {
+            //Otherwise let's send the choice over to the card game.
+            _cardGame.MakeChoice(entitySelected);
+            _stateMachine.ToIdle();
+        }
     }
 }
