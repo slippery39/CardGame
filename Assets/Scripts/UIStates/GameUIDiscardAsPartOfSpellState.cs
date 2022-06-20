@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 //Note currently we are only handling discard choices.
 public class GameUIDiscardAsPartOfSpellState : IGameUIState
@@ -46,8 +47,21 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
 
         foreach (var entity in entitiesToHighlight)
         {
-            entity.Highlight();
+            if (_cardsChosen.Select(c => c.EntityId).Contains(entity.EntityId))
+            {
+                entity.Highlight(Color.red);
+            }
+            else 
+            {
+                //Highlight with a red color if it is an already chosen card?
+                entity.Highlight();
+            }
         }
+    }
+
+    public void OnUpdate()
+    {
+        OnApply();
     }
 
     public void OnDestroy()
@@ -74,11 +88,12 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
         }
 
         _cardsChosen.Add(entitySelected);
+        //TODO - some sort of indicator of the cards chosen.
 
-        if (_cardsChosen.Count == _sourceEffect.Amount)
+        if (_cardsChosen.Count >= _sourceEffect.Amount)
         {
             //Otherwise let's send the choice over to the card game.
-            _cardGame.MakeChoice(entitySelected);
+            _cardGame.MakeChoice(_cardsChosen);
             _stateMachine.ToIdle();
         }
     }

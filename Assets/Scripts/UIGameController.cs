@@ -84,9 +84,15 @@ public class UIGameController : MonoBehaviour
         }
         else if (_cardGame.CurrentGameState == GameState.WaitingForChoice)
         {
-            _stateMachine.ChangeState(new GameUIDiscardAsPartOfSpellState(_stateMachine, _cardGame.ChoiceInfoNeeded));
+            //Temporary Hack to make it not automatically happen.
+            if (!(_stateMachine.CurrentState is GameUIDiscardAsPartOfSpellState))
+            {
+                _stateMachine.ChangeState(new GameUIDiscardAsPartOfSpellState(_stateMachine, _cardGame.ChoiceInfoNeeded as DiscardCardEffect));
+            }
             UpdateBoard();
         }
+
+        _stateMachine.CurrentState.OnUpdate();
     }
 
     public IEnumerable<UILane> GetUILanes()

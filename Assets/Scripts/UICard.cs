@@ -132,6 +132,13 @@ public class UICard : UIGameEntity
     public override void Highlight()
     {
         _highlight.gameObject.SetActive(true);
+        _highlight.color = Color.green;
+    }
+
+    public override void Highlight(Color highlightColor)
+    {
+        _highlight.gameObject.SetActive(true);
+        _highlight.color = highlightColor;
     }
 
     public override void StopHighlight()

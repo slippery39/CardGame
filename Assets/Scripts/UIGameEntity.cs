@@ -22,6 +22,11 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler
         Debug.Log($@"{EntityId} should be getting highlighted!");
     }
 
+    public virtual void Highlight(Color highlightColor)
+    {
+        Debug.Log($@"{EntityId} should be getting highlighted with a specific color!");
+    }
+
     public virtual void StopHighlight()
     {
         Debug.Log($@"{EntityId} should stop being highlighted!");

@@ -5,6 +5,11 @@
     void OnApply();
     void OnDestroy();
 
+    void OnUpdate()
+    {
+
+    }
+
     void HandleSelection(int entityId);
 }
 

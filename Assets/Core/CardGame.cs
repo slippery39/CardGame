@@ -206,7 +206,7 @@ public class CardGame
         return zone.ZoneType == zoneType;
     }
 
-    internal void MakeChoice(CardInstance entitySelected)
+    internal void MakeChoice(List<CardInstance> entitiesSelected)
     {
         if (CurrentGameState != GameState.WaitingForChoice)
         {
@@ -215,7 +215,7 @@ public class CardGame
 
         //For now we are just handling discard choices....
         //In the future we might have other choices, like choosing a creature to sacrifice or perhaps some other choice like choosing a type to destroy?
-        DiscardSystem.Discard(this, ActivePlayer, entitySelected);
+        DiscardSystem.Discard(this, ActivePlayer, entitiesSelected);
 
         CurrentGameState = GameState.WaitingForAction;
     }
