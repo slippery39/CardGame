@@ -1095,6 +1095,38 @@ public class CardDatabase : ICardDatabase
         */
 
         _cards.Add(
+            new UnitCardData
+            {
+                Name = "Merfolk Looter",
+                ManaCost = "1U",
+                Power = 1,
+                Toughness = 1,
+                ArtPath = "CardArt/Merfolk Looter",
+                CreatureType = "Merfolk",
+                Colors = new List<CardColor> {CardColor.Blue},
+                Abilities = new List<CardAbility>
+                {
+                    new ActivatedAbility()
+                    {
+                        AbilityEffect = new CompoundEffect()
+                        {
+                            Effects = new List<Effect>
+                            {
+                                new DrawCardEffect
+                                {
+                                    Amount = 1
+                                },
+                                new DiscardCardEffect
+                                {
+                                    Amount = 1
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+        _cards.Add(
        new UnitCardData
        {
            Name = "Wonder",

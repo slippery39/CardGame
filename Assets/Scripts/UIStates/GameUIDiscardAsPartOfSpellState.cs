@@ -31,7 +31,7 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
 
     public void OnApply()
     {
-
+        //Slightly differs from our usual highlight, we are highlighting the cards we have chosen to discard in red.
         var validChoices = _actingPlayer.Hand.Cards;
 
         if (validChoices.Count() == 0)

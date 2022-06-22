@@ -7,6 +7,7 @@ public interface IActivatedAbilitySystem
     public void ActivateAbility(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
     bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card);
     public bool CanPayAdditionalCost(CardGame cardGame, Player player, CardInstance source, AdditionalCost cost);
+    public void ActivateAbilityWithStack(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
 }
 
 public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
@@ -18,18 +19,17 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         ActivateAbilityWithTargets(cardGame, player, card, new List<CardGameEntity>());
     }
 
-    public void ActivateAbility(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo)
+    //Temporary method, testing stuff out to get this working better
+    public void ActivateAbilityWithStack(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo)
     {
-        //Do some checks here.
-
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
-        
+
         //Validating if we have the proper info to be able to correctly activate the ability;
         if (activateAbilityInfo == null && (activatedAbility.HasTargets() || activatedAbility.HasChoices()))
         {
-            throw new Exception("Cannot activate the ability, need ActivateAbilityInfo for either/or targets or choices");        
+            throw new Exception("Cannot activate the ability, need ActivateAbilityInfo for either/or targets or choices");
         }
-        if  (activatedAbility.HasTargets() && !(activateAbilityInfo.Targets.Any()))
+        if (activatedAbility.HasTargets() && !(activateAbilityInfo.Targets.Any()))
         {
             throw new Exception("Cannot activate the ability, we need targets but no targets were specified in ActivateAbilityInfo");
         }
@@ -41,7 +41,45 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         //Pay any additional costs.
         if (activatedAbility.HasAdditionalCost())
         {
-            PayAdditionalCost(cardGame, player, card,activatedAbility.AdditionalCost,new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
+            PayAdditionalCost(cardGame, player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
+        }
+
+        if (activatedAbility.HasTargets())
+        {
+            cardGame.ResolvingSystem.Add(cardGame, activatedAbility, card, activateAbilityInfo.Targets.First());
+            //ActivateAbilityWithTargets(cardGame, player, card, activateAbilityInfo.Targets);
+        }
+        else
+        {
+            cardGame.ResolvingSystem.Add(cardGame, activatedAbility, card);
+            //ActivateAbility(cardGame, player, card);
+        }
+    }
+
+    public void ActivateAbility(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo)
+    {
+        //Do some checks here.
+
+        var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+
+        //Validating if we have the proper info to be able to correctly activate the ability;
+        if (activateAbilityInfo == null && (activatedAbility.HasTargets() || activatedAbility.HasChoices()))
+        {
+            throw new Exception("Cannot activate the ability, need ActivateAbilityInfo for either/or targets or choices");
+        }
+        if (activatedAbility.HasTargets() && !(activateAbilityInfo.Targets.Any()))
+        {
+            throw new Exception("Cannot activate the ability, we need targets but no targets were specified in ActivateAbilityInfo");
+        }
+        if (activatedAbility.HasChoices() && !(activateAbilityInfo.Choices.Any()))
+        {
+            throw new Exception("Cannot activate the ability, we need choices but no choices were specified in ActivatedAbilityInfo");
+        }
+
+        //Pay any additional costs.
+        if (activatedAbility.HasAdditionalCost())
+        {
+            PayAdditionalCost(cardGame, player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
         }
 
         if (activatedAbility.HasTargets())
@@ -56,10 +94,10 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
     private void PayAdditionalCost(CardGame cardGame, Player player, CardInstance card, AdditionalCost additionalCost, CostInfo costInfo)
     {
-        additionalCost.PayCost(cardGame, player, card,costInfo);
+        additionalCost.PayCost(cardGame, player, card, costInfo);
     }
 
-    public void ActivateAbilityWithTargets(CardGame cardGame, Player player, CardInstance card, List<CardGameEntity> targets)
+    private void ActivateAbilityWithTargets(CardGame cardGame, Player player, CardInstance card, List<CardGameEntity> targets)
     {
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
 

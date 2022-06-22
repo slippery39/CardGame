@@ -15,6 +15,8 @@ public class DefaultEffectsProcessor : IEffectsProcessor
 {
     public void ApplyEffect(CardGame cardGame, Player player, CardInstance source, Effect effect, List<CardGameEntity> targets)
     {
+
+        
         List<CardGameEntity> entitiesToEffect;
         if (!cardGame.TargetSystem.EffectNeedsTargets(effect))
         {
@@ -24,6 +26,8 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         {
             entitiesToEffect = targets;
         }
+
+        //TODO - Change this to Switch Case or... place all the effects processing inside the effects themselves?
 
         //Process Effect
         if (effect is DamageEffect)
@@ -225,7 +229,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     }
                     return true;
                 });
-    
+
 
             if (validCardsToGet.Any())
             {
@@ -246,18 +250,24 @@ public class DefaultEffectsProcessor : IEffectsProcessor
 
             if (validCardsToDiscard.Count() < discardCardEffect.Amount)
             {
-                foreach(var card in validCardsToDiscard)
+                foreach (var card in validCardsToDiscard)
                 {
                     cardGame.DiscardSystem.Discard(cardGame, player, card);
                 }
             }
             else
             {
-                foreach(var card in validCardsToDiscard.Randomize().Take(discardCardEffect.Amount))
+                foreach (var card in validCardsToDiscard.Randomize().Take(discardCardEffect.Amount))
                 {
                     cardGame.DiscardSystem.Discard(cardGame, player, card);
                 }
             }
+        }
+
+        if (effect is CompoundEffect)
+        {
+            var compoundEffect = effect as CompoundEffect;
+            this.ApplyEffects(cardGame, player, source, compoundEffect.Effects, targets);
         }
     }
     public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)

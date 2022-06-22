@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public interface IResolvingSystem
 {
     public void Add(CardGame cardGame, CardInstance cardInstance, CardGameEntity target);
     public IZone Stack { get; }
-    public void Add(CardGame cardGame,TriggeredAbility triggeredAbility,CardInstance source);    
+    public void Add(CardGame cardGame, CardAbility ability, CardInstance source);
+
+    public void Add(CardGame cardGame, CardAbility ability, CardInstance source, CardGameEntity target);
     public void ResolveNext(CardGame cardGame);
 }
 
@@ -55,11 +58,27 @@ public class DefaultResolvingSystem : IResolvingSystem
         this.ResolveNext(cardGame);
     }
 
-    public void Add(CardGame cardGame, TriggeredAbility triggeredAbility, CardInstance source)
+    public void Add(CardGame cardGame, CardAbility ability, CardInstance source)
     {
         var resolvingAbility = new ResolvingAbility
         {
-            Ability = triggeredAbility,
+            Ability = ability,
+            Owner = cardGame.GetOwnerOfCard(source),
+            Source = source
+        };
+
+        _internalStack.Add(resolvingAbility);
+
+        //Our abilities auto resolve.
+        this.ResolveNext(cardGame);
+    }
+
+    //This is  very similar to the add aboce.
+    public void Add(CardGame cardGame, CardAbility ability, CardInstance source, CardGameEntity target)
+    {
+        var resolvingAbility = new ResolvingAbility
+        {
+            Ability = ability,
             Owner = cardGame.GetOwnerOfCard(source),
             Source = source
         };
@@ -81,13 +100,52 @@ public class DefaultResolvingSystem : IResolvingSystem
         var resolvingThing = _internalStack[nextIndex];
         _internalStack.RemoveAt(nextIndex);
 
+        //TODO - need to change this to resolving triggered ability? or just resolving ability in general?
         if (resolvingThing is ResolvingAbility)
         {
             var resolvingAbility = (ResolvingAbility)resolvingThing;
-            var triggeredAbility = (TriggeredAbility)(resolvingAbility.Ability);
-            cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, triggeredAbility.Effects, new List<CardGameEntity>());
-            //todo - handle the resolving of abilities.
-            //todo - handle what happens if there are no legal targets
+
+            switch (resolvingAbility.Ability)
+            {
+                case TriggeredAbility:
+                    {
+                        var triggeredAbility = (TriggeredAbility)resolvingAbility.Ability;
+                        cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, triggeredAbility.Effects, new List<CardGameEntity>());
+                        return;
+                    }
+                case ActivatedAbility:
+                    {
+                        var activatedAbility = (ActivatedAbility)resolvingAbility.Ability;
+                        cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, new List<Effect> { activatedAbility.AbilityEffect }, new List<CardGameEntity>());
+
+                        var player = cardGame.GetOwnerOfCard(resolvingAbility.Source);
+
+                        //How to grab compound effects?
+
+                        List<Effect> actualEffects;
+
+                        if (activatedAbility.AbilityEffect is CompoundEffect)
+                        {
+                            actualEffects = ((CompoundEffect)activatedAbility.AbilityEffect).Effects;
+                        }
+                        else
+                        {
+                            actualEffects = new List<Effect> { activatedAbility.AbilityEffect };
+                        }
+                        var effectsWithChoices = actualEffects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.Self);
+
+                        if (effectsWithChoices.Any())
+                        {
+                            cardGame.PromptPlayerForChoice(player, effectsWithChoices.First());
+                        }
+                        return;
+                    }
+                default:
+                    {
+                        throw new Exception("Cannot resolve unknown ability type.");
+                    }
+            }
+
         }
         else if (resolvingThing is ResolvingCardInstance)
         {
@@ -114,7 +172,7 @@ public class DefaultResolvingSystem : IResolvingSystem
 
                 if (effectsWithChoices.Any())
                 {
-                    cardGame.PromptPlayerForChoice(player,effectsWithChoices.First());
+                    cardGame.PromptPlayerForChoice(player, effectsWithChoices.First());
                 }
                 //TODO - Handle choices that must be made upon resolving spells.
 

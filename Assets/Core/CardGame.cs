@@ -378,8 +378,8 @@ public class CardGame
         var cardDB = new CardDatabase();
 
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Careful Study");
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData);
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Merfolk Looter");
+        //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData);
         var cardsToAdd = 45;
 
         for (int i = 0; i < cardsToAdd; i++)
