@@ -16,9 +16,19 @@ public abstract class CardAbility
         clone.Components = Components.ToList();
         return clone;
     }
+
+    public T GetComponent<T>()
+    {
+        return Components.Where(c => c is T).Cast<T>().FirstOrDefault();
+    }
 }
 
 public abstract class AbilityComponent
+{
+
+}
+
+public class AbilityCooldown: AbilityComponent
 {
 
 }

@@ -1115,6 +1115,7 @@ public class CardDatabase : ICardDatabase
                 {
                     new ActivatedAbility()
                     {
+                        OncePerTurn = true,
                         Effects = new List<Effect>
                         {
                             new DrawCardEffect

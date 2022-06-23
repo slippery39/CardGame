@@ -34,6 +34,17 @@ public class DefaultTurnSystem : ITurnSystem
             unit.IsSummoningSick = false;
         }
 
+        //Remove any ability cooldowns
+        foreach (var unit in activePlayersUnits)
+        {
+            var activatedAbilities = unit.GetAbilities<ActivatedAbility>().Where(ability => ability.OncePerTurn);
+            foreach (var ab in activatedAbilities)
+            {
+                //Remove all ability cooldowns.
+                ab.Components = ab.Components.Where(c => !(c is AbilityCooldown)).ToList();
+            }
+        }
+
         cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnStart);
         //Reset any spent mana
         cardGame.ManaSystem.ResetManaAndEssence(cardGame, cardGame.ActivePlayer);

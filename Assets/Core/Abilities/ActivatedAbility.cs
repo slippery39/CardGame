@@ -30,6 +30,7 @@ public class ActivatedAbility : CardAbility
     public AdditionalCost AdditionalCost { get; set; } = null;
     public List<Effect> Effects { get; set; }
     public CardFilter Filter { get; internal set; }
+    public bool OncePerTurn { get; set; } = false;
 
     public bool HasAdditionalCost()
     {

@@ -36,6 +36,13 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
             PayAdditionalCost(cardGame, player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
         }
 
+        //If its a once per turn ability, place an ability cooldown component on it.
+        if (activatedAbility.OncePerTurn)
+        {
+            activatedAbility.Components.Add(new AbilityCooldown());
+        }
+
+        //Check if it has targets or not to call the appropriate method.
         if (activatedAbility.HasTargets())
         {
             cardGame.ResolvingSystem.Add(cardGame, activatedAbility, card, activateAbilityInfo.Targets.First());
@@ -59,6 +66,13 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
     public bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card)
     {
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+
+        if (activatedAbility.GetComponent<AbilityCooldown>() != null)
+        {
+            cardGame.Log("Cannot use ability because its on cooldown");
+            return false;
+        }
+
         if (activatedAbility == null) { return false; }
 
         var canPayManaCost = cardGame.ManaSystem.CanPayManaCost(cardGame, player, activatedAbility.ManaCost);
