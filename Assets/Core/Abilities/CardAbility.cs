@@ -28,7 +28,7 @@ public abstract class AbilityComponent
 
 }
 
-public class AbilityCooldown: AbilityComponent
+public class AbilityCooldown : AbilityComponent
 {
 
 }
@@ -337,7 +337,22 @@ public class PumpUnitEffect : Effect
 
 public class DrawCardEffect : Effect
 {
-    public override string RulesText => $"Draw {Amount} Cards";
+    public override string RulesText
+    {
+        get
+        {
+
+            if (Amount == 1)
+            {
+                return "Draw a card";
+            }
+            else
+            {
+                return $"Draw {Amount} Cards";
+            }
+        }
+    }
+
     public int Amount { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
@@ -440,7 +455,7 @@ public class GetRandomCardFromDeckEffect : Effect
     public CardFilter Filter { get; set; }
 }
 
-public class GrabFromTopOfDeckEffect: Effect
+public class GrabFromTopOfDeckEffect : Effect
 {
     public override string RulesText
     {
@@ -471,7 +486,14 @@ public class DiscardCardEffect : Effect
     {
         get
         {
-            return $@"Discard {Amount} Cards";
+            if (Amount == 1)
+            {
+                return "Discard a card";
+            }
+            else
+            {
+                return $@"Discard {Amount} Cards";
+            }
         }
     }
     public int Amount { get; set; }

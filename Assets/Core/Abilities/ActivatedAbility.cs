@@ -16,14 +16,14 @@ public class ActivatedAbility : CardAbility
             string additionalCostStr = "";
             if (HasAdditionalCost())
             {
-                additionalCostStr = $@"{AdditionalCost.RulesText}:";
+                additionalCostStr = $@"{AdditionalCost.RulesText}";
                 if (manaCostStr != "")
                 {
                     manaCostStr += ", ";
                 }
             }
 
-            return $@"{manaCostStr}{additionalCostStr}{string.Join("and ",Effects.Select(e=>e.RulesText))}";
+            return $@"{manaCostStr}{additionalCostStr}: {string.Join("and ",Effects.Select(e=>e.RulesText))}";
         }
     }
     public string ManaCost { get; set; }
