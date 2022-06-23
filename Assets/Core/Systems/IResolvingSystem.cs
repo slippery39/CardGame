@@ -80,7 +80,8 @@ public class DefaultResolvingSystem : IResolvingSystem
         {
             Ability = ability,
             Owner = cardGame.GetOwnerOfCard(source),
-            Source = source
+            Source = source,
+            Targets = new List<CardGameEntity> { target }
         };
 
         _internalStack.Add(resolvingAbility);
@@ -116,23 +117,11 @@ public class DefaultResolvingSystem : IResolvingSystem
                 case ActivatedAbility:
                     {
                         var activatedAbility = (ActivatedAbility)resolvingAbility.Ability;
-                        cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, new List<Effect> { activatedAbility.AbilityEffect }, new List<CardGameEntity>());
+                        cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, activatedAbility.Effects, resolvingAbility.Targets);
 
                         var player = cardGame.GetOwnerOfCard(resolvingAbility.Source);
 
-                        //How to grab compound effects?
-
-                        List<Effect> actualEffects;
-
-                        if (activatedAbility.AbilityEffect is CompoundEffect)
-                        {
-                            actualEffects = ((CompoundEffect)activatedAbility.AbilityEffect).Effects;
-                        }
-                        else
-                        {
-                            actualEffects = new List<Effect> { activatedAbility.AbilityEffect };
-                        }
-                        var effectsWithChoices = actualEffects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.Self);
+                        var effectsWithChoices = activatedAbility.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.Self);
 
                         if (effectsWithChoices.Any())
                         {

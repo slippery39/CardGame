@@ -665,11 +665,12 @@ public class CardDatabase : ICardDatabase
                 new ActivatedAbility()
                 {
                     ManaCost = "1",
-                    AbilityEffect = new PumpUnitEffect()
+                    Effects = new List<Effect>{ new PumpUnitEffect()
                     {
                         Power = 1,
                         Toughness = 0,
                         TargetType = TargetType.Self
+                    }
                     }
                 }
             }
@@ -747,10 +748,11 @@ public class CardDatabase : ICardDatabase
                         ManaCost = "0",
                         //this needs to have rules text automatically generated.
                         AdditionalCost = new SacrificeSelfAdditionalCost(),
-                        AbilityEffect = new DamageEffect()
+                        Effects = new List<Effect>{new DamageEffect()
                         {
                            Amount = 1,
                            TargetType = TargetType.TargetUnitsOrPlayers
+                        }
                         }
                     }
                 }
@@ -774,10 +776,11 @@ public class CardDatabase : ICardDatabase
                         {
                             Amount = 3,
                         },
-                        AbilityEffect = new PumpUnitEffect()
+                        Effects = new List<Effect>{ new PumpUnitEffect()
                         {
                            Power = 1,
                            Toughness = 1
+                        }
                         }
                     }
             }
@@ -798,11 +801,12 @@ public class CardDatabase : ICardDatabase
                 {
                     ManaCost = "0",
                     AdditionalCost = new SacrificeCreatureAdditionalCost(),
-                    AbilityEffect = new PumpUnitEffect()
+                    Effects = new List<Effect>{ new PumpUnitEffect()
                     {
                         Power = 2,
                         Toughness = 2,
                         TargetType = TargetType.UnitSelf
+                    }
                     }
                  }
             }
@@ -832,10 +836,11 @@ public class CardDatabase : ICardDatabase
                             CreatureType = "Goblin"
                         }
                     },
-                    AbilityEffect = new AddTempManaEffect()
+                    Effects = new List<Effect>{new AddTempManaEffect()
                     {
                         ManaType = EssenceType.Red,
                         Amount = 1
+                    }
                     },
                  }
             }
@@ -862,10 +867,11 @@ public class CardDatabase : ICardDatabase
                             CreatureType = "Goblin"
                         }
                     },
-                    AbilityEffect = new PumpUnitEffect()
+                    Effects = new List<Effect>{ new PumpUnitEffect()
                     {
                         Power = 1,
                         Toughness =1
+                    }
                     },
                  }
             }
@@ -908,10 +914,11 @@ public class CardDatabase : ICardDatabase
                             CreatureType = "Goblin"
                         }
                     },
-                    AbilityEffect = new DamageEffect()
+                    Effects = new List<Effect>{ new DamageEffect()
                     {
                         Amount = 2,
                         TargetType = TargetType.TargetUnitsOrPlayers
+                    }
                     },
                  }
             }
@@ -1103,23 +1110,22 @@ public class CardDatabase : ICardDatabase
                 Toughness = 1,
                 ArtPath = "CardArt/Merfolk Looter",
                 CreatureType = "Merfolk",
-                Colors = new List<CardColor> {CardColor.Blue},
+                Colors = new List<CardColor> { CardColor.Blue },
                 Abilities = new List<CardAbility>
                 {
                     new ActivatedAbility()
                     {
-                        AbilityEffect = new CompoundEffect()
+                        Effects = new List<Effect>
                         {
-                            Effects = new List<Effect>
+                            new DrawCardEffect
                             {
-                                new DrawCardEffect
-                                {
-                                    Amount = 1
-                                },
-                                new DiscardCardEffect
-                                {
-                                    Amount = 1
-                                }
+                                TargetType = TargetType.Self,
+                                Amount = 1
+                            },
+                            new DiscardCardEffect
+                            {
+                                TargetType= TargetType.Self,
+                                Amount = 1
                             }
                         }
                     }
@@ -1159,16 +1165,16 @@ public class CardDatabase : ICardDatabase
            }
        });
 
-        
-_cards.Add(new UnitCardData()
-{
-    Name = "Wild Mongrel",
-    ManaCost = "1G",
-    Power = 2,
-    Toughness = 2,
-    ArtPath = "CardArt/Wild Mongrel",
-    Colors = new List<CardColor> { CardColor.Green },
-    Abilities = new List<CardAbility>
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Wild Mongrel",
+            ManaCost = "1G",
+            Power = 2,
+            Toughness = 2,
+            ArtPath = "CardArt/Wild Mongrel",
+            Colors = new List<CardColor> { CardColor.Green },
+            Abilities = new List<CardAbility>
     {
         new ActivatedAbility()
         {
@@ -1176,29 +1182,30 @@ _cards.Add(new UnitCardData()
             AdditionalCost = new DiscardCardAdditionalCost
             {
             },
-            AbilityEffect = new PumpUnitEffect
+            Effects = new List<Effect>{  new PumpUnitEffect
             {
                 Power = 1,
                 Toughness = 1,
                 TargetType = TargetType.UnitSelf
             }
+            }
         }
     }
-});
+        });
 
 
 
 
 
-_cards.Add(new UnitCardData()
-{
-    Name = "Griselbrand",
-    ManaCost = "5BBB",
-    Power = 7,
-    Toughness = 7,
-    ArtPath = "CardArt/Griselbrand",
-    Colors = new List<CardColor> { CardColor.Black },
-    Abilities = new List<CardAbility>
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Griselbrand",
+            ManaCost = "5BBB",
+            Power = 7,
+            Toughness = 7,
+            ArtPath = "CardArt/Griselbrand",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>
     {
         new LifelinkAbility(),
         new ActivatedAbility()
@@ -1209,23 +1216,24 @@ _cards.Add(new UnitCardData()
                 Type = AdditionalCostType.PayLife,
                 Amount = 7
             },
-            AbilityEffect = new DrawCardEffect()
+            Effects = new List<Effect>{ new DrawCardEffect()
             {
                 Amount = 7
             }
+            }
         }
     }
-});
+        });
 
-_cards.Add(new UnitCardData()
-{
-    Name = "Greedy Merchant",
-    ManaCost = "BBB",
-    Power = 3,
-    Toughness = 3,
-    ArtPath = "CardArt/Greedy Merchant",
-    Colors = new List<CardColor> { CardColor.Black },
-    Abilities = new List<CardAbility>
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Greedy Merchant",
+            ManaCost = "BBB",
+            Power = 3,
+            Toughness = 3,
+            ArtPath = "CardArt/Greedy Merchant",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>
     {
         new ActivatedAbility()
         {
@@ -1235,13 +1243,14 @@ _cards.Add(new UnitCardData()
                 Type = AdditionalCostType.PayLife,
                 Amount = 1,
             },
-            AbilityEffect = new DrawCardEffect()
+            Effects = new List<Effect>{ new DrawCardEffect()
             {
                 Amount = 1
             }
+            }
         }
     }
-});
+        });
 
 
         _cards.Add(new SpellCardData()
@@ -1249,7 +1258,7 @@ _cards.Add(new UnitCardData()
             Name = "Careful Study",
             ManaCost = "U",
             ArtPath = "CardArt/Careful Study",
-            Colors= new List<CardColor> { CardColor.Blue },
+            Colors = new List<CardColor> { CardColor.Blue },
             Effects = new List<Effect>
             {
                 new DrawCardEffect()
@@ -1309,7 +1318,7 @@ _cards.Add(new UnitCardData()
                 new ActivatedAbility()
                 {
                     ManaCost = "R",
-                    AbilityEffect = new AddTempAbilityEffect(new HasteAbility())
+                    Effects = new List<Effect>{new AddTempAbilityEffect(new HasteAbility()) }
                 }
             }
         });
@@ -1327,11 +1336,11 @@ _cards.Add(new UnitCardData()
                 new ActivatedAbility()
                 {
                   ManaCost = "2",
-                  AbilityEffect = new DamageEffect
+                  Effects = new List<Effect>{ new DamageEffect
                   {
                       TargetType = TargetType.TargetUnits,
                       Amount = 1
-
+                  }
                   }
                 }
             }

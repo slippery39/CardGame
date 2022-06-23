@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 public class ActivatedAbility : CardAbility
 {
@@ -22,12 +23,12 @@ public class ActivatedAbility : CardAbility
                 }
             }
 
-            return $@"{manaCostStr}{additionalCostStr}{AbilityEffect.RulesText}";
+            return $@"{manaCostStr}{additionalCostStr}{string.Join("and ",Effects.Select(e=>e.RulesText))}";
         }
     }
     public string ManaCost { get; set; }
     public AdditionalCost AdditionalCost { get; set; } = null;
-    public Effect AbilityEffect { get; set; }
+    public List<Effect> Effects { get; set; }
     public CardFilter Filter { get; internal set; }
 
     public bool HasAdditionalCost()

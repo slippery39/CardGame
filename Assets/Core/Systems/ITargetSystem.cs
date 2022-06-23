@@ -18,16 +18,15 @@ public static class TargetHelper
 
     public static bool NeedsTargets(ActivatedAbility ability)
     {
-        var abilityTargets = ability.AbilityEffect.TargetType;
-
-        return typesThatDontNeedTargets.Contains(abilityTargets) == false;
+        var abilityTargets = ability.Effects.Select(a => a.TargetType);
+        return abilityTargets.Where(te => typesThatDontNeedTargets.Contains(te) == false).Count() > 0;
     }
 }
 
 
 public class DefaultTargetSystem : ITargetSystem
 {
-    
+
     private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
 
     /// <summary>
@@ -78,7 +77,8 @@ public class DefaultTargetSystem : ITargetSystem
     //TODO - Generalize this and SpellNeedsTargets... perhaps it should just be under ActionNeedsTargets...
     public bool ActivatedAbilityNeedsTargets(CardGame cardGame, Player player, CardInstance cardWithAbility)
     {
-        return typesThatDontNeedTargets.Contains(cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().AbilityEffect.TargetType) == false;
+        var targetsFromEffects = cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType);
+        return targetsFromEffects.Where(te => typesThatDontNeedTargets.Contains(te) == false).Count() > 0;
     }
 
     private List<CardGameEntity> GetValidUnitTargets(CardGame cardGame, Player player)
@@ -112,7 +112,7 @@ public class DefaultTargetSystem : ITargetSystem
 
     public List<CardGameEntity> GetValidAbilityTargets(CardGame cardGame, Player player, CardInstance cardWithAbility)
     {
-        var effectTargets = new List<TargetType> { cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().AbilityEffect.TargetType }; //for compatibility purposes. 
+        var effectTargets = cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType); //for compatibility purposes. 
         if (!ActivatedAbilityNeedsTargets(cardGame, player, cardWithAbility))
         {
             return new List<CardGameEntity>();
