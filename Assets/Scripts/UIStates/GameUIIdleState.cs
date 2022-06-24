@@ -58,7 +58,7 @@ public class GameUIIdleState : IGameUIState
             _cardGame.Log("The card does not have an activated ability");
         }
 
-        var canActivateAbility = _cardGame.ActivatedAbilitySystem.CanActivateAbility(_cardGame, ActingPlayer, card);
+        var canActivateAbility = _cardGame.ActivatedAbilitySystem.CanActivateAbility(ActingPlayer, card);
 
         if (canActivateAbility)
         {

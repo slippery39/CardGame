@@ -96,7 +96,7 @@ public class CardGame
         _destroySystem = new DefaultDestroySystem();
         _resolvingSystem = new DefaultResolvingSystem();
         _continuousEffectSystem = new DefaultContinousEffectSystem();
-        _activatedAbilitySystem = new DefaultActivatedAbilitySystem();
+        _activatedAbilitySystem = new DefaultActivatedAbilitySystem(this);
         _discardSystem = new DefaultDiscardSystem();
 
         _cardGameLogger = new UnityCardGameLogger();

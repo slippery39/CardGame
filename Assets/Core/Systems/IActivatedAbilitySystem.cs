@@ -4,15 +4,21 @@ using System.Linq;
 
 public interface IActivatedAbilitySystem
 {
-    bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card);
-    public bool CanPayAdditionalCost(CardGame cardGame, Player player, CardInstance source, AdditionalCost cost);
-    public void ActivateAbililty(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
+    bool CanActivateAbility(Player player, CardInstance card);
+    public bool CanPayAdditionalCost(Player player, CardInstance source, AdditionalCost cost);
+    public void ActivateAbililty(Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
 }
 
 public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 {
     //Temporary method, testing stuff out to get this working better
-    public void ActivateAbililty(CardGame cardGame, Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo)
+    private CardGame cardGame;
+
+    public DefaultActivatedAbilitySystem(CardGame cardGames)
+    {
+        cardGame = cardGames;
+    }
+    public void ActivateAbililty(Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo)
     {
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
 
@@ -33,7 +39,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         //Pay any additional costs.
         if (activatedAbility.HasAdditionalCost())
         {
-            PayAdditionalCost(cardGame, player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
+            PayAdditionalCost(player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
         }
 
         //If its a once per turn ability, place an ability cooldown component on it.
@@ -53,17 +59,17 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         }
     }
 
-    private void PayAdditionalCost(CardGame cardGame, Player player, CardInstance card, AdditionalCost additionalCost, CostInfo costInfo)
+    private void PayAdditionalCost(Player player, CardInstance card, AdditionalCost additionalCost, CostInfo costInfo)
     {
         additionalCost.PayCost(cardGame, player, card, costInfo);
     }
 
-    public bool CanPayAdditionalCost(CardGame cardGame, Player player, CardInstance source, AdditionalCost cost)
+    public bool CanPayAdditionalCost(Player player, CardInstance source, AdditionalCost cost)
     {
         return cost.CanPay(cardGame, player, source);
     }
 
-    public bool CanActivateAbility(CardGame cardGame, Player player, CardInstance card)
+    public bool CanActivateAbility(Player player, CardInstance card)
     {
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
 
@@ -80,7 +86,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
         if (activatedAbility.HasAdditionalCost())
         {
-            canPayAdditionalCost = CanPayAdditionalCost(cardGame, player, card, activatedAbility.AdditionalCost);
+            canPayAdditionalCost = CanPayAdditionalCost(player, card, activatedAbility.AdditionalCost);
         }
 
         return canPayManaCost && canPayAdditionalCost;

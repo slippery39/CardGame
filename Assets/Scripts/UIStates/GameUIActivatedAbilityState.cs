@@ -107,7 +107,7 @@ public class GameUIActivatedAbilityState : IGameUIState
     public void ActivateAbility()
     {
         //TODO - this needs to change.
-        _cardGame.ActivatedAbilitySystem.ActivateAbililty(_cardGame, _actingPlayer, _cardWithAbility, new ActivateAbilityInfo
+        _cardGame.ActivatedAbilitySystem.ActivateAbililty(_actingPlayer, _cardWithAbility, new ActivateAbilityInfo
         {
             Targets = SelectedTargets,
             Choices = SelectedChoices
