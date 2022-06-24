@@ -71,7 +71,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     {
                         throw new Exception("Error : only players can draw cards");
                     }
-                    cardGame.CardDrawSystem.DrawCard(cardGame, (Player)entity);
+                    cardGame.CardDrawSystem.DrawCard((Player)entity);
                 }
             }
         }
@@ -110,7 +110,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 {
                     throw new Exception("Error : only players can be effected with the dark confidant effect");
                 }
-                var cardDrawn = cardGame.CardDrawSystem.DrawCard(cardGame, player);
+                var cardDrawn = cardGame.CardDrawSystem.DrawCard(player);
                 cardGame.DamageSystem.DealDamage(cardGame, source, player, new ManaAndEssence(cardDrawn.ManaCost).Mana);
                 cardGame.Log($@"Dark confidant effect : Drawn a card and you have lost {new ManaAndEssence(cardDrawn.ManaCost).Mana} life.");
             }
@@ -207,7 +207,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                return true;
            });
 
-            cardGame.CardDrawSystem.GrabRandomCardFromDeck(cardGame, player, fromDeckEffect.Filter);
+            cardGame.CardDrawSystem.GrabRandomCardFromDeck(player, fromDeckEffect.Filter);
 
 
         }

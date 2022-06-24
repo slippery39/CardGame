@@ -79,8 +79,6 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
                 return true;
 
             }).ToList();
-
-            var i = 0;
         }
 
         //Pump Effects don't need any additional special processing.

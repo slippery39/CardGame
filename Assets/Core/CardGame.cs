@@ -86,7 +86,7 @@ public class CardGame
         _zoneChangeSystem = new DefaultZoneChangeSystem();
         _stateBasedEffectSystem = new DefaultStateBasedEffectSystem();
         _unitPumpSystem = new DefaultUnitPumpSystem();
-        _cardDrawSystem = new DefaultCardDrawSystem();
+        _cardDrawSystem = new DefaultCardDrawSystem(this);
         _manaSystem = new DefaultManaSystem();
         _unitSummoningSystem = new DefaultUnitSummoningSystem();
         _targetSystem = new DefaultTargetSystem();
@@ -123,8 +123,8 @@ public class CardGame
         AddRandomCardsToDeck();
 
         //Need to use the card draw system to draw the opening hand.
-        _cardDrawSystem.DrawOpeningHand(this, Player1);
-        _cardDrawSystem.DrawOpeningHand(this, Player2);
+        _cardDrawSystem.DrawOpeningHand(Player1);
+        _cardDrawSystem.DrawOpeningHand(Player2);
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)

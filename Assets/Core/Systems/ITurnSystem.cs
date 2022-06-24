@@ -51,7 +51,7 @@ public class DefaultTurnSystem : ITurnSystem
         //Active Player Gains A Mana - not anymore.
         //cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
         //Active Player draws a card
-        cardGame.CardDrawSystem.DrawCard(cardGame, cardGame.ActivePlayer);
+        cardGame.CardDrawSystem.DrawCard(cardGame.ActivePlayer);
     }
 
     public void EndTurn(CardGame cardGame)

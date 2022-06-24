@@ -71,7 +71,7 @@ public class UIGameController : MonoBehaviour
             //Testing card drawing
             if (Input.GetKeyDown(KeyCode.D))
             {
-                _cardGame.CardDrawSystem.DrawCard(_cardGame, _cardGame.ActivePlayer);
+                _cardGame.CardDrawSystem.DrawCard(_cardGame.ActivePlayer);
             }
             if (Input.GetKeyDown(KeyCode.M))
             {

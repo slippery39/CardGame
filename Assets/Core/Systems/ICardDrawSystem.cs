@@ -2,18 +2,25 @@
 
 public interface ICardDrawSystem
 {
-    CardInstance DrawCard(CardGame cardGame, Player player);
-    void DrawOpeningHand(CardGame cardGame, Player player);
-    void GrabRandomCardFromDeck(CardGame cardGame, Player player, CardFilter filter);
+    CardInstance DrawCard(Player player);
+    void DrawOpeningHand(Player player);
+    void GrabRandomCardFromDeck(Player player, CardFilter filter);
 }
 
 
 public class DefaultCardDrawSystem : ICardDrawSystem
 {
 
+    private CardGame cardGame;
+
+    public DefaultCardDrawSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+
     //TODO - What happens if we have too many cards in our hand?
     //TODO - What happens if we draw a card with no cards left in our deck?
-    public CardInstance DrawCard(CardGame cardGame, Player player)
+    public CardInstance DrawCard(Player player)
     {
         if (player.Deck.Cards.Count > 0)
         {
@@ -24,7 +31,7 @@ public class DefaultCardDrawSystem : ICardDrawSystem
         return null;
     }
 
-    public void DrawOpeningHand(CardGame cardGame, Player player)
+    public void DrawOpeningHand(Player player)
     {
         int cardsToDraw = 3;
         int manaToDraw = 3;
@@ -49,7 +56,7 @@ public class DefaultCardDrawSystem : ICardDrawSystem
         }
     }
 
-    public void GrabRandomCardFromDeck(CardGame cardGame, Player player, CardFilter filter)
+    public void GrabRandomCardFromDeck(Player player, CardFilter filter)
     {
         var validCardsToGet = player.Deck.Cards.Where(card =>
         {
