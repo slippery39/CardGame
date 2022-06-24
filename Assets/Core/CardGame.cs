@@ -79,25 +79,25 @@ public class CardGame
 
     public CardGame()
     {
-        _battleSystem = new DefaultBattleSystem();
-        _damageSystem = new DefaultDamageSystem();
-        _healingSystem = new DefaultHealingSystem();
-        _spellCastingSystem = new DefaultSpellCastingSystem();
-        _zoneChangeSystem = new DefaultZoneChangeSystem();
-        _stateBasedEffectSystem = new DefaultStateBasedEffectSystem();
-        _unitPumpSystem = new DefaultUnitPumpSystem();
+        _battleSystem = new DefaultBattleSystem(this);
+        _damageSystem = new DefaultDamageSystem(this);
+        _healingSystem = new DefaultHealingSystem(this);
+        _spellCastingSystem = new DefaultSpellCastingSystem(this);
+        _zoneChangeSystem = new DefaultZoneChangeSystem(this);
+        _stateBasedEffectSystem = new DefaultStateBasedEffectSystem(this);
+        _unitPumpSystem = new DefaultUnitPumpSystem(this);
         _cardDrawSystem = new DefaultCardDrawSystem(this);
-        _manaSystem = new DefaultManaSystem();
-        _unitSummoningSystem = new DefaultUnitSummoningSystem();
-        _targetSystem = new DefaultTargetSystem();
-        _effectsProcessor = new DefaultEffectsProcessor();
-        _turnSystem = new DefaultTurnSystem();
-        _sacrificeSystem = new DefaultSacrificeSystem();
-        _destroySystem = new DefaultDestroySystem();
-        _resolvingSystem = new DefaultResolvingSystem();
-        _continuousEffectSystem = new DefaultContinousEffectSystem();
+        _manaSystem = new DefaultManaSystem(this);
+        _unitSummoningSystem = new DefaultUnitSummoningSystem(this);
+        _targetSystem = new DefaultTargetSystem(this);
+        _effectsProcessor = new DefaultEffectsProcessor(this);
+        _turnSystem = new DefaultTurnSystem(this);
+        _sacrificeSystem = new DefaultSacrificeSystem(this);
+        _destroySystem = new DefaultDestroySystem(this);
+        _resolvingSystem = new DefaultResolvingSystem(this);
+        _continuousEffectSystem = new DefaultContinousEffectSystem(this);
         _activatedAbilitySystem = new DefaultActivatedAbilitySystem(this);
-        _discardSystem = new DefaultDiscardSystem();
+        _discardSystem = new DefaultDiscardSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -161,7 +161,7 @@ public class CardGame
 
             foreach (var ab in abilities)
             {
-                ResolvingSystem.Add(this, ab, unit);
+                ResolvingSystem.Add(ab, unit);
             }
         }
     }
@@ -187,10 +187,10 @@ public class CardGame
 
     public void NextTurn()
     {
-        _turnSystem.EndTurn(this);
-        _stateBasedEffectSystem.CheckStateBasedEffects(this);
-        _turnSystem.StartTurn(this);
-        _stateBasedEffectSystem.CheckStateBasedEffects(this);
+        _turnSystem.EndTurn();
+        _stateBasedEffectSystem.CheckStateBasedEffects();
+        _turnSystem.StartTurn();
+        _stateBasedEffectSystem.CheckStateBasedEffects();
 
     }
 
@@ -215,7 +215,7 @@ public class CardGame
 
         //For now we are just handling discard choices....
         //In the future we might have other choices, like choosing a creature to sacrifice or perhaps some other choice like choosing a type to destroy?
-        DiscardSystem.Discard(this, ActivePlayer, entitiesSelected);
+        DiscardSystem.Discard(ActivePlayer, entitiesSelected);
 
         CurrentGameState = GameState.WaitingForAction;
     }
@@ -236,31 +236,31 @@ public class CardGame
 
         if (cardFromHand.CurrentCardData is ManaCardData)
         {
-            if (!ManaSystem.CanPlayManaCard(this, player, cardFromHand))
+            if (!ManaSystem.CanPlayManaCard(player, cardFromHand))
             {
                 Log("$Cannot play mana");
                 return;
             }
 
             //var manaCard = (ManaCardData)cardFromHand.CurrentCardData;
-            ManaSystem.PlayManaCard(this, player, cardFromHand);
+            ManaSystem.PlayManaCard(player, cardFromHand);
         }
         if (cardFromHand.CurrentCardData is UnitCardData)
         {
-            if (!ManaSystem.CanPlayCard(this, player, cardFromHand))
+            if (!ManaSystem.CanPlayCard(player, cardFromHand))
             {
                 Log($"Not enouugh mana to play {cardFromHand.Name}");
                 return;
             }
-            var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
+            var validTargets = _targetSystem.GetValidTargets(player, cardFromHand);
 
             var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
 
             if (targetAsEntity != null)
             {
-                ManaSystem.SpendManaAndEssence(this, player, cardFromHand.ManaCost);
-                ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
-                _stateBasedEffectSystem.CheckStateBasedEffects(this);
+                ManaSystem.SpendManaAndEssence(player, cardFromHand.ManaCost);
+                ResolvingSystem.Add(cardFromHand, targetAsEntity);
+                _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             else
             {
@@ -270,23 +270,23 @@ public class CardGame
         }
         else if (cardFromHand.CurrentCardData is SpellCardData)
         {
-            if (!_targetSystem.SpellNeedsTargets(this, player, cardFromHand) && ManaSystem.CanPlayCard(this, player, cardFromHand))
+            if (!_targetSystem.SpellNeedsTargets(player, cardFromHand) && ManaSystem.CanPlayCard(player, cardFromHand))
             {
-                ManaSystem.SpendManaAndEssence(this, player, cardFromHand.ManaCost);
-                ResolvingSystem.Add(this, cardFromHand, null);
-                _stateBasedEffectSystem.CheckStateBasedEffects(this);
+                ManaSystem.SpendManaAndEssence(player, cardFromHand.ManaCost);
+                ResolvingSystem.Add(cardFromHand, null);
+                _stateBasedEffectSystem.CheckStateBasedEffects();
             }
-            else if (ManaSystem.CanPlayCard(this, player, cardFromHand))
+            else if (ManaSystem.CanPlayCard(player, cardFromHand))
             {
-                var validTargets = _targetSystem.GetValidTargets(this, player, cardFromHand);
+                var validTargets = _targetSystem.GetValidTargets(player, cardFromHand);
 
                 var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
 
                 if (targetAsEntity != null)
                 {
-                    ManaSystem.SpendManaAndEssence(this, player, cardFromHand.ManaCost);
-                    ResolvingSystem.Add(this, cardFromHand, targetAsEntity);
-                    _stateBasedEffectSystem.CheckStateBasedEffects(this);
+                    ManaSystem.SpendManaAndEssence(player, cardFromHand.ManaCost);
+                    ResolvingSystem.Add(cardFromHand, targetAsEntity);
+                    _stateBasedEffectSystem.CheckStateBasedEffects();
                 }
             }
             else

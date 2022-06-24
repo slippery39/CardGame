@@ -4,8 +4,8 @@ using System.Linq;
 public interface ITurnSystem
 {
     int TurnId { get; set; }
-    void StartTurn(CardGame cardGame);
-    void EndTurn(CardGame cardGame);
+    void StartTurn();
+    void EndTurn();
 }
 
 //Not in use right now, but keep in mind these phases as we add more functionality.
@@ -21,11 +21,14 @@ public class DefaultTurnSystem : ITurnSystem
 {
     public int TurnId { get; set; }
 
-    public DefaultTurnSystem()
+    private CardGame cardGame;
+
+    public DefaultTurnSystem(CardGame cardGame)
     {
         TurnId = 1;
+        this.cardGame = cardGame;
     }
-    public void StartTurn(CardGame cardGame)
+    public void StartTurn()
     {
         //Reset any summoning sick units
         var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
@@ -47,17 +50,17 @@ public class DefaultTurnSystem : ITurnSystem
 
         cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnStart);
         //Reset any spent mana
-        cardGame.ManaSystem.ResetManaAndEssence(cardGame, cardGame.ActivePlayer);
+        cardGame.ManaSystem.ResetManaAndEssence(cardGame.ActivePlayer);
         //Active Player Gains A Mana - not anymore.
         //cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
         //Active Player draws a card
         cardGame.CardDrawSystem.DrawCard(cardGame.ActivePlayer);
     }
 
-    public void EndTurn(CardGame cardGame)
+    public void EndTurn()
     {
         //Execute our battles:
-        cardGame.BattleSystem.ExecuteBattles(cardGame);
+        cardGame.BattleSystem.ExecuteBattles();
 
 
         var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);

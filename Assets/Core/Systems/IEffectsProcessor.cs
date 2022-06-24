@@ -6,21 +6,27 @@ using System.Threading.Tasks;
 
 public interface IEffectsProcessor
 {
-    void ApplyEffect(CardGame cardGame, Player player, CardInstance source, Effect effects, List<CardGameEntity> targets);
-    void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets);
+    void ApplyEffect(Player player, CardInstance source, Effect effects, List<CardGameEntity> targets);
+    void ApplyEffects(Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets);
 }
 
 
 public class DefaultEffectsProcessor : IEffectsProcessor
 {
-    public void ApplyEffect(CardGame cardGame, Player player, CardInstance source, Effect effect, List<CardGameEntity> targets)
+    private CardGame cardGame;
+
+    public DefaultEffectsProcessor(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void ApplyEffect(Player player, CardInstance source, Effect effect, List<CardGameEntity> targets)
     {
 
         
         List<CardGameEntity> entitiesToEffect;
         if (!cardGame.TargetSystem.EffectNeedsTargets(effect))
         {
-            entitiesToEffect = cardGame.TargetSystem.GetEntitiesToApplyEffect(cardGame, player, source, effect);
+            entitiesToEffect = cardGame.TargetSystem.GetEntitiesToApplyEffect(player, source, effect);
         }
         else
         {
@@ -34,7 +40,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         {
             foreach (var entity in entitiesToEffect)
             {
-                cardGame.DamageSystem.DealAbilityDamage(cardGame, (DamageEffect)effect, source, entity);
+                cardGame.DamageSystem.DealAbilityDamage((DamageEffect)effect, source, entity);
             }
         }
         if (effect is LifeGainEffect)
@@ -45,7 +51,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 {
                     throw new Exception("Error: Only players can be healed via a life gain effect");
                 }
-                cardGame.HealingSystem.HealPlayer(cardGame, (Player)entity, ((LifeGainEffect)effect).Amount);
+                cardGame.HealingSystem.HealPlayer((Player)entity, ((LifeGainEffect)effect).Amount);
             }
         }
         if (effect is PumpUnitEffect)
@@ -57,7 +63,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     throw new Exception("Error: only card instances can be pumped");
                 }
 
-                cardGame.UnitPumpSystem.PumpUnit(cardGame, (CardInstance)entity, (PumpUnitEffect)effect);
+                cardGame.UnitPumpSystem.PumpUnit((CardInstance)entity, (PumpUnitEffect)effect);
             }
         }
         if (effect is DrawCardEffect)
@@ -85,8 +91,8 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 {
                     throw new Exception("Error : only players can gain man");
                 }
-                cardGame.ManaSystem.AddMana(cardGame, (Player)entity, ability.Amount);
-                cardGame.ManaSystem.AddEssence(cardGame, (Player)entity, ability.ManaType, ability.Amount);
+                cardGame.ManaSystem.AddMana((Player)entity, ability.Amount);
+                cardGame.ManaSystem.AddEssence((Player)entity, ability.ManaType, ability.Amount);
             }
         }
         if (effect is AddTempManaEffect)
@@ -99,7 +105,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 {
                     throw new Exception("Error : only players can gain man");
                 }
-                cardGame.ManaSystem.AddTemporaryManaAndEssence(cardGame, (Player)entity, ability.ManaType, ability.Amount);
+                cardGame.ManaSystem.AddTemporaryManaAndEssence((Player)entity, ability.ManaType, ability.Amount);
             }
         }
         if (effect is DarkConfidantEffect)
@@ -111,7 +117,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     throw new Exception("Error : only players can be effected with the dark confidant effect");
                 }
                 var cardDrawn = cardGame.CardDrawSystem.DrawCard(player);
-                cardGame.DamageSystem.DealDamage(cardGame, source, player, new ManaAndEssence(cardDrawn.ManaCost).Mana);
+                cardGame.DamageSystem.DealDamage(source, player, new ManaAndEssence(cardDrawn.ManaCost).Mana);
                 cardGame.Log($@"Dark confidant effect : Drawn a card and you have lost {new ManaAndEssence(cardDrawn.ManaCost).Mana} life.");
             }
         }
@@ -124,7 +130,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     throw new Exception("Error : only units can be effected with the sacrifice self effect");
                 }
                 var card = (CardInstance)entity;
-                cardGame.SacrificeSystem.SacrificeUnit(cardGame, player, card);
+                cardGame.SacrificeSystem.SacrificeUnit(player, card);
             }
         }
         if (effect is TransformEffect)
@@ -151,7 +157,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 }
 
                 var card = (CardInstance)entity;
-                cardGame.DestroySystem.DestroyUnit(cardGame, source, card);
+                cardGame.DestroySystem.DestroyUnit(source, card);
             }
         }
         if (effect is AddTempAbilityEffect)
@@ -188,7 +194,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         if (effect is GoblinPiledriverEffect)
         {
             var goblinsInPlay = player.Lanes.Where(l => l.IsEmpty() == false).Select(l => l.UnitInLane).Where(u => u != source && u.CreatureType == "Goblin").Count();
-            cardGame.UnitPumpSystem.PumpUnit(cardGame, source, new PumpUnitEffect { Power = 2 * goblinsInPlay, Toughness = 0 });
+            cardGame.UnitPumpSystem.PumpUnit(source, new PumpUnitEffect { Power = 2 * goblinsInPlay, Toughness = 0 });
         }
 
         if (effect is GetRandomCardFromDeckEffect)
@@ -235,7 +241,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
             {
                 validCardsToGet.ToList().ForEach(card =>
                 {
-                    cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.Hand);
+                    cardGame.ZoneChangeSystem.MoveToZone(card, player.Hand);
                 });
             }
         }
@@ -252,14 +258,14 @@ public class DefaultEffectsProcessor : IEffectsProcessor
             {
                 foreach (var card in validCardsToDiscard)
                 {
-                    cardGame.DiscardSystem.Discard(cardGame, player, card);
+                    cardGame.DiscardSystem.Discard(player, card);
                 }
             }
             else
             {
                 foreach (var card in validCardsToDiscard.Randomize().Take(discardCardEffect.Amount))
                 {
-                    cardGame.DiscardSystem.Discard(cardGame, player, card);
+                    cardGame.DiscardSystem.Discard(player, card);
                 }
             }
         }
@@ -267,14 +273,14 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         if (effect is CompoundEffect)
         {
             var compoundEffect = effect as CompoundEffect;
-            this.ApplyEffects(cardGame, player, source, compoundEffect.Effects, targets);
+            this.ApplyEffects(player, source, compoundEffect.Effects, targets);
         }
     }
-    public void ApplyEffects(CardGame cardGame, Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
+    public void ApplyEffects(Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {
         foreach (var effect in effects)
         {
-            ApplyEffect(cardGame, player, source, effect, targets);
+            ApplyEffect(player, source, effect, targets);
         }
     }
 }

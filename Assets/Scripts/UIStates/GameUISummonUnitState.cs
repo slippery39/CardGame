@@ -21,7 +21,7 @@ public class GameUISummonUnitState : IGameUIState
 
     public void OnApply()
     {
-        var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
+        var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
         foreach (UIGameEntity entity in _stateMachine.GameController.GetUIEntities())
         {
             if (validLaneTargets.Contains(entity.EntityId))
@@ -55,7 +55,7 @@ public class GameUISummonUnitState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
-        var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
+        var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
 
         if (!validLaneTargets.Contains(entityId))
         {

@@ -7,14 +7,20 @@ using UnityEngine;
 
 public class DefaultDamageSystem : IDamageSystem
 {
-    public void DealAbilityDamage(CardGame cardGame, DamageEffect abilitySource, CardInstance damagingCard, CardGameEntity damagedEntity)
+    private CardGame cardGame;
+
+    public DefaultDamageSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void DealAbilityDamage(DamageEffect abilitySource, CardInstance damagingCard, CardGameEntity damagedEntity)
     {
         DealDamage(damagedEntity, abilitySource.Amount);
         cardGame.Log($"{damagingCard.Name} dealt {abilitySource.Amount} damage to {damagedEntity.Name}!");
-        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 
-    public void DealCombatDamageToPlayer(CardGame cardGame, CardInstance damagingUnit, Player damagedPlayer)
+    public void DealCombatDamageToPlayer(CardInstance damagingUnit, Player damagedPlayer)
     {
         int damage = damagingUnit.Power;
         damagedPlayer.Health -= damagingUnit.Power;
@@ -33,7 +39,7 @@ public class DefaultDamageSystem : IDamageSystem
             ability.OnDamageDealt(cardGame, damagingUnit, null, damagingUnit.Power);
         }
     }
-    public void DealCombatDamageToUnits(CardGame cardGame, CardInstance attackingUnit, CardInstance defendingUnit)
+    public void DealCombatDamageToUnits(CardInstance attackingUnit, CardInstance defendingUnit)
     {
         var attackingDamage = attackingUnit.Power;
         var defendingDamage = defendingUnit.Power;
@@ -65,7 +71,7 @@ public class DefaultDamageSystem : IDamageSystem
             cardGame.Log($"{attackingUnit.Name} took {defendingDamage} combat damage");
         }
 
-        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
 
         //Attacker Damage Dealt Abilities
         var attackingAbilities = attackingUnit.GetAbilities<IOnDamageDealt>();
@@ -82,7 +88,7 @@ public class DefaultDamageSystem : IDamageSystem
         }
     }
 
-    public void DealDamage(CardGame cardGame, CardGameEntity source, CardGameEntity target, int amount)
+    public void DealDamage(CardGameEntity source, CardGameEntity target, int amount)
     {
         DealDamage(target, amount);
     }

@@ -1,14 +1,20 @@
 ﻿public interface IDestroySystem
 {
-    void DestroyUnit(CardGame cardGame, CardGameEntity source, CardInstance target);
+    void DestroyUnit(CardGameEntity source, CardInstance target);
 }
 
 
 public class DefaultDestroySystem : IDestroySystem
 {
-    public void DestroyUnit(CardGame cardGame, CardGameEntity source, CardInstance target)
+    private CardGame cardGame;
+
+    public DefaultDestroySystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void DestroyUnit(CardGameEntity source, CardInstance target)
     {
         var owner = cardGame.GetOwnerOfCard(target);
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame, target, owner.DiscardPile);
+        cardGame.ZoneChangeSystem.MoveToZone(target, owner.DiscardPile);
     }
 }                                                      

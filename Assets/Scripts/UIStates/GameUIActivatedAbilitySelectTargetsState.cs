@@ -36,7 +36,7 @@ internal class GameUIActivatedAbilitySelectTargetsState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
-        var validTargets = _cardGame.TargetSystem.GetValidAbilityTargets(_cardGame, _actingPlayer, _cardWithAbility); ;
+        var validTargets = _cardGame.TargetSystem.GetValidAbilityTargets(_actingPlayer, _cardWithAbility); ;
 
         if (!validTargets.Select(e => e.EntityId).Contains(entityId))
         {
@@ -70,7 +70,6 @@ internal class GameUIActivatedAbilitySelectTargetsState : IGameUIState
     public void OnApply()
     {
         var validTargets = _cardGame.TargetSystem.GetValidAbilityTargets(
-        _cardGame,
         _actingPlayer,
         _cardWithAbility)
         .Select(e => e.EntityId);

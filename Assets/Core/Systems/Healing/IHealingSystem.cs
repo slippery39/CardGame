@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 public interface IHealingSystem
 {
-    void HealPlayer(CardGame cardGame, Player playerToHeal,int amount);
+    void HealPlayer(Player playerToHeal,int amount);
 }

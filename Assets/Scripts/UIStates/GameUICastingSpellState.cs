@@ -33,7 +33,7 @@ public class GameUICastingSpellState : IGameUIState
 
     public void OnApply()
     {
-        var validTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _spellToCast).Select(e => e.EntityId);
+        var validTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _spellToCast).Select(e => e.EntityId);
 
         if (validTargets.Count() == 0)
         {
@@ -62,7 +62,7 @@ public class GameUICastingSpellState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
-        var validTargets = _cardGame.TargetSystem.GetValidTargets(_cardGame, _actingPlayer, _spellToCast).Select(e => e.EntityId);
+        var validTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _spellToCast).Select(e => e.EntityId);
 
         if (!validTargets.Contains(entityId))
         {

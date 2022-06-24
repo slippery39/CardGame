@@ -1,6 +1,12 @@
 ﻿public class DefaultHealingSystem : IHealingSystem
 {
-    public void HealPlayer(CardGame cardGame, Player playerToHeal,int amount)
+    private CardGame cardGame;
+
+    public DefaultHealingSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void HealPlayer(Player playerToHeal,int amount)
     {
         playerToHeal.Health += amount;
     }

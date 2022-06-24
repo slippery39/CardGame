@@ -7,13 +7,19 @@ using UnityEngine;
 
 public interface IZoneChangeSystem
 {
-    public void MoveToZone(CardGame cardGame, CardInstance card, IZone zoneTo);
+    public void MoveToZone(CardInstance card, IZone zoneTo);
 }
 
 
 public class DefaultZoneChangeSystem : IZoneChangeSystem
 {
-    public void MoveToZone(CardGame cardGame, CardInstance card, IZone zoneTo)
+    private CardGame cardGame;
+
+    public DefaultZoneChangeSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void MoveToZone(CardInstance card, IZone zoneTo)
     {
         var currentZone = cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();
 
@@ -45,16 +51,16 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         //Apply Death Triggers
         if (currentZone is Lane && zoneTo is DiscardPile)
         {
-            OnDeathTriggers(cardGame, card);
+            OnDeathTriggers(card);
         }
     }
 
-    private void OnDeathTriggers(CardGame cardGame, CardInstance card)
+    private void OnDeathTriggers(CardInstance card)
     {
         card.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfDies).ToList().ForEach(ab =>
         {
             //fire the trigger... 
-            cardGame.EffectsProcessor.ApplyEffects(cardGame, cardGame.GetOwnerOfCard(card), card, ab.Effects, new List<CardGameEntity>());
+            cardGame.EffectsProcessor.ApplyEffects(cardGame.GetOwnerOfCard(card), card, ab.Effects, new List<CardGameEntity>());
         });
     }
 }

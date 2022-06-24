@@ -2,22 +2,28 @@
 
 public interface IDiscardSystem
 {
-    void Discard(CardGame cardGame, Player player, CardInstance card);
-    void Discard(CardGame cardGame, Player player, List<CardInstance> cards);
+    void Discard(Player player, CardInstance card);
+    void Discard(Player player, List<CardInstance> cards);
 }
 
 public class DefaultDiscardSystem : IDiscardSystem
 {
-    public void Discard(CardGame cardGame, Player player, CardInstance card)
+    private CardGame cardGame;
+
+    public DefaultDiscardSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void Discard(Player player, CardInstance card)
     { 
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.DiscardPile);
+        cardGame.ZoneChangeSystem.MoveToZone(card, player.DiscardPile);
     }
 
-    public void Discard(CardGame cardGame, Player player, List<CardInstance> cards)
+    public void Discard(Player player, List<CardInstance> cards)
     {
         foreach(var card in cards)
         {
-            Discard(cardGame, player, card);
+            Discard(player, card);
         }
     }
 }

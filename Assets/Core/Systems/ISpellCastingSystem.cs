@@ -3,19 +3,25 @@ using System.Collections.Generic;
 
 public interface ISpellCastingSystem
 {
-    public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard, List<CardGameEntity> targets);
-    public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard, CardGameEntity target);
-    public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard);
+    public void CastSpell(Player player, CardInstance spellCard, List<CardGameEntity> targets);
+    public void CastSpell(Player player, CardInstance spellCard, CardGameEntity target);
+    public void CastSpell(Player player, CardInstance spellCard);
 }
 
 public class DefaultSpellCastingSystem : ISpellCastingSystem
 {
-    public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard, CardGameEntity target)
+    private CardGame cardGame;
+
+    public DefaultSpellCastingSystem(CardGame cardGame)
     {
-        CastSpell(cardGame, player, spellCard, new List<CardGameEntity> { target });
+        this.cardGame = cardGame;
+    }
+    public void CastSpell(Player player, CardInstance spellCard, CardGameEntity target)
+    {
+        CastSpell(player, spellCard, new List<CardGameEntity> { target });
     }
 
-    public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard, List<CardGameEntity> targets)
+    public void CastSpell(Player player, CardInstance spellCard, List<CardGameEntity> targets)
     {
         var effects = ((SpellCardData)spellCard.CurrentCardData).Effects;
 
@@ -24,16 +30,16 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
             throw new Exception("Multiple Targets not supported for casting spells yet");
         }
 
-        cardGame.EffectsProcessor.ApplyEffects(cardGame, player, spellCard, effects, targets);
+        cardGame.EffectsProcessor.ApplyEffects(player, spellCard, effects, targets);
 
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame, spellCard, cardGame.GetOwnerOfCard(spellCard).DiscardPile);
+        cardGame.ZoneChangeSystem.MoveToZone(spellCard, cardGame.GetOwnerOfCard(spellCard).DiscardPile);
     }
-    public void CastSpell(CardGame cardGame, Player player, CardInstance spellCard)
+    public void CastSpell(Player player, CardInstance spellCard)
     {
-        if (cardGame.TargetSystem.SpellNeedsTargets(cardGame, player, spellCard))
+        if (cardGame.TargetSystem.SpellNeedsTargets(player, spellCard))
         {
             throw new Exception("Error: The spell that is being cast needs targets but is calling the CastSpell method without targets... make sure it is using the correct overloaded CastSpell method");
         }
-        CastSpell(cardGame, player, spellCard, new List<CardGameEntity>());
+        CastSpell(player, spellCard, new List<CardGameEntity>());
     }
 }

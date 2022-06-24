@@ -1,11 +1,17 @@
 ﻿public interface IUnitPumpSystem
 {
-    void PumpUnit(CardGame cardGame, CardInstance unit, PumpUnitEffect pumpAbility);
+    void PumpUnit(CardInstance unit, PumpUnitEffect pumpAbility);
 }
 
 public class DefaultUnitPumpSystem: IUnitPumpSystem
 {
-    public void PumpUnit(CardGame cardGame, CardInstance unit, PumpUnitEffect pumpAbility)
+    private CardGame cardGame;
+
+    public DefaultUnitPumpSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void PumpUnit(CardInstance unit, PumpUnitEffect pumpAbility)
     {
         unit.AddModification(new ModAddToPowerToughness
         {

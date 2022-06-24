@@ -3,16 +3,21 @@ using System.Linq;
 
 public interface IContinuousEffectSystem
 {
-    void Apply(CardGame cardGame, CardInstance source, StaticAbility sourceAbility);
-    void RemoveContinousEffects(CardGame cardGame, CardInstance effectSource);
+    void Apply(CardInstance source, StaticAbility sourceAbility);
+    void RemoveContinousEffects(CardInstance effectSource);
 }
 
 public class DefaultContinousEffectSystem : IContinuousEffectSystem
 {
-    public void Apply(CardGame cardGame, CardInstance source, StaticAbility sourceAbility)
+    private CardGame cardGame;
+    public DefaultContinousEffectSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void Apply(CardInstance source, StaticAbility sourceAbility)
     {
         //get the entities that the ability affects.
-        var unitsToApply = GetUnitsToApplyAbility(cardGame, source, sourceAbility);
+        var unitsToApply = GetUnitsToApplyAbility(source, sourceAbility);
 
         foreach (var unit in unitsToApply)
         {
@@ -84,7 +89,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         //Pump Effects don't need any additional special processing.
     }
 
-    public void RemoveContinousEffects(CardGame cardGame, CardInstance effectSource)
+    public void RemoveContinousEffects(CardInstance effectSource)
     {
         //Remove all continuous effects from a source
         foreach (var unit in cardGame.GetUnitsInPlay())
@@ -119,7 +124,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
     }
 
     //TODO - fix this.
-    private List<CardInstance> GetUnitsToApplyAbility(CardGame cardGame, CardInstance source, StaticAbility sourceAbility)
+    private List<CardInstance> GetUnitsToApplyAbility(CardInstance source, StaticAbility sourceAbility)
     {
         var filter = sourceAbility.EntitiesAffectedInfo.Filter;
         var entitiesAffected = sourceAbility.EntitiesAffectedInfo.EntitiesAffected;

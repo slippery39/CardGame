@@ -51,11 +51,11 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         //Check if it has targets or not to call the appropriate method.
         if (activatedAbility.HasTargets())
         {
-            cardGame.ResolvingSystem.Add(cardGame, activatedAbility, card, activateAbilityInfo.Targets.First());
+            cardGame.ResolvingSystem.Add(activatedAbility, card, activateAbilityInfo.Targets.First());
         }
         else
         {
-            cardGame.ResolvingSystem.Add(cardGame, activatedAbility, card);
+            cardGame.ResolvingSystem.Add(activatedAbility, card);
         }
     }
 
@@ -81,7 +81,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
         if (activatedAbility == null) { return false; }
 
-        var canPayManaCost = cardGame.ManaSystem.CanPayManaCost(cardGame, player, activatedAbility.ManaCost);
+        var canPayManaCost = cardGame.ManaSystem.CanPayManaCost(player, activatedAbility.ManaCost);
         var canPayAdditionalCost = true;
 
         if (activatedAbility.HasAdditionalCost())

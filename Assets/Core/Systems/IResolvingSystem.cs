@@ -4,17 +4,19 @@ using System.Linq;
 
 public interface IResolvingSystem
 {
-    public void Add(CardGame cardGame, CardInstance cardInstance, CardGameEntity target);
+    public void Add( CardInstance cardInstance, CardGameEntity target);
     public IZone Stack { get; }
-    public void Add(CardGame cardGame, CardAbility ability, CardInstance source);
+    public void Add(CardAbility ability, CardInstance source);
 
-    public void Add(CardGame cardGame, CardAbility ability, CardInstance source, CardGameEntity target);
-    public void ResolveNext(CardGame cardGame);
+    public void Add( CardAbility ability, CardInstance source, CardGameEntity target);
+    public void ResolveNext();
 }
 
 
 public class ResolvingStack : IZone
 {
+    public CardGame cardGame;
+
     public string Name => "Stack";
 
     public List<CardInstance> Cards { get; set; }
@@ -39,26 +41,32 @@ public class ResolvingStack : IZone
 
 public class DefaultResolvingSystem : IResolvingSystem
 {
+    private CardGame cardGame;
+
     //Can hold card instances and abilities
     private List<ResolvingEntity> _internalStack = new List<ResolvingEntity>();
     //Can only hold card instances.
     private IZone stackZone = new ResolvingStack();
-
     public IZone Stack { get { return stackZone; } }
 
-    public void Add(CardGame cardGame, CardInstance cardInstance, CardGameEntity target)
+    public DefaultResolvingSystem(CardGame cardGame)
     {
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame, cardInstance, stackZone);
+        this.cardGame = cardGame;
+    }
+
+    public void Add(CardInstance cardInstance, CardGameEntity target)
+    {
+        cardGame.ZoneChangeSystem.MoveToZone(cardInstance, stackZone);
         //TODO - remove card instance from zone
         var resolvingCardInstance = new ResolvingCardInstance { CardInstance = cardInstance, Targets = new List<CardGameEntity> { target } };
         //remove the card instance from its zone
         _internalStack.Add(resolvingCardInstance);
 
         //Our abilities auto resolve.
-        this.ResolveNext(cardGame);
+        this.ResolveNext();
     }
 
-    public void Add(CardGame cardGame, CardAbility ability, CardInstance source)
+    public void Add(CardAbility ability, CardInstance source)
     {
         var resolvingAbility = new ResolvingAbility
         {
@@ -70,11 +78,11 @@ public class DefaultResolvingSystem : IResolvingSystem
         _internalStack.Add(resolvingAbility);
 
         //Our abilities auto resolve.
-        this.ResolveNext(cardGame);
+        this.ResolveNext();
     }
 
     //This is  very similar to the add aboce.
-    public void Add(CardGame cardGame, CardAbility ability, CardInstance source, CardGameEntity target)
+    public void Add(CardAbility ability, CardInstance source, CardGameEntity target)
     {
         var resolvingAbility = new ResolvingAbility
         {
@@ -87,10 +95,10 @@ public class DefaultResolvingSystem : IResolvingSystem
         _internalStack.Add(resolvingAbility);
 
         //Our abilities auto resolve.
-        this.ResolveNext(cardGame);
+        this.ResolveNext();
     }
 
-    public void ResolveNext(CardGame cardGame)
+    public void ResolveNext()
     {
         if (_internalStack.Count == 0)
         {
@@ -111,13 +119,13 @@ public class DefaultResolvingSystem : IResolvingSystem
                 case TriggeredAbility:
                     {
                         var triggeredAbility = (TriggeredAbility)resolvingAbility.Ability;
-                        cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, triggeredAbility.Effects, new List<CardGameEntity>());
+                        cardGame.EffectsProcessor.ApplyEffects(resolvingAbility.Owner, resolvingAbility.Source, triggeredAbility.Effects, new List<CardGameEntity>());
                         return;
                     }
                 case ActivatedAbility:
                     {
                         var activatedAbility = (ActivatedAbility)resolvingAbility.Ability;
-                        cardGame.EffectsProcessor.ApplyEffects(cardGame, resolvingAbility.Owner, resolvingAbility.Source, activatedAbility.Effects, resolvingAbility.Targets);
+                        cardGame.EffectsProcessor.ApplyEffects(resolvingAbility.Owner, resolvingAbility.Source, activatedAbility.Effects, resolvingAbility.Targets);
 
                         var player = cardGame.GetOwnerOfCard(resolvingAbility.Source);
 
@@ -143,7 +151,7 @@ public class DefaultResolvingSystem : IResolvingSystem
             if (resolvingCardInstance.CardInstance.CurrentCardData is UnitCardData)
             {
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
-                cardGame.UnitSummoningSystem.SummonUnit(cardGame, player, resolvingCardInstance.CardInstance, resolvingThing.Targets.First().EntityId);
+                cardGame.UnitSummoningSystem.SummonUnit(player, resolvingCardInstance.CardInstance, resolvingThing.Targets.First().EntityId);
 
             }
             //Handle the resolving of a spell
@@ -151,7 +159,7 @@ public class DefaultResolvingSystem : IResolvingSystem
             {
                 //if doesn't need a choice:
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
-                cardGame.SpellCastingSystem.CastSpell(cardGame, player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets);
+                cardGame.SpellCastingSystem.CastSpell(player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets);
 
                 var spellCardData = resolvingCardInstance.CardInstance.CurrentCardData as SpellCardData;
 
@@ -168,7 +176,7 @@ public class DefaultResolvingSystem : IResolvingSystem
             }
 
         }
-        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 }
 

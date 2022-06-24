@@ -7,13 +7,20 @@ using System.Threading.Tasks;
 
 public interface IStateBasedEffectSystem
 {
-    void CheckStateBasedEffects(CardGame cardGame);
+    void CheckStateBasedEffects();
 }
 
 
 public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
 {
-    public void CheckStateBasedEffects(CardGame cardGame)
+    private CardGame cardGame;
+
+    public DefaultStateBasedEffectSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+
+    public void CheckStateBasedEffects()
     {
         var units = cardGame.GetUnitsInPlay();
 
@@ -25,7 +32,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
             if (unit.Toughness <= 0)
             {
                 var owner = cardGame.GetOwnerOfCard(unit);
-                cardGame.ZoneChangeSystem.MoveToZone(cardGame, unit, owner.DiscardPile);
+                cardGame.ZoneChangeSystem.MoveToZone(unit, owner.DiscardPile);
             }
         }
 
@@ -51,7 +58,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
                     //TODO - IsInZone(ZoneType.Discard);
 
                     if (cardGame.IsInZone(unit, sAbility.ApplyWhenIn)){
-                        cardGame.ContinuousEffectSystem.Apply(cardGame, unit, sAbility);
+                        cardGame.ContinuousEffectSystem.Apply(unit, sAbility);
                     }
                 }
             }
@@ -88,7 +95,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
 
             foreach(var effect in continousEffectsToRemove)
             {
-                cardGame.ContinuousEffectSystem.RemoveContinousEffects(cardGame, effect.SourceCard);
+                cardGame.ContinuousEffectSystem.RemoveContinousEffects(effect.SourceCard);
             };          
 
 

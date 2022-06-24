@@ -109,7 +109,7 @@ public class SacrificeSelfAdditionalCost : AdditionalCost
             throw new Exception("Source should be a card instance for a SacrificeSelfAdditionalCost");
         }
 
-        cardGame.SacrificeSystem.SacrificeUnit(cardGame, player, sourceCard as CardInstance);
+        cardGame.SacrificeSystem.SacrificeUnit(player, sourceCard as CardInstance);
     }
 }
 
@@ -144,7 +144,7 @@ public class DiscardCardAdditionalCost : AdditionalCost
 
         foreach (var entity in cardsToDiscard)
         {
-            cardGame.ZoneChangeSystem.MoveToZone(cardGame, entity, player.DiscardPile);
+            cardGame.ZoneChangeSystem.MoveToZone(entity, player.DiscardPile);
         }
     }
     public override List<CardGameEntity> GetValidChoices(CardGame cardGame, Player player, CardGameEntity sourceEntity)
@@ -198,7 +198,7 @@ public class SacrificeCreatureAdditionalCost : AdditionalCost
 
         foreach (var entity in entitiesToSacrifice)
         {
-            cardGame.SacrificeSystem.SacrificeUnit(cardGame, player, entity);
+            cardGame.SacrificeSystem.SacrificeUnit(player, entity);
         }
     }
 

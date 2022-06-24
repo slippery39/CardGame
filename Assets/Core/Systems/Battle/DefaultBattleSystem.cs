@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class DefaultBattleSystem : IBattleSystem
 {
-    public void ExecuteBattles(CardGame cardGame)
+    private CardGame cardGame;
+
+    public DefaultBattleSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+    public void ExecuteBattles()
     {
         var attackingLanes = cardGame.ActivePlayer.Lanes;
         var defendingLanes = cardGame.InactivePlayer.Lanes;
@@ -33,7 +39,7 @@ public class DefaultBattleSystem : IBattleSystem
                 continue;
             }
 
-            else if (defendingLane.IsEmpty() || !DefenderCanBlock(cardGame, attackingLane, defendingLane))
+            else if (defendingLane.IsEmpty() || !DefenderCanBlock(attackingLane, defendingLane))
             {
                 //Attacking an empty lane trigger any on attack abilities
 
@@ -42,10 +48,10 @@ public class DefaultBattleSystem : IBattleSystem
                 var owner = cardGame.GetOwnerOfCard(attackingUnit);
                 foreach (var onAttackAb in onAttackAbilities)
                 {
-                    cardGame.EffectsProcessor.ApplyEffects(cardGame, owner, attackingUnit, onAttackAb.Effects, new List<CardGameEntity>());
+                    cardGame.EffectsProcessor.ApplyEffects(owner, attackingUnit, onAttackAb.Effects, new List<CardGameEntity>());
                 };
                 cardGame.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(i + 1)}");
-                DirectAttack(cardGame, attackingLane, defendingLane);
+                DirectAttack(attackingLane, defendingLane);
             }
             else
             {
@@ -56,36 +62,36 @@ public class DefaultBattleSystem : IBattleSystem
                 var owner = cardGame.GetOwnerOfCard(attackingUnit);
                 foreach (var onAttackAb in onAttackAbilities)
                 {
-                    cardGame.EffectsProcessor.ApplyEffects(cardGame, owner, attackingUnit, onAttackAb.Effects, new List<CardGameEntity>());
+                    cardGame.EffectsProcessor.ApplyEffects(owner, attackingUnit, onAttackAb.Effects, new List<CardGameEntity>());
                 };
                 cardGame.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(i + 1)}");
-                FightUnits(cardGame, attackingLane, defendingLane);
+                FightUnits(attackingLane, defendingLane);
             }
         }
     }
 
     #region Private Methods
 
-    private void DirectAttack(CardGame cardGame, Lane attackingLane, Lane defendingLane)
+    private void DirectAttack(Lane attackingLane, Lane defendingLane)
     {
         cardGame.Log($"{attackingLane.UnitInLane.Name} is attacking directly!");
         //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
-        cardGame.DamageSystem.DealCombatDamageToPlayer(cardGame, attackingLane.UnitInLane, cardGame.InactivePlayer);
+        cardGame.DamageSystem.DealCombatDamageToPlayer(attackingLane.UnitInLane, cardGame.InactivePlayer);
     }
 
-    private void FightUnits(CardGame cardGame, Lane attackingLane, Lane defendingLane)
+    private void FightUnits(Lane attackingLane, Lane defendingLane)
     {
         var attackingUnit = attackingLane.UnitInLane;
         var defendingUnit = defendingLane.UnitInLane;
 
         cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
         //Both lanes have units, they will attack eachother.
-        cardGame.DamageSystem.DealCombatDamageToUnits(cardGame, attackingUnit, defendingUnit);
-        cardGame.StateBasedEffectSystem.CheckStateBasedEffects(cardGame);
+        cardGame.DamageSystem.DealCombatDamageToUnits(attackingUnit, defendingUnit);
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 
     //Note - this method can be hooked into from Abilities.
-    private bool DefenderCanBlock(CardGame cardGame, Lane attackingLane, Lane defendingLane)
+    private bool DefenderCanBlock(Lane attackingLane, Lane defendingLane)
     {
         if (defendingLane.IsEmpty())
         {

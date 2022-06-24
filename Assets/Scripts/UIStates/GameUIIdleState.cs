@@ -30,15 +30,15 @@ public class GameUIIdleState : IGameUIState
         }
         else if (card.CurrentCardData is ManaCardData)
         {
-            if (_cardGame.ManaSystem.CanPlayManaCard(_cardGame, ActingPlayer, card))
+            if (_cardGame.ManaSystem.CanPlayManaCard(ActingPlayer, card))
             {
-                _cardGame.ManaSystem.PlayManaCard(_cardGame, ActingPlayer, card);
+                _cardGame.ManaSystem.PlayManaCard(ActingPlayer, card);
             }
         }
         else if (card.CurrentCardData is SpellCardData)
         {
             //TODO - need to update this.
-            if (_cardGame.TargetSystem.SpellNeedsTargets(_cardGame, ActingPlayer, card))
+            if (_cardGame.TargetSystem.SpellNeedsTargets(ActingPlayer, card))
             {
                 _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
             }

@@ -71,7 +71,7 @@ public class LifelinkAbility : CardAbility, IOnDamageDealt
         //Need a way to find out who owns which unit
         Player playerToGainLife = cardGame.GetOwnerOfCard(damagingUnit);
         cardGame.Log($"{playerToGainLife} gained {damage} life from {damagingUnit.Name}'s Lifelink!");
-        cardGame.HealingSystem.HealPlayer(cardGame, playerToGainLife, damage);
+        cardGame.HealingSystem.HealPlayer(playerToGainLife, damage);
     }
 }
 

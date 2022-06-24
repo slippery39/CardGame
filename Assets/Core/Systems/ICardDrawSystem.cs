@@ -25,7 +25,7 @@ public class DefaultCardDrawSystem : ICardDrawSystem
         if (player.Deck.Cards.Count > 0)
         {
             var card = player.Deck.GetTopCard();
-            cardGame.ZoneChangeSystem.MoveToZone(cardGame, card, player.Hand);
+            cardGame.ZoneChangeSystem.MoveToZone(card, player.Hand);
             return card;
         }
         return null;
@@ -46,13 +46,13 @@ public class DefaultCardDrawSystem : ICardDrawSystem
 
         for (int i = 0; i < manaToDraw; i++)
         {
-            cardGame.ZoneChangeSystem.MoveToZone(cardGame, manaCards.ToList()[i], player.Hand);
+            cardGame.ZoneChangeSystem.MoveToZone(manaCards.ToList()[i], player.Hand);
         }
 
 
         for (int i = 0; i < cardsToDraw; i++)
         {
-            cardGame.ZoneChangeSystem.MoveToZone(cardGame, nonManaCards.ToList()[i], player.Hand);
+            cardGame.ZoneChangeSystem.MoveToZone(nonManaCards.ToList()[i], player.Hand);
         }
     }
 
@@ -76,7 +76,7 @@ public class DefaultCardDrawSystem : ICardDrawSystem
         }
 
         cardGame.Log("Grabbed random card from deck");
-        cardGame.ZoneChangeSystem.MoveToZone(cardGame, validCardsToGet.Randomize().ToList()[0], player.Hand);
+        cardGame.ZoneChangeSystem.MoveToZone(validCardsToGet.Randomize().ToList()[0], player.Hand);
     }
 
 

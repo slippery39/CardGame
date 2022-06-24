@@ -4,12 +4,12 @@ using System.Linq;
 
 public interface ITargetSystem
 {
-    List<CardGameEntity> GetValidTargets(CardGame cardGame, Player player, CardInstance card);
-    List<CardGameEntity> GetValidAbilityTargets(CardGame cardGame, Player player, CardInstance card);
-    List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, CardGameEntity source, Effect effect);
-    bool SpellNeedsTargets(CardGame cardGame, Player player, CardInstance card);
+    List<CardGameEntity> GetValidTargets(Player player, CardInstance card);
+    List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance card);
+    List<CardGameEntity> GetEntitiesToApplyEffect(Player player, CardGameEntity source, Effect effect);
+    bool SpellNeedsTargets(Player player, CardInstance card);
     bool EffectNeedsTargets(Effect effect);
-    bool ActivatedAbilityNeedsTargets(CardGame cardGame, Player player, CardInstance cardWithAbility);
+    bool ActivatedAbilityNeedsTargets(Player player, CardInstance cardWithAbility);
 }
 
 public static class TargetHelper
@@ -28,7 +28,12 @@ public class DefaultTargetSystem : ITargetSystem
 {
 
     private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
+    private CardGame cardGame;
 
+    public DefaultTargetSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
     /// <summary>
     /// Gets the correct entities to apply an effect to when there is no manual targets.
     /// </summary>
@@ -37,7 +42,7 @@ public class DefaultTargetSystem : ITargetSystem
     /// <param name="effect">The effect that is being applied</param>
     /// <returns></returns>
     /// 
-    public List<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, CardGameEntity effectSource, Effect effect)
+    public List<CardGameEntity> GetEntitiesToApplyEffect(Player player, CardGameEntity effectSource, Effect effect)
     {
         switch (effect.TargetType)
         {
@@ -66,7 +71,7 @@ public class DefaultTargetSystem : ITargetSystem
         }
     }
 
-    public bool SpellNeedsTargets(CardGame cardGame, Player player, CardInstance card)
+    public bool SpellNeedsTargets(Player player, CardInstance card)
     {
         var spellCard = (SpellCardData)card.CurrentCardData;
         var spellTargetTypes = spellCard.Effects.Select(effect => effect.TargetType);
@@ -75,13 +80,13 @@ public class DefaultTargetSystem : ITargetSystem
     }
 
     //TODO - Generalize this and SpellNeedsTargets... perhaps it should just be under ActionNeedsTargets...
-    public bool ActivatedAbilityNeedsTargets(CardGame cardGame, Player player, CardInstance cardWithAbility)
+    public bool ActivatedAbilityNeedsTargets(Player player, CardInstance cardWithAbility)
     {
         var targetsFromEffects = cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType);
         return targetsFromEffects.Where(te => typesThatDontNeedTargets.Contains(te) == false).Count() > 0;
     }
 
-    private List<CardGameEntity> GetValidUnitTargets(CardGame cardGame, Player player)
+    private List<CardGameEntity> GetValidUnitTargets(Player player)
     {
         var units =
             cardGame
@@ -105,15 +110,15 @@ public class DefaultTargetSystem : ITargetSystem
         return units.Cast<CardGameEntity>().ToList();
     }
 
-    private List<CardGameEntity> GetValidPlayerTargets(CardGame cardGame, Player player)
+    private List<CardGameEntity> GetValidPlayerTargets(Player player)
     {
         return cardGame.Players.Cast<CardGameEntity>().ToList();
     }
 
-    public List<CardGameEntity> GetValidAbilityTargets(CardGame cardGame, Player player, CardInstance cardWithAbility)
+    public List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance cardWithAbility)
     {
         var effectTargets = cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType); //for compatibility purposes. 
-        if (!ActivatedAbilityNeedsTargets(cardGame, player, cardWithAbility))
+        if (!ActivatedAbilityNeedsTargets(player, cardWithAbility))
         {
             return new List<CardGameEntity>();
         }
@@ -121,23 +126,23 @@ public class DefaultTargetSystem : ITargetSystem
         {
             if (effectTargets.Contains(TargetType.TargetPlayers))
             {
-                return GetValidPlayerTargets(cardGame, player);
+                return GetValidPlayerTargets(player);
             }
             else if (effectTargets.Contains(TargetType.TargetUnits))
             {
-                return GetValidUnitTargets(cardGame, player);
+                return GetValidUnitTargets(player);
             }
             else if (effectTargets.Contains(TargetType.TargetUnitsOrPlayers))
             {
-                var validTargets = GetValidUnitTargets(cardGame, player);
-                validTargets.AddRange(GetValidPlayerTargets(cardGame, player));
+                var validTargets = GetValidUnitTargets(player);
+                validTargets.AddRange(GetValidPlayerTargets(player));
                 return validTargets;
             }
         }
         return new List<CardGameEntity>();
 
     }
-    public List<CardGameEntity> GetValidTargets(CardGame cardGame, Player player, CardInstance card)
+    public List<CardGameEntity> GetValidTargets(Player player, CardInstance card)
     {
         if (card.CurrentCardData is UnitCardData)
         {
@@ -151,7 +156,7 @@ public class DefaultTargetSystem : ITargetSystem
             var spellCard = (SpellCardData)card.CurrentCardData;
             var effects = spellCard.Effects.Select(e => e.TargetType);
 
-            if (!SpellNeedsTargets(cardGame, player, card))
+            if (!SpellNeedsTargets(player, card))
             {
                 return new List<CardGameEntity>();
             }
@@ -159,16 +164,16 @@ public class DefaultTargetSystem : ITargetSystem
             {
                 if (effects.Contains(TargetType.TargetPlayers))
                 {
-                    return GetValidPlayerTargets(cardGame, player);
+                    return GetValidPlayerTargets(player);
                 }
                 else if (effects.Contains(TargetType.TargetUnits))
                 {
-                    return GetValidUnitTargets(cardGame, player);
+                    return GetValidUnitTargets(player);
                 }
                 else if (effects.Contains(TargetType.TargetUnitsOrPlayers))
                 {
-                    var validTargets = GetValidUnitTargets(cardGame, player);
-                    validTargets.AddRange(GetValidPlayerTargets(cardGame, player));
+                    var validTargets = GetValidUnitTargets(player);
+                    validTargets.AddRange(GetValidPlayerTargets(player));
                     return validTargets;
                 }
             }
