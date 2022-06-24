@@ -36,6 +36,8 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
             throw new Exception("Cannot activate the ability, we need choices but no choices were specified in ActivatedAbilityInfo");
         }
 
+        cardGame.ManaSystem.SpendManaAndEssence(player, activatedAbility.ManaCost);
+
         //Pay any additional costs.
         if (activatedAbility.HasAdditionalCost())
         {
