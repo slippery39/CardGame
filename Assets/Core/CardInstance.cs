@@ -119,11 +119,91 @@ public class CardInstance : CardGameEntity
     //How do we figure this out?
     public List<ContinuousEffect> ContinuousEffects { get; set; }
 
-    public List<ModAddToPowerToughness> Modifications { get; set; } = new List<ModAddToPowerToughness>();
+    public List<Modification> Modifications { get; set; } = new List<Modification>();
 
 
     private int _powerWithoutMods;
     private int _toughnessWithoutMods;
+
+    //Calculates the power, we also use this for switching power / toughness effects
+    public int CalculatePower(bool applyPowerToughnessSwitchEffects)
+    {
+        if (_currentCardData is UnitCardData)
+        {
+            //return - power without mods, + mods power;
+            int calculatedPower = _powerWithoutMods;
+
+            var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
+            if (pumpContinuousEffects.Any())
+            {
+                foreach (var pumpEffect in pumpContinuousEffects)
+                {
+                    calculatedPower += pumpEffect.Power;
+                }
+            }   
+
+
+            var powerModifications = Modifications.GetOfType<IModifyPower>();
+
+            //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
+            if (!applyPowerToughnessSwitchEffects)
+            {
+                powerModifications = powerModifications.Where(mod => !(mod is ModSwitchPowerandToughness)).ToList();
+            }
+
+            foreach (var modification in powerModifications)
+            {
+                //Null is temporary, we haven't set everything up to pass in the CardGame yet.
+                calculatedPower = modification.ModifyPower(null, this, calculatedPower);
+            }
+
+            return calculatedPower;
+        }
+        else
+        {
+            throw new Exception("Card Instance is not a creature, cannot access the power property");
+        }
+    }
+
+    public int CalculateToughness(bool applyPowerToughnessSwitchEffects)
+    {
+        if (_currentCardData is UnitCardData)
+        {
+            //return - power without mods, + mods power;
+            int calculatedToughness = _toughnessWithoutMods;
+
+            var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
+            if (pumpContinuousEffects.Any())
+            {
+                foreach (var pumpEffect in pumpContinuousEffects)
+                {
+                    calculatedToughness += pumpEffect.Toughness;
+                }
+            }
+
+            //Add any modifications to the unit as well.
+            var toughnessModifications = Modifications.GetOfType<IModifyToughness>();
+
+            //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
+            if (!applyPowerToughnessSwitchEffects)
+            {
+                toughnessModifications = toughnessModifications.Where(mod => !(mod is ModSwitchPowerandToughness)).ToList();
+            }
+
+            foreach (var modification in toughnessModifications)
+            {
+                calculatedToughness = modification.ModifyToughness(null,this,calculatedToughness);
+            }
+
+            calculatedToughness = calculatedToughness - DamageTaken;
+
+            return calculatedToughness;
+        }
+        else
+        {
+            throw new Exception("Card Instance is not a creature, cannot access the power property");
+        }
+    }
 
     //Temporary sort of unsafe properties for accessing Unit Power and Toughness,
     //While I figure out how I actually want to do this properly in a more type safe way.
@@ -133,30 +213,7 @@ public class CardInstance : CardGameEntity
     {
         get
         {
-            if (_currentCardData is UnitCardData)
-            {
-                //return - power without mods, + mods power;
-                int calculatedPower = _powerWithoutMods;
-
-                var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
-                if (pumpContinuousEffects.Any())
-                {
-                    foreach (var pumpEffect in pumpContinuousEffects)
-                    {
-                        calculatedPower += pumpEffect.Power;
-                    }
-                }
-                foreach (var modification in Modifications)
-                {
-                    calculatedPower += modification.Power;
-                }
-
-                return calculatedPower;
-            }
-            else
-            {
-                throw new Exception("Card Instance is not a creature, cannot access the power property");
-            }
+            return CalculatePower(true);
         }
         set
         {
@@ -187,9 +244,11 @@ public class CardInstance : CardGameEntity
 
                 //Add any modifications to the unit as well.
 
-                foreach (var modification in Modifications)
+                var toughnessModifications = Modifications.GetOfType<IModifyToughness>();
+
+                foreach (var modification in toughnessModifications)
                 {
-                    calculatedToughness += modification.Toughness;
+                    calculatedToughness = modification.ModifyToughness(null, this, calculatedToughness);
                 }
 
                 calculatedToughness = calculatedToughness - DamageTaken;
@@ -240,7 +299,7 @@ public class CardInstance : CardGameEntity
         return GetAbilities<ActivatedAbility>().Any();
     }
 
-    public void AddModification(ModAddToPowerToughness mod)
+    public void AddModification(Modification mod)
     {
         Modifications.Add(mod);
     }

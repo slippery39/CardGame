@@ -501,6 +501,17 @@ public class DiscardCardEffect : Effect
 
 }
 
+public class SwitchPowerToughnessEffect : Effect
+{
+    public override string RulesText
+    {
+        get
+        {
+            return "Switch power and toughness";
+        }       
+    }
+}
+
 
 //Represents an effect with multiple components.
 public class CompoundEffect : Effect

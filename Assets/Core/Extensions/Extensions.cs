@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 public static class Extensions
 {
+
+    public static List<T> GetOfType<T>(this IEnumerable<object> source)
+    {
+        return source.Where(o=>o is T).Cast<T>().ToList();
+    }
+
     public static IEnumerable<T> Randomize<T>(this IEnumerable<T> source)
     {
         Random rnd = new Random();

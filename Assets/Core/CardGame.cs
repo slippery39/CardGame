@@ -39,6 +39,7 @@ public class CardGame
     private IResolvingSystem _resolvingSystem;
     private IContinuousEffectSystem _continuousEffectSystem;
     private IActivatedAbilitySystem _activatedAbilitySystem;
+    private IModificationsSystem _modificationsSystem;
     #endregion
 
 
@@ -71,6 +72,8 @@ public class CardGame
 
     public IActivatedAbilitySystem ActivatedAbilitySystem { get => _activatedAbilitySystem; set => _activatedAbilitySystem = value; }
     public IDiscardSystem DiscardSystem { get => _discardSystem; set => _discardSystem = value; }
+
+    public IModificationsSystem ModificationsSystem { get => _modificationsSystem; set => _modificationsSystem = value; }
     public GameState CurrentGameState { get; set; }
     public Effect ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
 
@@ -98,6 +101,7 @@ public class CardGame
         _continuousEffectSystem = new DefaultContinousEffectSystem(this);
         _activatedAbilitySystem = new DefaultActivatedAbilitySystem(this);
         _discardSystem = new DefaultDiscardSystem(this);
+        _modificationsSystem = new DefaultModificationSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
 

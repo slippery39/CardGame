@@ -22,7 +22,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
     public void ApplyEffect(Player player, CardInstance source, Effect effect, List<CardGameEntity> targets)
     {
 
-        
+
         List<CardGameEntity> entitiesToEffect;
         if (!cardGame.TargetSystem.EffectNeedsTargets(effect))
         {
@@ -274,6 +274,34 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         {
             var compoundEffect = effect as CompoundEffect;
             this.ApplyEffects(player, source, compoundEffect.Effects, targets);
+        }
+
+        if (effect is SwitchPowerToughnessEffect)
+        {
+            var powerToughnessEffect = effect as SwitchPowerToughnessEffect;
+
+            foreach (var entity in entitiesToEffect)
+            {
+                if (!(entity is CardInstance))
+                {
+                    throw new Exception("Error : only units can be effected with the sacrifice self effect");
+                }
+
+                var card = (CardInstance)entity;
+                var mod = new ModSwitchPowerandToughness();
+
+                //If they already have a switch power and toughness effect then it should cancel out (we will remove the existing one)
+                if (card.Modifications.GetOfType<ModSwitchPowerandToughness>().Any())
+                {
+
+                    card.Modifications = card.Modifications.Where(mod => !(mod is ModSwitchPowerandToughness)).ToList();
+                }
+                else
+                {
+                    cardGame.ModificationsSystem.AddModification(card, mod);
+                }
+            }
+
         }
     }
     public void ApplyEffects(Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)

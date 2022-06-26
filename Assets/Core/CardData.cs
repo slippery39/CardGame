@@ -1194,6 +1194,30 @@ public class CardDatabase : ICardDatabase
     }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Aquamoeba",
+            ManaCost = "1U",
+            Power = 1,
+            Toughness = 3,
+            ArtPath = "CardArt/Aquamoeba",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility(){
+                ManaCost = "0",
+                AdditionalCost = new DiscardCardAdditionalCost
+                {
+                },
+                Effects = new List<Effect>{  new SwitchPowerToughnessEffect
+            {
+                TargetType = TargetType.UnitSelf
+                }
+            }
+            }
+            }
+        });
+
 
 
 
