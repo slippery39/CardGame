@@ -15,9 +15,9 @@ public class DefaultUnitSummoningSystem : IUnitSummoningSystem
     {
         this.cardGame = cardGame;
     }
-    public void SummonUnit( Player player, CardInstance unitCard, int laneId)
+    public void SummonUnit( Player player, CardInstance unitCard, int laneEntityId)
     {
-        var emptyLanes = player.Lanes.Where(lane => lane.IsEmpty() && lane.EntityId == laneId);
+        var emptyLanes = player.Lanes.Where(lane => lane.IsEmpty() && lane.EntityId == laneEntityId);
 
         if (!emptyLanes.Any())
         {

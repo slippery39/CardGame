@@ -383,7 +383,7 @@ public class CardGame
 
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Merfolk Looter");
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any());
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData);
         var cardsToAdd = 45;
 

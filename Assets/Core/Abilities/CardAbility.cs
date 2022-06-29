@@ -202,6 +202,12 @@ public enum TriggerType
     AtTurnEnd
 }
 
+public class MadnessAbility: CardAbility
+{
+    public string ManaCost { get; set; }
+    public override string RulesText => $"Madness : {ManaCost}";
+}
+
 
 public class TriggeredAbility : CardAbility
 {

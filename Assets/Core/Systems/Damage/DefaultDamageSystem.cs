@@ -48,7 +48,7 @@ public class DefaultDamageSystem : IDamageSystem
         //IF UNIT HAS TRAMPLE
         if (attackingUnit.GetAbilities<TrampleAbility>().Count > 0)
         {
-            var damageToUnit = Math.Min(attackingDamage, defendingUnit.Toughness);
+            var damageToUnit = Math.Min(attackingDamage, (defendingUnit.Toughness - defendingUnit.DamageTaken));
             var damageToPlayer = attackingUnit.Power - damageToUnit;
 
             if (damageToPlayer > 0)

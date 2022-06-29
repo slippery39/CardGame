@@ -250,9 +250,6 @@ public class CardInstance : CardGameEntity
                 {
                     calculatedToughness = modification.ModifyToughness(null, this, calculatedToughness);
                 }
-
-                calculatedToughness = calculatedToughness - DamageTaken;
-
                 return calculatedToughness;
             }
             else

@@ -1218,6 +1218,28 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Basking Rootwalla",
+            ManaCost = "G",
+            Power = 1,
+            Toughness = 1,
+            ArtPath = "CardArt/Aquamoeba",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility(){
+                ManaCost = "1G",
+                Effects = new List<Effect>{  new PumpUnitEffect{Power = 2, Toughness = 2, TargetType = TargetType.UnitSelf},
+                }
+                },
+                new MadnessAbility()
+                {
+                    ManaCost = "0"
+                }
+            }            
+        });
+
 
 
 

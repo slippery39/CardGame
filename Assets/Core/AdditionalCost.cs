@@ -144,7 +144,7 @@ public class DiscardCardAdditionalCost : AdditionalCost
 
         foreach (var entity in cardsToDiscard)
         {
-            cardGame.ZoneChangeSystem.MoveToZone(entity, player.DiscardPile);
+            cardGame.DiscardSystem.Discard(player, entity);
         }
     }
     public override List<CardGameEntity> GetValidChoices(CardGame cardGame, Player player, CardGameEntity sourceEntity)

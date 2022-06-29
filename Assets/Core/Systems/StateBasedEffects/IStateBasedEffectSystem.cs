@@ -29,7 +29,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
         foreach (var unit in units)
         {
             //State Based effect, all units with current toughness 0 or less get moved to the discard pile.
-            if (unit.Toughness <= 0)
+            if (unit.Toughness - unit.DamageTaken <= 0)
             {
                 var owner = cardGame.GetOwnerOfCard(unit);
                 cardGame.ZoneChangeSystem.MoveToZone(unit, owner.DiscardPile);

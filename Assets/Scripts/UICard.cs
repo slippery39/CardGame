@@ -81,7 +81,7 @@ public class UICard : UIGameEntity
 
         if (cardData is UnitCardData)
         {
-            _cardCombatStatsText.text = cardInstance.Power + " / " + cardInstance.Toughness;
+            _cardCombatStatsText.text = cardInstance.Power + " / " + (cardInstance.Toughness - cardInstance.DamageTaken);
         }
         Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
         _cardArtRenderer.sprite = art;
