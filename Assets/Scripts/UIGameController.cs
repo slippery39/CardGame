@@ -32,6 +32,9 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private GameUIStateMachine _stateMachine;
 
+    [SerializeField]
+    private ZoneViewer _testGraveyard;
+
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
 
     //Singleton Pattern, should only be one game controller per unity scene.
@@ -165,6 +168,9 @@ public class UIGameController : MonoBehaviour
         _player2Avatar.SetHealth(_cardGame.Player2.Health);
 
         _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
+
+        //Testing out our graveyard.
+        _testGraveyard.SetZone(_cardGame.ActivePlayer.DiscardPile);
     }
     private void UpdateLanes(Transform laneInScene, List<Lane> lanes)
     {
