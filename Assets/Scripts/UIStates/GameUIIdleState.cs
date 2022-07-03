@@ -93,6 +93,12 @@ public class GameUIIdleState : IGameUIState
             return;
         }
 
+
+        //TODO - is the card we clicked castable? we need to be handle casting cards from graveyards and stuff.
+
+        var isCardCastable = _cardGame.CanCastCard(entityId); //should probably be part of a system.
+
+
         //we need to get the card from hand?
         var cardFromHand = ActingPlayer.Hand.Cards.Where(card => card.EntityId == entityId).FirstOrDefault();
 

@@ -1225,7 +1225,7 @@ public class CardDatabase : ICardDatabase
             Power = 1,
             Toughness = 1,
             ArtPath = "CardArt/Aquamoeba",
-            Colors = new List<CardColor> { CardColor.Blue },
+            Colors = new List<CardColor> { CardColor.Green },
             Abilities = new List<CardAbility>
             {
                 new ActivatedAbility(){
@@ -1238,6 +1238,32 @@ public class CardDatabase : ICardDatabase
                     ManaCost = "0"
                 }
             }            
+        });
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Deep Analysis",
+            ManaCost = "3U",
+            ArtPath = "CardArt/Deep Analysis",
+            Colors = new List<CardColor> { CardColor.Blue},
+            Effects = new List<Effect>
+            {
+                new DrawCardEffect
+                {
+                    Amount = 2
+                }
+            },
+            Abilities = new List<CardAbility>
+            {
+                new FlashbackAbility
+                {
+                    ManaCost = "1U",
+                    AdditionalCost = new PayLifeAdditionalCost
+                    {
+                        Amount = 3
+                    }
+                }
+            }   
         });
 
 

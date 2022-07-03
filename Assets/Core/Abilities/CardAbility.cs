@@ -202,7 +202,7 @@ public enum TriggerType
     AtTurnEnd
 }
 
-public class MadnessAbility: CardAbility
+public class MadnessAbility : CardAbility
 {
     public string ManaCost { get; set; }
     public override string RulesText => $"Madness : {ManaCost}";
@@ -514,7 +514,7 @@ public class SwitchPowerToughnessEffect : Effect
         get
         {
             return "Switch power and toughness";
-        }       
+        }
     }
 }
 
@@ -524,6 +524,14 @@ public class CompoundEffect : Effect
 {
     public List<Effect> Effects { get; set; }
     public override string RulesText => string.Join("\r\n", Effects.Select(e => e.RulesText));
+}
+
+
+public class FlashbackAbility : CardAbility
+{
+    public string ManaCost { get; set; }
+    public AdditionalCost AdditionalCost { get; set; }
+    public override string RulesText => $"Flashback : {ManaCost},{AdditionalCost}";
 }
 
 
