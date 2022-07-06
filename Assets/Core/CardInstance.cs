@@ -121,6 +121,10 @@ public class CardInstance : CardGameEntity
 
     public List<Modification> Modifications { get; set; } = new List<Modification>();
 
+    public bool IsOfType<T>()
+    {
+        return CurrentCardData is T;
+    }
 
     private int _powerWithoutMods;
     private int _toughnessWithoutMods;
@@ -288,7 +292,14 @@ public class CardInstance : CardGameEntity
 
     public List<T> GetAbilities<T>()
     {
-        return Abilities.Where(a => a is T).Cast<T>().ToList();
+
+        var abilities = Abilities.Where(a => a is T).Cast<T>().ToList();
+
+        //also look for ability components
+
+        var abilityComponents = Abilities.SelectMany(a=>a.Components).Where(c=>c is T).Cast<T>().ToList();
+
+        return abilities.Union(abilityComponents).ToList();
     }
 
     public bool HasActivatedAbility()

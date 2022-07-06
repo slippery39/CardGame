@@ -44,7 +44,7 @@ public class GameUIIdleState : IGameUIState
             }
             else
             {
-                _cardGame.PlayCardFromHand(ActingPlayer, card, 0);
+                _cardGame.PlayCard(ActingPlayer, card, 0);
             }
         }
     }
@@ -83,8 +83,6 @@ public class GameUIIdleState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
-        //check if its a card in play
-
         var cardInPlay = ActingPlayer.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Where(card => card.EntityId == entityId).FirstOrDefault();
 
         if (cardInPlay != null)
@@ -93,21 +91,16 @@ public class GameUIIdleState : IGameUIState
             return;
         }
 
+        var isCardCastable = _cardGame.CanPlayCard(entityId); //should probably be part of a system.
+        var card = _cardGame.GetCardById(entityId);
 
-        //TODO - is the card we clicked castable? we need to be handle casting cards from graveyards and stuff.
-
-        var isCardCastable = _cardGame.CanCastCard(entityId); //should probably be part of a system.
-
-
-        //we need to get the card from hand?
-        var cardFromHand = ActingPlayer.Hand.Cards.Where(card => card.EntityId == entityId).FirstOrDefault();
-
-        if (cardFromHand == null)
+        if (!isCardCastable)
         {
             Debug.Log("Invalid Selection");
             return;
         }
-        HandleCardSelectedFromHand(cardFromHand);
+
+        HandleCardSelectedFromHand(card);
     }
 }
 

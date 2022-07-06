@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -32,6 +33,7 @@ public class AbilityCooldown : AbilityComponent
 {
 
 }
+
 
 public interface IModifyCanBlock
 {
@@ -526,12 +528,84 @@ public class CompoundEffect : Effect
     public override string RulesText => string.Join("\r\n", Effects.Select(e => e.RulesText));
 }
 
+public interface IModifyManaCost
+{
+    string ModifyManaCost(CardGame cardGame, CardInstance card, string originalManaCost);
+
+}
+
+public class ModifyManaCostComponent : AbilityComponent, IModifyManaCost
+{
+
+    private Func<CardGame, CardInstance, string, string> _modManaCostFunc;
+
+    public ModifyManaCostComponent(Func<CardGame, CardInstance, string, string> modManaCostFunc)
+    {
+        _modManaCostFunc = modManaCostFunc;
+    }
+    public string ModifyManaCost(CardGame cardGame, CardInstance card, string originalManaCost)
+    {
+        return _modManaCostFunc(cardGame, card, originalManaCost);
+    }
+}
+
+public interface IModifyCastZones
+{
+    List<ZoneType> ModifyCastZones(CardGame cardGame, CardInstance card, List<ZoneType> originalCastZones);
+
+}
+
+public class ModifyCastZonesComponent : AbilityComponent, IModifyCastZones
+{
+    private Func<CardGame, CardInstance, List<ZoneType>, List<ZoneType>> _modCastZoneFunc;
+
+    public ModifyCastZonesComponent(Func<CardGame, CardInstance, List<ZoneType>, List<ZoneType>> modCastZoneFunc)
+    {
+        _modCastZoneFunc = modCastZoneFunc;
+    }
+
+    public List<ZoneType> ModifyCastZones(CardGame cardGame, CardInstance card, List<ZoneType> originalCastZones)
+    {
+        return _modCastZoneFunc(cardGame, card, originalCastZones);
+    }
+}
+
 
 public class FlashbackAbility : CardAbility
 {
     public string ManaCost { get; set; }
     public AdditionalCost AdditionalCost { get; set; }
-    public override string RulesText => $"Flashback : {ManaCost},{AdditionalCost}";
+    public override string RulesText => $"Flashback : {ManaCost},{AdditionalCost.RulesText}";
+
+    //Need to change things to have a cost, not just a mana cost.
+    private string ChangeManaCost(CardGame cardGame, CardInstance cardInstance, string originalManaCost)
+    {
+        if (cardGame.GetZoneOfCard(cardInstance).ZoneType == ZoneType.Discard)
+        {
+            return ManaCost;
+        }
+        else
+        {
+            return originalManaCost;
+        }
+    }
+
+    private List<ZoneType> ChangeCastZones(CardGame cardGame, CardInstance cardInstance, List<ZoneType> originalCastZones)
+    {
+        var modifiedCastZones = originalCastZones.ToList();
+        if (!originalCastZones.Contains(ZoneType.Discard))
+        {
+            modifiedCastZones.Add(ZoneType.Discard);
+        }
+
+        return modifiedCastZones;
+    }
+
+    public FlashbackAbility()
+    {
+        this.Components.Add(new ModifyManaCostComponent(ChangeManaCost));
+        this.Components.Add(new ModifyCastZonesComponent(ChangeCastZones));
+    }
 }
 
 

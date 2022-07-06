@@ -61,7 +61,7 @@ public class GameUISummonUnitState : IGameUIState
         {
             return;
         }
-        _cardGame.PlayCardFromHand(_cardGame.ActivePlayer, _unitToSummon, entityId);
+        _cardGame.PlayCard(_cardGame.ActivePlayer, _unitToSummon, entityId);
         _stateMachine.ToIdle();
     }
 }

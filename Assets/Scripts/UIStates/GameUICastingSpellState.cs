@@ -69,7 +69,7 @@ public class GameUICastingSpellState : IGameUIState
             return;
         }
 
-        _cardGame.PlayCardFromHand(_actingPlayer, _spellToCast, entityId);
+        _cardGame.PlayCard(_actingPlayer, _spellToCast, entityId);
         _stateMachine.ToIdle();
     }
 }
