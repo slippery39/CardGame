@@ -22,10 +22,10 @@ public class UIPlayerAvatar : UIGameEntity
 
     public void SetMana(ManaPool manaPool)
     {
-        var totalMana = manaPool.CurrentColorlessMana;
+        var colorlessMana = manaPool.CurrentColorlessMana;
         var colorsCount = manaPool.CurrentColoredMana;
 
-        string text = $@"Total Mana : {totalMana}";
+        string text = $@"Colorless : {colorlessMana}";
 
         foreach (var manaType in colorsCount.Keys)
         {
