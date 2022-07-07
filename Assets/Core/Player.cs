@@ -47,7 +47,7 @@ public class Player : CardGameEntity
     //public int Mana { get => _mana; set => _mana = value; }
     public int ManaPlayedThisTurn { get; set; } = 0;
     public int TotalManaThatCanBePlayedThisTurn { get; set; } = 1;
-    public int Mana => _manaPool.CurrentTotalMana;    
+    public int Mana => _manaPool.CurrentColorlessMana;    
     public ManaPool ManaPool { get => _manaPool; }
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 

@@ -87,21 +87,21 @@ public class CardInstance : CardGameEntity
         {
             var originalCost = _currentCardData.ManaCost;
 
-            var costAsCounts = new ManaAndEssence(originalCost);
+            var costAsCounts = new ManaContainer(originalCost);
 
             var allCostReductions = ContinuousEffects.SelectMany(ce => ce.SourceAbility.Effects).Where(ab => ab is StaticManaReductionEffect).Cast<StaticManaReductionEffect>();
 
             foreach (var effect in allCostReductions)
             {
-                var costAsDict = new ManaAndEssence(effect.ReductionAmount);
+                var costAsDict = new ManaContainer(effect.ReductionAmount);
 
-                costAsCounts.Mana -= costAsDict.Mana;
-                costAsCounts.Mana = Math.Max(0, costAsCounts.Mana);
+                costAsCounts.ColorlessMana -= costAsDict.ColorlessMana;
+                costAsCounts.ColorlessMana = Math.Max(0, costAsCounts.ColorlessMana);
 
-                foreach (var essenceType in costAsDict.Essence)
+                foreach (var essenceType in costAsDict.ColoredMana)
                 {
-                    costAsCounts.Essence[essenceType.Key] -= essenceType.Value;
-                    costAsCounts.Essence[essenceType.Key] = Math.Max(0, costAsCounts.Essence[essenceType.Key]);
+                    costAsCounts.ColoredMana[essenceType.Key] -= essenceType.Value;
+                    costAsCounts.ColoredMana[essenceType.Key] = Math.Max(0, costAsCounts.ColoredMana[essenceType.Key]);
                 }
             }
 

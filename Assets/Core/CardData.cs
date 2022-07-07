@@ -237,7 +237,7 @@ public class CardDatabase : ICardDatabase
             {
                 new AddTempManaEffect()
                 {
-                    ManaType = EssenceType.Any,
+                    ManaType = ManaType.Any,
                     Amount = 3
                 }
             }
@@ -838,7 +838,7 @@ public class CardDatabase : ICardDatabase
                     },
                     Effects = new List<Effect>{new AddTempManaEffect()
                     {
-                        ManaType = EssenceType.Red,
+                        ManaType = ManaType.Red,
                         Amount = 1
                     }
                     },

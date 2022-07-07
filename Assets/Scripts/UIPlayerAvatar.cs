@@ -22,8 +22,8 @@ public class UIPlayerAvatar : UIGameEntity
 
     public void SetMana(ManaPool manaPool)
     {
-        var totalMana = manaPool.CurrentTotalMana;
-        var colorsCount = manaPool.CurrentEssence;
+        var totalMana = manaPool.CurrentColorlessMana;
+        var colorsCount = manaPool.CurrentColoredMana;
 
         string text = $@"Total Mana : {totalMana}";
 

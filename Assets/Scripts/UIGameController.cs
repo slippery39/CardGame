@@ -78,7 +78,7 @@ public class UIGameController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.M))
             {
-                _cardGame.ManaSystem.AddEssence(_cardGame.ActivePlayer, EssenceType.Any, 1);
+                _cardGame.ManaSystem.AddEssence(_cardGame.ActivePlayer, ManaType.Any, 1);
                 _cardGame.ManaSystem.AddMana(_cardGame.ActivePlayer, 1);
             }
 

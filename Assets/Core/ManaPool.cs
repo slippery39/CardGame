@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class ManaAndEssence
+public class ManaContainer
 {
-    public int Mana { get; set; } = 0;
-    public Dictionary<EssenceType, int> Essence { get; set; }
+    public int ColorlessMana { get; set; } = 0;
+    public Dictionary<ManaType, int> ColoredMana { get; set; }
 
-    public ManaAndEssence()
+    public ManaContainer()
     {
-        Essence = ManaAndEssenceHelper.CreateManaDict();
+        ColoredMana = ManaHelper.CreateManaDict();
     }
 
-    public ManaAndEssence(string manaCost)
+    public ManaContainer(string manaCost)
     {
-        Essence = ManaAndEssenceHelper.CreateManaDict();
+        ColoredMana = ManaHelper.CreateManaDict();
 
         if (manaCost == null)
         {
@@ -41,40 +41,40 @@ public class ManaAndEssence
             {
                 if (currentNumber.Length > 0)
                 {
-                    Mana = Convert.ToInt32(currentNumber);
+                    ColorlessMana = Convert.ToInt32(currentNumber);
                     currentNumber = "";
                 }
 
                 //Add the color type
                 switch (manaChars[i].ToString().ToUpper())
                 {
-                    case "W": Essence[EssenceType.White]++; break;
-                    case "U": Essence[EssenceType.Blue]++; break;
-                    case "B": Essence[EssenceType.Black]++; break;
-                    case "R": Essence[EssenceType.Red]++; break;
-                    case "G": Essence[EssenceType.Green]++; break;
-                    case "*": Essence[EssenceType.Any]++; break;
-                    default: throw new Exception($@"Unaccounted for essence symbol {manaChars[i].ToString().ToUpper()}");
+                    case "W": ColoredMana[ManaType.White]++; break;
+                    case "U": ColoredMana[ManaType.Blue]++; break;
+                    case "B": ColoredMana[ManaType.Black]++; break;
+                    case "R": ColoredMana[ManaType.Red]++; break;
+                    case "G": ColoredMana[ManaType.Green]++; break;
+                    case "*": ColoredMana[ManaType.Any]++; break;
+                    default: throw new Exception($@"Unaccounted for mana symbol {manaChars[i].ToString().ToUpper()}");
                 }
             }
         }
         //Need this for colorless only strings..
         if (currentNumber.Length > 0)
         {
-            Mana = Convert.ToInt32(currentNumber);
+            ColorlessMana = Convert.ToInt32(currentNumber);
         }
     }
-    public int TotalSumOfEssence => Essence.Values.Sum();
-    public bool IsEnoughToPayCost(ManaAndEssence cost)
+    public int TotalSumOfColoredMana => ColoredMana.Values.Sum();
+    public bool IsEnoughToPayCost(ManaContainer cost)
     {
-        var colorsCost = cost.Essence;
-        var colorsPaying = Essence;
+        var colorsCost = cost.ColoredMana;
+        var colorsPaying = ColoredMana;
 
         bool hasEnoughColor = true;
 
         //We are going to compare the player's mana pool with the colors needed in the card.
         //If the player does not have enough color he cannot play the card.
-        foreach (var color in cost.Essence.Keys)
+        foreach (var color in cost.ColoredMana.Keys)
         {
             if (colorsCost[color] == 0) continue;
             if (colorsCost[color] > colorsPaying[color])
@@ -87,52 +87,52 @@ public class ManaAndEssence
         //Do a last check of the Any ("*") type mana to see if we can still play the card off of that.
         if (!hasEnoughColor)
         {
-            hasEnoughColor = CanPayEssenceWithAny(cost);
+            hasEnoughColor = CanPayManaWithAny(cost);
         }
 
-        bool hasEnoughTotalMana = Mana >= cost.Mana;
+        bool hasEnoughColorlessMana = ColorlessMana >= cost.ColorlessMana;
 
-        return hasEnoughColor && hasEnoughTotalMana;
+        return hasEnoughColor && hasEnoughColorlessMana;
     }
 
     public string ToManaString()
     {
         var str = "";
 
-        if (Mana == 0 && TotalSumOfEssence == 0)
+        if (ColorlessMana == 0 && TotalSumOfColoredMana == 0)
         {
             return "0";
         }
 
         //We should not show 0 for mana costs that also have an essence component.
-        if (Mana != 0)
+        if (ColorlessMana != 0)
         {
-            str = Mana.ToString();
+            str = ColorlessMana.ToString();
         }
 
-        foreach(var essence in Essence)
+        foreach (var manaType in ColoredMana)
         {
-            var essenceTypeAsString = EssenceTypeToString(essence.Key);
-            str += string.Concat(Enumerable.Repeat(essenceTypeAsString, essence.Value));
+            var manaTypeAsString = ManaTypeToString(manaType.Key);
+            str += string.Concat(Enumerable.Repeat(manaTypeAsString, manaType.Value));
         }
 
         return str;
     }
 
-    private bool CanPayEssenceWithAny(ManaAndEssence cost)
+    private bool CanPayManaWithAny(ManaContainer cost)
     {
-        return Essence[EssenceType.Any] >= cost.TotalSumOfEssence;
+        return ColoredMana[ManaType.Any] >= cost.TotalSumOfColoredMana;
     }
 
-    private string EssenceTypeToString(EssenceType type)
+    private string ManaTypeToString(ManaType type)
     {
-        var dictionary = new Dictionary<EssenceType, string>();
-        dictionary.Add(EssenceType.Blue, "U");
-        dictionary.Add(EssenceType.Green, "G");
-        dictionary.Add(EssenceType.Red, "R");
-        dictionary.Add(EssenceType.Black, "B");
-        dictionary.Add(EssenceType.White, "W");
-        dictionary.Add(EssenceType.Any, "*");
+        var dictionary = new Dictionary<ManaType, string>();
+        dictionary.Add(ManaType.Blue, "U");
+        dictionary.Add(ManaType.Green, "G");
+        dictionary.Add(ManaType.Red, "R");
+        dictionary.Add(ManaType.Black, "B");
+        dictionary.Add(ManaType.White, "W");
+        dictionary.Add(ManaType.Any, "*");
 
         return dictionary[type];
     }
@@ -141,22 +141,22 @@ public class ManaAndEssence
 }
 
 
-public static class ManaAndEssenceHelper
+public static class ManaHelper
 {
-    private static List<EssenceType> _manaTypes;
-    public static List<EssenceType> GetManaTypes()
+    private static List<ManaType> _manaTypes;
+    public static List<ManaType> GetManaTypes()
     {
         //Cache the result, since it shouldn't change at runtime.
         if (_manaTypes == null)
         {
-            _manaTypes = Enum.GetValues(typeof(EssenceType)).Cast<EssenceType>().ToList();
+            _manaTypes = Enum.GetValues(typeof(ManaType)).Cast<ManaType>().ToList();
         }
         return _manaTypes;
     }
 
-    public static Dictionary<EssenceType, int> CreateManaDict()
+    public static Dictionary<ManaType, int> CreateManaDict()
     {
-        Dictionary<EssenceType, int> manaDict = new Dictionary<EssenceType, int>();
+        Dictionary<ManaType, int> manaDict = new Dictionary<ManaType, int>();
 
         foreach (var manaType in GetManaTypes())
         {
@@ -170,8 +170,8 @@ public static class ManaAndEssenceHelper
 public class ManaPool
 {
 
-    private ManaAndEssence _totalManaAndEssence;
-    private ManaAndEssence _currentManaAndEssence;
+    private ManaContainer _totalMana;
+    private ManaContainer _currentMana;
 
     //TODO - need to be able to differentiate between spent mana and saved mana.
     //i.e. we should have a CurrentManaByType and a CurrentTotalMana
@@ -180,111 +180,111 @@ public class ManaPool
     //To Reset we just set CurrentManaByType to the same values as ManaByType.
     //If we want temp mana we can just add to the CurrentManaByType without addinf to the ManaByType.
 
-    public ManaAndEssence CurrentManaAndEssence => _currentManaAndEssence;
-    public ManaAndEssence TotalManaAndEssence => _totalManaAndEssence;
+    public ManaContainer CurrentMana => _currentMana;
+    public ManaContainer TotalMana => _totalMana;
 
     /// <summary>
     /// The total converted mana in the pool.
     /// </summary>
-    public int TotalMana
+    public int TotalColorlessMana
     {
-        get { return _totalManaAndEssence.Mana; }
-        set { _totalManaAndEssence.Mana = value; }
+        get { return _totalMana.ColorlessMana; }
+        set { _totalMana.ColorlessMana = value; }
 
     }
-    public int CurrentTotalMana
+    public int CurrentColorlessMana
     {
-        get { return _currentManaAndEssence.Mana; }
-        set { _currentManaAndEssence.Mana = value; }
+        get { return _currentMana.ColorlessMana; }
+        set { _currentMana.ColorlessMana = value; }
     }
     /// <summary>
     /// Returns the total available mana NOT accounting for any spent.
     /// </summary>
-    public Dictionary<EssenceType, int> TotalEssence
+    public Dictionary<ManaType, int> TotalColoredMana
     {
-        get { return _totalManaAndEssence.Essence; }
-        set { _totalManaAndEssence.Essence = value; }
+        get { return _totalMana.ColoredMana; }
+        set { _totalMana.ColoredMana = value; }
     }
     /// <summary>
     /// Returns the available mana we have accounting for any spent.
     /// </summary>
-    public Dictionary<EssenceType, int> CurrentEssence
+    public Dictionary<ManaType, int> CurrentColoredMana
     {
-        get { return _currentManaAndEssence.Essence; }
-        set { _currentManaAndEssence.Essence = value; }
+        get { return _currentMana.ColoredMana; }
+        set { _currentMana.ColoredMana = value; }
     }
 
     public ManaPool()
     {
-        _totalManaAndEssence = new ManaAndEssence();
-        _currentManaAndEssence = new ManaAndEssence();
+        _totalMana = new ManaContainer();
+        _currentMana = new ManaContainer();
     }
 
     //How do we do this?
-    public void SpendMana(int amount)
+    public void SpendColorlessMana(int amount)
     {
-        CurrentTotalMana -= amount;
+        CurrentColorlessMana -= amount;
     }
 
-    public void SpendEssence(EssenceType type, int amount)
+    public void SpendColoredMana(ManaType type, int amount)
     {
         //Spend as much in the amount as possible, the rest should go into Any.
-        int remainder = Math.Max(amount - CurrentEssence[type],0);
-        CurrentEssence[type] -= Math.Min(amount, CurrentEssence[type]);
+        int remainder = Math.Max(amount - CurrentColoredMana[type], 0);
+        CurrentColoredMana[type] -= Math.Min(amount, CurrentColoredMana[type]);
         if (remainder > 0)
         {
-            CurrentEssence[EssenceType.Any] -= remainder;
+            CurrentColoredMana[ManaType.Any] -= remainder;
         };
     }
 
-    public void AddManaAndEssence(EssenceType type, int manaAmount)
+    public void AddColorAndColorless(ManaType type, int manaAmount)
     {
-        TotalMana += manaAmount;
-        CurrentTotalMana += manaAmount;
-        CurrentEssence[type] += manaAmount;
-        TotalEssence[type] += manaAmount;
+        TotalColorlessMana += manaAmount;
+        CurrentColorlessMana += manaAmount;
+        CurrentColoredMana[type] += manaAmount;
+        TotalColoredMana[type] += manaAmount;
     }
 
-    public void AddMana(int amount)
+    public void AddColorlessMana(int amount)
     {
         //Need to add to both so they have access to it in the same turn.
         //If they don't need access to it, then 
-        TotalMana += amount;
-        CurrentTotalMana += amount;
+        TotalColorlessMana += amount;
+        CurrentColorlessMana += amount;
 
     }
 
-    public void AddTemporaryEssenceAndMana(EssenceType type, int amount)
+    public void AddTemporaryColorAndColorless(ManaType type, int amount)
     {
-        CurrentTotalMana += amount;
-        CurrentEssence[type] += amount;
+        CurrentColorlessMana += amount;
+        CurrentColoredMana[type] += amount;
     }
 
-    public void AddEssence(EssenceType type, int amount)
+    public void AddColor(ManaType type, int amount)
     {
-        CurrentEssence[type] += amount;
-        TotalEssence[type] += amount;
+        CurrentColoredMana[type] += amount;
+        TotalColoredMana[type] += amount;
     }
 
-    public void AddTemporaryEssence(EssenceType type, int amount)
+    public void AddTemporaryColor(ManaType type, int amount)
     {
-        CurrentEssence[type] += amount;
+        CurrentColoredMana[type] += amount;
     }
 
-    public void ResetManaAndEssence()
+    public void ResetMana()
     {
         //Reset the total mana
-        CurrentTotalMana = TotalMana;
+        CurrentColorlessMana = TotalColorlessMana;
         //init the mana by type and temp mana by type dictionaries
-        foreach (var manaType in ManaAndEssenceHelper.GetManaTypes())
+        foreach (var manaType in ManaHelper.GetManaTypes())
         {
-            CurrentEssence[manaType] = TotalEssence[manaType];
+            CurrentColoredMana[manaType] = TotalColoredMana[manaType];
         }
     }
 
 }
 
-public enum EssenceType
+public enum ManaType
 {
     White,
     Blue,
