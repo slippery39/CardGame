@@ -255,7 +255,7 @@ public class CardGame
 
     public void AddCardToGame(Player player, BaseCardData data, IZone zone)
     {
-        var cardInstance = new CardInstance(data);
+        var cardInstance = new CardInstance(this, data);
         cardInstance.OwnerId = player.PlayerId;
         RegisterEntity(cardInstance);
         zone.Add(cardInstance);

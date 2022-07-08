@@ -37,7 +37,39 @@ public enum ZoneType
     Hand,
     InPlay,
     Deck,
-    Stack
+    Stack,
+    Exile
+}
+
+//A generic zone that can be used if no extra functionality is needed.
+public class Zone : IZone
+{
+
+    private ZoneType _zoneType;
+    private string _name;
+    private List<CardInstance> _cards;
+
+    public ZoneType ZoneType { get { return _zoneType; } }
+
+    public string Name { get { return _name; } }
+    public List<CardInstance> Cards { get { return _cards; } }
+
+    public Zone(ZoneType zoneType, string name)
+    {
+        _zoneType = zoneType;
+        _name = name;
+        _cards = new List<CardInstance>();
+    }
+
+    public void Add(CardInstance card)
+    {
+        _cards.Add(card);
+    }
+
+    public void Remove(CardInstance card)
+    {
+        _cards.Remove(card);
+    }
 }
 
 

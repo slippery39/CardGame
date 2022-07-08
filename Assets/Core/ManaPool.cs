@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class ManaContainer
+public class Mana
 {
     public int ColorlessMana { get; set; } = 0;
     public Dictionary<ManaType, int> ColoredMana { get; set; }
 
-    public ManaContainer()
+    private static List<ManaType> _manaTypes;
+
+    public Mana()
     {
-        ColoredMana = ManaHelper.CreateManaDict();
+        ColoredMana = Mana.CreateManaDict();
     }
 
-    public ManaContainer(string manaCost)
+    public Mana(string manaCost)
     {
-        ColoredMana = ManaHelper.CreateManaDict();
+        ColoredMana = Mana.CreateManaDict();
 
         if (manaCost == null)
         {
@@ -65,7 +67,7 @@ public class ManaContainer
         }
     }
     public int TotalSumOfColoredMana => ColoredMana.Values.Sum();
-    public bool IsEnoughToPayCost(ManaContainer cost)
+    public bool IsEnoughToPayCost(Mana cost)
     {
         var colorsCost = cost.ColoredMana;
         var colorsPaying = ColoredMana;
@@ -119,7 +121,7 @@ public class ManaContainer
         return str;
     }
 
-    private bool CanPayManaWithAny(ManaContainer cost)
+    private bool CanPayManaWithAny(Mana cost)
     {
         return ColoredMana[ManaType.Any] >= cost.TotalSumOfColoredMana;
     }
@@ -137,13 +139,6 @@ public class ManaContainer
         return dictionary[type];
     }
 
-
-}
-
-
-public static class ManaHelper
-{
-    private static List<ManaType> _manaTypes;
     public static List<ManaType> GetManaTypes()
     {
         //Cache the result, since it shouldn't change at runtime.
@@ -165,13 +160,15 @@ public static class ManaHelper
 
         return manaDict;
     }
+
+
 }
 
 public class ManaPool
 {
 
-    private ManaContainer _totalMana;
-    private ManaContainer _currentMana;
+    private Mana _totalMana;
+    private Mana _currentMana;
 
     //TODO - need to be able to differentiate between spent mana and saved mana.
     //i.e. we should have a CurrentManaByType and a CurrentTotalMana
@@ -180,8 +177,8 @@ public class ManaPool
     //To Reset we just set CurrentManaByType to the same values as ManaByType.
     //If we want temp mana we can just add to the CurrentManaByType without addinf to the ManaByType.
 
-    public ManaContainer CurrentMana => _currentMana;
-    public ManaContainer TotalMana => _totalMana;
+    public Mana CurrentMana => _currentMana;
+    public Mana TotalMana => _totalMana;
 
     /// <summary>
     /// The total converted mana in the pool.
@@ -216,8 +213,8 @@ public class ManaPool
 
     public ManaPool()
     {
-        _totalMana = new ManaContainer();
-        _currentMana = new ManaContainer();
+        _totalMana = new Mana();
+        _currentMana = new Mana();
     }
 
     //How do we do this?
@@ -276,7 +273,7 @@ public class ManaPool
         //Reset the total mana
         CurrentColorlessMana = TotalColorlessMana;
         //init the mana by type and temp mana by type dictionaries
-        foreach (var manaType in ManaHelper.GetManaTypes())
+        foreach (var manaType in Mana.GetManaTypes())
         {
             CurrentColoredMana[manaType] = TotalColoredMana[manaType];
         }

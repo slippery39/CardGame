@@ -4,11 +4,11 @@ using System.Linq;
 
 public interface IResolvingSystem
 {
-    public void Add( CardInstance cardInstance, CardGameEntity target);
+    public void Add(CardInstance cardInstance, CardGameEntity target);
     public IZone Stack { get; }
     public void Add(CardAbility ability, CardInstance source);
 
-    public void Add( CardAbility ability, CardInstance source, CardGameEntity target);
+    public void Add(CardAbility ability, CardInstance source, CardGameEntity target);
     public void ResolveNext();
 }
 
@@ -44,7 +44,7 @@ public class DefaultResolvingSystem : IResolvingSystem
     private CardGame cardGame;
 
     //Can hold card instances and abilities
-    private List<ResolvingEntity> _internalStack = new List<ResolvingEntity>();
+    private List<ResolveInfo> _internalStack = new List<ResolveInfo>();
     //Can only hold card instances.
     private IZone stackZone = new ResolvingStack();
     public IZone Stack { get { return stackZone; } }
@@ -56,10 +56,15 @@ public class DefaultResolvingSystem : IResolvingSystem
 
     public void Add(CardInstance cardInstance, CardGameEntity target)
     {
+        var resolvingCardInstance = new ResolvingCardInstance
+        {
+            CardInstance = cardInstance,
+            Targets = new List<CardGameEntity> { target },
+            SourceZone = cardGame.GetZoneOfCard(cardInstance)
+        };
+
         cardGame.ZoneChangeSystem.MoveToZone(cardInstance, stackZone);
-        //TODO - remove card instance from zone
-        var resolvingCardInstance = new ResolvingCardInstance { CardInstance = cardInstance, Targets = new List<CardGameEntity> { target } };
-        //remove the card instance from its zone
+
         _internalStack.Add(resolvingCardInstance);
 
         //Our abilities auto resolve.
@@ -72,7 +77,8 @@ public class DefaultResolvingSystem : IResolvingSystem
         {
             Ability = ability,
             Owner = cardGame.GetOwnerOfCard(source),
-            Source = source
+            Source = source,
+            SourceZone = cardGame.GetZoneOfCard(source)
         };
 
         _internalStack.Add(resolvingAbility);
@@ -89,7 +95,8 @@ public class DefaultResolvingSystem : IResolvingSystem
             Ability = ability,
             Owner = cardGame.GetOwnerOfCard(source),
             Source = source,
-            Targets = new List<CardGameEntity> { target }
+            Targets = new List<CardGameEntity> { target },
+            SourceZone = cardGame.GetZoneOfCard(source)
         };
 
         _internalStack.Add(resolvingAbility);
@@ -159,7 +166,7 @@ public class DefaultResolvingSystem : IResolvingSystem
             {
                 //if doesn't need a choice:
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
-                cardGame.SpellCastingSystem.CastSpell(player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets);
+                cardGame.SpellCastingSystem.CastSpell(player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets, resolvingCardInstance);
 
                 var spellCardData = resolvingCardInstance.CardInstance.CurrentCardData as SpellCardData;
 
@@ -180,18 +187,20 @@ public class DefaultResolvingSystem : IResolvingSystem
     }
 }
 
-public class ResolvingEntity
+public class ResolveInfo
 {
     public Player Owner { get; set; }
+    //The zone that the entity was in before it was added to the stack.
+    public IZone SourceZone { get; set; }
     public CardInstance Source { get; set; }
     public List<CardGameEntity> Targets { get; set; }
 }
 
-public class ResolvingAbility : ResolvingEntity
+public class ResolvingAbility : ResolveInfo
 {
     public CardAbility Ability { get; set; }
 }
-public class ResolvingCardInstance : ResolvingEntity
+public class ResolvingCardInstance : ResolveInfo
 {
     public CardInstance CardInstance { get; set; }
 }

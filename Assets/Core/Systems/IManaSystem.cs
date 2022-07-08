@@ -46,7 +46,7 @@ public class DefaultManaSystem : IManaSystem
     {
         //TODO - change this.
 
-        var costInManaAndEssence = new ManaContainer(cost);
+        var costInManaAndEssence = new Mana(cost);
 
         //Spend the mana;
         if (costInManaAndEssence.ColorlessMana > 0)
@@ -71,7 +71,7 @@ public class DefaultManaSystem : IManaSystem
 
 
     //How to we convert a costToPay into a ManaPool?
-    public bool CanPayManaCost(ManaContainer costToPay, ManaContainer payingPool)
+    public bool CanPayManaCost(Mana costToPay, Mana payingPool)
     {
         return payingPool.IsEnoughToPayCost(costToPay);
     }
@@ -79,7 +79,7 @@ public class DefaultManaSystem : IManaSystem
     public bool CanPlayCard(Player player, CardInstance card)
     {
         //TODO - Handle Non Integer Mana Costs.
-        return CanPayManaCost(new ManaContainer(card.ManaCost), player.ManaPool.CurrentMana);
+        return CanPayManaCost(new Mana(card.ManaCost), player.ManaPool.CurrentMana);
     }
 
     public bool CanPlayManaCard(Player player, CardInstance card)
@@ -92,7 +92,7 @@ public class DefaultManaSystem : IManaSystem
         player.ManaPlayedThisTurn++;
         var manaCard = card.CurrentCardData as ManaCardData;
 
-        var manaAndEssenceCounts = new ManaContainer(manaCard.ManaAdded);
+        var manaAndEssenceCounts = new Mana(manaCard.ManaAdded);
 
         //Mana is easy enough, just add the mana count stated in the ManaAndEssence object
 
@@ -121,7 +121,7 @@ public class DefaultManaSystem : IManaSystem
 
     public bool CanPayManaCost(Player player, string manaCost)
     {
-        return (player.ManaPool.CurrentMana.IsEnoughToPayCost(new ManaContainer(manaCost))); ;
+        return (player.ManaPool.CurrentMana.IsEnoughToPayCost(new Mana(manaCost))); ;
     }
 
     public void AddTemporaryEssence(Player player, ManaType essenceType, int amount)

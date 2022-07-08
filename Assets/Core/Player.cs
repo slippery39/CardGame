@@ -14,13 +14,10 @@ public class Player : CardGameEntity
     private Hand _hand;
     private DiscardPile _discardPile;
     private Deck _deck;
-
+    private IZone _exile;
 
     private ManaPool _manaPool;
 
-    //TODO - replace these.
-    //private int _totalMana;
-    // private int _mana;
     private string _name;
     #endregion
 
@@ -31,8 +28,7 @@ public class Player : CardGameEntity
         Lanes = new List<Lane>();
         DiscardPile = new DiscardPile();
         Deck = new Deck();
-        //TotalMana = 1;
-        // Mana = TotalMana;
+        Exile = new Zone(ZoneType.Exile, "Exile");
 
         InitLanes(numberOfLanes);
     }
@@ -45,13 +41,12 @@ public class Player : CardGameEntity
     public DiscardPile DiscardPile { get => _discardPile; set => _discardPile = value; }
     public Deck Deck { get => _deck; set => _deck = value; }
     //public int Mana { get => _mana; set => _mana = value; }
+    public IZone Exile { get => _exile; set => _exile = value; }
     public int ManaPlayedThisTurn { get; set; } = 0;
     public int TotalManaThatCanBePlayedThisTurn { get; set; } = 1;
-    public int Mana => _manaPool.CurrentColorlessMana;    
+    public int Mana => _manaPool.CurrentColorlessMana;
     public ManaPool ManaPool { get => _manaPool; }
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
-
-    //public int TotalMana { get => _totalMana; set => _totalMana = value; }
 
     #endregion
 

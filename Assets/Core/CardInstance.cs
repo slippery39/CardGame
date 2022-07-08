@@ -13,6 +13,7 @@ public class CardInstance : CardGameEntity
     private BaseCardData _currentCardData;
     private int _ownerId;
     private bool _isSummoningSick = true;
+    private CardGame _cardGame;
 
     #region Public Properties
     public BaseCardData CurrentCardData
@@ -87,13 +88,20 @@ public class CardInstance : CardGameEntity
         {
             var originalCost = _currentCardData.ManaCost;
 
-            var costAsCounts = new ManaContainer(originalCost);
+            var allCostModifiers = GetAbilities<IModifyManaCost>();
 
+            foreach (var costModifier in allCostModifiers)
+            {
+                originalCost = costModifier.ModifyManaCost(_cardGame, this, originalCost);
+            }
+
+            //TODO Have the cost reduction effects also use IModifyManaCost
+            var costAsCounts = new Mana(originalCost);
             var allCostReductions = ContinuousEffects.SelectMany(ce => ce.SourceAbility.Effects).Where(ab => ab is StaticManaReductionEffect).Cast<StaticManaReductionEffect>();
 
             foreach (var effect in allCostReductions)
             {
-                var costAsDict = new ManaContainer(effect.ReductionAmount);
+                var costAsDict = new Mana(effect.ReductionAmount);
 
                 costAsCounts.ColorlessMana -= costAsDict.ColorlessMana;
                 costAsCounts.ColorlessMana = Math.Max(0, costAsCounts.ColorlessMana);
@@ -272,8 +280,9 @@ public class CardInstance : CardGameEntity
 
     #endregion
 
-    public CardInstance(BaseCardData cardData)
+    public CardInstance(CardGame cardGame,BaseCardData cardData)
     {
+        _cardGame = cardGame;
         ContinuousEffects = new List<ContinuousEffect>();
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();

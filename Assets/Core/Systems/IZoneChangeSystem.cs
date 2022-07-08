@@ -7,7 +7,7 @@ using UnityEngine;
 
 public interface IZoneChangeSystem
 {
-    public void MoveToZone(CardInstance card, IZone zoneTo);
+   public void MoveToZone(CardInstance card, IZone zoneTo);
 }
 
 
@@ -19,6 +19,7 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
     {
         this.cardGame = cardGame;
     }
+
     public void MoveToZone(CardInstance card, IZone zoneTo)
     {
         var currentZone = cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();

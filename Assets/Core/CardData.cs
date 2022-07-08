@@ -1266,10 +1266,6 @@ public class CardDatabase : ICardDatabase
             }   
         });
 
-
-
-
-
         _cards.Add(new UnitCardData()
         {
             Name = "Griselbrand",
