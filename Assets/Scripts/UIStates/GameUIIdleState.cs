@@ -37,14 +37,8 @@ public class GameUIIdleState : IGameUIState
         }
         else if (card.CurrentCardData is SpellCardData)
         {
-            //TODO - need to update this.
-            if (_cardGame.TargetSystem.SpellNeedsTargets(ActingPlayer, card))
-            {
+            if (_cardGame.CanPlayCard(card.EntityId)) { 
                 _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
-            }
-            else
-            {
-                _cardGame.PlayCard(ActingPlayer, card, 0);
             }
         }
     }

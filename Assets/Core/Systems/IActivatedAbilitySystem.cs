@@ -23,7 +23,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
 
         //Validating if we have the proper info to be able to correctly activate the ability;
-        if (activateAbilityInfo == null && (activatedAbility.HasTargets() || activatedAbility.HasChoices()))
+        if (activateAbilityInfo == null && (activatedAbility.HasTargets() || activatedAbility.HasAdditionalCostChoices()))
         {
             throw new Exception("Cannot activate the ability, need ActivateAbilityInfo for either/or targets or choices");
         }
@@ -31,7 +31,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         {
             throw new Exception("Cannot activate the ability, we need targets but no targets were specified in ActivateAbilityInfo");
         }
-        if (activatedAbility.HasChoices() && !(activateAbilityInfo.Choices.Any()))
+        if (activatedAbility.HasAdditionalCostChoices() && !(activateAbilityInfo.Choices.Any()))
         {
             throw new Exception("Cannot activate the ability, we need choices but no choices were specified in ActivatedAbilityInfo");
         }

@@ -3,26 +3,37 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameUICastingSpellState : IGameUIState
+public class GameUICastingSpellState : GameUIActionState, IGameUIState
 {
-
     private CardGame _cardGame;
-    private Player _actingPlayer=>_cardGame.ActivePlayer;
+    private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _spellToCast;
-
-    public GameUICastingSpellState(GameUIStateMachine stateMachine,CardInstance spellToCast)
+    public GameUICastingSpellState(GameUIStateMachine stateMachine, CardInstance spellToCast)
     {
         _stateMachine = stateMachine;
         _cardGame = stateMachine.CardGame;
         _spellToCast = spellToCast;
+
+        //Determine whether the ability has targets
+        NeedsTargets = _cardGame.TargetSystem.SpellNeedsTargets(_actingPlayer, _spellToCast);
+        //Determine whether the ability needs cost choices
+
+        if (_spellToCast.AdditionalCost == null)
+        {
+            NeedsCostChoices = false;
+        }
+        else
+        {
+            NeedsCostChoices = _spellToCast.AdditionalCost.NeedsChoice;
+        }
     }
-    public string GetMessage()
+    public override string GetMessage()
     {
-        return $@"Choose a target for spell {_spellToCast.Name}";
+        return _internalState?.GetMessage();
     }
 
-    public void HandleInput()
+    public override void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -31,27 +42,23 @@ public class GameUICastingSpellState : IGameUIState
         }
     }
 
-    public void OnApply()
+    public override void OnApply()
     {
-        var validTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _spellToCast).Select(e => e.EntityId);
-
-        if (validTargets.Count() == 0)
+        if (NeedsTargets)
         {
-            return;
+            ChangeToSelectTargetState();
         }
-
-        var uiEntities = _stateMachine.GameController.GetUIEntities();
-        //Highlight all entities that share an entity id with the valid targets of the spell        
-
-        var entitiesToHighlight = uiEntities.Where(e => validTargets.Contains(e.EntityId));
-
-        foreach (var entity in entitiesToHighlight)
+        else if (NeedsCostChoices)
         {
-            entity.Highlight();
+            ChangeToCostChoosingState();
+        }
+        else
+        {
+            DoAction();
         }
     }
 
-    public void OnDestroy()
+    public override void OnDestroy()
     {
         var uiEntities = _stateMachine.GameController.GetUIEntities();
         foreach (var entity in uiEntities)
@@ -60,7 +67,7 @@ public class GameUICastingSpellState : IGameUIState
         }
     }
 
-    public void HandleSelection(int entityId)
+    public override void HandleSelection(int entityId)
     {
         var validTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _spellToCast).Select(e => e.EntityId);
 
@@ -72,5 +79,42 @@ public class GameUICastingSpellState : IGameUIState
         _cardGame.PlayCard(_actingPlayer, _spellToCast, entityId);
         _stateMachine.ToIdle();
     }
+
+    public override void ChangeToSelectTargetState()
+    {
+        var effectsWithTargets = _cardGame.TargetSystem.GetEffectsThatNeedTargets(_spellToCast.Effects);
+        if (effectsWithTargets.Any())
+        {
+            ChangeState(new GameUISelectTargetState(_stateMachine, this, effectsWithTargets));
+        }
+        else
+        {
+            _cardGame.Log("An error occured... expecting effects with targets for GameUICastingSpellState::ChangeToSelectTargetState()");
+        }
+    }
+
+    public override void ChangeToCostChoosingState()
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void DoAction()
+    {
+        //We need to change this to account for any additional costs and targets.
+        int target;
+
+        if (SelectedTargets != null && SelectedTargets.Any())
+        {
+            target = SelectedTargets[0].EntityId;
+        }
+        else
+        {
+            target = 0;
+        }
+
+        _cardGame.PlayCard(_actingPlayer, _spellToCast, target);
+        _stateMachine.ToIdle();
+    }
 }
+
 

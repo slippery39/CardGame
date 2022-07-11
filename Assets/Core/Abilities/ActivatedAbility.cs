@@ -37,7 +37,7 @@ public class ActivatedAbility : CardAbility
         return AdditionalCost != null;
     }
 
-    public bool HasChoices()
+    public bool HasAdditionalCostChoices()
     {
         return HasAdditionalCost() && AdditionalCost.NeedsChoice;
     }

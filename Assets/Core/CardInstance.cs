@@ -40,8 +40,10 @@ public class CardInstance : CardGameEntity
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
+    public List<Effect> Effects { get => ((SpellCardData)_currentCardData).Effects; }
+
     public string RulesText
-    {
+    { 
         get
         {
             var str = string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name);
@@ -118,6 +120,8 @@ public class CardInstance : CardGameEntity
         }
     }
 
+    public AdditionalCost AdditionalCost { get; set; }
+
     public string CardType { get => _currentCardData.CardType; }
 
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
@@ -152,7 +156,7 @@ public class CardInstance : CardGameEntity
                 {
                     calculatedPower += pumpEffect.Power;
                 }
-            }   
+            }
 
 
             var powerModifications = Modifications.GetOfType<IModifyPower>();
@@ -204,7 +208,7 @@ public class CardInstance : CardGameEntity
 
             foreach (var modification in toughnessModifications)
             {
-                calculatedToughness = modification.ModifyToughness(null,this,calculatedToughness);
+                calculatedToughness = modification.ModifyToughness(null, this, calculatedToughness);
             }
 
             calculatedToughness = calculatedToughness - DamageTaken;
@@ -280,14 +284,14 @@ public class CardInstance : CardGameEntity
 
     #endregion
 
-    public CardInstance(CardGame cardGame,BaseCardData cardData)
+    public CardInstance(CardGame cardGame, BaseCardData cardData)
     {
         _cardGame = cardGame;
         ContinuousEffects = new List<ContinuousEffect>();
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();
         Abilities = _currentCardData.Abilities.ToList();
-
+        AdditionalCost = _currentCardData.AdditionalCost;
 
         if (_currentCardData is UnitCardData)
         {
@@ -306,7 +310,7 @@ public class CardInstance : CardGameEntity
 
         //also look for ability components
 
-        var abilityComponents = Abilities.SelectMany(a=>a.Components).Where(c=>c is T).Cast<T>().ToList();
+        var abilityComponents = Abilities.SelectMany(a => a.Components).Where(c => c is T).Cast<T>().ToList();
 
         return abilities.Union(abilityComponents).ToList();
     }

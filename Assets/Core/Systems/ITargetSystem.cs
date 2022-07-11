@@ -5,8 +5,11 @@ using System.Linq;
 public interface ITargetSystem
 {
     List<CardGameEntity> GetValidTargets(Player player, CardInstance card);
+
+    List<CardGameEntity> GetValidEffectTargets(Player player, List<Effect> effects);
     List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance card);
     List<CardGameEntity> GetEntitiesToApplyEffect(Player player, CardGameEntity source, Effect effect);
+    List<Effect> GetEffectsThatNeedTargets(List<Effect> effects);
     bool SpellNeedsTargets(Player player, CardInstance card);
     bool EffectNeedsTargets(Effect effect);
     bool ActivatedAbilityNeedsTargets(Player player, CardInstance cardWithAbility);
@@ -113,6 +116,44 @@ public class DefaultTargetSystem : ITargetSystem
     private List<CardGameEntity> GetValidPlayerTargets(Player player)
     {
         return cardGame.Players.Cast<CardGameEntity>().ToList();
+    }
+
+    public bool EffectsNeedsTargets(Player player, List<Effect> effects)
+    {
+        var effectTargets = effects.Select(e => e.TargetType).ToList();
+        return effectTargets.Where(te => typesThatDontNeedTargets.Contains(te) == false).Count() > 0;
+    }
+
+    public List<Effect> GetEffectsThatNeedTargets(List<Effect> effects)
+    {
+        return effects.Where(e => typesThatDontNeedTargets.Contains(e.TargetType) == false).ToList();
+    }
+
+    public List<CardGameEntity> GetValidEffectTargets(Player player, List<Effect> effects)
+    {
+        var effectTargets = effects.Select(e => e.TargetType).ToList();
+
+        if (!EffectsNeedsTargets(player, effects))
+        {
+            return new List<CardGameEntity>();
+        }
+
+        if (effectTargets.Contains(TargetType.TargetPlayers))
+        {
+            return GetValidPlayerTargets(player);
+        }
+        else if (effectTargets.Contains(TargetType.TargetUnits))
+        {
+            return GetValidUnitTargets(player);
+        }
+        else if (effectTargets.Contains(TargetType.TargetUnitsOrPlayers))
+        {
+            var validTargets = GetValidUnitTargets(player);
+            validTargets.AddRange(GetValidPlayerTargets(player));
+            return validTargets;
+        }
+
+        return new List<CardGameEntity>();
     }
 
     public List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance cardWithAbility)

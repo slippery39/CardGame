@@ -53,9 +53,6 @@ public abstract class AdditionalCost
 
     //NOTE - we should always implement this one going forward.
     public abstract void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo);
-
-
-
     public bool NeedsChoice { get; set; } = false;
     public virtual List<CardGameEntity> GetValidChoices(CardGame cardGame, Player player, CardGameEntity sourceEntity)
     {

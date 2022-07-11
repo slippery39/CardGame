@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 
+
+//TODO - This needs to be changed to a more generic choose AdditionalCostState to be handle to handle additional costs on creatures and spells.
+/*
+ * We should be able to do this by passing in the additional cost instead of the entire card, and by changing the _parentState to 
+ * use some sort of interface like "Apply()" or "OnFinish()" instead of forcing it to be a GameUIActivatedAbilityState.
+ */
 public class GameUIActivatedAbilityCostChoosingState : IGameUIState
 {
     private CardGame _cardGame;

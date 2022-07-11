@@ -1,4 +1,6 @@
-﻿public interface IGameUIState
+﻿using System.Collections.Generic;
+
+public interface IGameUIState
 {
     void HandleInput();
     string GetMessage();
@@ -9,7 +11,5 @@
     {
 
     }
-
-    void HandleSelection(int entityId);
+   void HandleSelection(int entityId);
 }
-

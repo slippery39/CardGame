@@ -30,6 +30,7 @@ public abstract class BaseCardData
     public List<CardColor> Colors { get; set; }
     public string ArtPath { get; set; }
     public List<CardAbility> Abilities { get; set; }
+    public AdditionalCost AdditionalCost { get; set; }
     public List<T> GetAbilities<T>()
     {
         //We are sorting so the highest priority items are at the bottom of the list.
@@ -1237,7 +1238,7 @@ public class CardDatabase : ICardDatabase
                 {
                     ManaCost = "0"
                 }
-            }            
+            }
         });
 
         _cards.Add(new SpellCardData()
@@ -1245,7 +1246,7 @@ public class CardDatabase : ICardDatabase
             Name = "Deep Analysis",
             ManaCost = "3U",
             ArtPath = "CardArt/Deep Analysis",
-            Colors = new List<CardColor> { CardColor.Blue},
+            Colors = new List<CardColor> { CardColor.Blue },
             Effects = new List<Effect>
             {
                 new DrawCardEffect
@@ -1263,7 +1264,7 @@ public class CardDatabase : ICardDatabase
                         Amount = 3
                     }
                 }
-            }   
+            }
         });
 
         _cards.Add(new UnitCardData()

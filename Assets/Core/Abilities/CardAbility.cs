@@ -570,6 +570,26 @@ public class ModifyCastZonesComponent : AbilityComponent, IModifyCastZones
     }
 }
 
+public interface IModifyAdditionalCost
+{
+    AdditionalCost ModifyAdditionalCost(CardGame cardGame, CardInstance sourceCard, AdditionalCost originalAdditionalCost);
+}
+
+public class ModifyAdditionalCostComponent : AbilityComponent, IModifyAdditionalCost
+{
+    private Func<CardGame, CardInstance, AdditionalCost, AdditionalCost> _modAdditionalCostFunc;
+
+    public ModifyAdditionalCostComponent(Func<CardGame, CardInstance, AdditionalCost, AdditionalCost> modCastZoneFunc)
+    {
+        _modAdditionalCostFunc = modCastZoneFunc;
+    }
+
+    public AdditionalCost ModifyAdditionalCost(CardGame cardGame, CardInstance card, AdditionalCost originalAdditionalCost)
+    {
+        return _modAdditionalCostFunc(cardGame, card, originalAdditionalCost);
+    }
+}
+
 
 public class FlashbackAbility : CardAbility
 {
@@ -601,10 +621,19 @@ public class FlashbackAbility : CardAbility
         return modifiedCastZones;
     }
 
+    private AdditionalCost ChangeAdditionalCost(CardGame cardGame, CardInstance cardInstance, AdditionalCost originalAdditionalCost)
+    {
+        return new PayLifeAdditionalCost
+        {
+            Amount = 3
+        };
+    }
+
     public FlashbackAbility()
     {
         this.Components.Add(new ModifyManaCostComponent(ChangeManaCost));
         this.Components.Add(new ModifyCastZonesComponent(ChangeCastZones));
+        this.Components.Add(new ModifyAdditionalCostComponent(ChangeAdditionalCost));
     }
 }
 

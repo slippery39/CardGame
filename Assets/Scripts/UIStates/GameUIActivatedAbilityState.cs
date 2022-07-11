@@ -17,8 +17,6 @@ public class GameUIActivatedAbilityState : IGameUIState
     public bool NeedsTargets { get; set; } = false;
     public bool NeedsCostChoices { get; set; } = false;
 
-    public bool AutomaticCostChoice { get; set; } = false;
-
     public List<CardGameEntity> SelectedTargets { get; set; }
     public List<CardGameEntity> SelectedChoices { get; set; }
 
@@ -35,7 +33,7 @@ public class GameUIActivatedAbilityState : IGameUIState
         //Determine whether the ability has targets
         NeedsTargets = GetActivatedAbility().HasTargets();
         //Determine whether the ability needs cost choices
-        NeedsCostChoices = GetActivatedAbility().HasChoices();
+        NeedsCostChoices = GetActivatedAbility().HasAdditionalCostChoices();
     }
 
     public string GetMessage()
@@ -106,7 +104,6 @@ public class GameUIActivatedAbilityState : IGameUIState
 
     public void ActivateAbility()
     {
-        //TODO - this needs to change.
         _cardGame.ActivatedAbilitySystem.ActivateAbililty(_actingPlayer, _cardWithAbility, new ActivateAbilityInfo
         {
             Targets = SelectedTargets,

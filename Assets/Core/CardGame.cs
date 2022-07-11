@@ -73,15 +73,8 @@ public class CardGame
         return card;
     }
 
-    internal bool CanPlayCard(int entityId)
+    public bool CanPlayCard(CardInstance card)
     {
-        if (CurrentGameState != GameState.WaitingForAction)
-        {
-            return false;
-        }
-
-        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
-
         if (card == null)
         {
             return false;
@@ -136,10 +129,31 @@ public class CardGame
             {
                 return false;
             }
+
+            if (card.AdditionalCost != null)
+            {
+                if (card.AdditionalCost.CanPay(this, owner, card) == false)
+                {
+                    Log($"Cannot pay the additional cost for ${card.Name}");
+                    return false;
+                }
+            }
         }
 
 
         return true; //if it gets to this point it has passed all the checks, and it is ok to be played.
+    }
+
+    internal bool CanPlayCard(int entityId)
+    {
+        if (CurrentGameState != GameState.WaitingForAction)
+        {
+            return false;
+        }
+
+        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
+
+        return CanPlayCard(card);
     }
 
     public IManaSystem ManaSystem { get => _manaSystem; set => _manaSystem = value; }
@@ -459,7 +473,7 @@ public class CardGame
         var cardDB = new CardDatabase();
 
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData);
         var cardsToAdd = 45;
