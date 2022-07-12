@@ -44,7 +44,7 @@ public class DefaultResolvingSystem : IResolvingSystem
     private CardGame cardGame;
 
     //Can hold card instances and abilities
-    private List<ResolveInfo> _internalStack = new List<ResolveInfo>();
+    private List<ResolvingActionInfo> _internalStack = new List<ResolvingActionInfo>();
     //Can only hold card instances.
     private IZone stackZone = new ResolvingStack();
     public IZone Stack { get { return stackZone; } }
@@ -56,11 +56,11 @@ public class DefaultResolvingSystem : IResolvingSystem
 
     public void Add(CardInstance cardInstance, CardGameEntity target)
     {
-        var resolvingCardInstance = new ResolvingCardInstance
+        var resolvingCardInstance = new ResolvingCardInstanceActionInfo
         {
             CardInstance = cardInstance,
             Targets = new List<CardGameEntity> { target },
-            SourceZone = cardGame.GetZoneOfCard(cardInstance)
+            SourceZone = cardGame.GetZoneOfCard(cardInstance),
         };
 
         cardGame.ZoneChangeSystem.MoveToZone(cardInstance, stackZone);
@@ -73,7 +73,7 @@ public class DefaultResolvingSystem : IResolvingSystem
 
     public void Add(CardAbility ability, CardInstance source)
     {
-        var resolvingAbility = new ResolvingAbility
+        var resolvingAbility = new ResolvingAbilityActionInfo
         {
             Ability = ability,
             Owner = cardGame.GetOwnerOfCard(source),
@@ -90,7 +90,7 @@ public class DefaultResolvingSystem : IResolvingSystem
     //This is  very similar to the add aboce.
     public void Add(CardAbility ability, CardInstance source, CardGameEntity target)
     {
-        var resolvingAbility = new ResolvingAbility
+        var resolvingAbility = new ResolvingAbilityActionInfo
         {
             Ability = ability,
             Owner = cardGame.GetOwnerOfCard(source),
@@ -117,9 +117,9 @@ public class DefaultResolvingSystem : IResolvingSystem
         _internalStack.RemoveAt(nextIndex);
 
         //TODO - need to change this to resolving triggered ability? or just resolving ability in general?
-        if (resolvingThing is ResolvingAbility)
+        if (resolvingThing is ResolvingAbilityActionInfo)
         {
-            var resolvingAbility = (ResolvingAbility)resolvingThing;
+            var resolvingAbility = (ResolvingAbilityActionInfo)resolvingThing;
 
             switch (resolvingAbility.Ability)
             {
@@ -151,9 +151,9 @@ public class DefaultResolvingSystem : IResolvingSystem
             }
 
         }
-        else if (resolvingThing is ResolvingCardInstance)
+        else if (resolvingThing is ResolvingCardInstanceActionInfo)
         {
-            var resolvingCardInstance = (ResolvingCardInstance)resolvingThing;
+            var resolvingCardInstance = (ResolvingCardInstanceActionInfo)resolvingThing;
             //Handle the resolving of a unit
             if (resolvingCardInstance.CardInstance.CurrentCardData is UnitCardData)
             {
@@ -178,7 +178,7 @@ public class DefaultResolvingSystem : IResolvingSystem
                 {
                     cardGame.PromptPlayerForChoice(player, effectsWithChoices.First());
                 }
-                //TODO - Handle choices that must be made upon resolving spells.
+                //TODO - Properly Handle choices that must be made upon resolving spells.
 
             }
 
@@ -187,20 +187,3 @@ public class DefaultResolvingSystem : IResolvingSystem
     }
 }
 
-public class ResolveInfo
-{
-    public Player Owner { get; set; }
-    //The zone that the entity was in before it was added to the stack.
-    public IZone SourceZone { get; set; }
-    public CardInstance Source { get; set; }
-    public List<CardGameEntity> Targets { get; set; }
-}
-
-public class ResolvingAbility : ResolveInfo
-{
-    public CardAbility Ability { get; set; }
-}
-public class ResolvingCardInstance : ResolveInfo
-{
-    public CardInstance CardInstance { get; set; }
-}

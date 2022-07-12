@@ -623,10 +623,18 @@ public class FlashbackAbility : CardAbility
 
     private AdditionalCost ChangeAdditionalCost(CardGame cardGame, CardInstance cardInstance, AdditionalCost originalAdditionalCost)
     {
-        return new PayLifeAdditionalCost
+
+        if (cardGame.GetZoneOfCard(cardInstance).ZoneType == ZoneType.Discard)
         {
-            Amount = 3
-        };
+            return new PayLifeAdditionalCost
+            {
+                Amount = 3
+            };
+        }
+        else
+        {
+            return originalAdditionalCost;
+        }
     }
 
     public FlashbackAbility()

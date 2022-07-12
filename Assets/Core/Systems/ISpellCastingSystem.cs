@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 public interface ISpellCastingSystem
 {
-    public void CastSpell(Player player, CardInstance spellCard, List<CardGameEntity> targets, ResolveInfo resolveInfo);
-    public void CastSpell(Player player, CardInstance spellCard, CardGameEntity target,ResolveInfo resolveInfo);
-    public void CastSpell(Player player, CardInstance spellCard,ResolveInfo resolveInfo);
+    public void CastSpell(Player player, CardInstance spellCard, List<CardGameEntity> targets, ResolvingActionInfo resolveInfo);
+    public void CastSpell(Player player, CardInstance spellCard, CardGameEntity target,ResolvingActionInfo resolveInfo);
+    public void CastSpell(Player player, CardInstance spellCard,ResolvingActionInfo resolveInfo);
 }
 
 public class DefaultSpellCastingSystem : ISpellCastingSystem
@@ -16,13 +16,13 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
     {
         this.cardGame = cardGame;
     }
-    public void CastSpell(Player player, CardInstance spellCard, CardGameEntity target,ResolveInfo resolveInfo)
+    public void CastSpell(Player player, CardInstance spellCard, CardGameEntity target,ResolvingActionInfo resolveInfo)
     {
         CastSpell(player, spellCard, new List<CardGameEntity> { target },resolveInfo);
     }
 
     //Needs information on how the spell was cast (i.e. which zone it came from and stuff).
-    public void CastSpell(Player player, CardInstance spellCard, List<CardGameEntity> targets,ResolveInfo resolveInfo)
+    public void CastSpell(Player player, CardInstance spellCard, List<CardGameEntity> targets,ResolvingActionInfo resolveInfo)
     {
         var effects = ((SpellCardData)spellCard.CurrentCardData).Effects;
 
@@ -42,7 +42,7 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
             cardGame.ZoneChangeSystem.MoveToZone(spellCard, cardGame.GetOwnerOfCard(spellCard).DiscardPile);
         }
     }
-    public void CastSpell(Player player, CardInstance spellCard, ResolveInfo resolveInfo)
+    public void CastSpell(Player player, CardInstance spellCard, ResolvingActionInfo resolveInfo)
     {
         if (cardGame.TargetSystem.SpellNeedsTargets(player, spellCard))
         {

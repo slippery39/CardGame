@@ -43,7 +43,7 @@ public class CardInstance : CardGameEntity
     public List<Effect> Effects { get => ((SpellCardData)_currentCardData).Effects; }
 
     public string RulesText
-    { 
+    {
         get
         {
             var str = string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name);
@@ -120,7 +120,22 @@ public class CardInstance : CardGameEntity
         }
     }
 
-    public AdditionalCost AdditionalCost { get; set; }
+    public AdditionalCost AdditionalCost
+    {
+        get
+        {
+            var originalCost = CurrentCardData.AdditionalCost;
+            var allCostModifiers = GetAbilities<IModifyAdditionalCost>();
+
+            foreach (var costModifier in allCostModifiers)
+            {
+                originalCost = costModifier.ModifyAdditionalCost(_cardGame, this, originalCost);
+            }
+
+            return originalCost;
+        }
+    }
+
 
     public string CardType { get => _currentCardData.CardType; }
 
@@ -291,7 +306,6 @@ public class CardInstance : CardGameEntity
         _originalCardData = cardData;
         _currentCardData = cardData.Clone();
         Abilities = _currentCardData.Abilities.ToList();
-        AdditionalCost = _currentCardData.AdditionalCost;
 
         if (_currentCardData is UnitCardData)
         {

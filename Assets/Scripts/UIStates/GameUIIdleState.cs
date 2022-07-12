@@ -30,16 +30,11 @@ public class GameUIIdleState : IGameUIState
         }
         else if (card.CurrentCardData is ManaCardData)
         {
-            if (_cardGame.ManaSystem.CanPlayManaCard(ActingPlayer, card))
-            {
-                _cardGame.ManaSystem.PlayManaCard(ActingPlayer, card);
-            }
+           _cardGame.ManaSystem.PlayManaCard(ActingPlayer, card);
         }
         else if (card.CurrentCardData is SpellCardData)
         {
-            if (_cardGame.CanPlayCard(card.EntityId)) { 
-                _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
-            }
+           _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
         }
     }
 
@@ -52,6 +47,7 @@ public class GameUIIdleState : IGameUIState
             _cardGame.Log("The card does not have an activated ability");
         }
 
+        //TODO, this should also be handled by the game logic as well... it currently is not.
         var canActivateAbility = _cardGame.ActivatedAbilitySystem.CanActivateAbility(ActingPlayer, card);
 
         if (canActivateAbility)
@@ -90,7 +86,6 @@ public class GameUIIdleState : IGameUIState
 
         if (!isCardCastable)
         {
-            Debug.Log("Invalid Selection");
             return;
         }
 

@@ -67,19 +67,6 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
         }
     }
 
-    public override void HandleSelection(int entityId)
-    {
-        var validTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _spellToCast).Select(e => e.EntityId);
-
-        if (!validTargets.Contains(entityId))
-        {
-            return;
-        }
-
-        _cardGame.PlayCard(_actingPlayer, _spellToCast, entityId);
-        _stateMachine.ToIdle();
-    }
-
     public override void ChangeToSelectTargetState()
     {
         var effectsWithTargets = _cardGame.TargetSystem.GetEffectsThatNeedTargets(_spellToCast.Effects);
@@ -98,11 +85,17 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
         throw new NotImplementedException();
     }
 
+    public override void HandleSelection(int entityId)
+    {
+        _internalState?.HandleSelection(entityId);
+    }
+
     public override void DoAction()
     {
         //We need to change this to account for any additional costs and targets.
         int target;
 
+        //Temporary, should really just be a list of CardGameEntities.
         if (SelectedTargets != null && SelectedTargets.Any())
         {
             target = SelectedTargets[0].EntityId;
@@ -112,7 +105,7 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
             target = 0;
         }
 
-        _cardGame.PlayCard(_actingPlayer, _spellToCast, target);
+        _cardGame.PlayCard(_actingPlayer, _spellToCast, target, SelectedChoices);
         _stateMachine.ToIdle();
     }
 }

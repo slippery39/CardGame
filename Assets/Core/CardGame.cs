@@ -40,6 +40,7 @@ public class CardGame
     private IContinuousEffectSystem _continuousEffectSystem;
     private IActivatedAbilitySystem _activatedAbilitySystem;
     private IModificationsSystem _modificationsSystem;
+    private IAdditionalCostSystem _additionalCostSystem;
     #endregion
 
 
@@ -59,6 +60,7 @@ public class CardGame
     public IStateBasedEffectSystem StateBasedEffectSystem { get => _stateBasedEffectSystem; set => _stateBasedEffectSystem = value; }
     public IUnitPumpSystem UnitPumpSystem { get => _unitPumpSystem; set => _unitPumpSystem = value; }
     public ICardDrawSystem CardDrawSystem { get => _cardDrawSystem; set => _cardDrawSystem = value; }
+
 
 
     public CardInstance GetCardById(int entityId)
@@ -173,6 +175,7 @@ public class CardGame
     public IModificationsSystem ModificationsSystem { get => _modificationsSystem; set => _modificationsSystem = value; }
     public GameState CurrentGameState { get; set; }
     public Effect ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
+    internal IAdditionalCostSystem AdditionalCostSystem { get => _additionalCostSystem; set => _additionalCostSystem = value; }
 
     #endregion
     #endregion
@@ -199,6 +202,7 @@ public class CardGame
         _activatedAbilitySystem = new DefaultActivatedAbilitySystem(this);
         _discardSystem = new DefaultDiscardSystem(this);
         _modificationsSystem = new DefaultModificationSystem(this);
+        _additionalCostSystem = new DefaultAdditionalCostSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -328,29 +332,31 @@ public class CardGame
     }
     */
 
-    public void PlayCard(Player player, CardInstance cardFromHand, int targetId)
+    //PlayCard needs an ActionInfo
+    public void PlayCard(Player player, CardInstance cardToPlay, int targetId, List<CardGameEntity> costChoices)
     {
 
-        if (!CanPlayCard(cardFromHand.EntityId))
+        if (!CanPlayCard(cardToPlay.EntityId))
         {
             Log("Unable to play the card");
             return;
         }
 
-        if (cardFromHand.CurrentCardData is ManaCardData)
+        if (cardToPlay.CurrentCardData is ManaCardData)
         {
-            ManaSystem.PlayManaCard(player, cardFromHand);
+            ManaSystem.PlayManaCard(player, cardToPlay);
         }
-        if (cardFromHand.CurrentCardData is UnitCardData)
+        else if (cardToPlay.CurrentCardData is UnitCardData)
         {
-            var validTargets = _targetSystem.GetValidTargets(player, cardFromHand);
+            var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
             var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
 
             if (targetAsEntity != null)
             {
-                ManaSystem.SpendManaAndEssence(player, cardFromHand.ManaCost);
-                ResolvingSystem.Add(cardFromHand, targetAsEntity);
+                ManaSystem.SpendManaAndEssence(player, cardToPlay.ManaCost);
+                AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
+                ResolvingSystem.Add(cardToPlay, targetAsEntity);
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             else
@@ -359,32 +365,26 @@ public class CardGame
                 return;
             }
         }
-        else if (cardFromHand.CurrentCardData is SpellCardData)
+        else if (cardToPlay.CurrentCardData is SpellCardData)
         {
-            if (!_targetSystem.SpellNeedsTargets(player, cardFromHand))
+            if (!_targetSystem.SpellNeedsTargets(player, cardToPlay))
             {
-                var manaCost = cardFromHand.ManaCost;
-
-                //Temporary for flashback effects while we figure out where to put this logic.
-                if (player.DiscardPile.Cards.Contains(cardFromHand))
-                {
-                    manaCost = cardFromHand.GetAbilities<FlashbackAbility>().FirstOrDefault().ManaCost;
-                }
-
-                ManaSystem.SpendManaAndEssence(player, manaCost);
-                ResolvingSystem.Add(cardFromHand, null);
+                ManaSystem.SpendManaAndEssence(player, cardToPlay.ManaCost);
+                AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
+                ResolvingSystem.Add(cardToPlay, null);
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             else
             {
-                var validTargets = _targetSystem.GetValidTargets(player, cardFromHand);
+                var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
                 var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
 
                 if (targetAsEntity != null)
                 {
-                    ManaSystem.SpendManaAndEssence(player, cardFromHand.ManaCost);
-                    ResolvingSystem.Add(cardFromHand, targetAsEntity);
+                    ManaSystem.SpendManaAndEssence(player, cardToPlay.ManaCost);
+                    AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
+                    ResolvingSystem.Add(cardToPlay, targetAsEntity);
                     _stateBasedEffectSystem.CheckStateBasedEffects();
                 }
             }
@@ -473,9 +473,10 @@ public class CardGame
         var cardDB = new CardDatabase();
 
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
+        //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData);
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
         for (int i = 0; i < cardsToAdd; i++)

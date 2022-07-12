@@ -5,7 +5,6 @@ using System.Linq;
 public interface IActivatedAbilitySystem
 {
     bool CanActivateAbility(Player player, CardInstance card);
-    public bool CanPayAdditionalCost(Player player, CardInstance source, AdditionalCost cost);
     public void ActivateAbililty(Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
 }
 
@@ -39,9 +38,9 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         cardGame.ManaSystem.SpendManaAndEssence(player, activatedAbility.ManaCost);
 
         //Pay any additional costs.
-        if (activatedAbility.HasAdditionalCost())
+         if (activatedAbility.HasAdditionalCost())
         {
-            PayAdditionalCost(player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
+            cardGame.AdditionalCostSystem.PayAdditionalCost(player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
         }
 
         //If its a once per turn ability, place an ability cooldown component on it.
@@ -61,15 +60,6 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         }
     }
 
-    private void PayAdditionalCost(Player player, CardInstance card, AdditionalCost additionalCost, CostInfo costInfo)
-    {
-        additionalCost.PayCost(cardGame, player, card, costInfo);
-    }
-
-    public bool CanPayAdditionalCost(Player player, CardInstance source, AdditionalCost cost)
-    {
-        return cost.CanPay(cardGame, player, source);
-    }
 
     public bool CanActivateAbility(Player player, CardInstance card)
     {
@@ -88,7 +78,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
         if (activatedAbility.HasAdditionalCost())
         {
-            canPayAdditionalCost = CanPayAdditionalCost(player, card, activatedAbility.AdditionalCost);
+            canPayAdditionalCost = cardGame.AdditionalCostSystem.CanPayAdditionalCost(player, card, activatedAbility.AdditionalCost);
         }
 
         return canPayManaCost && canPayAdditionalCost;
