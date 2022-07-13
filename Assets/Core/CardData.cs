@@ -94,9 +94,11 @@ public class SpellCardData : BaseCardData
     {
         get
         {
+            var additionalCostText = AdditionalCost != null ? $"Additional Cost : {AdditionalCost.RulesText}\r\n" : "";
             var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
             var effectsText = string.Join("\r\n", Effects.Select(ef => ef.RulesText));
-            return abilitiesText + effectsText;
+
+            return additionalCostText + abilitiesText + effectsText;
         }
     }
 
@@ -114,7 +116,8 @@ public class SpellCardData : BaseCardData
             ArtPath = ArtPath,
             Colors = Colors,
             Abilities = Abilities.ToList(), //todo - potential deep clone.
-            Effects = Effects.ToList()
+            Effects = Effects.ToList(),
+            AdditionalCost = AdditionalCost //clone this?
         };
     }
 }
@@ -1263,6 +1266,28 @@ public class CardDatabase : ICardDatabase
                     {
                         Amount = 3
                     }
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Goblin Grenade",
+            ManaCost = "R",
+            Colors = new List<CardColor> { CardColor.Red },
+            AdditionalCost = new SacrificeCreatureAdditionalCost
+            {
+                Filter = new CardFilter
+                {
+                    CreatureType = "Goblin"
+                }
+            },
+            Effects = new List<Effect>
+            {
+                new DamageEffect
+                {
+                    Amount = 5,
+                    TargetType = TargetType.TargetUnitsOrPlayers
                 }
             }
         });

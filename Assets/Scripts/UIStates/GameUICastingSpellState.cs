@@ -82,7 +82,7 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
 
     public override void ChangeToCostChoosingState()
     {
-        throw new NotImplementedException();
+        ChangeState(new GameUIChooseCostsState(_stateMachine, this, _spellToCast,_spellToCast.AdditionalCost));
     }
 
     public override void HandleSelection(int entityId)

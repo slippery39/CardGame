@@ -132,6 +132,11 @@ public class CardInstance : CardGameEntity
                 originalCost = costModifier.ModifyAdditionalCost(_cardGame, this, originalCost);
             }
 
+            if (Name == "Goblin Grenade")
+            {
+                var test = 1;
+            }
+
             return originalCost;
         }
     }
