@@ -3,24 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameUIActivatedAbilityState : IGameUIState
+public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
 {
     private CardGame _cardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _cardWithAbility;
-
-    //TODO - we will be using internal state to determine which messages to show and what not
-    private IGameUIState _internalState;
-
-
-    public bool NeedsTargets { get; set; } = false;
-    public bool NeedsCostChoices { get; set; } = false;
-
-    public List<CardGameEntity> SelectedTargets { get; set; }
-    public List<CardGameEntity> SelectedChoices { get; set; }
-
-    //How to pay additional costs?
 
     public GameUIActivatedAbilityState(GameUIStateMachine stateMachine, CardInstance cardWithAbility)
     {
@@ -36,12 +24,12 @@ public class GameUIActivatedAbilityState : IGameUIState
         NeedsCostChoices = GetActivatedAbility().HasAdditionalCostChoices();
     }
 
-    public string GetMessage()
+    public override string GetMessage()
     {
         return _internalState?.GetMessage();
     }
 
-    public void HandleInput()
+    public override void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -50,7 +38,7 @@ public class GameUIActivatedAbilityState : IGameUIState
         }
     }
 
-    public void OnApply()
+    public override void OnApply()
     {
         //TODO - I think the bug is because this is activating before the state machine above it gets to do anything.
         if (NeedsTargets)
@@ -75,31 +63,25 @@ public class GameUIActivatedAbilityState : IGameUIState
         return _cardWithAbility.GetAbilities<ActivatedAbility>().First();
     }
 
-    public void OnDestroy()
+    public override void OnDestroy()
     {
         _internalState?.OnDestroy();
     }
 
-    public void HandleSelection(int entityId)
+    public override void HandleSelection(int entityId)
     {
         _internalState?.HandleSelection(entityId);
     }
 
-    public void ChangeState(IGameUIState stateTo)
+
+    public override void ChangeToCostChoosingState()
     {
-        _internalState?.OnDestroy();
-        _internalState = stateTo;
-        stateTo.OnApply();
+        ChangeState(new GameUIChooseCostsState(_stateMachine, this, _cardWithAbility, GetActivatedAbility().AdditionalCost));
     }
 
-    public void ChangeToCostChoosingState()
+    public override void ChangeToSelectTargetState()
     {
-        ChangeState(new GameUIActivatedAbilityCostChoosingState(_stateMachine, this, _cardWithAbility));
-    }
-
-    public void ChangeToSelectTargetState()
-    {
-        ChangeState(new GameUIActivatedAbilitySelectTargetsState(_stateMachine, this, _cardWithAbility));
+        ChangeState(new GameUISelectTargetState(_stateMachine, this, GetActivatedAbility().Effects));
     }
 
     public void ActivateAbility()
@@ -111,5 +93,10 @@ public class GameUIActivatedAbilityState : IGameUIState
         });
 
         _stateMachine.ToIdle();
+    }
+
+    public override void DoAction()
+    {
+        ActivateAbility();
     }
 }
