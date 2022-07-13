@@ -113,7 +113,7 @@ public class CardGame
         }
         //Other checks: is the card in the players hand. Otherwise they cannot play it.
 
-        if (!card.IsOfType<UnitCardData>())
+        if (card.IsOfType<UnitCardData>())
         {
             if (!ManaSystem.CanPlayCard(owner, card))
             {
@@ -354,7 +354,7 @@ public class CardGame
 
             if (targetAsEntity != null)
             {
-                ManaSystem.SpendManaAndEssence(player, cardToPlay.ManaCost);
+                ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
                 ResolvingSystem.Add(cardToPlay, targetAsEntity);
                 _stateBasedEffectSystem.CheckStateBasedEffects();
@@ -369,7 +369,7 @@ public class CardGame
         {
             if (!_targetSystem.SpellNeedsTargets(player, cardToPlay))
             {
-                ManaSystem.SpendManaAndEssence(player, cardToPlay.ManaCost);
+                ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
                 ResolvingSystem.Add(cardToPlay, null);
                 _stateBasedEffectSystem.CheckStateBasedEffects();
@@ -382,7 +382,7 @@ public class CardGame
 
                 if (targetAsEntity != null)
                 {
-                    ManaSystem.SpendManaAndEssence(player, cardToPlay.ManaCost);
+                    ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                     AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
                     ResolvingSystem.Add(cardToPlay, targetAsEntity);
                     _stateBasedEffectSystem.CheckStateBasedEffects();

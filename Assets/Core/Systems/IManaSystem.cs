@@ -7,7 +7,7 @@ public interface IManaSystem
     void AddEssence(Player player, ManaType essenceType, int amount);
     void AddTemporaryManaAndEssence(Player player, ManaType manaType, int amount);
     void AddTemporaryEssence(Player player, ManaType essenceType, int amount);
-    void SpendManaAndEssence(Player player, string cost);
+    void SpendMana(Player player, string cost);
     void ResetManaAndEssence(Player player);
     bool CanPlayCard(Player player, CardInstance card);
     bool CanPlayManaCard(Player player, CardInstance card);
@@ -42,7 +42,7 @@ public class DefaultManaSystem : IManaSystem
         player.ManaPool.AddColorlessMana(amount);
     }
 
-    public void SpendManaAndEssence(Player player, string cost)
+    public void SpendMana(Player player, string cost)
     {
         //TODO - change this.
 
