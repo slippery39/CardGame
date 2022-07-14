@@ -3,4 +3,5 @@
 public interface IBattleSystem
 {
     void ExecuteBattles();
+    void Battle(int laneIndex);
 }

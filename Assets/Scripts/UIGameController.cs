@@ -65,6 +65,27 @@ public class UIGameController : MonoBehaviour
 
         if (_cardGame.CurrentGameState == GameState.WaitingForAction)
         {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                _cardGame.BattleSystem.Battle(0);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                _cardGame.BattleSystem.Battle(1);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                _cardGame.BattleSystem.Battle(2);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                _cardGame.BattleSystem.Battle(3);
+            }
+            if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                _cardGame.BattleSystem.Battle(4);
+            }
+
             //Test Hotkey for testing our Battle System.
             if (Input.GetKeyDown(KeyCode.B))
             {

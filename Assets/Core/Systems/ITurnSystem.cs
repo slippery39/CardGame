@@ -60,7 +60,8 @@ public class DefaultTurnSystem : ITurnSystem
     public void EndTurn()
     {
         //Execute our battles:
-        cardGame.BattleSystem.ExecuteBattles();
+        //No need for this anymore.
+        //cardGame.BattleSystem.ExecuteBattles();
 
 
         var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
