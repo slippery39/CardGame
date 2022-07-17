@@ -61,102 +61,7 @@ public class CardGame
     public IUnitPumpSystem UnitPumpSystem { get => _unitPumpSystem; set => _unitPumpSystem = value; }
     public ICardDrawSystem CardDrawSystem { get => _cardDrawSystem; set => _cardDrawSystem = value; }
 
-
-
-    public CardInstance GetCardById(int entityId)
-    {
-        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
-
-        if (card == null)
-        {
-            Logger.Log($"Could not find card, invalid entity id {entityId}");
-        }
-
-        return card;
-    }
-
-    public bool CanPlayCard(CardInstance card)
-    {
-        if (card == null)
-        {
-            return false;
-        }
-
-        var owner = GetOwnerOfCard(card);
-
-        if (ActivePlayer != owner)
-        {
-            return false;
-        }
-
-        //Can only play the card if it is in the owners hand.
-        //We have hard coded in flashback here.
-
-        var castZones = new List<ZoneType> { ZoneType.Hand };
-
-        //figure out where the card can be cast from
-
-        var modCastZoneComponents = card.GetAbilities<IModifyCastZones>();
-
-        foreach (var modCastZoneComponent in modCastZoneComponents)
-        {
-            castZones = modCastZoneComponent.ModifyCastZones(this, card, castZones);
-        }
-
-        //TODO - check if the card is in one of the cast zones
-
-        var castZoneOfCard = GetZoneOfCard(card).ZoneType;
-
-        if (!castZones.Contains(castZoneOfCard))
-        {
-            return false;
-        }
-        //Other checks: is the card in the players hand. Otherwise they cannot play it.
-
-        if (card.IsOfType<UnitCardData>())
-        {
-            if (!ManaSystem.CanPlayCard(owner, card))
-            {
-                return false;
-            }
-        }
-        else if (card.IsOfType<ManaCardData>())
-        {
-            return ManaSystem.CanPlayManaCard(ActivePlayer, card);
-            //check if we can the mana card.
-        }
-        else if (card.IsOfType<SpellCardData>())
-        {
-            if (!ManaSystem.CanPlayCard(owner, card))
-            {
-                return false;
-            }
-
-            if (card.AdditionalCost != null)
-            {
-                if (card.AdditionalCost.CanPay(this, owner, card) == false)
-                {
-                    Log($"Cannot pay the additional cost for ${card.Name}");
-                    return false;
-                }
-            }
-        }
-
-
-        return true; //if it gets to this point it has passed all the checks, and it is ok to be played.
-    }
-
-    internal bool CanPlayCard(int entityId)
-    {
-        if (CurrentGameState != GameState.WaitingForAction)
-        {
-            return false;
-        }
-
-        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
-
-        return CanPlayCard(card);
-    }
+    public IItemSystem ItemSystem { get; set; }
 
     public IManaSystem ManaSystem { get => _manaSystem; set => _manaSystem = value; }
     public IUnitSummoningSystem UnitSummoningSystem { get => _unitSummoningSystem; set => _unitSummoningSystem = value; }
@@ -203,6 +108,8 @@ public class CardGame
         _discardSystem = new DefaultDiscardSystem(this);
         _modificationsSystem = new DefaultModificationSystem(this);
         _additionalCostSystem = new DefaultAdditionalCostSystem(this);
+
+        ItemSystem = new DefaultItemSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -325,12 +232,108 @@ public class CardGame
         CurrentGameState = GameState.WaitingForAction;
     }
 
-    /*
-    public void ResolveNext()
+    public CardInstance GetCardById(int entityId)
     {
-        ResolvingSystem.ResolveNext(this);
+        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
+
+        if (card == null)
+        {
+            Logger.Log($"Could not find card, invalid entity id {entityId}");
+        }
+
+        return card;
     }
-    */
+
+    public bool CanPlayCard(CardInstance card)
+    {
+        if (card == null)
+        {
+            return false;
+        }
+
+        var owner = GetOwnerOfCard(card);
+
+        if (ActivePlayer != owner)
+        {
+            return false;
+        }
+
+        //Can only play the card if it is in the owners hand.
+        //We have hard coded in flashback here.
+
+        var castZones = new List<ZoneType> { ZoneType.Hand };
+
+        //figure out where the card can be cast from
+
+        var modCastZoneComponents = card.GetAbilities<IModifyCastZones>();
+
+        foreach (var modCastZoneComponent in modCastZoneComponents)
+        {
+            castZones = modCastZoneComponent.ModifyCastZones(this, card, castZones);
+        }
+
+        //TODO - check if the card is in one of the cast zones
+
+        var castZoneOfCard = GetZoneOfCard(card).ZoneType;
+
+        if (!castZones.Contains(castZoneOfCard))
+        {
+            return false;
+        }
+        //Other checks: is the card in the players hand. Otherwise they cannot play it.
+
+        if (card.IsOfType<ManaCardData>())
+        {
+            return ManaSystem.CanPlayManaCard(ActivePlayer, card);
+            //check if we can the mana card.
+        }
+        else
+        {
+            if (!ManaSystem.CanPlayCard(owner, card))
+            {
+                return false;
+            }
+        }
+
+        if (card.IsOfType<SpellCardData>())
+        {
+            if (card.AdditionalCost != null)
+            {
+                if (card.AdditionalCost.CanPay(this, owner, card) == false)
+                {
+                    Log($"Cannot pay the additional cost for ${card.Name}");
+                    return false;
+                }
+            }
+        }
+        else if (card.IsOfType<ItemCardData>())
+        {
+            if (card.AdditionalCost != null)
+            {
+                if (card.AdditionalCost.CanPay(this, owner, card) == false)
+                {
+                    Log($"Cannot pay the additional cost for ${card.Name}");
+                    return false;
+                }
+            }
+        }
+
+
+        return true; //if it gets to this point it has passed all the checks, and it is ok to be played.
+    }
+
+    internal bool CanPlayCard(int entityId)
+    {
+        if (CurrentGameState != GameState.WaitingForAction)
+        {
+            return false;
+        }
+
+        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
+
+        return CanPlayCard(card);
+    }
+
 
     //PlayCard needs an ActionInfo
     public void PlayCard(Player player, CardInstance cardToPlay, int targetId, List<CardGameEntity> costChoices)
@@ -367,11 +370,12 @@ public class CardGame
         }
         else if (cardToPlay.CurrentCardData is SpellCardData)
         {
-            if (!_targetSystem.SpellNeedsTargets(player, cardToPlay))
+            if (!_targetSystem.CardNeedsTargets(player, cardToPlay))
             {
                 ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
                 ResolvingSystem.Add(cardToPlay, null);
+                //Do we need our state based effects here?
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             else
@@ -385,9 +389,17 @@ public class CardGame
                     ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                     AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
                     ResolvingSystem.Add(cardToPlay, targetAsEntity);
+                    //Do we need our state based effects here?
                     _stateBasedEffectSystem.CheckStateBasedEffects();
                 }
             }
+        }
+        else if (cardToPlay.IsOfType<ItemCardData>())
+        {
+            ManaSystem.SpendMana(player, cardToPlay.ManaCost);
+            ResolvingSystem.Add(cardToPlay, null);
+            _stateBasedEffectSystem.CheckStateBasedEffects();
+
         }
     }
 
@@ -420,6 +432,12 @@ public class CardGame
 
         zones.Add(ResolvingSystem.Stack);
 
+        zones.Add(Player1.Exile);
+        zones.Add(Player2.Exile);
+
+        zones.Add(Player1.Items);
+        zones.Add(Player2.Items);
+
         return zones;
     }
 
@@ -430,10 +448,21 @@ public class CardGame
     public List<CardInstance> GetUnitsInPlay()
     {
 
-        var player1Units = Player1.Lanes.Select(lane => lane.UnitInLane).Where(unit => unit != null);
-        var player2Units = Player2.Lanes.Select(lane => lane.UnitInLane).Where(unit => unit != null);
+        var player1Units = Player1.GetUnitsInPlay();
+        var player2Units = Player2.GetUnitsInPlay();
 
         return player1Units.Concat(player2Units).ToList();
+    }
+
+    public bool IsInPlay(CardInstance card)
+    {
+        var zone = GetZoneOfCard(card);
+        return new List<ZoneType> { ZoneType.InPlay, ZoneType.Items }.Contains(zone.ZoneType);
+    }
+
+    public List<CardInstance> GetCardsInPlay(Player player)
+    {
+        return player.GetCardsInPlay();
     }
 
     //For general console logging purposes.
@@ -475,7 +504,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => (card is UnitCardData && ((UnitCardData)card).CreatureType == "Goblin") || card.Name == "Goblin Grenade");
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Subtype == "Artifact");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 

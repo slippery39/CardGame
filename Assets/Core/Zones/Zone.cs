@@ -38,7 +38,8 @@ public enum ZoneType
     InPlay,
     Deck,
     Stack,
-    Exile
+    Exile,
+    Items
 }
 
 //A generic zone that can be used if no extra functionality is needed.

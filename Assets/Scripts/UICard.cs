@@ -72,6 +72,10 @@ public class UICard : UIGameEntity
             _cardCombatStatsText.gameObject.SetActive(false);
             _cardManaText.gameObject.SetActive(false);
         }
+        else if (cardData is ItemCardData)
+        {
+            _cardCombatStatsText.gameObject.SetActive(false);
+        }
 
         //Warning: we might want to update this to the CardInstanceAttributes..
         _cardNameText.text = cardData.Name;
@@ -123,9 +127,9 @@ public class UICard : UIGameEntity
                 case CardColor.Red: _cardFrame.sprite = redCardFrame; break;
                 case CardColor.Black: _cardFrame.sprite = blackCardFrame; break;
                 case CardColor.Colorless: _cardFrame.sprite = colorlessCardFrame; break;
-                default: _cardFrame.sprite = colorlessCardFrame;break;
+                default: _cardFrame.sprite = colorlessCardFrame; break;
             }
-            
+
         }
     }
 

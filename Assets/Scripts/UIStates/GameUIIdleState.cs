@@ -32,9 +32,16 @@ public class GameUIIdleState : IGameUIState
         {
            _cardGame.ManaSystem.PlayManaCard(ActingPlayer, card);
         }
-        else if (card.CurrentCardData is SpellCardData)
+        else if (card.CurrentCardData is SpellCardData || card.CurrentCardData is ItemCardData)
         {
+            
            _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
+        }
+        else
+        {
+            //TODO - handle items... 
+            //handle items now... items might have targets?
+            //Really we should just have a PlayingCardState... 
         }
     }
 
@@ -73,16 +80,23 @@ public class GameUIIdleState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
-        var cardInPlay = ActingPlayer.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Where(card => card.EntityId == entityId).FirstOrDefault();
+        var card = _cardGame.GetCardById(entityId);
 
-        if (cardInPlay != null)
+        if (card == null)
         {
-            HandleCardActivatedAbility(cardInPlay);
+            _cardGame.Log($"Could not find card with entity id {entityId}");
+            return;
+        }
+
+        var isCardInPlay = _cardGame.IsInPlay(card);
+
+        if (isCardInPlay)
+        {
+            HandleCardActivatedAbility(card);
             return;
         }
 
         var isCardCastable = _cardGame.CanPlayCard(entityId); //should probably be part of a system.
-        var card = _cardGame.GetCardById(entityId);
 
         if (!isCardCastable)
         {

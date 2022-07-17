@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public interface IEffectsProcessor
 {
@@ -284,7 +285,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
             {
                 if (!(entity is CardInstance))
                 {
-                    throw new Exception("Error : only units can be effected with the sacrifice self effect");
+                    throw new Exception("Error : only units can be effected with the SwitchPowerToughness effect");
                 }
 
                 var card = (CardInstance)entity;
@@ -301,7 +302,29 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     cardGame.ModificationsSystem.AddModification(card, mod);
                 }
             }
+        }
+        if (effect is PumpPowerByNumberOfArtifactsEffect)
+        {
+            var pumpPowerByArtifacts = effect as PumpPowerByNumberOfArtifactsEffect;
+            foreach (var entity in entitiesToEffect)
+            {
+                if (!(entity is CardInstance))
+                {
+                    throw new Exception("Error : only units can be effected with PumpPowerByNumberOfArtifactsEffect");
+                }
 
+                var card = (CardInstance)entity;
+
+                Func<CardGame, CardInstance, int, int> powerMod = (c, ci, o) =>
+                {
+                    return o + pumpPowerByArtifacts.CountArtifacts(c, c.GetOwnerOfCard(card));
+                };
+
+                //We will need a new modification.
+                var mod = new ModAddXToPowerToughness(powerMod, null);
+                mod.OneTurnOnly = true;
+                cardGame.ModificationsSystem.AddModification(card, mod);
+            }
         }
     }
     public void ApplyEffects(Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)

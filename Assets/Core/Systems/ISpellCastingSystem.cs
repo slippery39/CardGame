@@ -44,7 +44,7 @@ public class DefaultSpellCastingSystem : ISpellCastingSystem
     }
     public void CastSpell(Player player, CardInstance spellCard, ResolvingActionInfo resolveInfo)
     {
-        if (cardGame.TargetSystem.SpellNeedsTargets(player, spellCard))
+        if (cardGame.TargetSystem.CardNeedsTargets(player, spellCard))
         {
             throw new Exception("Error: The spell that is being cast needs targets but is calling the CastSpell method without targets... make sure it is using the correct overloaded CastSpell method");
         }

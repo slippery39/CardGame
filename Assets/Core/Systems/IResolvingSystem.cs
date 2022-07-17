@@ -159,7 +159,6 @@ public class DefaultResolvingSystem : IResolvingSystem
             {
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
                 cardGame.UnitSummoningSystem.SummonUnit(player, resolvingCardInstance.CardInstance, resolvingThing.Targets.First().EntityId);
-
             }
             //Handle the resolving of a spell
             else if (resolvingCardInstance.CardInstance.CurrentCardData is SpellCardData)
@@ -172,6 +171,8 @@ public class DefaultResolvingSystem : IResolvingSystem
 
                 //if does need a choice upon resolution, the game needs to account for that.
                 //For now we are just considering discard effects
+                //TODO - the way we are doing this will cause bugs in the future. We need a way of "pausing" the resolving of the spell until all of the choices are
+                //done.
                 var effectsWithChoices = spellCardData.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.Self);
 
                 if (effectsWithChoices.Any())
@@ -179,7 +180,11 @@ public class DefaultResolvingSystem : IResolvingSystem
                     cardGame.PromptPlayerForChoice(player, effectsWithChoices.First());
                 }
                 //TODO - Properly Handle choices that must be made upon resolving spells.
-
+            }
+            else if (resolvingCardInstance.CardInstance.CurrentCardData is ItemCardData)
+            {
+                var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
+                cardGame.ItemSystem.PlayItem(player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets, resolvingCardInstance);
             }
 
         }

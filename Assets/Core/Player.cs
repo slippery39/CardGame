@@ -15,6 +15,7 @@ public class Player : CardGameEntity
     private DiscardPile _discardPile;
     private Deck _deck;
     private IZone _exile;
+    private IZone _items;
 
     private ManaPool _manaPool;
 
@@ -29,6 +30,9 @@ public class Player : CardGameEntity
         DiscardPile = new DiscardPile();
         Deck = new Deck();
         Exile = new Zone(ZoneType.Exile, "Exile");
+        Items = new Zone(ZoneType.Items, "Items");
+
+
 
         InitLanes(numberOfLanes);
     }
@@ -48,6 +52,8 @@ public class Player : CardGameEntity
     public ManaPool ManaPool { get => _manaPool; }
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 
+    public IZone Items { get => _items; set => _items = value; }
+
     #endregion
 
     #region Public Methods
@@ -55,6 +61,18 @@ public class Player : CardGameEntity
     public bool IsOwnerOfCard(CardGame cardGame, CardInstance card)
     {
         return Hand.Cards.Contains(card) || DiscardPile.Cards.Contains(card) || Lanes.SelectMany(l => l.Cards).Contains(card);
+    }
+
+    public List<CardInstance> GetUnitsInPlay()
+    {
+        return Lanes.Where(l=>l.IsEmpty() == false).Select(l=>l.UnitInLane).ToList();
+    }
+
+    public List<CardInstance> GetCardsInPlay()
+    {
+        var cardsInPlay = GetUnitsInPlay();
+        cardsInPlay.AddRange(Items.Cards);
+        return cardsInPlay;
     }
 
     #endregion

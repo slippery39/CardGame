@@ -27,6 +27,7 @@ public abstract class BaseCardData
     public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name); } }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
+    public string Subtype { get; set; }
     public List<CardColor> Colors { get; set; }
     public string ArtPath { get; set; }
     public List<CardAbility> Abilities { get; set; }
@@ -65,13 +66,9 @@ public class UnitCardData : BaseCardData
 
     public override BaseCardData Clone()
     {
-
-        BaseCardData card = this.MemberwiseClone() as BaseCardData;
         Abilities = Abilities.Select(ab => ab.Clone()).ToList();
         return new UnitCardData()
         {
-
-
             Name = Name,
             ManaCost = ManaCost,
             ArtPath = ArtPath,
@@ -79,7 +76,8 @@ public class UnitCardData : BaseCardData
             Toughness = Toughness,
             Colors = Colors,
             Abilities = Abilities.ToList(), //todo - potential deep clone.
-            CreatureType = CreatureType
+            CreatureType = CreatureType,
+            Subtype = Subtype
         };
     }
 }
@@ -117,7 +115,27 @@ public class SpellCardData : BaseCardData
             Colors = Colors,
             Abilities = Abilities.ToList(), //todo - potential deep clone.
             Effects = Effects.ToList(),
-            AdditionalCost = AdditionalCost //clone this?
+            AdditionalCost = AdditionalCost, //clone this?
+            Subtype = Subtype
+        };
+    }
+}
+
+public class ItemCardData : BaseCardData
+{
+    public override string CardType => "Item";
+
+    public override BaseCardData Clone()
+    {
+        Abilities = Abilities.Select(ab => ab.Clone()).ToList();
+        return new ItemCardData()
+        {
+            Name = Name,
+            ManaCost = ManaCost,
+            ArtPath = ArtPath,
+            Colors = Colors,
+            Abilities = Abilities.ToList(), //todo - potential deep clone.
+            Subtype = Subtype
         };
     }
 }
@@ -1368,6 +1386,137 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
+
+        _cards.Add(new ItemCardData
+        {
+            Name = "Chromatic Sphere",
+            ManaCost = "1",
+            ArtPath = "CardArt/Chromatic Sphere",
+            Colors = new List<CardColor> { }, //Colorless,
+            Subtype = "Artifact",
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost = "1",
+                    AdditionalCost = new SacrificeSelfAdditionalCost(),
+                    Effects = new List<Effect>
+                    {
+                        new DrawCardEffect
+                        {
+                            Amount = 1
+                        },
+                        new AddTempManaEffect
+                        {
+                            ManaType = ManaType.Any,
+                            Amount = 1
+                        },
+                    }
+                }
+            }
+        });
+
+        //Cranial Plating should be some sort of equipment, but we can just make it an item.
+        _cards.Add(new ItemCardData
+        {
+            Name = "Cranial Plating",
+            ManaCost = "2",
+            Colors = new List<CardColor> { }, // Colorless,
+            Subtype = "Artifact",
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost = "1",
+                    OncePerTurn = true,
+                    Effects = new List<Effect>
+                    {
+                        new PumpPowerByNumberOfArtifactsEffect()
+                        {
+                            TargetType = TargetType.TargetUnits
+                        }
+                    }
+                }
+            }
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Ornithopter",
+            ManaCost = "0",
+            Colors = new List<CardColor> { },
+            Subtype = "Artifact",
+            Abilities = new List<CardAbility>
+            {
+                new FlyingAbility()
+            },
+            Power = 0,
+            Toughness = 2
+        });
+        /*
+        //Instead of regen, we will give our cards shields.
+        _cards.Add(new ItemCardData
+        {
+            Name = "Welding Jar",
+            ManaCost = "0",
+            Colors = new List<CardColor> { },
+            Subtype = "Artifact",
+            Abilities = new List<CardAbility>
+            {
+                new AddTempAbilityEffect(new ShieldAbility())
+            }
+        });
+
+        _cards.Add(new ItemCardData
+        {
+            Name = "Chrome Mox",
+            ManaCost = "0",
+            Colors = new List<CardColor> { },
+            Subtype = "Artifact",
+            Abilities = new List<CardAbility>
+            {
+                //Imprint has two parts, // not too sure how to do this yet.
+                //When we discard the card, check to see if the source has imprint, if it does, save a reference of that card
+                //to the cards ability components as an ImprintedCardComponent?
+                //then our imprint effect can modify the AddManaEffect as needed. 
+                new ImprintAbility()
+                {
+                    new AddVariableManaEffect
+                    {
+                        
+                    }
+                }
+            }
+        });
+        */
+
+
+
+
+
+        //Affinity Deck
+
+        /*
+         * Creature (24)
+4 Ornithopter
+4 Arcbound Ravager
+4 Arcbound Worker
+4 Disciple of the Vault
+2 Somber Hoverguard
+4 Frogmite
+4 Chrome Mox
+4 Thoughtcast
+4 Welding Jar
+4 Shrapnel Blast
+4 Cranial Plating
+4 Seat of the Synod
+4 Vault of Whispers
+4 Great Furnace
+3 Blinkmoth Nexus
+3 Glimmervoid
+Cards 60
+         * 
+         */
 
 
 

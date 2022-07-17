@@ -520,6 +520,25 @@ public class SwitchPowerToughnessEffect : Effect
     }
 }
 
+public class PumpPowerByNumberOfArtifactsEffect : Effect
+{
+
+    public int CountArtifacts(CardGame cardGame, Player player)
+    {
+        var thingsInPlay = cardGame.GetUnitsInPlay().Where(u => cardGame.GetOwnerOfCard(u) == player).ToList();
+        thingsInPlay.AddRange(player.Items.Cards);
+        return thingsInPlay.Where(thing => thing.Subtype.ToLower() == "artifact").Count();
+    }
+
+    public override string RulesText
+    {
+        get
+        {
+            return $"A unit gets +X/+0 until end of turn where X is the amount of artifacts you control.";
+        }
+    }
+}
+
 
 //Represents an effect with multiple components.
 public class CompoundEffect : Effect
@@ -645,5 +664,30 @@ public class FlashbackAbility : CardAbility
     }
 }
 
+
+public class AffinityAbility : CardAbility
+{
+    public override string RulesText => $"Affinity for artifacts"; //only for artifacts right now.
+
+    private string ChangeManaCost(CardGame cardGame, CardInstance cardInstance, string originalManaCost)
+    {
+        //We need to count the amount of artifacts in play for the controller.
+        var cardOwner = cardGame.GetOwnerOfCard(cardInstance);
+        var artifactCounts = cardGame.GetCardsInPlay(cardOwner).Where(c => c.Subtype.ToLower() == "artifact").Count();
+
+        //Subtract the artifact counts from the colorless mana;
+        var manaCostAsObj = new Mana(originalManaCost);
+
+        manaCostAsObj.ColorlessMana -= artifactCounts;
+        manaCostAsObj.ColorlessMana = Math.Max(0, manaCostAsObj.ColorlessMana);
+
+        return manaCostAsObj.ToManaString();
+    }
+
+    public AffinityAbility()
+    {
+        this.Components.Add(new ModifyManaCostComponent(ChangeManaCost));
+    }
+}
 
 

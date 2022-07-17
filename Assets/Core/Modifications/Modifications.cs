@@ -1,9 +1,11 @@
-﻿ 
+﻿
 //TemporaryInPlayEffects
 //  -could just have a "remove at end of turn flag"
 //
 
 //Modifications - Card Instances can now have "modifications" which will allow us to add temporary or permanent modifications to CardInstances.
+
+using System;
 
 public class Modification
 {
@@ -35,6 +37,37 @@ public class ModAddToPowerToughness : Modification, IModifyPower, IModifyToughne
     {
         return originalToughness + Toughness;
     }    
+}
+
+public class ModAddXToPowerToughness : Modification, IModifyPower, IModifyToughness
+{
+
+    private Func<CardGame, CardInstance, int, int> _powerMod;
+    private Func<CardGame, CardInstance, int, int> _toughnessMod;
+
+    public ModAddXToPowerToughness(Func<CardGame,CardInstance,int,int> powerMod, Func<CardGame,CardInstance,int,int> toughnessMod)
+    {
+        this._powerMod = powerMod;
+        this._toughnessMod = toughnessMod;
+    }
+
+    public int ModifyPower(CardGame cardGame, CardInstance card, int originalPower)
+    {
+        if (_powerMod == null)
+        {
+            return originalPower;
+        }
+        return _powerMod(cardGame, card, originalPower);
+    }
+
+    public int ModifyToughness(CardGame cardGame,CardInstance card, int originalToughness)
+    {
+        if (_toughnessMod == null)
+        {
+            return originalToughness;
+        }
+        return _toughnessMod(cardGame, card, originalToughness);
+    }
 }
 
 public class ModSwitchPowerandToughness : Modification, IModifyPower, IModifyToughness

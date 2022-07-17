@@ -16,7 +16,7 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
         _spellToCast = spellToCast;
 
         //Determine whether the ability has targets
-        NeedsTargets = _cardGame.TargetSystem.SpellNeedsTargets(_actingPlayer, _spellToCast);
+        NeedsTargets = _cardGame.TargetSystem.CardNeedsTargets(_actingPlayer, _spellToCast);
         //Determine whether the ability needs cost choices
 
         if (_spellToCast.AdditionalCost == null)

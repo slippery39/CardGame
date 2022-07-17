@@ -1,0 +1,20 @@
+﻿using System.Collections.Generic;
+
+public interface IItemSystem
+{
+    void PlayItem(Player player, CardInstance card, List<CardGameEntity> targets, ResolvingCardInstanceActionInfo resolvingCardInstance);
+}
+
+public class DefaultItemSystem : IItemSystem
+{
+    private CardGame cardGame;
+    public DefaultItemSystem(CardGame cardGame)
+    {
+        this.cardGame = cardGame;
+    }
+
+    public void PlayItem(Player player, CardInstance card, List<CardGameEntity> targets, ResolvingCardInstanceActionInfo resolvingCardInstance)
+    {
+        cardGame.ZoneChangeSystem.MoveToZone(card, player.Items);
+    }
+}

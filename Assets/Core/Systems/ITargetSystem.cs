@@ -10,7 +10,7 @@ public interface ITargetSystem
     List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance card);
     List<CardGameEntity> GetEntitiesToApplyEffect(Player player, CardGameEntity source, Effect effect);
     List<Effect> GetEffectsThatNeedTargets(List<Effect> effects);
-    bool SpellNeedsTargets(Player player, CardInstance card);
+    bool CardNeedsTargets(Player player, CardInstance card);
     bool EffectNeedsTargets(Effect effect);
     bool ActivatedAbilityNeedsTargets(Player player, CardInstance cardWithAbility);
 }
@@ -74,8 +74,14 @@ public class DefaultTargetSystem : ITargetSystem
         }
     }
 
-    public bool SpellNeedsTargets(Player player, CardInstance card)
+    public bool CardNeedsTargets(Player player, CardInstance card)
     {
+        //Temporary Work Around for non SpellCards that might need this...
+        if (!(card.CurrentCardData is SpellCardData))
+        {
+            return false;
+        }
+
         var spellCard = (SpellCardData)card.CurrentCardData;
         var spellTargetTypes = spellCard.Effects.Select(effect => effect.TargetType);
 
@@ -197,7 +203,7 @@ public class DefaultTargetSystem : ITargetSystem
             var spellCard = (SpellCardData)card.CurrentCardData;
             var effects = spellCard.Effects.Select(e => e.TargetType);
 
-            if (!SpellNeedsTargets(player, card))
+            if (!CardNeedsTargets(player, card))
             {
                 return new List<CardGameEntity>();
             }

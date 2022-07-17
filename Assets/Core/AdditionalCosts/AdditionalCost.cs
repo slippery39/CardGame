@@ -92,12 +92,11 @@ public class SacrificeSelfAdditionalCost : AdditionalCost
     public override bool CanPay(CardGame cardGame, Player player, CardGameEntity source)
     {
         //check if the source is in play...
-
         if (!(source is CardInstance))
         {
             throw new Exception("Source should be a card instance for a SacrificeSelfAdditionalCost");
         }
-        return cardGame.GetZoneOfCard(source as CardInstance).Name.ToLower() == "lane";
+        return cardGame.IsInPlay(source as CardInstance);
     }
     public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {

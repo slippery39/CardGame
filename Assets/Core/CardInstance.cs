@@ -131,16 +131,11 @@ public class CardInstance : CardGameEntity
             {
                 originalCost = costModifier.ModifyAdditionalCost(_cardGame, this, originalCost);
             }
-
-            if (Name == "Goblin Grenade")
-            {
-                var test = 1;
-            }
-
             return originalCost;
         }
     }
 
+    public string Subtype => _currentCardData.Subtype;
 
     public string CardType { get => _currentCardData.CardType; }
 
@@ -190,7 +185,7 @@ public class CardInstance : CardGameEntity
             foreach (var modification in powerModifications)
             {
                 //Null is temporary, we haven't set everything up to pass in the CardGame yet.
-                calculatedPower = modification.ModifyPower(null, this, calculatedPower);
+                calculatedPower = modification.ModifyPower(_cardGame, this, calculatedPower);
             }
 
             return calculatedPower;
@@ -228,7 +223,7 @@ public class CardInstance : CardGameEntity
 
             foreach (var modification in toughnessModifications)
             {
-                calculatedToughness = modification.ModifyToughness(null, this, calculatedToughness);
+                calculatedToughness = modification.ModifyToughness(_cardGame, this, calculatedToughness);
             }
 
             calculatedToughness = calculatedToughness - DamageTaken;
@@ -284,7 +279,7 @@ public class CardInstance : CardGameEntity
 
                 foreach (var modification in toughnessModifications)
                 {
-                    calculatedToughness = modification.ModifyToughness(null, this, calculatedToughness);
+                    calculatedToughness = modification.ModifyToughness(_cardGame, this, calculatedToughness);
                 }
                 return calculatedToughness;
             }
