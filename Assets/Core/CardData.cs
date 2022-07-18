@@ -1482,6 +1482,25 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Thoughtcast",
+            ManaCost = "4U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Abilities = new List<CardAbility>
+            {
+                new AffinityAbility()
+            },
+            Effects = new List<Effect>
+            {
+                new DrawCardEffect
+                {
+                    Amount = 2
+                }
+            }
+        });
+
+ 
         /*
         _cards.Add(new ItemCardData
         {

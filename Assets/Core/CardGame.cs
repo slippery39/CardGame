@@ -504,7 +504,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Subtype == "Artifact");
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Subtype == "Artifact" || card.Abilities.GetOfType<AffinityAbility>().Count() > 0);
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
