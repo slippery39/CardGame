@@ -37,8 +37,10 @@ public class DefaultTurnSystem : ITurnSystem
             unit.IsSummoningSick = false;
         }
 
+        var unitsAndItems = cardGame.GetCardsInPlay(cardGame.ActivePlayer);
+
         //Remove any ability cooldowns
-        foreach (var unit in activePlayersUnits)
+        foreach (var unit in unitsAndItems)
         {
             var activatedAbilities = unit.GetAbilities<ActivatedAbility>().Where(ability => ability.OncePerTurn);
             foreach (var ab in activatedAbilities)
