@@ -539,6 +539,17 @@ public class PumpPowerByNumberOfArtifactsEffect : Effect
     }
 }
 
+public class GiveShieldEffect : Effect
+{
+    public override string RulesText
+    {
+        get
+        {
+            return $"Give a shield";
+        }
+    }
+}
+
 
 //Represents an effect with multiple components.
 public class CompoundEffect : Effect

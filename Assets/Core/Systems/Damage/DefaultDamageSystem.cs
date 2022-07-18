@@ -95,6 +95,12 @@ public class DefaultDamageSystem : IDamageSystem
 
     private void DealDamage(CardInstance damagedUnit, int damage)
     {
+        //HARD CODED OUR SHIELDS IN HERE.
+        if (damagedUnit.Shields > 0)
+        {
+            damagedUnit.Shields = damagedUnit.Shields - 1;
+            return;
+        }
         damagedUnit.DamageTaken += damage;
     }
 

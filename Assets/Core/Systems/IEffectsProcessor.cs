@@ -326,6 +326,19 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 cardGame.ModificationsSystem.AddModification(card, mod);
             }
         }
+        if (effect is GiveShieldEffect)
+        {
+            var giveShieldEffect = effect as GiveShieldEffect;
+            foreach (var entity in entitiesToEffect)
+            {
+                if (!(entity is CardInstance))
+                {
+                    throw new Exception("Error : only units can be effected with PumpPowerByNumberOfArtifactsEffect");
+                }
+                var card = (CardInstance)entity;
+                card.Shields++;
+            }
+        }
     }
     public void ApplyEffects(Player player, CardInstance source, List<Effect> effects, List<CardGameEntity> targets)
     {

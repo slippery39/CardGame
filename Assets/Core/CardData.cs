@@ -27,7 +27,7 @@ public abstract class BaseCardData
     public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name); } }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
-    public string Subtype { get; set; }
+    public string Subtype { get; set; } = "";
     public List<CardColor> Colors { get; set; }
     public string ArtPath { get; set; }
     public List<CardAbility> Abilities { get; set; }
@@ -1453,7 +1453,7 @@ public class CardDatabase : ICardDatabase
             Power = 0,
             Toughness = 2
         });
-        /*
+
         //Instead of regen, we will give our cards shields.
         _cards.Add(new ItemCardData
         {
@@ -1463,10 +1463,26 @@ public class CardDatabase : ICardDatabase
             Subtype = "Artifact",
             Abilities = new List<CardAbility>
             {
-                new AddTempAbilityEffect(new ShieldAbility())
+                new ActivatedAbility()
+                {
+                    ManaCost ="0",
+                    AdditionalCost = new SacrificeSelfAdditionalCost(),
+                    Filter = new CardFilter
+                    {
+                        Subtype = "artifact"
+                    },
+                    Effects = new List<Effect>
+                    {
+                        new GiveShieldEffect()
+                        {
+                        TargetType = TargetType.TargetUnits
+                        }
+                    }
+                }
             }
         });
 
+        /*
         _cards.Add(new ItemCardData
         {
             Name = "Chrome Mox",

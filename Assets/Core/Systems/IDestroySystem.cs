@@ -14,7 +14,12 @@ public class DefaultDestroySystem : IDestroySystem
     }
     public void DestroyUnit(CardGameEntity source, CardInstance target)
     {
+        if (target.Shields > 0)
+        {
+            target.Shields--;
+            return;
+        }
         var owner = cardGame.GetOwnerOfCard(target);
         cardGame.ZoneChangeSystem.MoveToZone(target, owner.DiscardPile);
     }
-}                                                      
+}

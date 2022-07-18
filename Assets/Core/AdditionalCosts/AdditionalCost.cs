@@ -21,6 +21,7 @@ public class CostInfo
 public class CardFilter
 {
     public string CreatureType { get; set; }
+    public string Subtype { get; set; }
 
     public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)
     {
@@ -32,6 +33,10 @@ public class CardFilter
             //Should also have a method to automatically filter a list of CardInstances based off of its type and return the proper cast.
             //i.e. List.GetOfType<UnitCard>()
             list = list.Where(x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType).ToList();
+        }
+        if (filter.Subtype != null)
+        {
+            list = list.Where(x => x.Subtype == filter.Subtype).ToList();
         }
 
         return list;

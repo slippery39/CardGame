@@ -142,8 +142,8 @@ public class CardInstance : CardGameEntity
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
     public List<CardAbility> Abilities { get; set; } = new List<CardAbility>();
 
-
-    //How do we figure this out?
+    //Hard coding in shield counters for now...
+    public int Shields{ get; set; }
     public List<ContinuousEffect> ContinuousEffects { get; set; }
 
     public List<Modification> Modifications { get; set; } = new List<Modification>();
