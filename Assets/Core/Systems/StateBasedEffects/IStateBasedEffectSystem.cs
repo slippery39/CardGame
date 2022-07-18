@@ -45,7 +45,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
 
         foreach (var unit in units.Concat(cardsInGraveyards))
         {
-            var unitStaticAbilities = unit.GetAbilities<StaticAbility>();
+            var unitStaticAbilities = unit.GetAbilitiesAndComponents<StaticAbility>();
             if (unitStaticAbilities.Count > 0)
             {
                 foreach (var sAbility in unitStaticAbilities)

@@ -1528,6 +1528,23 @@ public class CardDatabase : ICardDatabase
             Toughness = 4
         });
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Arcbound Worker",
+            ManaCost = "1",
+            Subtype = "Artifact",
+            Colors = new List<CardColor> { },
+            Abilities = new List<CardAbility>
+            {
+                new ModularAbility
+                {
+                    Amount = 1
+                }
+            },
+            Power = 0,
+            Toughness = 0
+        });
+
 
 
         /*

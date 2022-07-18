@@ -19,7 +19,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
     }
     public void ActivateAbililty(Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo)
     {
-        var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+        var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault();
 
         //Validating if we have the proper info to be able to correctly activate the ability;
         if (activateAbilityInfo == null && (activatedAbility.HasTargets() || activatedAbility.HasAdditionalCostChoices()))
@@ -63,7 +63,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
     public bool CanActivateAbility(Player player, CardInstance card)
     {
-        var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+        var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault();
 
         if (activatedAbility.GetComponent<AbilityCooldown>() != null)
         {

@@ -34,7 +34,7 @@ public class DefaultBattleSystem : IBattleSystem
 
         //Determine whether or not the unit can attack.
         var unitCanAttack = attackingLane.UnitInLane.IsSummoningSick ? false : true;
-        foreach (var canAttackAb in attackingLane.UnitInLane.GetAbilities<IModifyCanAttack>())
+        foreach (var canAttackAb in attackingLane.UnitInLane.GetAbilitiesAndComponents<IModifyCanAttack>())
         {
             unitCanAttack = canAttackAb.CanAttack(cardGame, attackingLane.UnitInLane);
         };
@@ -50,7 +50,7 @@ public class DefaultBattleSystem : IBattleSystem
             //Attacking an empty lane trigger any on attack abilities
 
             var attackingUnit = attackingLane.UnitInLane;
-            var onAttackAbilities = attackingUnit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfAttacks);
+            var onAttackAbilities = attackingUnit.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfAttacks);
             var owner = cardGame.GetOwnerOfCard(attackingUnit);
             foreach (var onAttackAb in onAttackAbilities)
             {
@@ -64,7 +64,7 @@ public class DefaultBattleSystem : IBattleSystem
             //Attacking an empty lane trigger any on attack abilities
 
             var attackingUnit = attackingLane.UnitInLane;
-            var onAttackAbilities = attackingUnit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfAttacks);
+            var onAttackAbilities = attackingUnit.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfAttacks);
             var owner = cardGame.GetOwnerOfCard(attackingUnit);
             foreach (var onAttackAb in onAttackAbilities)
             {
@@ -109,7 +109,7 @@ public class DefaultBattleSystem : IBattleSystem
         //check to see if the attacker can attack directly by default
 
         var attackingUnit = attackingLane.UnitInLane;
-        var directAttackAbilities = attackingUnit.GetAbilities<IModifyCanAttackDirectly>();
+        var directAttackAbilities = attackingUnit.GetAbilitiesAndComponents<IModifyCanAttackDirectly>();
 
         var canAttackDirectly = false;
         //In this case, it might be possible to just take the highest priority ability in the list.
@@ -130,7 +130,7 @@ public class DefaultBattleSystem : IBattleSystem
         //For example, the Can't Block ability would always overrdie any other ModifyBlocking abilities.
         //Check the defenders abilities to see if it has any of the the type IModifyCanBlock;
         var defendingUnit = defendingLane.UnitInLane;
-        var modifyBlockAbilities = defendingUnit.GetAbilities<IModifyCanBlock>();
+        var modifyBlockAbilities = defendingUnit.GetAbilitiesAndComponents<IModifyCanBlock>();
         foreach (var ability in modifyBlockAbilities)
         {
             canBlock = ability.ModifyCanBlock(cardGame);

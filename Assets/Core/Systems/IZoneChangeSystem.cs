@@ -7,7 +7,7 @@ using UnityEngine;
 
 public interface IZoneChangeSystem
 {
-   public void MoveToZone(CardInstance card, IZone zoneTo);
+    public void MoveToZone(CardInstance card, IZone zoneTo);
 }
 
 
@@ -58,7 +58,17 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
 
     private void OnDeathTriggers(CardInstance card)
     {
-        card.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfDies).ToList().ForEach(ab =>
+
+        //These are things that might happen when a card dies, that don't necessarily use the stack.
+        //They would be defined in the ability itself, not as a trigger.
+        var onDeathAbilities = card.Abilities.GetOfType<IOnDeath>();
+
+        foreach (var ability in onDeathAbilities)
+        {
+            ability.OnDeath(cardGame, card);
+        }
+
+        card.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfDies).ToList().ForEach(ab =>
         {
             //fire the trigger... 
             cardGame.EffectsProcessor.ApplyEffects(cardGame.GetOwnerOfCard(card), card, ab.Effects, new List<CardGameEntity>());

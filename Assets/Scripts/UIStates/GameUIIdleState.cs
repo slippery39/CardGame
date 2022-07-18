@@ -47,7 +47,7 @@ public class GameUIIdleState : IGameUIState
 
     private void HandleCardActivatedAbility(CardInstance card)
     {
-        var activatedAbility = card.GetAbilities<ActivatedAbility>().FirstOrDefault();
+        var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault();
 
         if (activatedAbility == null)
         {

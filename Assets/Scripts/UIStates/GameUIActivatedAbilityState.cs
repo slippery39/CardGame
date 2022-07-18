@@ -60,7 +60,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
 
     private ActivatedAbility GetActivatedAbility()
     {
-        return _cardWithAbility.GetAbilities<ActivatedAbility>().First();
+        return _cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().First();
     }
 
     public override void OnDestroy()

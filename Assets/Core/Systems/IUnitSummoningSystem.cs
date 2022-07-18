@@ -4,7 +4,7 @@ using System.Linq;
 
 public interface IUnitSummoningSystem
 {
-    void SummonUnit( Player player, CardInstance unitCard, int laneId);
+    void SummonUnit(Player player, CardInstance unitCard, int laneId);
 }
 
 public class DefaultUnitSummoningSystem : IUnitSummoningSystem
@@ -15,7 +15,7 @@ public class DefaultUnitSummoningSystem : IUnitSummoningSystem
     {
         this.cardGame = cardGame;
     }
-    public void SummonUnit( Player player, CardInstance unitCard, int laneEntityId)
+    public void SummonUnit(Player player, CardInstance unitCard, int laneEntityId)
     {
         var emptyLanes = player.Lanes.Where(lane => lane.IsEmpty() && lane.EntityId == laneEntityId);
 
@@ -25,6 +25,16 @@ public class DefaultUnitSummoningSystem : IUnitSummoningSystem
             return;
         }
         cardGame.ZoneChangeSystem.MoveToZone(unitCard, emptyLanes.First());
+
+        //Search for any abilities with an EntersPlay callback, slightly different from triggered abilities as these would happen immediatly.
+
+        var onSummonAbilities = unitCard.Abilities.GetOfType<IOnSummon>();
+
+        foreach (var ability in onSummonAbilities)
+        {
+            ability.OnSummoned(cardGame, unitCard);
+        }
+
         //Search for TriggeredAbilities with the SelfEntersPlay effect
         cardGame.HandleTriggeredAbilities(new List<CardInstance> { unitCard }, TriggerType.SelfEntersPlay);
     }

@@ -17,9 +17,9 @@ public class DefaultDiscardSystem : IDiscardSystem
     }
     public void Discard(Player player, CardInstance card)
     {
-        if (card.GetAbilities<MadnessAbility>().Any())
+        if (card.GetAbilitiesAndComponents<MadnessAbility>().Any())
         {
-            var madnessAbility = card.GetAbilities<MadnessAbility>().First();
+            var madnessAbility = card.GetAbilitiesAndComponents<MadnessAbility>().First();
             if (cardGame.ManaSystem.CanPayManaCost(player,madnessAbility.ManaCost))
             {   
                 //TODO - Spells with madness?

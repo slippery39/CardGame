@@ -91,7 +91,7 @@ public class DefaultTargetSystem : ITargetSystem
     //TODO - Generalize this and SpellNeedsTargets... perhaps it should just be under ActionNeedsTargets...
     public bool ActivatedAbilityNeedsTargets(Player player, CardInstance cardWithAbility)
     {
-        var targetsFromEffects = cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType);
+        var targetsFromEffects = cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType);
         return targetsFromEffects.Where(te => typesThatDontNeedTargets.Contains(te) == false).Count() > 0;
     }
 
@@ -105,7 +105,7 @@ public class DefaultTargetSystem : ITargetSystem
 
         units = units.Where(unit =>
         {
-            var modTargetAbilities = unit.GetAbilities<IModifyCanBeTargeted>();
+            var modTargetAbilities = unit.GetAbilitiesAndComponents<IModifyCanBeTargeted>();
             var canBeTargeted = true;
 
             foreach (var ability in modTargetAbilities)
@@ -164,7 +164,7 @@ public class DefaultTargetSystem : ITargetSystem
 
     public List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance cardWithAbility)
     {
-        var effectTargets = cardWithAbility.GetAbilities<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType); //for compatibility purposes. 
+        var effectTargets = cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType); //for compatibility purposes. 
         if (!ActivatedAbilityNeedsTargets(player, cardWithAbility))
         {
             return new List<CardGameEntity>();

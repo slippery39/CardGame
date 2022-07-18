@@ -31,7 +31,7 @@ public class DefaultDamageSystem : IDamageSystem
 
         //Trigger Damage Dealt Abilities.
         //TODO - Handle case if 0 damage is dealt for whatever reason.
-        var damageDealtAbilities = damagingUnit.GetAbilities<IOnDamageDealt>();
+        var damageDealtAbilities = damagingUnit.GetAbilitiesAndComponents<IOnDamageDealt>();
 
         foreach (var ability in damageDealtAbilities)
         {
@@ -46,7 +46,7 @@ public class DefaultDamageSystem : IDamageSystem
 
 
         //IF UNIT HAS TRAMPLE
-        if (attackingUnit.GetAbilities<TrampleAbility>().Count > 0)
+        if (attackingUnit.GetAbilitiesAndComponents<TrampleAbility>().Count > 0)
         {
             var damageToUnit = Math.Min(attackingDamage, (defendingUnit.Toughness - defendingUnit.DamageTaken));
             var damageToPlayer = attackingUnit.Power - damageToUnit;
@@ -74,14 +74,14 @@ public class DefaultDamageSystem : IDamageSystem
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
 
         //Attacker Damage Dealt Abilities
-        var attackingAbilities = attackingUnit.GetAbilities<IOnDamageDealt>();
+        var attackingAbilities = attackingUnit.GetAbilitiesAndComponents<IOnDamageDealt>();
         foreach (var ability in attackingAbilities)
         {
             ability.OnDamageDealt(cardGame, attackingUnit, defendingUnit, attackingUnit.Power);
         }
 
         //Defender Damage Dealt Abilities
-        var defendingAbilities = defendingUnit.GetAbilities<IOnDamageDealt>();
+        var defendingAbilities = defendingUnit.GetAbilitiesAndComponents<IOnDamageDealt>();
         foreach (var ability in defendingAbilities)
         {
             ability.OnDamageDealt(cardGame, defendingUnit, attackingUnit, defendingUnit.Power);

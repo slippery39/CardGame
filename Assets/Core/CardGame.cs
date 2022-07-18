@@ -82,6 +82,8 @@ public class CardGame
     public Effect ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
     internal IAdditionalCostSystem AdditionalCostSystem { get => _additionalCostSystem; set => _additionalCostSystem = value; }
 
+    public ICountersSystem CountersSystem { get; set; } 
+
     #endregion
     #endregion
 
@@ -109,6 +111,7 @@ public class CardGame
         _modificationsSystem = new DefaultModificationSystem(this);
         _additionalCostSystem = new DefaultAdditionalCostSystem(this);
 
+        CountersSystem = new DefaultCountersSystem(this);
         ItemSystem = new DefaultItemSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
@@ -169,7 +172,7 @@ public class CardGame
     {
         foreach (var unit in units)
         {
-            var abilities = unit.GetAbilities<TriggeredAbility>().Where(ab => ab.TriggerType == triggerType);
+            var abilities = unit.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == triggerType);
 
             foreach (var ab in abilities)
             {
@@ -265,7 +268,7 @@ public class CardGame
 
         //figure out where the card can be cast from
 
-        var modCastZoneComponents = card.GetAbilities<IModifyCastZones>();
+        var modCastZoneComponents = card.GetAbilitiesAndComponents<IModifyCastZones>();
 
         foreach (var modCastZoneComponent in modCastZoneComponents)
         {

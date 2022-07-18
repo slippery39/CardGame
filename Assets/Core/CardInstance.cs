@@ -90,7 +90,7 @@ public class CardInstance : CardGameEntity
         {
             var originalCost = _currentCardData.ManaCost;
 
-            var allCostModifiers = GetAbilities<IModifyManaCost>();
+            var allCostModifiers = GetAbilitiesAndComponents<IModifyManaCost>();
 
             foreach (var costModifier in allCostModifiers)
             {
@@ -125,7 +125,7 @@ public class CardInstance : CardGameEntity
         get
         {
             var originalCost = CurrentCardData.AdditionalCost;
-            var allCostModifiers = GetAbilities<IModifyAdditionalCost>();
+            var allCostModifiers = GetAbilitiesAndComponents<IModifyAdditionalCost>();
 
             foreach (var costModifier in allCostModifiers)
             {
@@ -143,11 +143,11 @@ public class CardInstance : CardGameEntity
     public List<CardAbility> Abilities { get; set; } = new List<CardAbility>();
 
     //Hard coding in shield counters for now...
-    public int Shields{ get; set; }
+    public int Shields { get; set; }
     public List<ContinuousEffect> ContinuousEffects { get; set; }
 
     public List<Modification> Modifications { get; set; } = new List<Modification>();
-
+    public List<Counter> Counters { get; set; } = new List<Counter>();
     public bool IsOfType<T>()
     {
         return CurrentCardData is T;
@@ -174,7 +174,7 @@ public class CardInstance : CardGameEntity
             }
 
 
-            var powerModifications = Modifications.GetOfType<IModifyPower>();
+            var powerModifications = Modifications.GetOfType<IModifyPower>().Union(Counters.GetOfType<IModifyPower>());
 
             //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
             if (!applyPowerToughnessSwitchEffects)
@@ -213,7 +213,7 @@ public class CardInstance : CardGameEntity
             }
 
             //Add any modifications to the unit as well.
-            var toughnessModifications = Modifications.GetOfType<IModifyToughness>();
+            var toughnessModifications = Modifications.GetOfType<IModifyToughness>().Union(Counters.GetOfType<IModifyToughness>());
 
             //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
             if (!applyPowerToughnessSwitchEffects)
@@ -225,9 +225,6 @@ public class CardInstance : CardGameEntity
             {
                 calculatedToughness = modification.ModifyToughness(_cardGame, this, calculatedToughness);
             }
-
-            calculatedToughness = calculatedToughness - DamageTaken;
-
             return calculatedToughness;
         }
         else
@@ -261,27 +258,7 @@ public class CardInstance : CardGameEntity
         {
             if (_currentCardData is UnitCardData)
             {
-                //return - power without mods, + mods power;
-                int calculatedToughness = _toughnessWithoutMods;
-
-                var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
-                if (pumpContinuousEffects.Any())
-                {
-                    foreach (var pumpEffect in pumpContinuousEffects)
-                    {
-                        calculatedToughness += pumpEffect.Toughness;
-                    }
-                }
-
-                //Add any modifications to the unit as well.
-
-                var toughnessModifications = Modifications.GetOfType<IModifyToughness>();
-
-                foreach (var modification in toughnessModifications)
-                {
-                    calculatedToughness = modification.ModifyToughness(_cardGame, this, calculatedToughness);
-                }
-                return calculatedToughness;
+                return CalculateToughness(true);
             }
             else
             {
@@ -317,7 +294,7 @@ public class CardInstance : CardGameEntity
 
     #region Public Methods
 
-    public List<T> GetAbilities<T>()
+    public List<T> GetAbilitiesAndComponents<T>()
     {
 
         var abilities = Abilities.Where(a => a is T).Cast<T>().ToList();
@@ -331,7 +308,7 @@ public class CardInstance : CardGameEntity
 
     public bool HasActivatedAbility()
     {
-        return GetAbilities<ActivatedAbility>().Any();
+        return GetAbilitiesAndComponents<ActivatedAbility>().Any();
     }
 
     public void AddModification(Modification mod)
