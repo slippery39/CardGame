@@ -93,7 +93,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     throw new Exception("Error : only players can gain man");
                 }
                 cardGame.ManaSystem.AddMana((Player)entity, ability.Amount);
-                cardGame.ManaSystem.AddEssence((Player)entity, ability.ManaType, ability.Amount);
+                cardGame.ManaSystem.AddColoredMana((Player)entity, ability.ManaType, ability.Amount);
             }
         }
         if (effect is AddTempManaEffect)
@@ -177,9 +177,9 @@ public class DefaultEffectsProcessor : IEffectsProcessor
             }
         }
 
-        if (effect is CreateTokenEffect)
+        if (effect is CreateTokenEffect<UnitCardData>)
         {
-            var tokenEffect = effect as CreateTokenEffect;
+            var tokenEffect = effect as CreateTokenEffect<UnitCardData>;
             //put in open lanes. 
 
             var emptyLanes = player.GetEmptyLanes();
@@ -190,6 +190,16 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 {
                     cardGame.AddCardToGame(player, tokenEffect.TokenData, emptyLane);
                 }
+            }
+        }
+        if (effect is CreateTokenEffect<ItemCardData>)
+        {
+            var tokenEffect = effect as CreateTokenEffect<ItemCardData>;
+            //put in open lanes. 
+
+            for (var i = 0; i < tokenEffect.AmountOfTokens; i++)
+            {
+                cardGame.AddCardToGame(player, tokenEffect.TokenData, player.Items);
             }
         }
         if (effect is GoblinPiledriverEffect)

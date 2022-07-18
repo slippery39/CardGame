@@ -154,7 +154,8 @@ public class ManaCardData : BaseCardData
             ManaAdded = ManaAdded,
             Name = Name,
             Colors = Colors,
-            ArtPath = ArtPath
+            ArtPath = ArtPath,
+            Abilities = Abilities.ToList()
         };
     }
 }
@@ -708,7 +709,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "City of Brass",
-            ManaAdded = "*",
+            ManaAdded = "1*",
             Colors = new List<CardColor>() { CardColor.Red, CardColor.White, CardColor.Blue, CardColor.Black, CardColor.Green },
             ArtPath = "CardArt/CityOfBrass"
         });
@@ -716,7 +717,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Plains",
-            ManaAdded = "W",
+            ManaAdded = "1W",
             ArtPath = "CardArt/Plains",
             Colors = new List<CardColor> { CardColor.White }
         });
@@ -724,7 +725,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Island",
-            ManaAdded = "U",
+            ManaAdded = "1U",
             Colors = new List<CardColor> { CardColor.Blue },
             ArtPath = "CardArt/Island"
         });
@@ -732,7 +733,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Swamp",
-            ManaAdded = "B",
+            ManaAdded = "1B",
             Colors = new List<CardColor> { CardColor.Black },
             ArtPath = "CardArt/Swamp"
         });
@@ -740,7 +741,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Mountain",
-            ManaAdded = "R",
+            ManaAdded = "1R",
             Colors = new List<CardColor> { CardColor.Red },
             ArtPath = "CardArt/Mountain"
         });
@@ -748,7 +749,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Forest",
-            ManaAdded = "G",
+            ManaAdded = "1G",
             Colors = new List<CardColor> { CardColor.Green },
             ArtPath = "CardArt/Forest"
         });
@@ -911,7 +912,7 @@ public class CardDatabase : ICardDatabase
             Abilities = new List<CardAbility>
             {
                 new TriggeredAbility(TriggerType.SelfEntersPlay
-                ,new CreateTokenEffect(new UnitCardData()
+                ,new CreateTokenEffect<UnitCardData>(new UnitCardData()
                             {
                                 Name = "Goblin Token",
                                 ManaCost = "0",
@@ -959,10 +960,10 @@ public class CardDatabase : ICardDatabase
             {
                 new TriggeredAbility(
                     TriggerType.SelfEntersPlay,
-                    new CreateTokenEffect(TokenHelper.GoblinToken())),
+                    new CreateTokenEffect<UnitCardData>(TokenHelper.GoblinToken())),
 
                 new TriggeredAbility(TriggerType.SelfDies,
-                new CreateTokenEffect(TokenHelper.GoblinToken()))
+                new CreateTokenEffect<UnitCardData>(TokenHelper.GoblinToken()))
             }
         });
 
@@ -1650,6 +1651,172 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Blinkmoth Nexus",
+            ManaAdded = "1",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<UnitCardData>
+                        {
+                            TokenData = new UnitCardData()
+                            {
+                                Name = "Blinkmoth",
+                                Power = 1,
+                                Toughness = 1,
+                                Subtype = "Artifact",
+                                Abilities = new List<CardAbility>
+                                {
+                                    new FlyingAbility()
+                                }
+                            },
+                            AmountOfTokens = 1
+
+                        }
+                    }
+                }
+            }
+
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Great Furnace",
+            ManaAdded = "1",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<ItemCardData>
+                        {
+                            TokenData = new ItemCardData()
+                            {
+                                Name = "Great Furnace",
+                                Subtype = "Artifact",
+                                Abilities = new List<CardAbility>
+                                {
+                                    new ActivatedAbility()
+                                    {
+                                        OncePerTurn = true,
+                                        ManaCost = "1",
+                                        Effects = new List<Effect>
+                                        {
+                                            new AddTempManaEffect
+                                            {
+                                                ManaType = ManaType.Red,
+                                                Amount = 1
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            AmountOfTokens = 1
+
+                        }
+                    }
+                }
+            }
+
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Seat of the Synod",
+            ManaAdded = "1",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<ItemCardData>
+                        {
+                            TokenData = new ItemCardData()
+                            {
+                                Name = "Seat of the Synod",
+                                Subtype = "Artifact",
+                                Abilities = new List<CardAbility>
+                                {
+                                    new ActivatedAbility()
+                                    {
+                                        OncePerTurn = true,
+                                        ManaCost = "1",
+                                        Effects = new List<Effect>
+                                        {
+                                            new AddTempManaEffect
+                                            {
+                                                ManaType = ManaType.Blue,
+                                                Amount = 1
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            AmountOfTokens = 1
+
+                        }
+                    }
+                }
+            }
+
+        });
+
+        _cards.Add(new ManaCardData()
+        {
+            Name = "Vault of Whispers",
+            ManaAdded = "1",
+            Colors = new List<CardColor> { CardColor.Black },
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<ItemCardData>
+                        {
+                            TokenData = new ItemCardData()
+                            {
+                                Name = "Vault of Whispers",
+                                Subtype = "Artifact",
+                                Abilities = new List<CardAbility>
+                                {
+                                    new ActivatedAbility()
+                                    {
+                                        OncePerTurn = true,
+                                        ManaCost = "1",
+                                        Effects = new List<Effect>
+                                        {
+                                            new AddTempManaEffect
+                                            {
+                                                ManaType = ManaType.Black,
+                                                Amount = 1
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            AmountOfTokens = 1
+
+                        }
+                    }
+                }
+            }
+
+        });
+
+
 
 
         /*
@@ -1669,7 +1836,7 @@ public class CardDatabase : ICardDatabase
                 {
                     new AddVariableManaEffect
                     {
-                        
+
                     }
                 }
             }
@@ -1684,23 +1851,23 @@ public class CardDatabase : ICardDatabase
 
         /*
          * Creature (24)
-4 Ornithopter
-4 Arcbound Ravager
-4 Arcbound Worker
-4 Disciple of the Vault
-2 Somber Hoverguard
-4 Frogmite
-4 Chrome Mox
-4 Thoughtcast
-4 Welding Jar
-4 Shrapnel Blast
-4 Cranial Plating
-4 Seat of the Synod
-4 Vault of Whispers
-4 Great Furnace
-3 Blinkmoth Nexus
-3 Glimmervoid
-Cards 60
+        4 Ornithopter
+        4 Arcbound Ravager
+        4 Arcbound Worker
+        4 Disciple of the Vault
+        2 Somber Hoverguard
+        4 Frogmite
+        4 Chrome Mox
+        4 Thoughtcast
+        4 Welding Jar
+        4 Shrapnel Blast
+        4 Cranial Plating
+        4 Seat of the Synod
+        4 Vault of Whispers
+        4 Great Furnace
+        3 Blinkmoth Nexus
+        3 Glimmervoid
+        Cards 60
          * 
          */
 

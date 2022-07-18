@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public interface IManaSystem
 {
     void AddMana(Player player, int amount);
-    void AddEssence(Player player, ManaType essenceType, int amount);
+    void AddColoredMana(Player player, ManaType essenceType, int amount);
     void AddTemporaryManaAndEssence(Player player, ManaType manaType, int amount);
     void AddTemporaryEssence(Player player, ManaType essenceType, int amount);
     void SpendMana(Player player, string cost);
@@ -97,24 +98,32 @@ public class DefaultManaSystem : IManaSystem
         //Mana is easy enough, just add the mana count stated in the ManaAndEssence object
 
         //For now, we are going to make our mana cards simple, they will always just add the total essence as mana.
-        AddMana(player, manaAndEssenceCounts.TotalSumOfColoredMana);
+        AddMana(player, manaAndEssenceCounts.ColorlessMana);
 
-        var essence = manaAndEssenceCounts.ColoredMana;
+        var coloredMana = manaAndEssenceCounts.ColoredMana;
 
-        var essenceAdded = essence.Keys.Where(k => essence[k] > 0);
+        var coloredManaAdded = coloredMana.Keys.Where(k => coloredMana[k] > 0);
 
-        foreach (var essenceType in essence.Keys)
+        foreach (var manaType in coloredMana.Keys)
         {
-            if (manaAndEssenceCounts.ColoredMana[essenceType] > 0)
+            if (manaAndEssenceCounts.ColoredMana[manaType] > 0)
             {
-                AddEssence(player, essenceType, essence[essenceType]);
+                AddColoredMana(player, manaType, coloredMana[manaType]);
             }
+        }
+
+        //Trigger any SelfEnters play effects
+        var selfEntersPlayEffects = card.GetAbilitiesAndComponents<TriggeredAbility>().Where(ta => ta.TriggerType == TriggerType.SelfEntersPlay);
+
+        foreach (var ab in selfEntersPlayEffects)
+        {
+            cardGame.EffectsProcessor.ApplyEffects(player, card, ab.Effects, new List<CardGameEntity>());
         }
 
         cardGame.ZoneChangeSystem.MoveToZone(card, player.DiscardPile);
     }
 
-    public void AddEssence(Player player, ManaType essenceType, int amount)
+    public void AddColoredMana(Player player, ManaType essenceType, int amount)
     {
         player.ManaPool.AddColor(essenceType, amount);
     }
