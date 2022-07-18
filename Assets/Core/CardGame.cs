@@ -82,7 +82,7 @@ public class CardGame
     public Effect ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
     internal IAdditionalCostSystem AdditionalCostSystem { get => _additionalCostSystem; set => _additionalCostSystem = value; }
 
-    public ICountersSystem CountersSystem { get; set; } 
+    public ICountersSystem CountersSystem { get; set; }
 
     #endregion
     #endregion
@@ -463,6 +463,11 @@ public class CardGame
         return new List<ZoneType> { ZoneType.InPlay, ZoneType.Items }.Contains(zone.ZoneType);
     }
 
+    public List<CardInstance> GetCardsInPlay()
+    {
+        return Player1.GetCardsInPlay().Union(Player2.GetCardsInPlay()).ToList();
+    }
+
     public List<CardInstance> GetCardsInPlay(Player player)
     {
         return player.GetCardsInPlay();
@@ -507,7 +512,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Subtype == "Artifact" || card.Abilities.GetOfType<AffinityAbility>().Count() > 0);
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Subtype == "Artifact" || card.Abilities.GetOfType<AffinityAbility>().Count() > 0 || card.Name == "Atog" || card.Name == "Disciple of the Vault");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 

@@ -1533,6 +1533,7 @@ public class CardDatabase : ICardDatabase
             Name = "Arcbound Worker",
             ManaCost = "1",
             Subtype = "Artifact",
+            ArtPath = "CardArt/ArcboundWorker",
             Colors = new List<CardColor> { },
             Abilities = new List<CardAbility>
             {
@@ -1550,6 +1551,7 @@ public class CardDatabase : ICardDatabase
             Name = "Arcbound Ravager",
             ManaCost = "2",
             Subtype = "Artifact",
+            ArtPath = "CardArt/ArcboundRavager",
             Colors = new List<CardColor> { },
             Abilities = new List<CardAbility>
             {
@@ -1576,6 +1578,76 @@ public class CardDatabase : ICardDatabase
             },
             Power = 0,
             Toughness = 0
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Atog",
+            ManaCost = "1R",
+            Colors = new List<CardColor> { CardColor.Red },
+            Power = 1,
+            Toughness = 2,
+            ArtPath = "CardArt/Atog",
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility
+                {
+                    ManaCost = "0",
+                    AdditionalCost = new SacrificeAdditionalCost
+                    {
+                        Filter = new CardFilter{Subtype = "Artifact"}
+                    },
+                    Effects = new List<Effect>
+                    {
+                        new PumpUnitEffect
+                        {
+                            Power = 2,
+                            Toughness = 2,
+                            TargetType = TargetType.UnitSelf
+                        }
+                    }
+                }
+            }
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Somber Hoverguard",
+            ManaCost = "5U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Power = 3,
+            Toughness = 2,
+            ArtPath = "CardArt/SomberHoverguard",
+            Abilities = new List<CardAbility>
+            {
+                new FlyingAbility(),
+                new AffinityAbility()
+            }
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Disciple of the Vault",
+            ManaCost = "B",
+            Colors = new List<CardColor> { CardColor.Black },
+            Power = 1,
+            Toughness = 1,
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SomethingDies,
+                    Filter = new CardFilter {Subtype = "Artifact"},
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                            Amount = 1,
+                            TargetType = TargetType.Opponent
+                        }
+                    }
+                }
+            }
         });
 
 

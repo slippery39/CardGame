@@ -50,7 +50,7 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         zoneTo.Add(card);
 
         //Apply Death Triggers
-        if (currentZone is Lane && zoneTo is DiscardPile)
+        if ((currentZone.ZoneType == ZoneType.InPlay || currentZone.ZoneType == ZoneType.Items) && zoneTo is DiscardPile)
         {
             OnDeathTriggers(card);
         }
@@ -68,11 +68,32 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
             ability.OnDeath(cardGame, card);
         }
 
+        //Self dies triggers
         card.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SelfDies).ToList().ForEach(ab =>
         {
             //fire the trigger... 
             cardGame.EffectsProcessor.ApplyEffects(cardGame.GetOwnerOfCard(card), card, ab.Effects, new List<CardGameEntity>());
         });
+
+        //Something dies triggers, this needs to come from all the cards in play.
+        //
+
+        var cardsInPlay = cardGame.GetCardsInPlay();
+
+        //We have to get all the abilities
+
+        cardsInPlay.SelectMany(card => card.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SomethingDies)).ToList().ForEach(ab =>
+          {
+              //fire the trigger...
+
+              var thingThatDies = new List<CardInstance> { card };
+              var filteredList = CardFilter.ApplyFilter(thingThatDies, ab.Filter);
+
+              if (filteredList.Any())
+              {
+                  cardGame.EffectsProcessor.ApplyEffects(cardGame.GetOwnerOfCard(card), card, ab.Effects, new List<CardGameEntity>());
+              }
+          });
     }
 }
 

@@ -201,7 +201,8 @@ public enum TriggerType
     SelfDies,
     SelfAttacks,
     AtTurnStart,
-    AtTurnEnd
+    AtTurnEnd,
+    SomethingDies
 }
 
 public class MadnessAbility : CardAbility
@@ -253,6 +254,9 @@ public class TriggeredAbility : CardAbility
     }
     public TriggerType TriggerType { get; set; }
     public List<Effect> Effects { get; set; }
+
+    //Filter that causes the trigger only to apply if it meets the filtering requirements (i.e. Instead of when a creature dies, When a goblin dies, When a goblin comes into play etc).
+    public CardFilter Filter { get; set; } = new CardFilter();
 
     public TriggeredAbility(TriggerType triggerType, Effect effect)
     {
