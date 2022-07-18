@@ -1500,7 +1500,36 @@ public class CardDatabase : ICardDatabase
             }
         });
 
- 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Frogmite",
+            ManaCost = "4",
+            Subtype = "Artifact",
+            Colors = new List<CardColor> { },
+            Abilities = new List<CardAbility>
+            {
+                new AffinityAbility()
+            },
+            Power = 2,
+            Toughness = 2
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Myr Enforcer",
+            ManaCost = "7",
+            Subtype = "Artifact",
+            Colors = new List<CardColor> { },
+            Abilities = new List<CardAbility>
+            {
+                new AffinityAbility()
+            },
+            Power = 4,
+            Toughness = 4
+        });
+
+
+
         /*
         _cards.Add(new ItemCardData
         {
