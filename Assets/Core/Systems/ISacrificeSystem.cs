@@ -1,5 +1,6 @@
 ﻿public interface ISacrificeSystem
-{    void SacrificeUnit(Player owner, CardInstance unit);
+{
+    void Sacrifice(Player owner, CardInstance unit);
 }
 
 
@@ -11,9 +12,9 @@ public class DefaultSacrificeSystem : ISacrificeSystem
     {
         this.cardGame = cardGame;
     }
-    public void SacrificeUnit(Player owner, CardInstance unit)
+    public void Sacrifice(Player owner, CardInstance card)
     {
-        cardGame.ZoneChangeSystem.MoveToZone(unit, owner.DiscardPile);
-        cardGame.Log($@"{unit.Name} was sacrificed!");
+        cardGame.ZoneChangeSystem.MoveToZone(card, owner.DiscardPile);
+        cardGame.Log($@"{card.Name} was sacrificed!");
     }
 }

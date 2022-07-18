@@ -137,6 +137,11 @@ public class UIGameController : MonoBehaviour
         return _playerHand.GetComponentsInChildren<UICard>(true);
     }
 
+    public IEnumerable<UICard> GetUIItems()
+    {
+        return _items.GetComponentsInChildren<UICard>(true);
+    }
+
     public IEnumerable<UIGameEntity> GetUIEntities()
     {
         var entities = new List<UIGameEntity>();
@@ -146,6 +151,7 @@ public class UIGameController : MonoBehaviour
         entities.AddRange(GetUILanes());
         entities.AddRange(GetUICardsInLane());
         entities.AddRange(GetUICardsInHand());
+        entities.AddRange(GetUIItems());
 
         return entities;
     }

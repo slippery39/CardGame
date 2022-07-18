@@ -131,7 +131,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                     throw new Exception("Error : only units can be effected with the sacrifice self effect");
                 }
                 var card = (CardInstance)entity;
-                cardGame.SacrificeSystem.SacrificeUnit(player, card);
+                cardGame.SacrificeSystem.Sacrifice(player, card);
             }
         }
         if (effect is TransformEffect)
@@ -337,6 +337,19 @@ public class DefaultEffectsProcessor : IEffectsProcessor
                 }
                 var card = (CardInstance)entity;
                 card.Shields++;
+            }
+        }
+        if (effect is AddPlusOnePlusOneCounterEffect)
+        {
+            var plusOnePlusOneCounterEffect = effect as AddPlusOnePlusOneCounterEffect;
+            foreach (var entity in entitiesToEffect)
+            {
+                if (!(entity is CardInstance))
+                {
+                    throw new Exception("Error : only units can be effected with PumpPowerByNumberOfArtifactsEffect");
+                }
+                var card = (CardInstance)entity;
+                cardGame.CountersSystem.AddPlusOnePlusOneCounter(card, plusOnePlusOneCounterEffect.Amount);
             }
         }
     }

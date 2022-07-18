@@ -1545,6 +1545,39 @@ public class CardDatabase : ICardDatabase
             Toughness = 0
         });
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Arcbound Ravager",
+            ManaCost = "2",
+            Subtype = "Artifact",
+            Colors = new List<CardColor> { },
+            Abilities = new List<CardAbility>
+            {
+                new ModularAbility
+                {
+                    Amount = 1
+                },
+                new ActivatedAbility
+                {
+                    ManaCost = "0",
+                    AdditionalCost = new SacrificeAdditionalCost
+                    {
+                        Filter = new CardFilter{Subtype = "artifact"}
+                    },
+                    Effects = new List<Effect>
+                    {
+                        new AddPlusOnePlusOneCounterEffect
+                        {
+                            Amount = 1,
+                            TargetType = TargetType.UnitSelf
+                        }
+                    }
+                }
+            },
+            Power = 0,
+            Toughness = 0
+        });
+
 
 
         /*
