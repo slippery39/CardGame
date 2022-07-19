@@ -223,6 +223,30 @@ public class ManaPool
         CurrentColorlessMana -= amount;
     }
 
+    public void AddMana(string manaToAdd)
+    {
+        var manaToAdd2 = new Mana(manaToAdd);
+
+        AddColorlessMana(manaToAdd2.ColorlessMana);
+
+        foreach (var color in manaToAdd2.ColoredMana.Keys)
+        {
+            AddColor(color, manaToAdd2.ColoredMana[color]);
+        }
+    }
+
+    public void AddTemporary(string manaToAdd)
+    {
+        var manaToAdd2 = new Mana(manaToAdd);
+
+        AddTemporaryColorless(manaToAdd2.ColorlessMana);
+
+        foreach (var color in manaToAdd2.ColoredMana.Keys)
+        {
+            AddTemporaryColor(color, manaToAdd2.ColoredMana[color]);
+        }
+    }
+
     public void SpendColoredMana(ManaType type, int amount)
     {
         //Spend as much in the amount as possible, the rest should go into Any.
@@ -249,6 +273,11 @@ public class ManaPool
         TotalColorlessMana += amount;
         CurrentColorlessMana += amount;
 
+    }
+
+    public void AddTemporaryColorless(int amount)
+    {
+        CurrentColorlessMana += amount;
     }
 
     public void AddTemporaryColorAndColorless(ManaType type, int amount)

@@ -102,8 +102,7 @@ public class UIGameController : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.M))
             {
-                _cardGame.ManaSystem.AddColoredMana(_cardGame.ActivePlayer, ManaType.Any, 1);
-                _cardGame.ManaSystem.AddMana(_cardGame.ActivePlayer, 1);
+                _cardGame.ManaSystem.AddMana(_cardGame.ActivePlayer, "1*");
             }
 
             _stateMachine.CurrentState.HandleInput();

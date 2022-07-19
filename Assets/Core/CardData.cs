@@ -260,8 +260,7 @@ public class CardDatabase : ICardDatabase
             {
                 new AddTempManaEffect()
                 {
-                    ManaType = ManaType.Any,
-                    Amount = 3
+                    ManaToAdd = "***"
                 }
             }
         });
@@ -861,8 +860,7 @@ public class CardDatabase : ICardDatabase
                     },
                     Effects = new List<Effect>{new AddTempManaEffect()
                     {
-                        ManaType = ManaType.Red,
-                        Amount = 1
+                        ManaToAdd = "1R"
                     }
                     },
                  }
@@ -1409,8 +1407,7 @@ public class CardDatabase : ICardDatabase
                         },
                         new AddTempManaEffect
                         {
-                            ManaType = ManaType.Any,
-                            Amount = 1
+                            ManaToAdd = "1*"
                         },
                     }
                 }
@@ -1712,8 +1709,7 @@ public class CardDatabase : ICardDatabase
                                         {
                                             new AddTempManaEffect
                                             {
-                                                ManaType = ManaType.Red,
-                                                Amount = 1
+                                                ManaToAdd = "R"
                                             }
                                         }
                                     }
@@ -1756,8 +1752,7 @@ public class CardDatabase : ICardDatabase
                                         {
                                             new AddTempManaEffect
                                             {
-                                                ManaType = ManaType.Blue,
-                                                Amount = 1
+                                                ManaToAdd = "U"
                                             }
                                         }
                                     }
@@ -1800,8 +1795,7 @@ public class CardDatabase : ICardDatabase
                                         {
                                             new AddTempManaEffect
                                             {
-                                                ManaType = ManaType.Black,
-                                                Amount = 1
+                                                ManaToAdd = "B"
                                             }
                                         }
                                     }

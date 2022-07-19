@@ -371,17 +371,15 @@ public class DrawCardEffect : Effect
 
 public class AddManaEffect : Effect
 {
-    public override string RulesText => $"Gain {Amount} Mana";
-    public int Amount;
-    public ManaType ManaType { get; set; }
+    public override string RulesText => $"Gain {ManaToAdd} Mana";
+    public string ManaToAdd { get; set; } = "0";
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
 
 public class AddTempManaEffect : Effect
 {
-    public override string RulesText => $"Gain {Amount} Mana until end of turn";
-    public ManaType ManaType { get; set; }
-    public int Amount;
+    public override string RulesText => $"Add {ManaToAdd} until end of turn";
+    public string ManaToAdd { get; set; } = "0";
     public override TargetType TargetType { get; set; } = TargetType.Self;
 }
 

@@ -4,10 +4,10 @@ using System.Linq;
 
 public interface IManaSystem
 {
-    void AddMana(Player player, int amount);
-    void AddColoredMana(Player player, ManaType essenceType, int amount);
-    void AddTemporaryColorAndColorless(Player player, ManaType manaType, int amount);
-    void AddTemporaryColor(Player player, ManaType essenceType, int amount);
+
+    //TODO - Simplify this system... we have too many methods in here.. Change all of our methods to just accept a string of the mana cost instead.
+    void AddMana(Player player, string manaToAdd);
+    void AddTemporaryMana(Player player, string manaToAdd);
     void SpendMana(Player player, string cost);
     void ResetManaAndEssence(Player player);
     bool CanPlayCard(Player player, CardInstance card);
@@ -43,24 +43,30 @@ public class DefaultManaSystem : IManaSystem
         player.ManaPool.AddColorlessMana(amount);
     }
 
+    public void AddMana(Player player, string mana)
+    {
+        player.ManaPool.AddMana(mana);
+    }
+
+    public void AddTemporaryMana(Player player, string mana)
+    {
+        player.ManaPool.AddTemporary(mana);
+    }
+
+
     public void SpendMana(Player player, string cost)
     {
-        //TODO - change this.
-
-        var costInManaAndEssence = new Mana(cost);
-
-        //Spend the mana;
-        if (costInManaAndEssence.ColorlessMana > 0)
+        var manaAsObj = new Mana(cost);
+        if (manaAsObj.ColorlessMana > 0)
         {
-            player.ManaPool.SpendColorlessMana(costInManaAndEssence.ColorlessMana);
+            player.ManaPool.SpendColorlessMana(manaAsObj.ColorlessMana);
         }
 
-        if (costInManaAndEssence.TotalSumOfColoredMana > 0)
+        if (manaAsObj.TotalSumOfColoredMana > 0)
         {
-            //Spend the essence.
-            foreach (var color in costInManaAndEssence.ColoredMana.Keys)
+            foreach (var color in manaAsObj.ColoredMana.Keys)
             {
-                player.ManaPool.SpendColoredMana(color, costInManaAndEssence.ColoredMana[color]);
+                player.ManaPool.SpendColoredMana(color, manaAsObj.ColoredMana[color]);
             }
         }
     }
@@ -92,25 +98,7 @@ public class DefaultManaSystem : IManaSystem
     {
         player.ManaPlayedThisTurn++;
         var manaCard = card.CurrentCardData as ManaCardData;
-
-        var manaAndEssenceCounts = new Mana(manaCard.ManaAdded);
-
-        //Mana is easy enough, just add the mana count stated in the ManaAndEssence object
-
-        //For now, we are going to make our mana cards simple, they will always just add the total essence as mana.
-        AddMana(player, manaAndEssenceCounts.ColorlessMana);
-
-        var coloredMana = manaAndEssenceCounts.ColoredMana;
-
-        var coloredManaAdded = coloredMana.Keys.Where(k => coloredMana[k] > 0);
-
-        foreach (var manaType in coloredMana.Keys)
-        {
-            if (manaAndEssenceCounts.ColoredMana[manaType] > 0)
-            {
-                AddColoredMana(player, manaType, coloredMana[manaType]);
-            }
-        }
+        AddMana(player, manaCard.ManaAdded);
 
         //Trigger any SelfEnters play effects
         var selfEntersPlayEffects = card.GetAbilitiesAndComponents<TriggeredAbility>().Where(ta => ta.TriggerType == TriggerType.SelfEntersPlay);
