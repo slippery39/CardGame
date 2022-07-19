@@ -90,7 +90,7 @@ public class DefaultEffectsProcessor : IEffectsProcessor
             {
                 if (!(entity is Player))
                 {
-                    throw new Exception("Error : only players can gain man");
+                    throw new Exception("Error : only players can gain mana");
                 }
                 cardGame.ManaSystem.AddMana((Player)entity, ability.Amount);
                 cardGame.ManaSystem.AddColoredMana((Player)entity, ability.ManaType, ability.Amount);
@@ -98,15 +98,17 @@ public class DefaultEffectsProcessor : IEffectsProcessor
         }
         if (effect is AddTempManaEffect)
         {
+            //TODO - support for both colorless and colored mana.
+            //will need to change
             var ability = (AddTempManaEffect)effect;
 
             foreach (var entity in entitiesToEffect)
             {
                 if (!(entity is Player))
                 {
-                    throw new Exception("Error : only players can gain man");
+                    throw new Exception("Error : only players can gain mana");
                 }
-                cardGame.ManaSystem.AddTemporaryManaAndEssence((Player)entity, ability.ManaType, ability.Amount);
+                cardGame.ManaSystem.AddTemporaryColor((Player)entity, ability.ManaType, ability.Amount);
             }
         }
         if (effect is DarkConfidantEffect)

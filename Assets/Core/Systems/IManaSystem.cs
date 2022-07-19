@@ -6,8 +6,8 @@ public interface IManaSystem
 {
     void AddMana(Player player, int amount);
     void AddColoredMana(Player player, ManaType essenceType, int amount);
-    void AddTemporaryManaAndEssence(Player player, ManaType manaType, int amount);
-    void AddTemporaryEssence(Player player, ManaType essenceType, int amount);
+    void AddTemporaryColorAndColorless(Player player, ManaType manaType, int amount);
+    void AddTemporaryColor(Player player, ManaType essenceType, int amount);
     void SpendMana(Player player, string cost);
     void ResetManaAndEssence(Player player);
     bool CanPlayCard(Player player, CardInstance card);
@@ -33,7 +33,7 @@ public class DefaultManaSystem : IManaSystem
         this.cardGame = cardGame;
     }
     //Adds mana to the mana pool without effecting the total amount.
-    public void AddTemporaryManaAndEssence(Player player, ManaType manaType, int amount)
+    public void AddTemporaryColorAndColorless(Player player, ManaType manaType, int amount)
     {
         player.ManaPool.AddTemporaryColorAndColorless(manaType, amount);
     }
@@ -133,7 +133,7 @@ public class DefaultManaSystem : IManaSystem
         return (player.ManaPool.CurrentMana.IsEnoughToPayCost(new Mana(manaCost))); ;
     }
 
-    public void AddTemporaryEssence(Player player, ManaType essenceType, int amount)
+    public void AddTemporaryColor(Player player, ManaType essenceType, int amount)
     {
         player.ManaPool.AddTemporaryColor(essenceType, amount);
     }
