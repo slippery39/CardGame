@@ -1873,6 +1873,48 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Geist of Saint Traft",
+            ManaCost = "1UW",
+            Colors = new List<CardColor> { CardColor.Blue, CardColor.White },
+            Power = 2,
+            Toughness = 2,
+            Abilities = new List<CardAbility>
+            {
+                new HexproofAbility(),
+                new TriggeredAbility()
+                {
+                    TriggerType= TriggerType.SelfAttacks,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<UnitCardData>{
+                            TokenData = new UnitCardData
+                            {
+                                Name = "Angel",
+                                CreatureType = "Angel",
+                                Power = 4,
+                                Toughness = 4,
+                                Abilities = new List<CardAbility>
+                                {
+                                    new FlyingAbility(),
+                                    new HasteAbility(),
+                                    new TriggeredAbility()
+                                    {
+                                        TriggerType = TriggerType.AtTurnEnd,
+                                        Effects = new List<Effect>
+                                        {
+                                            new SacrificeSelfEffect()
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
 
 
 
