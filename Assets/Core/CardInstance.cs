@@ -294,6 +294,18 @@ public class CardInstance : CardGameEntity
 
     #region Public Methods
 
+    public void SetCardData(BaseCardData cardData)
+    {
+        _currentCardData = cardData.Clone();
+        Abilities = _currentCardData.Abilities.ToList();
+        if (_currentCardData is UnitCardData)
+        {
+            var unitCardData = (UnitCardData)_currentCardData;
+            _powerWithoutMods = unitCardData.Power;
+            _toughnessWithoutMods = unitCardData.Toughness;
+        }
+    }
+
     public List<T> GetAbilitiesAndComponents<T>()
     {
 

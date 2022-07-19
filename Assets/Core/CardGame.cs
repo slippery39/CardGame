@@ -522,8 +522,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
-        card.Name == "Mulldrifter"
-        || card.Name == "Restoration Angel" || card.Name == "Geist of Saint Traft");
+        card.Name == "Delver of Secrets" || card is SpellCardData);
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 

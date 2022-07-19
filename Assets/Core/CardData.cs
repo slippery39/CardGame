@@ -555,7 +555,7 @@ public class CardDatabase : ICardDatabase
                 new TriggeredAbility
                 (
                     TriggerType.AtTurnStart,
-                    new TransformEffect
+                    new DelverTransformEffect
                     {
                         TransformData = new UnitCardData
                         {
