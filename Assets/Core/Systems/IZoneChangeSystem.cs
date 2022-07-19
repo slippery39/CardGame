@@ -49,6 +49,13 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         currentZone.Remove(card);
         zoneTo.Add(card);
 
+
+        //Apply any ETB Triggers
+        if (currentZone.ZoneType != ZoneType.InPlay && (zoneTo.ZoneType == ZoneType.InPlay || zoneTo.ZoneType == ZoneType.Items))
+        {
+            cardGame.HandleTriggeredAbilities(new List<CardInstance> { card }, TriggerType.SelfEntersPlay);
+        }
+
         //Apply Death Triggers
         if ((currentZone.ZoneType == ZoneType.InPlay || currentZone.ZoneType == ZoneType.Items) && zoneTo is DiscardPile)
         {

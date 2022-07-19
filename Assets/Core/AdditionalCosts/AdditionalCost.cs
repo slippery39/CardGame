@@ -22,9 +22,25 @@ public class CardFilter
 {
     public string CreatureType { get; set; }
     public string Subtype { get; set; }
+    public bool Not { get; set; } = false; //Search for things that don't match the criteria.
 
     public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)
     {
+        if (filter == null)
+        {
+            return list;
+        }
+
+        Func<CardInstance, bool> creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType;
+        Func<CardInstance, bool> subTypeFilter = x => x.Subtype?.ToLower() == filter.Subtype.ToLower();
+
+        if (filter.Not)
+        {
+            creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType != filter.CreatureType;
+            subTypeFilter = x => x.Subtype?.ToLower() != filter.Subtype.ToLower();
+        }
+
+        //TODO - need to apply a NOT to everything (but how?)
         if (filter.CreatureType != null)
         {
             //Things to consider: 
@@ -32,11 +48,11 @@ public class CardFilter
             //Should also have a method to check what type a card is?
             //Should also have a method to automatically filter a list of CardInstances based off of its type and return the proper cast.
             //i.e. List.GetOfType<UnitCard>()
-            list = list.Where(x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType).ToList();
+            list = list.Where(creatureTypeFilter).ToList();
         }
         if (filter.Subtype != null)
         {
-            list = list.Where(x => x.Subtype?.ToLower() == filter.Subtype.ToLower()).ToList();
+            list = list.Where(subTypeFilter).ToList();
         }
 
         return list;

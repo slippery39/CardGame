@@ -36,6 +36,7 @@ public class DefaultUnitSummoningSystem : IUnitSummoningSystem
         }
 
         //Search for TriggeredAbilities with the SelfEntersPlay effect
-        cardGame.HandleTriggeredAbilities(new List<CardInstance> { unitCard }, TriggerType.SelfEntersPlay);
+        //This was moved to the zone change system.
+        //cardGame.HandleTriggeredAbilities(new List<CardInstance> { unitCard }, TriggerType.SelfEntersPlay);
     }
 }

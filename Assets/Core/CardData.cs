@@ -1843,6 +1843,36 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Restoration Angel",
+            ManaCost = "3W",
+            Colors = new List<CardColor> { CardColor.White },
+            CreatureType = "Angel",
+            Power = 3,
+            Toughness = 4,
+            Abilities = new List<CardAbility>
+            {
+                new FlyingAbility(),
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new BlinkEffect
+                        {
+                            Filter = new CardFilter
+                            {
+                                Not = true,
+                                CreatureType = "Angel"
+                            },
+                            TargetType = TargetType.RandomOurUnits
+                        }
+                    }
+                }
+            }
+        });
+
 
 
 

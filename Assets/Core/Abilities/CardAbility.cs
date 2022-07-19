@@ -143,6 +143,7 @@ public enum TargetType
     TargetPlayers,
     TargetUnits,
     TargetUnitsOrPlayers,
+    RandomOurUnits,
     OpenLane,
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
 }

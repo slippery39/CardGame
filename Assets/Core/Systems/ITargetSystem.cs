@@ -17,12 +17,12 @@ public interface ITargetSystem
 
 public static class TargetHelper
 {
-    private static List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
+    public static List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
 
     public static bool NeedsTargets(ActivatedAbility ability)
     {
         var abilityTargets = ability.Effects.Select(a => a.TargetType);
-        return abilityTargets.Where(te => typesThatDontNeedTargets.Contains(te) == false).Count() > 0;
+        return abilityTargets.Where(te => TypesThatDontNeedTargets.Contains(te) == false).Count() > 0;
     }
 }
 
@@ -30,7 +30,7 @@ public static class TargetHelper
 public class DefaultTargetSystem : ITargetSystem
 {
 
-    private List<TargetType> typesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None };
+    private List<TargetType> typesThatDontNeedTargets = TargetHelper.TypesThatDontNeedTargets;
     private CardGame cardGame;
 
     public DefaultTargetSystem(CardGame cardGame)
@@ -69,6 +69,10 @@ public class DefaultTargetSystem : ITargetSystem
                 return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
                 return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
+            case TargetType.RandomOurUnits:
+                var ourUnits = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Randomize();
+                var filtered = CardFilter.ApplyFilter(ourUnits.ToList(), effect.Filter);
+                return new List<CardGameEntity> { filtered.FirstOrDefault() };
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {effect.TargetType}");
         }

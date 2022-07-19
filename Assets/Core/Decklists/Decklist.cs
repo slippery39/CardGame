@@ -31,6 +31,32 @@ public static class Decklist
             ";
     }
 
+    public static string UWDelver2012()
+    {
+        return $@"
+        3 Restoration Angel
+        4 Geist of Saint Traft
+        4 Delver of Secrets
+        4 Snapcaster Mage
+        2 Augur of Bolas
+        Sorcery(8)
+        4 Ponder
+        4 Gitaxian Probe
+        Instant(14)
+        4 Vapor Snag
+        4 Thought Scour
+        4 Gut Shot
+        2 Mana Leak
+        Artifact(2)
+        2 Runechanter's Pike
+        Land(19)
+        8 Island
+        4 Seachrome Coast
+        4 Glacial Fortress
+        2 Moorland Haunt
+        1 Plains";
+    }
+
     public static List<BaseCardData> ConvertToDeck(string decklist)
     {
         var deck = new List<BaseCardData>();

@@ -521,19 +521,15 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Subtype == "Artifact"
-        || card.Abilities.GetOfType<AffinityAbility>().Count() > 0 || card.Name == "Atog"
-        || card.Name == "Disciple of the Vault"
-        || card.Name == "Blinkmoth Nexus"
-        || card.Name == "Great Furnace"
-        || card.Name == "Vault of Whispers"
-        || card.Name == "Seat of the Synod"
-        || card.Name == "Glimmervoid");
+        var cardsToSelectFrom = cardDB.GetAll().Where(card =>
+        card.Abilities.GetOfType<AffinityAbility>().Count() > 0 || card.Name == "Mulldrifter"
+        || card.Name == "Restoration Angel");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
         //Testing out if we can instantiate an affinity deck.
-        var affinityDeck = Decklist.ConvertToDeck(Decklist.Affinity2004());
+        /*
+        //var affinityDeck = Decklist.ConvertToDeck(Decklist.Affinity2004());
 
         affinityDeck.ForEach(card =>
         {
@@ -542,6 +538,7 @@ public class CardGame
 
         player.Deck.Shuffle();
         return;
+        */
 
         //OLD Randomize code
 
