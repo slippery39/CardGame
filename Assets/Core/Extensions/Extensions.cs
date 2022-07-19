@@ -10,7 +10,7 @@ public static class Extensions
 
     public static List<T> GetOfType<T>(this IEnumerable<object> source)
     {
-        return source.Where(o=>o is T).Cast<T>().ToList();
+        return source.Where(o => o is T).Cast<T>().ToList();
     }
 
     public static IEnumerable<T> Randomize<T>(this IEnumerable<T> source)
@@ -34,6 +34,37 @@ public static class Extensions
     /// <param name="text"></param>
     /// <returns></returns>
     public static bool IsNumeric(this char character) => Int32.TryParse(character.ToString(), out _);
+
+    public static string ToManaString(this List<CardColor> colors)
+    {
+        var manaString = "";
+
+        foreach (var color in colors)
+        {
+            if (color == CardColor.White)
+            {
+                manaString += "W";
+            }
+            else if (color == CardColor.Blue)
+            {
+                manaString += "U";
+            }
+            else if (color == CardColor.Black)
+            {
+                manaString += "B";
+            }
+            else if (color == CardColor.Red)
+            {
+                manaString += "R";
+            }
+            else if (color == CardColor.Green)
+            {
+                manaString += "G";
+            }
+        }
+
+        return manaString;
+    }
 
 }
 

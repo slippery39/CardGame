@@ -1810,10 +1810,21 @@ public class CardDatabase : ICardDatabase
 
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Shrapnel Blast",
+            ManaCost = "1R",
+            Colors = new List<CardColor> { CardColor.Red },
+            AdditionalCost = new SacrificeAdditionalCost { Filter = new CardFilter { Subtype = "Artifact" } },
+            Effects = new List<Effect>
+            {
+                new DamageEffect
+                {
+                   Amount = 5
+                }
+            }
+        });
 
-
-
-        /*
         _cards.Add(new ItemCardData
         {
             Name = "Chrome Mox",
@@ -1828,14 +1839,10 @@ public class CardDatabase : ICardDatabase
                 //then our imprint effect can modify the AddManaEffect as needed. 
                 new ImprintAbility()
                 {
-                    new AddVariableManaEffect
-                    {
-
-                    }
                 }
             }
         });
-        */
+
 
 
 

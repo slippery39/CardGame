@@ -228,6 +228,15 @@ public class CardGame
             return;
         }
 
+        //This is mainly to get chrome mox working.
+        GetCardsInPlay().ForEach(card =>
+        {
+            card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ForEach(component =>
+                component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded)
+            );
+        });
+
+
         //For now we are just handling discard choices....
         //In the future we might have other choices, like choosing a creature to sacrifice or perhaps some other choice like choosing a type to destroy?
         DiscardSystem.Discard(ActivePlayer, entitiesSelected);
@@ -522,6 +531,19 @@ public class CardGame
         || card.Name == "Glimmervoid");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
+
+        //Testing out if we can instantiate an affinity deck.
+        var affinityDeck = Decklist.ConvertToDeck(Decklist.Affinity2004());
+
+        affinityDeck.ForEach(card =>
+        {
+            AddCardToGame(player, card, player.Deck);
+        });
+
+        player.Deck.Shuffle();
+        return;
+
+        //OLD Randomize code
 
         for (int i = 0; i < cardsToAdd; i++)
         {

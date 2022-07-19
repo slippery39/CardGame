@@ -16,5 +16,10 @@ public class DefaultItemSystem : IItemSystem
     public void PlayItem(Player player, CardInstance card, List<CardGameEntity> targets, ResolvingCardInstanceActionInfo resolvingCardInstance)
     {
         cardGame.ZoneChangeSystem.MoveToZone(card, player.Items);
+
+        card.GetAbilitiesAndComponents<IOnSummon>().ForEach(ab =>
+        {
+            ab.OnSummoned(cardGame, card); 
+        });
     }
 }
