@@ -1,4 +1,7 @@
-﻿public class GetRandomCardFromDeckEffect : Effect
+﻿using System.Collections.Generic;
+using System.Linq;
+
+public class GetRandomCardFromDeckEffect : Effect
 {
 
     public override string RulesText
@@ -20,6 +23,11 @@
     public override TargetType TargetType { get; set; } = TargetType.None;
 
     public CardFilter Filter { get; set; }
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        cardGame.CardDrawSystem.GrabRandomCardFromDeck(player, Filter);
+    }
 }
 
 

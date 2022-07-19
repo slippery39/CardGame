@@ -1,4 +1,7 @@
-﻿public class CreateTokenEffect<T> : Effect where T : BaseCardData
+﻿using System.Collections.Generic;
+using System.Linq;
+
+public class CreateTokenEffect<T> : Effect where T : BaseCardData
 {
     //TODO - change the rules text to take into account the amount of tokens created.
     public override string RulesText
@@ -31,6 +34,33 @@
     public CreateTokenEffect(T cardData)
     {
         TokenData = cardData;
+    }
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        if (this is CreateTokenEffect<UnitCardData>)
+        {
+            //put in open lanes. 
+
+            var emptyLanes = player.GetEmptyLanes();
+            for (var i = 0; i < AmountOfTokens; i++)
+            {
+                var emptyLane = player.GetEmptyLanes().FirstOrDefault();
+                if (emptyLane != null)
+                {
+                    cardGame.AddCardToGame(player, TokenData, emptyLane);
+                }
+            }
+        }
+        else if (this is CreateTokenEffect<ItemCardData>)
+        {
+            //put in open lanes.
+            for (var i = 0; i < AmountOfTokens; i++)
+            {
+                cardGame.AddCardToGame(player, TokenData, player.Items);
+            }
+        }
+
     }
 }
 

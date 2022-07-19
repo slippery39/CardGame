@@ -58,16 +58,7 @@ public class DefaultCardDrawSystem : ICardDrawSystem
 
     public void GrabRandomCardFromDeck(Player player, CardFilter filter)
     {
-        var validCardsToGet = player.Deck.Cards.Where(card =>
-        {
-
-            if (filter.CreatureType != null)
-            {
-                return card.CreatureType == filter.CreatureType;
-            }
-            return true;
-        });
-
+        var validCardsToGet = CardFilter.ApplyFilter(player.Deck.Cards.ToList(), filter);
 
         if (!validCardsToGet.Any())
         {
