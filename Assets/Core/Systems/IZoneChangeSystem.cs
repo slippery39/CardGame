@@ -82,18 +82,20 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
 
         //We have to get all the abilities
 
-        cardsInPlay.SelectMany(card => card.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SomethingDies)).ToList().ForEach(ab =>
-          {
-              //fire the trigger...
+        foreach (var card2 in cardsInPlay)
+        {
+            card2.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == TriggerType.SomethingDies).ToList().ForEach(ab =>
+            {
+                //fire the trigger...
+                var thingThatDies = new List<CardInstance> { card };
+                var filteredList = CardFilter.ApplyFilter(thingThatDies, ab.Filter);
 
-              var thingThatDies = new List<CardInstance> { card };
-              var filteredList = CardFilter.ApplyFilter(thingThatDies, ab.Filter);
-
-              if (filteredList.Any())
-              {
-                  cardGame.EffectsProcessor.ApplyEffects(cardGame.GetOwnerOfCard(card), card, ab.Effects, new List<CardGameEntity>());
-              }
-          });
+                if (filteredList.Any())
+                {
+                    cardGame.EffectsProcessor.ApplyEffects(cardGame.GetOwnerOfCard(card2), card2, ab.Effects, new List<CardGameEntity>());
+                }
+            });
+        }
     }
 }
 
