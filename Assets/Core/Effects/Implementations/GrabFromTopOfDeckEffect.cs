@@ -22,14 +22,9 @@ public class GrabFromTopOfDeckEffect : Effect
     public int CardsToLookAt { get; set; }
     public int Amount { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.None;
-
-    public CardFilter Filter { get; set; }
-
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
-        var validCardsToGet = CardFilter.ApplyFilter(player.Deck.Cards.ToList(), Filter);
-
-        cardGame.CardDrawSystem.GrabRandomCardFromDeck(player, Filter);
+        cardGame.CardDrawSystem.GrabFromTopOfDeck(player, Filter, CardsToLookAt, Amount);
     }
 }
 

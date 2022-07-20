@@ -5,6 +5,7 @@ public interface ICardDrawSystem
     CardInstance DrawCard(Player player);
     void DrawOpeningHand(Player player);
     void GrabRandomCardFromDeck(Player player, CardFilter filter);
+    void GrabFromTopOfDeck(Player player, CardFilter filter, int amountToLookAt, int amountToGrab);
 }
 
 
@@ -68,6 +69,34 @@ public class DefaultCardDrawSystem : ICardDrawSystem
 
         cardGame.Log("Grabbed random card from deck");
         cardGame.ZoneChangeSystem.MoveToZone(validCardsToGet.Randomize().ToList()[0], player.Hand);
+    }
+
+    public void GrabFromTopOfDeck(Player player, CardFilter filter, int amountToLookAt, int amountToGrab)
+    {
+        var copyOfDeck = player.Deck.Cards.ToList();
+        copyOfDeck.Reverse();
+
+        var cardsToLookAt = copyOfDeck.Take(amountToLookAt).ToList();
+
+        var validCardsToGet = CardFilter.ApplyFilter(cardsToLookAt, filter).Randomize().ToList();
+
+        for (int i = 0; i < amountToGrab; i++)
+        {
+            if (validCardsToGet.Count() > i)
+            {
+                cardGame.ZoneChangeSystem.MoveToZone(validCardsToGet.ToList()[i], player.Hand);
+                validCardsToGet.Remove(validCardsToGet.ToList()[i]);
+            }
+        }
+
+        //Put the remaining cards on the bottom
+
+        foreach (var card in cardsToLookAt)
+        {
+            //This could be a method.
+            player.Deck.Cards.Remove(card);
+            player.Deck.Cards.Insert(0, card);
+        }
     }
 
 
