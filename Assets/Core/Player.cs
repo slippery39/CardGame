@@ -16,6 +16,7 @@ public class Player : CardGameEntity
     private Deck _deck;
     private IZone _exile;
     private IZone _items;
+    private List<Modification> _modifications;
 
     private ManaPool _manaPool;
 
@@ -32,7 +33,7 @@ public class Player : CardGameEntity
         Exile = new Zone(ZoneType.Exile, "Exile");
         Items = new Zone(ZoneType.Items, "Items");
 
-
+        _modifications = new List<Modification>();
 
         InitLanes(numberOfLanes);
     }
@@ -53,6 +54,8 @@ public class Player : CardGameEntity
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 
     public IZone Items { get => _items; set => _items = value; }
+    public List<Modification> Modifications { get => _modifications; set => _modifications = value; }
+
 
     #endregion
 
@@ -65,7 +68,7 @@ public class Player : CardGameEntity
 
     public List<CardInstance> GetUnitsInPlay()
     {
-        return Lanes.Where(l=>l.IsEmpty() == false).Select(l=>l.UnitInLane).ToList();
+        return Lanes.Where(l => l.IsEmpty() == false).Select(l => l.UnitInLane).ToList();
     }
 
     public List<CardInstance> GetCardsInPlay()

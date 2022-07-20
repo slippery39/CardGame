@@ -1915,6 +1915,30 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Snapcaster Mage",
+            ManaCost = "1U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Power = 2,
+            Toughness = 1,
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType =TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        //ModificationsOnPlayersNow!
+                        new SnapcasterMageEffect
+                        {
+
+                        }
+                    }
+                }
+            }
+        });
+
 
 
 
@@ -2052,37 +2076,6 @@ public class CardDatabase : ICardDatabase
                 */
 
 
-        /*
-        //Geist of Saint Traft
-        _cards.Add(new UnitCardData()
-        {
-            Name = "Geist of Saint Traft",
-            ManaCost = "3",
-            Power = 2,
-            Toughness = 2,
-            ArtPath = "CardArt/GeistOfSaintTraft",
-            Abilities = new List<CardAbility>()
-                {
-                    new HexproofAbility(),
-                    new TriggeredAbility(TriggerType.SelfAttacks,
-                    new CreateTokenEffect( new UnitCardData(){
-                        Name = "Angel",
-                        ManaCost = "0",
-                        Power = 4,
-                        Toughness = 4,
-                        ArtPath = "CardArt/Tokens/Angel",
-                        Abilities = new List<CardAbility>()
-                        {
-                            new FlyingAbility(),
-                            new HasteAbility(), //haste is needed to make sure it attacks.
-                            new TriggeredAbility(TriggerType.AtTurnEnd, new SacrificeSelfEffect())
-                        }
-                    }, TargetType.OpenLane
-                    )
-                    )
-                }
-        });;
-        */
 
 
     }

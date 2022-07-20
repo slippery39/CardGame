@@ -83,6 +83,7 @@ public class CardGame
     internal IAdditionalCostSystem AdditionalCostSystem { get => _additionalCostSystem; set => _additionalCostSystem = value; }
 
     public ICountersSystem CountersSystem { get; set; }
+    public IPlayerModificationSystem PlayerAbilitySystem { get; set; }
 
     #endregion
     #endregion
@@ -113,6 +114,7 @@ public class CardGame
 
         CountersSystem = new DefaultCountersSystem(this);
         ItemSystem = new DefaultItemSystem(this);
+        PlayerAbilitySystem = new PlayerModificationSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -277,7 +279,9 @@ public class CardGame
 
         //figure out where the card can be cast from
 
-        var modCastZoneComponents = card.GetAbilitiesAndComponents<IModifyCastZones>();
+        var modCastZoneComponents =
+             card.GetAbilitiesAndComponents<IModifyCastZones>()
+            .Union(owner.Modifications.GetOfType<IModifyCastZones>()).ToList();
 
         foreach (var modCastZoneComponent in modCastZoneComponents)
         {
@@ -386,6 +390,10 @@ public class CardGame
             {
                 ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
+                player.Modifications.GetOfType<IOnSpellCast>().ForEach(mod =>
+                {
+                    mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay)); //etc...
+                });
                 ResolvingSystem.Add(cardToPlay, null);
                 //Do we need our state based effects here?
                 _stateBasedEffectSystem.CheckStateBasedEffects();
@@ -400,6 +408,10 @@ public class CardGame
                 {
                     ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                     AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
+                    player.Modifications.GetOfType<IOnSpellCast>().ForEach(mod =>
+                    {
+                        mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay));//etc...
+                    });
                     ResolvingSystem.Add(cardToPlay, targetAsEntity);
                     //Do we need our state based effects here?
                     _stateBasedEffectSystem.CheckStateBasedEffects();
@@ -522,7 +534,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
-        card.Name == "Delver of Secrets" || card is SpellCardData);
+        card.Name == "Delver of Secrets" || card.Name == "Snapcaster Mage" || card is SpellCardData);
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
