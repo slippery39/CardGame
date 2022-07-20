@@ -27,14 +27,7 @@ public class GrabFromTopOfDeckEffect : Effect
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
-        var validCardsToGet = player.Deck.Cards.Where(card =>
-        {
-            if (Filter.CreatureType != null)
-            {
-                return card.CreatureType == Filter.CreatureType;
-            }
-            return true;
-        });
+        var validCardsToGet = CardFilter.ApplyFilter(player.Deck.Cards.ToList(), Filter);
 
         cardGame.CardDrawSystem.GrabRandomCardFromDeck(player, Filter);
     }

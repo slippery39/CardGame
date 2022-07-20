@@ -1939,6 +1939,62 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Gitaxian Probe",
+            ManaCost = "0",
+            Colors = new List<CardColor> { CardColor.Blue },
+            AdditionalCost = new PayLifeAdditionalCost
+            {
+                Amount = 2
+            },
+            Effects = new List<Effect>
+            {
+                new DrawCardEffect
+                {
+                    Amount = 1
+                }
+            }
+            //TODO - Reveal Hand
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Ponder",
+            ManaCost = "U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Effects = new List<Effect>
+            {
+                new DrawCardEffect {Amount = 1},
+                new PutSpellOnTopOfDeckEffect()
+            }
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Augur of Bolas",
+            ManaCost = "1U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Power = 1,
+            Toughness = 3,
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility{
+                TriggerType = TriggerType.SelfEntersPlay,
+                Effects = new List<Effect>{
+                new GrabFromTopOfDeckEffect
+                {
+                    CardsToLookAt = 3,
+                    Amount = 1,
+                    Filter = new CardFilter
+                    {
+                        SpellsOnly = true
+                    }
+                }
+                }
+                }
+            }
+        });
 
 
 

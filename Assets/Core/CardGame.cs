@@ -534,7 +534,8 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
-        card.Name == "Delver of Secrets" || card.Name == "Snapcaster Mage" || card is SpellCardData);
+        card.Name == "Delver of Secrets" || card.Name == "Snapcaster Mage" || card.Name == "Ponder" || card.Name == "Gitaxian Probe"
+        || card.Name == "Geist of Saint Traft" || card.Name == "Restoration Angel" || card.Name == "Augur of Bolas");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
