@@ -1996,6 +1996,73 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Vapor Snag",
+            ManaCost = "U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Effects = new List<Effect>
+            {
+                new BounceUnitEffect
+                {
+                    TargetType = TargetType.TargetUnits
+                },
+                new DamageEffect
+                {
+                    Amount = 1,
+                    TargetType = TargetType.Opponent
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Thought Scour",
+            ManaCost = "U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Effects = new List<Effect>
+            {
+                new MillEffect
+                {
+                    Amount = 2,
+                    TargetType = TargetType.Self
+                },
+                new DrawCardEffect
+                {
+                    Amount = 1,
+                    TargetType = TargetType.Self
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Gut Shot",
+            ManaCost = "0",
+            AdditionalCost = new PayLifeAdditionalCost
+            {
+                Amount = 2
+            },
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>
+            {
+                new DamageEffect {TargetType = TargetType.TargetUnitsOrPlayers, Amount = 1}
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Mana Leak",
+            ManaCost = "1U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Abilities = new List<CardAbility>
+            {
+                new RespondToCastAbility
+                {
+                }
+            }
+        });
+
 
 
 

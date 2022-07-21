@@ -9,6 +9,9 @@ public interface IResolvingSystem
     public void Add(CardAbility ability, CardInstance source);
 
     public void Add(CardAbility ability, CardInstance source, CardGameEntity target);
+
+    public void Cancel(ResolvingActionInfo action);
+
     public void ResolveNext();
 }
 
@@ -67,6 +70,21 @@ public class DefaultResolvingSystem : IResolvingSystem
 
         _internalStack.Add(resolvingCardInstance);
 
+        //Search each players hands for RespondToCastAbilities
+        //And resolve those abilities if necessary.
+        //TODO - possibly we only need to look for the opponents cards.
+        var playersHands = cardGame.Player1.Hand.Cards.Union(cardGame.Player2.Hand.Cards);
+        playersHands.Where(card => card.Abilities.GetOfType<RespondToCastAbility>().Any()).ToList()
+        .ForEach(card =>
+            {
+                card.GetAbilitiesAndComponents<RespondToCastAbility>().ForEach(ab =>
+                {
+                    ab.BeforeSpellResolve(cardGame, resolvingCardInstance);
+                });
+            });
+
+
+
         //Our abilities auto resolve.
         this.ResolveNext();
     }
@@ -103,6 +121,19 @@ public class DefaultResolvingSystem : IResolvingSystem
 
         //Our abilities auto resolve.
         this.ResolveNext();
+    }
+
+    public void Cancel(ResolvingActionInfo action)
+    {
+        _internalStack.Remove(action);
+
+        var caAction = action as ResolvingCardInstanceActionInfo;
+
+        if (caAction != null)
+        {
+            cardGame.ZoneChangeSystem.MoveToZone(caAction.CardInstance, cardGame.GetOwnerOfCard(caAction.CardInstance).DiscardPile);
+        }
+        cardGame.Log($"has been cancelled (by mana leak probably");
     }
 
     public void ResolveNext()

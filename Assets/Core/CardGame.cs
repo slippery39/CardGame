@@ -478,6 +478,22 @@ public class CardGame
         return player1Units.Concat(player2Units).ToList();
     }
 
+    public CardInstance GetCardThatHasResponseAbility(RespondToCastAbility ability)
+    {
+        //Check players hands;
+        var cardsInHand = Player1.Hand.Cards.Union(Player2.Hand.Cards).ToList();
+
+        foreach (var card in cardsInHand)
+        {
+            if (card.Abilities.Contains(ability))
+            {
+                return card;
+            }
+        }
+
+        return null; //card cannot be found.
+    }
+
     public bool IsInPlay(CardInstance card)
     {
         var zone = GetZoneOfCard(card);
@@ -535,7 +551,8 @@ public class CardGame
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
         card.Name == "Delver of Secrets" || card.Name == "Snapcaster Mage" || card.Name == "Ponder" || card.Name == "Gitaxian Probe"
-        || card.Name == "Geist of Saint Traft" || card.Name == "Restoration Angel" || card.Name == "Augur of Bolas");
+        || card.Name == "Geist of Saint Traft" || card.Name == "Restoration Angel" || card.Name == "Augur of Bolas"
+        || card.Name == "Vapor Snag" || card.Name == "Thought Scour" || card.Name == "Gut Shot" || card.Name == "Mana Leak");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
