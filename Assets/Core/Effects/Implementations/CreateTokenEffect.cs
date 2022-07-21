@@ -23,7 +23,7 @@ public class CreateTokenEffect<T> : Effect where T : BaseCardData
         }
     }
     public T TokenData { get; set; }
-    public override TargetType TargetType { get; set; } = TargetType.OpenLane;
+    public override TargetType TargetType { get; set; } = TargetType.Self;
     public int AmountOfTokens { get; set; } = 1;
 
     public CreateTokenEffect()

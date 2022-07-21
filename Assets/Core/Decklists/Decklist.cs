@@ -57,6 +57,32 @@ public static class Decklist
         1 Plains";
     }
 
+    public static string RGValakut2011()
+    {
+        return $@"Creature (10)
+                        1 Avenger of Zendikar
+                        3 Inferno Titan
+                        2 Oracle of Mul Daya
+                        4 Primeval Titan
+                        Sorcery(7)
+                        3 Cultivate
+                        4 Explore
+                        Instant(11)
+                        3 Harrow
+                        4 Lightning Bolt
+                        4 Summoning Trap
+                        Enchantment(4)
+                        4 Khalni Heart Expedition
+                        Land(28)
+                        3 Evolving Wilds
+                        5 Forest
+                        10 Mountain
+                        1 Raging Ravine
+                        3 Terramorphic Expanse
+                        4 Valakut, the Molten Pinnacle
+                        2 Verdant Catacombs";
+    }
+
     public static List<BaseCardData> ConvertToDeck(string decklist)
     {
         var deck = new List<BaseCardData>();

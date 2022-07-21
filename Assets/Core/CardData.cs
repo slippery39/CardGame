@@ -147,6 +147,8 @@ public class ManaCardData : BaseCardData
     //TODO - We need to revamp this somehow
     public string ManaAdded { get; set; } = "*";
     public override string RulesText => $"Add {ManaAdded} to your mana";
+    public bool ReadyImmediately { get; set; } = true;
+    public IManaReadyCondition ReadyCondition { get; set; } = null;
     public override BaseCardData Clone()
     {
         return new ManaCardData()
@@ -155,8 +157,41 @@ public class ManaCardData : BaseCardData
             Name = Name,
             Colors = Colors,
             ArtPath = ArtPath,
-            Abilities = Abilities.ToList()
+            Abilities = Abilities.ToList(),
+            ReadyImmediately = ReadyImmediately,
+            ReadyCondition = ReadyCondition
         };
+    }
+}
+
+public interface IManaReadyCondition
+{
+    bool IsReady(CardGame cardGame, Player owner);
+}
+
+public class LessThan3ManaReadyCondition : IManaReadyCondition
+{
+    public bool IsReady(CardGame cardGame, Player owner)
+    {
+        return owner.ManaPool.TotalColorlessMana < 3;
+    }
+}
+
+public class AlreadyHasManaCondition : IManaReadyCondition
+{
+    public string ManaNeeded { get; set; }
+    public bool IsReady(CardGame cardGame, Player owner)
+    {
+        var isReady = false;
+        foreach (var manaChar in ManaNeeded)
+        {
+            if (owner.ManaPool.TotalMana.ToManaString().Contains(manaChar))
+            {
+                isReady = true;
+                break;
+            }
+        }
+        return isReady;
     }
 }
 
@@ -2087,6 +2122,92 @@ public class CardDatabase : ICardDatabase
         });
 
 
+        _cards.Add(new ManaCardData
+        {
+            Name = "Seachrome Coast",
+            ManaAdded = "1WU",
+            ReadyImmediately = false,
+            ReadyCondition = new LessThan3ManaReadyCondition() { },
+            Colors = new List<CardColor> { CardColor.Blue, CardColor.White }
+        });
+
+        _cards.Add(new ManaCardData
+        {
+            Name = "Glacial Fortress",
+            ManaAdded = "1WU",
+            ReadyImmediately = false,
+            ReadyCondition = new AlreadyHasManaCondition { ManaNeeded = "UW" },
+            Colors = new List<CardColor> { CardColor.Blue, CardColor.White }
+        });
+
+        _cards.Add(new ManaCardData
+        {
+            Name = "Moorland Haunt",
+            ManaAdded = "1",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<ItemCardData>
+                        {
+                            TokenData = new ItemCardData()
+                            {
+                                Name = "Moorland Haunt",
+                                Subtype = "Artifact",
+                                Abilities = new List<CardAbility>
+                                {
+                                    new ActivatedAbility()
+                                    {
+                                        OncePerTurn = true,
+                                        ManaCost = "UW",
+                                        AdditionalCost = new ExileRandomCreatureFromDiscardAdditionalCost(),
+                                        Effects = new List<Effect>
+                                        {
+                                            new CreateTokenEffect<UnitCardData>
+                                            {
+                                                AmountOfTokens = 1,
+                                                TokenData = new UnitCardData
+                                                {
+                                                    Name = "Spirit",
+                                                    Power = 1,
+                                                    Toughness = 1,
+                                                    Abilities = new List<CardAbility>
+                                                    {
+                                                        new FlyingAbility()
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            AmountOfTokens = 1
+
+                        }
+                    }
+                }
+            }
+
+
+        });
+
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Rampant Growth",
+            ManaCost = "1G",
+            Colors = new List<CardColor> { CardColor.Green },
+            Effects = new List<Effect>
+            {
+                new PutManaFromDeckIntoPlayEffect
+                {
+                    Amount = 1,
+                }
+            }
+        });
 
 
 

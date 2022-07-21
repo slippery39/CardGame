@@ -550,14 +550,12 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
-        card.Name == "Delver of Secrets" || card.Name == "Snapcaster Mage" || card.Name == "Ponder" || card.Name == "Gitaxian Probe"
-        || card.Name == "Geist of Saint Traft" || card.Name == "Restoration Angel" || card.Name == "Augur of Bolas"
-        || card.Name == "Vapor Snag" || card.Name == "Thought Scour" || card.Name == "Gut Shot" || card.Name == "Mana Leak");
+        card.Name == "Rampant Growth");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
         //Testing out if we can instantiate an affinity deck.
-
+        /*
         var decklist = Decklist.ConvertToDeck(Decklist.UWDelver2012());
 
         decklist.ForEach(card =>
@@ -567,7 +565,7 @@ public class CardGame
 
         player.Deck.Shuffle();
         return;
-
+        */
 
         //OLD Randomize code
 

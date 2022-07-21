@@ -17,7 +17,7 @@ public interface ITargetSystem
 
 public static class TargetHelper
 {
-    public static List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
+    public static List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.OpenLane, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
 
     public static bool NeedsTargets(ActivatedAbility ability)
     {

@@ -3,5 +3,6 @@
     Sacrifice,
     SacrificeSelf,
     PayLife,
-    Discard
+    Discard,
+    ExileRandomCreatureFromDiscard
 }

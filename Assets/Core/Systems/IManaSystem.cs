@@ -8,6 +8,8 @@ public interface IManaSystem
     //TODO - Simplify this system... we have too many methods in here.. Change all of our methods to just accept a string of the mana cost instead.
     void AddMana(Player player, string manaToAdd);
     void AddTemporaryMana(Player player, string manaToAdd);
+
+    void AddTotalMana(Player player, string manaToAdd);
     void SpendMana(Player player, string cost);
     void ResetManaAndEssence(Player player);
     bool CanPlayCard(Player player, CardInstance card);
@@ -31,16 +33,6 @@ public class DefaultManaSystem : IManaSystem
     public DefaultManaSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;
-    }
-    //Adds mana to the mana pool without effecting the total amount.
-    public void AddTemporaryColorAndColorless(Player player, ManaType manaType, int amount)
-    {
-        player.ManaPool.AddTemporaryColorAndColorless(manaType, amount);
-    }
-
-    public void AddMana(Player player, int amount)
-    {
-        player.ManaPool.AddColorlessMana(amount);
     }
 
     public void AddMana(Player player, string mana)
@@ -94,11 +86,31 @@ public class DefaultManaSystem : IManaSystem
         return player.ManaPlayedThisTurn < player.TotalManaThatCanBePlayedThisTurn;
     }
 
+    //Adds total mana without adding it to the current mana
+    public void AddTotalMana(Player player, string mana)
+    {
+        player.ManaPool.AddTotalMana(mana);
+    }
+
     public void PlayManaCard(Player player, CardInstance card)
     {
-        player.ManaPlayedThisTurn++;
+        //If played from the hand, count it as mana played this turn.
+        if (cardGame.GetZoneOfCard(card).ZoneType == ZoneType.Hand)
+        {
+            player.ManaPlayedThisTurn++;
+        }
+
         var manaCard = card.CurrentCardData as ManaCardData;
-        AddMana(player, manaCard.ManaAdded);
+
+
+        if (manaCard.ReadyImmediately == true || (manaCard.ReadyImmediately == false && manaCard.ReadyCondition?.IsReady(cardGame, player) == true))
+        {
+            AddMana(player, manaCard.ManaAdded);
+        }
+        else
+        {
+            AddTotalMana(player, manaCard.ManaAdded);
+        }
 
         //Trigger any SelfEnters play effects
         var selfEntersPlayEffects = card.GetAbilitiesAndComponents<TriggeredAbility>().Where(ta => ta.TriggerType == TriggerType.SelfEntersPlay);
@@ -111,18 +123,8 @@ public class DefaultManaSystem : IManaSystem
         cardGame.ZoneChangeSystem.MoveToZone(card, player.DiscardPile);
     }
 
-    public void AddColoredMana(Player player, ManaType essenceType, int amount)
-    {
-        player.ManaPool.AddColor(essenceType, amount);
-    }
-
     public bool CanPayManaCost(Player player, string manaCost)
     {
         return (player.ManaPool.CurrentMana.IsEnoughToPayCost(new Mana(manaCost))); ;
-    }
-
-    public void AddTemporaryColor(Player player, ManaType essenceType, int amount)
-    {
-        player.ManaPool.AddTemporaryColor(essenceType, amount);
     }
 }

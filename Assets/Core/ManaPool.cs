@@ -235,6 +235,18 @@ public class ManaPool
         }
     }
 
+    public void AddTotalMana(string manaToAdd)
+    {
+        var manaToAdd2 = new Mana(manaToAdd);
+
+        _totalMana.ColorlessMana += manaToAdd2.ColorlessMana;
+
+        foreach (var color in manaToAdd2.ColoredMana.Keys)
+        {
+            _totalMana.ColoredMana[color] += manaToAdd2.ColoredMana[color];
+        }
+    }
+
     public void AddTemporary(string manaToAdd)
     {
         var manaToAdd2 = new Mana(manaToAdd);
@@ -258,7 +270,7 @@ public class ManaPool
         };
     }
 
-    public void AddColorAndColorless(ManaType type, int manaAmount)
+    private void AddColorAndColorless(ManaType type, int manaAmount)
     {
         TotalColorlessMana += manaAmount;
         CurrentColorlessMana += manaAmount;
@@ -266,7 +278,7 @@ public class ManaPool
         TotalColoredMana[type] += manaAmount;
     }
 
-    public void AddColorlessMana(int amount)
+    private void AddColorlessMana(int amount)
     {
         //Need to add to both so they have access to it in the same turn.
         //If they don't need access to it, then 
@@ -275,24 +287,24 @@ public class ManaPool
 
     }
 
-    public void AddTemporaryColorless(int amount)
+    private void AddTemporaryColorless(int amount)
     {
         CurrentColorlessMana += amount;
     }
 
-    public void AddTemporaryColorAndColorless(ManaType type, int amount)
+    private void AddTemporaryColorAndColorless(ManaType type, int amount)
     {
         CurrentColorlessMana += amount;
         CurrentColoredMana[type] += amount;
     }
 
-    public void AddColor(ManaType type, int amount)
+    private void AddColor(ManaType type, int amount)
     {
         CurrentColoredMana[type] += amount;
         TotalColoredMana[type] += amount;
     }
 
-    public void AddTemporaryColor(ManaType type, int amount)
+    private void AddTemporaryColor(ManaType type, int amount)
     {
         CurrentColoredMana[type] += amount;
     }
