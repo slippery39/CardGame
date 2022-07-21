@@ -2063,6 +2063,29 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new ItemCardData
+        {
+            Name = "Runechanter's Pike",
+            ManaCost = "2",
+            Subtype = "Artifact",
+            Colors = new List<CardColor> { },
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility
+                {
+                    ManaCost = "2",
+                    OncePerTurn = true,
+                    Effects = new List<Effect>
+                    {
+                        new PumpPowerByNumberOfSpellsInGraveyardEffect
+                        {
+                              TargetType = TargetType.TargetUnits
+                        }
+                    }
+                }
+            }
+        });
+
 
 
 
