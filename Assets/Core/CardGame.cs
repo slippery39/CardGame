@@ -555,8 +555,8 @@ public class CardGame
         var cardsToAdd = 45;
 
         //Testing out if we can instantiate an affinity deck.
-        /*
-        var decklist = Decklist.ConvertToDeck(Decklist.UWDelver2012());
+
+        var decklist = Decklist.ConvertToDeck(Decklist.RGValakut2011());
 
         decklist.ForEach(card =>
         {
@@ -565,7 +565,7 @@ public class CardGame
 
         player.Deck.Shuffle();
         return;
-        */
+
 
         //OLD Randomize code
 

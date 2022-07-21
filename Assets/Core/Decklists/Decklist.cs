@@ -59,6 +59,8 @@ public static class Decklist
 
     public static string RGValakut2011()
     {
+        //Note we replaced Khalni Heart Expedition with Rampant Growth
+        //Also replaced Evolving Wilds / Terramorphic Expanse / Verdant Catacombs with other Red Green Lands (Rootbound Crag / Stomping Ground)
         return $@"Creature (10)
                         1 Avenger of Zendikar
                         3 Inferno Titan
@@ -72,15 +74,16 @@ public static class Decklist
                         4 Lightning Bolt
                         4 Summoning Trap
                         Enchantment(4)
-                        4 Khalni Heart Expedition
+                        4 Rampant Growth
                         Land(28)
-                        3 Evolving Wilds
-                        5 Forest
+                        4 Rootbound Crag
+                        4 Stomping Ground
+                        2 Copperline Gorge
+                        2 Forest 
                         10 Mountain
                         1 Raging Ravine
-                        3 Terramorphic Expanse
-                        4 Valakut, the Molten Pinnacle
-                        2 Verdant Catacombs";
+                        4 Valakut, The Molten Pinnacle
+                        ";
     }
 
     public static List<BaseCardData> ConvertToDeck(string decklist)

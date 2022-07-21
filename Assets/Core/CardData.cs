@@ -2194,6 +2194,88 @@ public class CardDatabase : ICardDatabase
 
         });
 
+        _cards.Add(new ManaCardData
+        {
+            Name = "Stomping Ground",
+            ManaAdded = "1RG",
+            ReadyImmediately = false,
+            ReadyCondition = new LessThan3ManaReadyCondition() { },
+            Colors = new List<CardColor> { CardColor.Green, CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                            Amount = 2,
+                            TargetType = TargetType.Self
+                        }
+                    }
+                }
+            }
+        });
+
+        _cards.Add(new ManaCardData
+        {
+            Name = "Rootbound Crag",
+            ManaAdded = "1RG",
+            ReadyImmediately = false,
+            ReadyCondition = new AlreadyHasManaCondition { ManaNeeded = "RG" },
+            Colors = new List<CardColor> { CardColor.Green, CardColor.Red },
+        });
+
+        _cards.Add(new ManaCardData
+        {
+            Name = "Copperline Gorge",
+            ManaAdded = "1RG",
+            ReadyImmediately = false,
+            Colors = new List<CardColor> { CardColor.Green, CardColor.Red },
+            ReadyCondition = new LessThan3ManaReadyCondition() { },
+        });
+
+        _cards.Add(new ManaCardData
+        {
+            Name = "Valakut, The Molten Pinnacle",
+            ManaAdded = "1",
+            ReadyImmediately = false,
+            Colors = new List<CardColor> { },
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<ItemCardData>()
+                        {
+                            TokenData = new ItemCardData
+                            {
+                                Name = "Valakut Item",
+                                Abilities = new List<CardAbility>
+                                {
+                                       new TriggeredAbility
+                                        {
+                                        TriggerType = TriggerType.SelfManaPlayed,
+                                            Effects = new List<Effect>
+                                            {
+                                                new ValakutEffect()
+                                                {
+                                                TargetType = TargetType.RandomOpponentOrUnits
+                                                }
+                                            }
+                                        }
+                                }
+
+                            }
+                        }
+                    }
+                },
+
+            }
+        });
 
         _cards.Add(new SpellCardData
         {

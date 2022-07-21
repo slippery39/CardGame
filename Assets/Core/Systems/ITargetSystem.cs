@@ -17,7 +17,7 @@ public interface ITargetSystem
 
 public static class TargetHelper
 {
-    public static List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.OpenLane, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
+    public static List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.RandomOpponentOrUnits, TargetType.OpenLane, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
 
     public static bool NeedsTargets(ActivatedAbility ability)
     {
@@ -73,6 +73,10 @@ public class DefaultTargetSystem : ITargetSystem
                 var ourUnits = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Randomize();
                 var filtered = CardFilter.ApplyFilter(ourUnits.ToList(), effect.Filter);
                 return new List<CardGameEntity> { filtered.FirstOrDefault() };
+            case TargetType.RandomOpponentOrUnits:
+                var opponent = cardGame.Players.Where(p => p.EntityId != player.EntityId).First();
+                var things = new List<CardGameEntity> { opponent };
+                return things.Union(opponent.GetUnitsInPlay()).ToList();
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {effect.TargetType}");
         }

@@ -120,6 +120,9 @@ public class DefaultManaSystem : IManaSystem
             cardGame.EffectsProcessor.ApplyEffects(player, card, ab.Effects, new List<CardGameEntity>());
         }
 
+        //Trigger any mana enters play effects
+        cardGame.HandleTriggeredAbilities(player.GetCardsInPlay(), TriggerType.SelfManaPlayed);
+
         cardGame.ZoneChangeSystem.MoveToZone(card, player.DiscardPile);
     }
 

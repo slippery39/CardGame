@@ -66,6 +66,7 @@ public enum TriggerType
     SelfEntersPlay,
     SelfDies,
     SelfAttacks,
+    SelfManaPlayed,
     AtTurnStart,
     AtTurnEnd,
     SomethingDies
@@ -144,6 +145,7 @@ public enum TargetType
     TargetUnits,
     TargetUnitsOrPlayers,
     RandomOurUnits,
+    RandomOpponentOrUnits,
     OpenLane,
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
 }
