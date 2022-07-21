@@ -2209,6 +2209,41 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Primeval Titan",
+            ManaCost = "4GG",
+            Colors = new List<CardColor> { CardColor.Green },
+            Power = 6,
+            Toughness = 6,
+            Abilities = new List<CardAbility>
+            {
+                new TrampleAbility(),
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                      new PutManaFromDeckIntoPlayEffect
+                        {
+                            Amount = 2,
+                        }
+                    }
+                },
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SelfAttacks,
+                    Effects = new List<Effect>
+                    {
+                      new PutManaFromDeckIntoPlayEffect
+                        {
+                            Amount = 2,
+                        }
+                    }
+                }
+            }
+        });
+
 
 
         //Affinity Deck

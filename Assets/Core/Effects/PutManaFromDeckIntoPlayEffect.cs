@@ -22,7 +22,7 @@ public class PutManaFromDeckIntoPlayEffect : Effect
                 break;
             }
 
-            var manaCardToPlay = manaCards[i];
+            var manaCardToPlay = manaCards[0];
             cardGame.ManaSystem.PlayManaCard(player, manaCardToPlay);
             manaCards.Remove(manaCardToPlay);
         }
