@@ -2326,6 +2326,55 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Inferno Titan",
+            ManaCost = "4RR",
+            Colors = new List<CardColor> { CardColor.Red },
+            Power = 6,
+            Toughness = 6,
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility
+                {
+                    ManaCost = "R",
+                    Effects = new List<Effect>
+                    {
+                        new PumpUnitEffect
+                        {
+                            Power = 1,
+                            Toughness =0,
+                            TargetType = TargetType.UnitSelf
+                        }
+                    }
+                },
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                            Amount = 3,
+                            TargetType = TargetType.RandomOpponentOrUnits
+                        }
+                    }
+                },
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SelfAttacks,
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                            Amount = 3,
+                            TargetType = TargetType.RandomOpponentOrUnits
+                        }
+                    }
+                }
+            }
+        });
+
 
 
         //Affinity Deck

@@ -61,9 +61,9 @@ public static class Decklist
     {
         //Note we replaced Khalni Heart Expedition with Rampant Growth
         //Also replaced Evolving Wilds / Terramorphic Expanse / Verdant Catacombs with other Red Green Lands (Rootbound Crag / Stomping Ground)
+        //Replaced Avenger of Zendikar with a 4th Inferno Titan
         return $@"Creature (10)
-                        1 Avenger of Zendikar
-                        3 Inferno Titan
+                        4 Inferno Titan
                         2 Oracle of Mul Daya
                         4 Primeval Titan
                         Sorcery(7)
