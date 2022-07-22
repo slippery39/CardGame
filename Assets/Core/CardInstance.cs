@@ -153,6 +153,11 @@ public class CardInstance : CardGameEntity
         return CurrentCardData is T;
     }
 
+    public bool IsOfType(string cardType)
+    {
+        return CurrentCardData.CardType == cardType;
+    }
+
     private int _powerWithoutMods;
     private int _toughnessWithoutMods;
 

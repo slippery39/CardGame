@@ -17,12 +17,20 @@ public class CostInfo
 
 }
 
+public enum CardType
+{
+    Unit,
+    Spell,
+    Item,
+    Mana
+}
+
 
 public class CardFilter
 {
     public string CreatureType { get; set; }
     public string Subtype { get; set; }
-
+    public string CardType { get; set; }
     //Temporary, would like an actual search by card type.
     public bool SpellsOnly { get; set; } = false;
     public bool Not { get; set; } = false; //Search for things that don't match the criteria.
@@ -36,13 +44,13 @@ public class CardFilter
 
         Func<CardInstance, bool> creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType;
         Func<CardInstance, bool> subTypeFilter = x => x.Subtype?.ToLower() == filter.Subtype.ToLower();
-        Func<CardInstance, bool> cardTypeFilter = x => x.IsOfType<SpellCardData>();
+        Func<CardInstance, bool> cardTypeFilter = x => x.IsOfType(filter.CardType);
 
         if (filter.Not)
         {
             creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType != filter.CreatureType;
             subTypeFilter = x => x.Subtype?.ToLower() != filter.Subtype.ToLower();
-            cardTypeFilter = x => !x.IsOfType<SpellCardData>();
+            cardTypeFilter = x => !x.IsOfType(filter.CardType);
         }
 
         //TODO - need to apply a NOT to everything (but how?)
@@ -60,7 +68,7 @@ public class CardFilter
             list = list.Where(subTypeFilter).ToList();
         }
 
-        if (filter.SpellsOnly == true)
+        if (filter.CardType != null && filter.CardType.Trim() != "")
         {
             list = list.Where(cardTypeFilter).ToList();
         }
@@ -107,6 +115,26 @@ public class PayLifeAdditionalCost : AdditionalCost
     public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {
         player.Health -= Amount;
+    }
+}
+
+public class SacrificeManaAdditionalCost : AdditionalCost
+{
+    public override string RulesText => $@" Sacrifice {Amount} mana";
+
+    public SacrificeManaAdditionalCost()
+    {
+        Type = AdditionalCostType.SacrificeMana;
+    }
+
+    public override bool CanPay(CardGame cardGame, Player player, CardGameEntity source)
+    {
+        return player.ManaPool.TotalColorlessMana >= Amount;
+    }
+
+    public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
+    {
+        player.ManaPool.TotalColorlessMana -= Amount;
     }
 }
 

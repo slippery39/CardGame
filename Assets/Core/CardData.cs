@@ -2375,6 +2375,46 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Cultivate",
+            ManaCost = "2G",
+            Colors = new List<CardColor>() { CardColor.Green },
+            Effects = new List<Effect>
+            {
+                new GetRandomCardFromDeckEffect()
+                {
+                    Filter = new CardFilter
+                    {
+                        CardType = "Mana"
+                    },
+                    Amount = 1
+                },
+                new PutManaFromDeckIntoPlayEffect()
+                {
+                    Amount = 1
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Harrow",
+            ManaCost = "2G",
+            AdditionalCost = new SacrificeManaAdditionalCost
+            {
+                Amount = 1
+            },
+            Colors = new List<CardColor> { CardColor.Green },
+            Effects = new List<Effect>
+            {
+                new PutManaFromDeckIntoPlayEffect
+                {
+                    Amount = 2
+                }
+            }
+        });
+
 
 
         //Affinity Deck

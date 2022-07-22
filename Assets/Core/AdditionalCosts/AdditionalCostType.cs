@@ -4,5 +4,6 @@
     SacrificeSelf,
     PayLife,
     Discard,
-    ExileRandomCreatureFromDiscard
+    ExileRandomCreatureFromDiscard,
+    SacrificeMana
 }

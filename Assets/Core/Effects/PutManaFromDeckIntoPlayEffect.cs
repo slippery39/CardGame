@@ -23,6 +23,7 @@ public class PutManaFromDeckIntoPlayEffect : Effect
             }
 
             var manaCardToPlay = manaCards[0];
+            //TODO - should be either tapped or untapped.
             cardGame.ManaSystem.PlayManaCard(player, manaCardToPlay);
             manaCards.Remove(manaCardToPlay);
         }
