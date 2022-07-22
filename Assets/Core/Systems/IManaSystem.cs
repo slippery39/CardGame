@@ -16,6 +16,8 @@ public interface IManaSystem
     bool CanPlayManaCard(Player player, CardInstance card);
     void PlayManaCard(Player player, CardInstance card);
 
+    void PlayManaCard(Player player, CardInstance card, bool forceEmpty);
+
     /// <summary>
     /// Checks whether a player can theoretically pay a mana cost. Mana Cost is passed in as a string format. 
     /// </summary>
@@ -94,6 +96,11 @@ public class DefaultManaSystem : IManaSystem
 
     public void PlayManaCard(Player player, CardInstance card)
     {
+        PlayManaCard(player, card, false);
+    }
+
+    public void PlayManaCard(Player player, CardInstance card, bool forceEmpty)
+    {
         //If played from the hand, count it as mana played this turn.
         if (cardGame.GetZoneOfCard(card).ZoneType == ZoneType.Hand)
         {
@@ -103,7 +110,7 @@ public class DefaultManaSystem : IManaSystem
         var manaCard = card.CurrentCardData as ManaCardData;
 
 
-        if (manaCard.ReadyImmediately == true || (manaCard.ReadyImmediately == false && manaCard.ReadyCondition?.IsReady(cardGame, player) == true))
+        if (!(forceEmpty) && (manaCard.ReadyImmediately == true || (manaCard.ReadyImmediately == false && manaCard.ReadyCondition?.IsReady(cardGame, player) == true)))
         {
             AddMana(player, manaCard.ManaAdded);
         }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 public class PutManaFromDeckIntoPlayEffect : Effect
 {
     public int Amount { get; set; } = 1;
+    public bool ForceEmpty { get; set; } = true;
     public override string RulesText => " play a mana card from your deck";
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
@@ -24,7 +25,7 @@ public class PutManaFromDeckIntoPlayEffect : Effect
 
             var manaCardToPlay = manaCards[0];
             //TODO - should be either tapped or untapped.
-            cardGame.ManaSystem.PlayManaCard(player, manaCardToPlay);
+            cardGame.ManaSystem.PlayManaCard(player, manaCardToPlay, ForceEmpty);
             manaCards.Remove(manaCardToPlay);
         }
     }

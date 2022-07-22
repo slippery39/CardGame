@@ -2198,8 +2198,6 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Stomping Ground",
             ManaAdded = "1RG",
-            ReadyImmediately = false,
-            ReadyCondition = new LessThan3ManaReadyCondition() { },
             Colors = new List<CardColor> { CardColor.Green, CardColor.Red },
             Abilities = new List<CardAbility>
             {
@@ -2287,6 +2285,7 @@ public class CardDatabase : ICardDatabase
                 new PutManaFromDeckIntoPlayEffect
                 {
                     Amount = 1,
+                    ForceEmpty = true
                 }
             }
         });
@@ -2309,6 +2308,7 @@ public class CardDatabase : ICardDatabase
                       new PutManaFromDeckIntoPlayEffect
                         {
                             Amount = 2,
+                            ForceEmpty = true
                         }
                     }
                 },
@@ -2320,6 +2320,7 @@ public class CardDatabase : ICardDatabase
                       new PutManaFromDeckIntoPlayEffect
                         {
                             Amount = 2,
+                            ForceEmpty = true
                         }
                     }
                 }
@@ -2392,7 +2393,8 @@ public class CardDatabase : ICardDatabase
                 },
                 new PutManaFromDeckIntoPlayEffect()
                 {
-                    Amount = 1
+                    Amount = 1,
+                    ForceEmpty = true
                 }
             }
         });
@@ -2410,7 +2412,8 @@ public class CardDatabase : ICardDatabase
             {
                 new PutManaFromDeckIntoPlayEffect
                 {
-                    Amount = 2
+                    Amount = 2,
+                    ForceEmpty = false
                 }
             }
         });
