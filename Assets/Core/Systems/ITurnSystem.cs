@@ -83,6 +83,10 @@ public class DefaultTurnSystem : ITurnSystem
         .Where(c => c.OneTurnOnly == false)
         .ToList());
 
+        //Remove any temporary player abilities.
+        cardGame.PlayerAbilitySystem.RemoveOneTurnModifications(cardGame.Player1);
+        cardGame.PlayerAbilitySystem.RemoveOneTurnModifications(cardGame.Player2);
+
         //Reset the players mana played this turn.
         cardGame.ActivePlayer.ManaPlayedThisTurn = 0;
 

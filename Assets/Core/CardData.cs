@@ -2418,6 +2418,25 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Explore",
+            ManaCost = "1G",
+            Colors = new List<CardColor> { CardColor.Green },
+            Effects = new List<Effect>
+            {
+                new PlayAdditionalLandEffect
+                {
+                    Amount = 1,
+                    OneTurnOnly = true
+                },
+                new DrawCardEffect
+                {
+                    Amount = 1
+                }
+            }
+        });
+
 
 
         //Affinity Deck

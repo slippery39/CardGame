@@ -48,7 +48,20 @@ public class Player : CardGameEntity
     //public int Mana { get => _mana; set => _mana = value; }
     public IZone Exile { get => _exile; set => _exile = value; }
     public int ManaPlayedThisTurn { get; set; } = 0;
-    public int TotalManaThatCanBePlayedThisTurn { get; set; } = 1;
+    public int TotalManaThatCanBePlayedThisTurn
+    {
+        get
+        {
+            var manaThatCanBePlayed = 1;
+            var manaPlayedModifications = Modifications.GetOfType<IModifyManaPerTurn>();
+
+            foreach (var mod in manaPlayedModifications)
+            {
+                manaThatCanBePlayed = mod.ModifyManaPerTurn(null, this, manaThatCanBePlayed);
+            }
+            return manaThatCanBePlayed;
+        }
+    }
     public int Mana => _manaPool.CurrentColorlessMana;
     public ManaPool ManaPool { get => _manaPool; }
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
