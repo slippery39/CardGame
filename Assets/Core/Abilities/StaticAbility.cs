@@ -92,8 +92,27 @@ public class StaticPumpEffect : Effect
     {
         foreach (var entity in entitiesToApply)
         {
+            var cardInstance = entity as CardInstance;
+            if (cardInstance == null)
+            {
+                continue;
+            }
             var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).First();
-            cardGame.ContinuousEffectSystem.Apply(source, abilitySource as StaticAbility);
+
+            var modification = new ModAddToPowerToughness
+            {
+                Power = Power,
+                Toughness = Toughness,
+                OneTurnOnly = false
+            };
+
+            modification.StaticInfo = new StaticInfo
+            {
+                AbilitySource = abilitySource,
+                EffectSource = source
+            };
+
+            cardInstance.Modifications.Add(modification);
         }
     }
 }

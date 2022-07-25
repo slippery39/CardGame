@@ -42,6 +42,13 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
 
         var sourceEffect = effect.SourceAbility.Effects.First();
 
+        //Temporary code to test out our modifications.
+        if (sourceEffect is StaticPumpEffect)
+        {
+            var pumpEffect = sourceEffect as StaticPumpEffect;
+            pumpEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
+        }
+
         if (sourceEffect is StaticGiveAbilityEffect)
         {
             var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
@@ -56,15 +63,13 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
             //Warning, we are doing a shallow clone here... may run into issues if we need a deep clone done.
             unit.Abilities.Add(giveAbilityEffect.Ability.Clone());
         }
-
-        //Pump Effects don't need any additional special processing.
     }
 
     private void RemoveFrom(ContinuousEffect effect, CardInstance unit)
     {
         unit.ContinuousEffects.Remove(effect);
 
-            var sourceEffect = effect.SourceAbility.Effects.First();
+        var sourceEffect = effect.SourceAbility.Effects.First();
 
         if (sourceEffect is StaticGiveAbilityEffect)
         {
@@ -102,6 +107,9 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
                 //todo - we are modifying the list in a loop. this is giving us a might be modified error. Fix this by removing them all at once.
                 RemoveFrom(effect, unit);
             }
+
+            var modificationsToKeep = unit.Modifications.Where(mod => mod.StaticInfo.EffectSource != effectSource).ToList();
+            unit.Modifications = modificationsToKeep;
         }
     }
 

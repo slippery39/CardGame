@@ -169,16 +169,6 @@ public class CardInstance : CardGameEntity
             //return - power without mods, + mods power;
             int calculatedPower = _powerWithoutMods;
 
-            var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
-            if (pumpContinuousEffects.Any())
-            {
-                foreach (var pumpEffect in pumpContinuousEffects)
-                {
-                    calculatedPower += pumpEffect.Power;
-                }
-            }
-
-
             var powerModifications = Modifications.GetOfType<IModifyPower>().Union(Counters.GetOfType<IModifyPower>());
 
             //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
@@ -189,7 +179,6 @@ public class CardInstance : CardGameEntity
 
             foreach (var modification in powerModifications)
             {
-                //Null is temporary, we haven't set everything up to pass in the CardGame yet.
                 calculatedPower = modification.ModifyPower(_cardGame, this, calculatedPower);
             }
 
@@ -208,14 +197,6 @@ public class CardInstance : CardGameEntity
             //return - power without mods, + mods power;
             int calculatedToughness = _toughnessWithoutMods;
 
-            var pumpContinuousEffects = ContinuousEffects.SelectMany(e => e.SourceAbility.Effects).Where(e => e is StaticPumpEffect).Cast<StaticPumpEffect>();
-            if (pumpContinuousEffects.Any())
-            {
-                foreach (var pumpEffect in pumpContinuousEffects)
-                {
-                    calculatedToughness += pumpEffect.Toughness;
-                }
-            }
 
             //Add any modifications to the unit as well.
             var toughnessModifications = Modifications.GetOfType<IModifyToughness>().Union(Counters.GetOfType<IModifyToughness>());
