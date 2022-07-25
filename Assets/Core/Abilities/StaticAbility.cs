@@ -65,10 +65,7 @@ public class StaticAbility : CardAbility
     }
 
     public EntitiesAffectedInfo EntitiesAffectedInfo { get; set; }
-
-    public List<StaticAbilityEffect> Effects { get; set; }
-
-    public ZoneType ApplyWhenIn { get; set; } = ZoneType.Discard;
+    public ZoneType ApplyWhenIn { get; set; } = ZoneType.InPlay;
 
     private EntityType EntitiesAffected => EntitiesAffectedInfo.EntitiesAffected;
     private CardFilter Filter => EntitiesAffectedInfo.Filter;
@@ -81,30 +78,56 @@ public enum StaticAbilityEntitiesAffected
     CardsInHand
 }
 
-//each unit should have an instance of the effect
 
-public abstract class StaticAbilityEffect
-{
-    public abstract string RulesText { get; }
-}
+//These need to be changed to use modifictions instead.
 
-public class StaticPumpEffect : StaticAbilityEffect
+//TODO - replace with a PumpEffect with a StaticInfo
+public class StaticPumpEffect : Effect
 {
     public override string RulesText => $" gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
     public int Power { get; set; }
     public int Toughness { get; set; }
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        foreach (var entity in entitiesToApply)
+        {
+            var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).First();
+            cardGame.ContinuousEffectSystem.Apply(source, abilitySource as StaticAbility);
+        }
+    }
 }
 
-public class StaticManaReductionEffect : StaticAbilityEffect
+//TODO - replace with with a mana effect with a static info
+public class StaticManaReductionEffect : Effect
 {
     public override string RulesText => $" cost {ReductionAmount} less to play.";
     public string ReductionAmount { get; set; }
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        foreach (var entity in entitiesToApply)
+        {
+            var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).First();
+            cardGame.ContinuousEffectSystem.Apply(source, abilitySource as StaticAbility);
+        }
+    }
 }
 
-public class StaticGiveAbilityEffect : StaticAbilityEffect
+//TODO - replace with a GiveAbility effect with a static info
+public class StaticGiveAbilityEffect : Effect
 {
-    public override string RulesText => " gain haste.";
+    public override string RulesText => $" gain {Ability.RulesText}.";
     public CardAbility Ability { get; set; }
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        foreach (var entity in entitiesToApply)
+        {
+            var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).First();
+            cardGame.ContinuousEffectSystem.Apply(source, abilitySource as StaticAbility);
+        }
+    }
 }
 
 

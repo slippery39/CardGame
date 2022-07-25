@@ -10,6 +10,7 @@ public abstract class CardAbility
     public abstract string RulesText { get; }
     public bool ThisTurnOnly { get; set; } = false;
     public List<AbilityComponent> Components { get; set; } = new List<AbilityComponent>();
+    public List<Effect> Effects { get; set; }
 
     public CardAbility Clone()
     {

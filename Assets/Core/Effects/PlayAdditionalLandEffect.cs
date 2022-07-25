@@ -9,6 +9,8 @@ public class PlayAdditionalLandEffect : Effect
     public override string RulesText => "You may play play an additional land";
     public bool OneTurnOnly { get; set; } = true;
 
+    public bool IsStatic = false;
+
     private Modification AdditionalLandModification() => new ManaPerTurnModification()
     {
         Amount = Amount,
@@ -16,6 +18,19 @@ public class PlayAdditionalLandEffect : Effect
     };
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
+        var modification = AdditionalLandModification();
+
+        /*
+        if (IsStatic)
+        {
+            var sourceAbility = source.Abilities.Where(ab=>ab.Effects
+            modification.StaticInfo = new StaticInfo
+            {
+
+            };
+        }
+        */
+
         cardGame.PlayerAbilitySystem.GiveModification(player, AdditionalLandModification());
     }
 }

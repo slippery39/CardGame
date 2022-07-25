@@ -74,7 +74,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
 
             unit.Abilities = unit.Abilities.Where(ab =>
             {
-                var components = ab.Components.Where(comp => comp is ContinuousAblityComponent).Cast<ContinuousAblityComponent>();
+                var components = ab.Components.GetOfType<ContinuousAblityComponent>();
 
                 if (components.Where(comp => comp.SourceEffect == effect).Any())
                 {

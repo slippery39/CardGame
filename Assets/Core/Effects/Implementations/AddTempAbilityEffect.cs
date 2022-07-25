@@ -18,7 +18,7 @@ public class AddTempAbilityEffect : Effect
         {
             if (!(entity is CardInstance))
             {
-                throw new Exception("Error : only units can be effected with the sacrifice self effect");
+                throw new Exception("Error : only card instances can be effected with the add temp ability effect");
             }
             var card = (CardInstance)entity;
             //note, ideally the temp ability would be cloned from the AddTempAbilityEffect...

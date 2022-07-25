@@ -696,7 +696,7 @@ public class CardDatabase : ICardDatabase
                     {
                         EntitiesAffected = EntityType.OtherCreaturesYouControl
                     },
-                    Effects = new List<StaticAbilityEffect>
+                    Effects = new List<Effect>
                     {
                         new StaticPumpEffect
                         {
@@ -1038,7 +1038,7 @@ public class CardDatabase : ICardDatabase
                         EntitiesAffected = EntityType.CardsInHand,
                         Filter = new CardFilter{CreatureType = "Goblin"}
                     },
-                    Effects = new List<StaticAbilityEffect>
+                    Effects = new List<Effect>
                     {
                         new StaticManaReductionEffect
                         {
@@ -1052,7 +1052,7 @@ public class CardDatabase : ICardDatabase
                         EntitiesAffected = EntityType.OtherCreaturesYouControl,
                         Filter = new CardFilter{CreatureType = "Goblin"}
                     },
-                    Effects = new List<StaticAbilityEffect>
+                    Effects = new List<Effect>
                     {
                         new StaticGiveAbilityEffect
                         {
@@ -1210,7 +1210,7 @@ public class CardDatabase : ICardDatabase
                             EntitiesAffected = EntityType.OtherCreaturesYouControl,
 
                         },
-                        Effects = new List<StaticAbilityEffect>()
+                        Effects = new List<Effect>()
                         {
                             new StaticGiveAbilityEffect
                             {
@@ -2433,6 +2433,22 @@ public class CardDatabase : ICardDatabase
                 new DrawCardEffect
                 {
                     Amount = 1
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Oracle of Mul Daya",
+            ManaCost = "3G",
+            Colors = new List<CardColor> { CardColor.Green },
+            Effects = new List<Effect>
+            {
+                new PlayAdditionalLandEffect
+                {
+                    Amount = 1,
+                    OneTurnOnly = false,
+                    IsStatic = true
                 }
             }
         });

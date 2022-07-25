@@ -550,12 +550,13 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
-        card.Name == "Rampant Growth" || card.Name == "Primeval Titan");
+       card.Abilities.GetOfType<StaticAbility>().Any());
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
         //Testing out if we can instantiate an affinity deck.
 
+        /*
         var decklist = Decklist.ConvertToDeck(Decklist.RGValakut2011());
 
         decklist.ForEach(card =>
@@ -565,7 +566,7 @@ public class CardGame
 
         player.Deck.Shuffle();
         return;
-
+        */
 
         //OLD Randomize code
 

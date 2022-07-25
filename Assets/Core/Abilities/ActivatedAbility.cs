@@ -23,12 +23,11 @@ public class ActivatedAbility : CardAbility
                 }
             }
 
-            return $@"{manaCostStr}{additionalCostStr}: {string.Join(" and ",Effects.Select(e=>e.RulesText))}";
+            return $@"{manaCostStr}{additionalCostStr}: {string.Join(" and ", Effects.Select(e => e.RulesText))}";
         }
     }
     public string ManaCost { get; set; }
     public AdditionalCost AdditionalCost { get; set; } = null;
-    public List<Effect> Effects { get; set; }
     public CardFilter Filter { get; internal set; }
     public bool OncePerTurn { get; set; } = false;
 

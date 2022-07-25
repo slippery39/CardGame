@@ -41,7 +41,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
         //TODO - Static Effects can also be applied from the graveyard and potentially other zones now...
         //need to check graveyard for static abilitys.
 
-        var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard=>discard.Cards);
+        var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard => discard.Cards);
 
         foreach (var unit in units.Concat(cardsInGraveyards))
         {
@@ -50,14 +50,8 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
             {
                 foreach (var sAbility in unitStaticAbilities)
                 {
-                    //cardGame, source, ability.
-
-                    //Check to see if the card is in the correct zone.
-
-
-                    //TODO - IsInZone(ZoneType.Discard);
-
-                    if (cardGame.IsInZone(unit, sAbility.ApplyWhenIn)){
+                    if (cardGame.IsInZone(unit, sAbility.ApplyWhenIn))
+                    {
                         cardGame.ContinuousEffectSystem.Apply(unit, sAbility);
                     }
                 }
@@ -82,21 +76,21 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
 
             //Working on this.
 
-           Func<ContinuousEffect, bool> GetContinuousEffectsToRemove = (ContinuousEffect ce) =>
-           {
-               var cardsInPlayAndDiscard = units.Concat(cardsInGraveyards);
-               var zoneOfSourceCard= cardGame.GetZoneOfCard(ce.SourceCard);
-               return zoneOfSourceCard.ZoneType != ce.SourceAbility.ApplyWhenIn;
-           };        
+            Func<ContinuousEffect, bool> GetContinuousEffectsToRemove = (ContinuousEffect ce) =>
+            {
+                var cardsInPlayAndDiscard = units.Concat(cardsInGraveyards);
+                var zoneOfSourceCard = cardGame.GetZoneOfCard(ce.SourceCard);
+                return zoneOfSourceCard.ZoneType != ce.SourceAbility.ApplyWhenIn;
+            };
 
-           var continousEffectsToRemove = continousEffectsOnUnit
-                .Where(ce => GetContinuousEffectsToRemove(ce)              
-           ).ToList();
+            var continousEffectsToRemove = continousEffectsOnUnit
+                 .Where(ce => GetContinuousEffectsToRemove(ce)
+            ).ToList();
 
-            foreach(var effect in continousEffectsToRemove)
+            foreach (var effect in continousEffectsToRemove)
             {
                 cardGame.ContinuousEffectSystem.RemoveContinousEffects(effect.SourceCard);
-            };          
+            };
 
 
             /*

@@ -10,6 +10,13 @@ using System;
 public class Modification
 {
     public bool OneTurnOnly { get; set; } = true;
+    public StaticInfo StaticInfo { get; set; } = null;
+}
+
+public class StaticInfo
+{
+    public CardAbility AbilitySource { get; set; }
+    public CardInstance EffectSource { get; set; }
 }
 
 public interface IModifyPower
@@ -19,7 +26,7 @@ public interface IModifyPower
 
 public interface IModifyToughness
 {
-    int ModifyToughness(CardGame cardGame,CardInstance card, int originalToughness);
+    int ModifyToughness(CardGame cardGame, CardInstance card, int originalToughness);
 }
 
 
@@ -33,10 +40,10 @@ public class ModAddToPowerToughness : Modification, IModifyPower, IModifyToughne
         return originalPower + Power;
     }
 
-    public int ModifyToughness (CardGame cardGame, CardInstance card, int originalToughness)
+    public int ModifyToughness(CardGame cardGame, CardInstance card, int originalToughness)
     {
         return originalToughness + Toughness;
-    }    
+    }
 }
 
 public class ModAddXToPowerToughness : Modification, IModifyPower, IModifyToughness
@@ -45,7 +52,7 @@ public class ModAddXToPowerToughness : Modification, IModifyPower, IModifyToughn
     private Func<CardGame, CardInstance, int, int> _powerMod;
     private Func<CardGame, CardInstance, int, int> _toughnessMod;
 
-    public ModAddXToPowerToughness(Func<CardGame,CardInstance,int,int> powerMod, Func<CardGame,CardInstance,int,int> toughnessMod)
+    public ModAddXToPowerToughness(Func<CardGame, CardInstance, int, int> powerMod, Func<CardGame, CardInstance, int, int> toughnessMod)
     {
         this._powerMod = powerMod;
         this._toughnessMod = toughnessMod;
@@ -60,7 +67,7 @@ public class ModAddXToPowerToughness : Modification, IModifyPower, IModifyToughn
         return _powerMod(cardGame, card, originalPower);
     }
 
-    public int ModifyToughness(CardGame cardGame,CardInstance card, int originalToughness)
+    public int ModifyToughness(CardGame cardGame, CardInstance card, int originalToughness)
     {
         if (_toughnessMod == null)
         {
