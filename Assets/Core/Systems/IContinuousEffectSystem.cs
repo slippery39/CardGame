@@ -48,8 +48,12 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
             var pumpEffect = sourceEffect as StaticPumpEffect;
             pumpEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
         }
-
-        if (sourceEffect is StaticGiveAbilityEffect)
+        else if (sourceEffect is StaticManaReductionEffect)
+        {
+            var manaEffect = sourceEffect as StaticManaReductionEffect;
+            manaEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
+        }
+        else if (sourceEffect is StaticGiveAbilityEffect)
         {
             var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
 

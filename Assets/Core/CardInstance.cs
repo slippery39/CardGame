@@ -88,34 +88,15 @@ public class CardInstance : CardGameEntity
     {
         get
         {
-            var originalCost = _currentCardData.ManaCost;
+            var modifiedCost = _currentCardData.ManaCost;
 
-            var allCostModifiers = GetAbilitiesAndComponents<IModifyManaCost>();
+            var allCostModifiers = GetMods<IModifyManaCost>();
 
             foreach (var costModifier in allCostModifiers)
             {
-                originalCost = costModifier.ModifyManaCost(_cardGame, this, originalCost);
+                modifiedCost = costModifier.ModifyManaCost(_cardGame, this, modifiedCost);
             }
 
-            //TODO Have the cost reduction effects also use IModifyManaCost
-            var costAsCounts = new Mana(originalCost);
-            var allCostReductions = ContinuousEffects.SelectMany(ce => ce.SourceAbility.Effects).Where(ab => ab is StaticManaReductionEffect).Cast<StaticManaReductionEffect>();
-
-            foreach (var effect in allCostReductions)
-            {
-                var costAsDict = new Mana(effect.ReductionAmount);
-
-                costAsCounts.ColorlessMana -= costAsDict.ColorlessMana;
-                costAsCounts.ColorlessMana = Math.Max(0, costAsCounts.ColorlessMana);
-
-                foreach (var essenceType in costAsDict.ColoredMana)
-                {
-                    costAsCounts.ColoredMana[essenceType.Key] -= essenceType.Value;
-                    costAsCounts.ColoredMana[essenceType.Key] = Math.Max(0, costAsCounts.ColoredMana[essenceType.Key]);
-                }
-            }
-
-            var modifiedCost = costAsCounts.ToManaString();
             return modifiedCost;
         }
     }
@@ -125,7 +106,7 @@ public class CardInstance : CardGameEntity
         get
         {
             var originalCost = CurrentCardData.AdditionalCost;
-            var allCostModifiers = GetAbilitiesAndComponents<IModifyAdditionalCost>();
+            var allCostModifiers = GetMods<IModifyAdditionalCost>();
 
             foreach (var costModifier in allCostModifiers)
             {
@@ -169,7 +150,7 @@ public class CardInstance : CardGameEntity
             //return - power without mods, + mods power;
             int calculatedPower = _powerWithoutMods;
 
-            var powerModifications = Modifications.GetOfType<IModifyPower>().Union(Counters.GetOfType<IModifyPower>());
+            var powerModifications = GetMods<IModifyPower>();
 
             //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
             if (!applyPowerToughnessSwitchEffects)
@@ -197,9 +178,8 @@ public class CardInstance : CardGameEntity
             //return - power without mods, + mods power;
             int calculatedToughness = _toughnessWithoutMods;
 
-
             //Add any modifications to the unit as well.
-            var toughnessModifications = Modifications.GetOfType<IModifyToughness>().Union(Counters.GetOfType<IModifyToughness>());
+            var toughnessModifications = GetMods<IModifyToughness>();
 
             //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
             if (!applyPowerToughnessSwitchEffects)
@@ -302,6 +282,16 @@ public class CardInstance : CardGameEntity
         var abilityComponents = Abilities.SelectMany(a => a.Components).Where(c => c is T).Cast<T>().ToList();
 
         return abilities.Union(abilityComponents).ToList();
+    }
+    /// <summary>
+    /// Returns anything on the card instance which could modify a property of the card.
+    /// Could be an ability, an ability component or a Modification
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public List<T> GetMods<T>()
+    {
+        return GetAbilitiesAndComponents<T>().Union(Modifications.GetOfType<T>()).Union(Counters.GetOfType<T>()).ToList();
     }
 
     public bool HasActivatedAbility()

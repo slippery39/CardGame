@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 //Other creatures you control get +1/+1
 //This creature gets +0/+2 as long as its your turn
@@ -127,9 +128,50 @@ public class StaticManaReductionEffect : Effect
     {
         foreach (var entity in entitiesToApply)
         {
-            var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).First();
-            cardGame.ContinuousEffectSystem.Apply(source, abilitySource as StaticAbility);
+            var cardInstance = entity as CardInstance;
+            if (cardInstance == null)
+            {
+                continue;
+            }
+
+            var manaModification = new ModReduceManaCost
+            {
+                ReductionAmount = ReductionAmount
+            };
+
+
+
+            var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).ToList();
+
+            manaModification.StaticInfo = new StaticInfo
+            {
+                AbilitySource = abilitySource.First(),
+                EffectSource = source
+            };
+
+            cardInstance.Modifications.Add(manaModification);
         }
+    }
+}
+
+public class ModReduceManaCost : Modification, IModifyManaCost
+{
+    public string ReductionAmount { get; set; }
+    public string ModifyManaCost(CardGame cardGame, CardInstance card, string originalManaCost)
+    {
+        var costAsCounts = new Mana(originalManaCost);
+        var reductionCostAsCounts = new Mana(ReductionAmount);
+
+        costAsCounts.ColorlessMana -= reductionCostAsCounts.ColorlessMana;
+        costAsCounts.ColorlessMana = Math.Max(0, costAsCounts.ColorlessMana);
+
+        foreach (var essenceType in reductionCostAsCounts.ColoredMana)
+        {
+            costAsCounts.ColoredMana[essenceType.Key] -= essenceType.Value;
+            costAsCounts.ColoredMana[essenceType.Key] = Math.Max(0, costAsCounts.ColoredMana[essenceType.Key]);
+        }
+
+        return costAsCounts.ToManaString();
     }
 }
 

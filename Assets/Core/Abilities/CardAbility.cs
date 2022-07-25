@@ -10,7 +10,7 @@ public abstract class CardAbility
     public abstract string RulesText { get; }
     public bool ThisTurnOnly { get; set; } = false;
     public List<AbilityComponent> Components { get; set; } = new List<AbilityComponent>();
-    public List<Effect> Effects { get; set; }
+    public List<Effect> Effects { get; set; } = new List<Effect> { };
 
     public CardAbility Clone()
     {
@@ -115,8 +115,6 @@ public class TriggeredAbility : CardAbility
         }
     }
     public TriggerType TriggerType { get; set; }
-    public List<Effect> Effects { get; set; }
-
     //Filter that causes the trigger only to apply if it meets the filtering requirements (i.e. Instead of when a creature dies, When a goblin dies, When a goblin comes into play etc).
     public CardFilter Filter { get; set; } = new CardFilter();
 
