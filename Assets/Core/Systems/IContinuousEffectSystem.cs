@@ -4,7 +4,7 @@ using System.Linq;
 public interface IContinuousEffectSystem
 {
     void Apply(CardInstance source, StaticAbility sourceAbility);
-    void RemoveContinousEffects(CardInstance effectSource);
+    void RemoveContinuousEffects(CardInstance effectSource);
 }
 
 public class DefaultContinousEffectSystem : IContinuousEffectSystem
@@ -27,7 +27,8 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
                 var continuousEffect = new ContinuousEffect
                 {
                     SourceCard = source,
-                    SourceAbility = sourceAbility
+                    SourceAbility = sourceAbility,
+                    SourceEffect = sourceAbility.Effects.First()
                 };
 
                 //This way each effect can be responsible for how it needs to apply and remove from the uni.
@@ -39,41 +40,22 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
     private void ApplyTo(ContinuousEffect effect, CardInstance unit)
     {
         unit.ContinuousEffects.Add(effect);
-
+        //Note this makes it so that static abilities with multiple effects will not work.
         var sourceEffect = effect.SourceAbility.Effects.First();
 
-        //Temporary code to test out our modifications.
-        if (sourceEffect is StaticPumpEffect)
+        if (effect.SourceAbility.Effects.Count() > 1)
         {
-            var pumpEffect = sourceEffect as StaticPumpEffect;
-            pumpEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
+            cardGame.Log("Continuous effects are only supported for 1 effect at a time... if you are seeing this message it is likely you have a bug and it is time to update");
         }
-        else if (sourceEffect is StaticManaReductionEffect)
-        {
-            var manaEffect = sourceEffect as StaticManaReductionEffect;
-            manaEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
-        }
-        else if (sourceEffect is StaticGiveAbilityEffect)
-        {
-            var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
 
-            var abilityToGive = giveAbilityEffect.Ability;
-
-            abilityToGive.Components.Add(new ContinuousAblityComponent
-            {
-                SourceEffect = effect
-            });
-
-            //Warning, we are doing a shallow clone here... may run into issues if we need a deep clone done.
-            unit.Abilities.Add(giveAbilityEffect.Ability.Clone());
-        }
+        sourceEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
     }
 
-    private void RemoveFrom(ContinuousEffect effect, CardInstance unit)
+    private void RemoveFrom(ContinuousEffect contEffect, CardInstance unit)
     {
-        unit.ContinuousEffects.Remove(effect);
+        unit.ContinuousEffects.Remove(contEffect);
 
-        var sourceEffect = effect.SourceAbility.Effects.First();
+        var sourceEffect = contEffect.SourceAbility.Effects.First();
 
         if (sourceEffect is StaticGiveAbilityEffect)
         {
@@ -85,7 +67,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
             {
                 var components = ab.Components.GetOfType<ContinuousAblityComponent>();
 
-                if (components.Where(comp => comp.SourceEffect == effect).Any())
+                if (components.Where(comp => comp.SourceEffect == contEffect.SourceEffect).Any())
                 {
                     return false;
                 }
@@ -98,7 +80,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         //Pump Effects don't need any additional special processing.
     }
 
-    public void RemoveContinousEffects(CardInstance effectSource)
+    public void RemoveContinuousEffects(CardInstance effectSource)
     {
         //Remove all continuous effects from a source
         foreach (var unit in cardGame.GetUnitsInPlay())
@@ -168,5 +150,5 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
 
 public class ContinuousAblityComponent : AbilityComponent
 {
-    public ContinuousEffect SourceEffect { get; set; }
+    public Effect SourceEffect { get; set; }
 }

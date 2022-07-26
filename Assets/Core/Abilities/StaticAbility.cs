@@ -139,8 +139,6 @@ public class StaticManaReductionEffect : Effect
                 ReductionAmount = ReductionAmount
             };
 
-
-
             var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).ToList();
 
             manaModification.StaticInfo = new StaticInfo
@@ -185,8 +183,23 @@ public class StaticGiveAbilityEffect : Effect
     {
         foreach (var entity in entitiesToApply)
         {
+            var cardInstance = entity as CardInstance;
+
+            if (cardInstance == null)
+            {
+                continue;
+            }
+
             var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).First();
-            cardGame.ContinuousEffectSystem.Apply(source, abilitySource as StaticAbility);
+
+            var abilityToGive = Ability.Clone();
+
+            abilityToGive.Components.Add(new ContinuousAblityComponent
+            {
+                SourceEffect = this
+            });
+
+            cardInstance.Abilities.Add(abilityToGive);
         }
     }
 }

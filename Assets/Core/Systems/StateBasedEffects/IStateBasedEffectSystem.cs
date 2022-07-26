@@ -89,7 +89,7 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
 
             foreach (var effect in continousEffectsToRemove)
             {
-                cardGame.ContinuousEffectSystem.RemoveContinousEffects(effect.SourceCard);
+                cardGame.ContinuousEffectSystem.RemoveContinuousEffects(effect.SourceCard);
             };
 
 

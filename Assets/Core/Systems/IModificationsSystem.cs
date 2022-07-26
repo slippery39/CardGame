@@ -10,6 +10,7 @@ public class DefaultModificationSystem : IModificationsSystem
     {
         this.cardGame = cardGame;
     }
+    //TODO - Add source and if it should be static or not.
     public void AddModification(CardInstance cardToGetModification, Modification mod)
     {
         cardToGetModification.AddModification(mod);
