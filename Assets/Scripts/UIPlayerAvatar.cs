@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class UIPlayerAvatar : UIGameEntity
 {
     [SerializeField]
@@ -18,6 +19,12 @@ public class UIPlayerAvatar : UIGameEntity
     public void SetMana(int amount)
     {
         _manaText.text = $@"Mana : {amount}";
+    }
+
+    public void Update()
+    {
+        _manaText.renderer.sortingOrder = this.GetComponent<Renderer>().sortingOrder + 1;
+        _healthText.renderer.sortingOrder = this.GetComponent<Renderer>().sortingOrder + 1;
     }
 
     public void SetMana(ManaPool manaPool)

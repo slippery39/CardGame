@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class UICard : UIGameEntity
 {
+
+    [SerializeField]
+    private GameObject _frontOfCard;
+
+    [SerializeField]
+    private GameObject _backOfCard;
     //Unity Fields
     [SerializeField]
     private TextMeshPro _cardNameText;
@@ -49,6 +55,10 @@ public class UICard : UIGameEntity
     public SpriteRenderer CardArtRenderer { get => _cardArtRenderer; set => _cardArtRenderer = value; }
 
     #endregion
+
+    public void SetAsUnknownCard()
+    {
+    }
 
     public void SetCardData(CardInstance cardInstance)
     {
