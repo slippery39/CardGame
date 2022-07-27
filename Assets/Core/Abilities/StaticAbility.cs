@@ -109,8 +109,8 @@ public class StaticPumpEffect : Effect
 
             modification.StaticInfo = new StaticInfo
             {
-                AbilitySource = abilitySource,
-                EffectSource = source
+                SourceAbility = abilitySource,
+                SourceCard = source
             };
 
             cardInstance.Modifications.Add(modification);
@@ -136,15 +136,16 @@ public class StaticManaReductionEffect : Effect
 
             var manaModification = new ModReduceManaCost
             {
-                ReductionAmount = ReductionAmount
+                ReductionAmount = ReductionAmount,
+                OneTurnOnly = false
             };
 
             var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).ToList();
 
             manaModification.StaticInfo = new StaticInfo
             {
-                AbilitySource = abilitySource.First(),
-                EffectSource = source
+                SourceAbility = abilitySource.First(),
+                SourceCard = source
             };
 
             cardInstance.Modifications.Add(manaModification);
@@ -194,9 +195,18 @@ public class StaticGiveAbilityEffect : Effect
 
             var abilityToGive = Ability.Clone();
 
+            var sourceAbility = source.Abilities.First(ab => ab.Effects.Contains(this));
+
+            if (sourceAbility == null)
+            {
+                cardGame.Log("Could not find the source ability for an effect... possibly it was modified before the effect could take place");
+            }
+
             abilityToGive.Components.Add(new ContinuousAblityComponent
             {
-                SourceEffect = this
+                SourceEffect = this,
+                SourceCard = source,
+                SourceAbility = sourceAbility as StaticAbility
             });
 
             cardInstance.Abilities.Add(abilityToGive);

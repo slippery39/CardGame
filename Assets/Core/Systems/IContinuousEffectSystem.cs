@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 public interface IContinuousEffectSystem
 {
-    void Apply(CardInstance source, StaticAbility sourceAbility);
-    void RemoveContinuousEffects(CardInstance effectSource);
+    public void ApplyStaticEffects();
+    public void RemoveStaticEffects();
 }
 
 public class DefaultContinousEffectSystem : IContinuousEffectSystem
@@ -14,15 +15,105 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
     {
         this.cardGame = cardGame;
     }
-    public void Apply(CardInstance source, StaticAbility sourceAbility)
+
+    public void ApplyStaticEffects()
+    {
+        var cardsInPlay = cardGame.GetCardsInPlay();
+        var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard => discard.Cards);
+
+        foreach (var card in cardsInPlay.Concat(cardsInGraveyards))
+        {
+            var unitStaticAbilities = card.GetAbilitiesAndComponents<StaticAbility>();
+            if (unitStaticAbilities.Count > 0)
+            {
+                foreach (var sAbility in unitStaticAbilities)
+                {
+                    if (cardGame.IsInZone(card, sAbility.ApplyWhenIn))
+                    {
+                        Apply(card, sAbility);
+                    }
+                }
+            }
+        }
+    }
+
+    public void RemoveStaticEffects()
+    {
+        var cardsInPlay = cardGame.GetCardsInPlay();
+        var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard => discard.Cards);
+
+        foreach (var card in cardGame.GetEntities<CardInstance>())
+        {
+            var continousEffectsOnUnit = card.ContinuousEffects;
+
+            if (continousEffectsOnUnit.Count == 0)
+            {
+                continue;
+            }
+
+            Func<ContinuousEffect, bool> GetContinuousEffectsToRemove = (ContinuousEffect ce) =>
+            {
+                var cardsInPlayAndDiscard = cardsInPlay.Concat(cardsInGraveyards);
+                var zoneOfSourceCard = cardGame.GetZoneOfCard(ce.SourceCard);
+                return zoneOfSourceCard.ZoneType != ce.SourceAbility.ApplyWhenIn;
+            };
+
+            var continousEffectsToRemove = continousEffectsOnUnit
+                 .Where(ce => GetContinuousEffectsToRemove(ce)
+            ).ToList();
+
+            foreach (var effect in continousEffectsToRemove)
+            {
+                RemoveContinuousEffects(effect.SourceCard);
+            };
+        }
+    }
+
+    private bool HasEffectFromSource(CardInstance cardToCheck, CardInstance source, StaticAbility sourceAbility)
+    {
+
+        return cardToCheck.ContinuousEffects.Where(ce => ce.SourceCard == source && ce.SourceAbility == sourceAbility).Any();
+
+        /*
+         * Not sure if we need this code or not?
+         */
+
+        //We check if it has a modification or an added ability from the static ability.
+        if (cardToCheck.Modifications.Where(m => m.StaticInfo.SourceCard == source && m.StaticInfo.SourceAbility == sourceAbility).Count() > 0)
+        {
+            return true;
+        }
+
+
+        if (cardToCheck.Abilities.Where(ab =>
+        {
+
+            var comp = ab.GetComponent<ContinuousAblityComponent>();
+
+            if (comp == null)
+            {
+                return false;
+            }
+            return comp.SourceCard == source && comp.SourceAbility == sourceAbility;
+        }
+        )
+        .Count() > 0
+        )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private void Apply(CardInstance source, StaticAbility sourceAbility)
     {
         //get the entities that the ability affects.
         var unitsToApply = GetUnitsToApplyAbility(source, sourceAbility);
 
         foreach (var unit in unitsToApply)
         {
-            //Apply the effect if it does not currently exist.
-            if (unit.ContinuousEffects.Where(ce => ce.SourceCard == source && ce.SourceAbility == sourceAbility).Count() == 0)
+            if (!HasEffectFromSource(unit, source, sourceAbility))
             {
                 var continuousEffect = new ContinuousEffect
                 {
@@ -51,23 +142,27 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         sourceEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
     }
 
-    private void RemoveFrom(ContinuousEffect contEffect, CardInstance unit)
+    /// <summary>
+    /// Remove all continous effects form all units in play where the effect came from a specific source.
+    /// </summary>
+    /// <param name="sourceCard"></param>
+    private void RemoveContinuousEffects(CardInstance sourceCard)
     {
-        unit.ContinuousEffects.Remove(contEffect);
-
-        var sourceEffect = contEffect.SourceAbility.Effects.First();
-
-        if (sourceEffect is StaticGiveAbilityEffect)
+        foreach (var card in cardGame.GetEntities<CardInstance>())
         {
-            var giveAbilityEffect = sourceEffect as StaticGiveAbilityEffect;
+            //Remove all continuous effects
+            card.ContinuousEffects = card.ContinuousEffects.Where(ce => ce.SourceCard != sourceCard).ToList();
 
-            //Remove all abilities which have a continous ability component that point to the effect.
+            //Remove any modifications that came from the source
+            var modificationsToKeep = card.Modifications.Where(mod => mod.StaticInfo.SourceCard != sourceCard).ToList();
+            card.Modifications = modificationsToKeep;
 
-            unit.Abilities = unit.Abilities.Where(ab =>
+            //Remove any abilities that come from the source
+            card.Abilities = card.Abilities.Where(ab =>
             {
                 var components = ab.Components.GetOfType<ContinuousAblityComponent>();
 
-                if (components.Where(comp => comp.SourceEffect == contEffect.SourceEffect).Any())
+                if (components.Where(comp => comp.SourceCard == sourceCard).Any())
                 {
                     return false;
                 }
@@ -75,27 +170,6 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
                 return true;
 
             }).ToList();
-        }
-
-        //Pump Effects don't need any additional special processing.
-    }
-
-    public void RemoveContinuousEffects(CardInstance effectSource)
-    {
-        //Remove all continuous effects from a source
-        foreach (var unit in cardGame.GetUnitsInPlay())
-        {
-            var effectsToRemove = unit.ContinuousEffects.Where(effect => effect.SourceCard == effectSource).ToList();
-
-            //
-            foreach (var effect in effectsToRemove)
-            {
-                //todo - we are modifying the list in a loop. this is giving us a might be modified error. Fix this by removing them all at once.
-                RemoveFrom(effect, unit);
-            }
-
-            var modificationsToKeep = unit.Modifications.Where(mod => mod.StaticInfo.EffectSource != effectSource).ToList();
-            unit.Modifications = modificationsToKeep;
         }
     }
 
@@ -150,5 +224,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
 
 public class ContinuousAblityComponent : AbilityComponent
 {
+    public CardInstance SourceCard { get; set; }
+    public StaticAbility SourceAbility { get; set; }
     public Effect SourceEffect { get; set; }
 }

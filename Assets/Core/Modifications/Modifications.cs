@@ -15,8 +15,8 @@ public class Modification
 
 public class StaticInfo
 {
-    public CardAbility AbilitySource { get; set; }
-    public CardInstance EffectSource { get; set; }
+    public CardAbility SourceAbility { get; set; }
+    public CardInstance SourceCard { get; set; }
 }
 
 public interface IModifyPower
