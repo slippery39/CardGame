@@ -692,16 +692,13 @@ public class CardDatabase : ICardDatabase
             {
                 new StaticAbility
                 {
-                    EntitiesAffectedInfo = new EntitiesAffectedInfo
-                    {
-                        EntitiesAffected = EntityType.OtherCreaturesYouControl
-                    },
                     Effects = new List<Effect>
                     {
                         new StaticPumpEffect
                         {
                             Power = 1,
-                            Toughness = 1
+                            Toughness = 1,
+                            TargetType = TargetType.OtherCreaturesYouControl,
                         }
                     }
                 }
@@ -1034,29 +1031,25 @@ public class CardDatabase : ICardDatabase
                 new HasteAbility(),
                 new StaticAbility()
                 {
-                    EntitiesAffectedInfo= new EntitiesAffectedInfo{
-                        EntitiesAffected = EntityType.CardsInHand,
-                        Filter = new CardFilter{CreatureType = "Goblin"}
-                    },
                     Effects = new List<Effect>
                     {
                         new StaticManaReductionEffect
                         {
-                            ReductionAmount = "1"
+                            ReductionAmount = "1",
+                            TargetType = TargetType.CardsInHand,
+                            Filter = new CardFilter{CreatureType = "Goblin"}
                         }
                     }
                 },
                 new StaticAbility()
                 {
-                    EntitiesAffectedInfo = new EntitiesAffectedInfo{
-                        EntitiesAffected = EntityType.OtherCreaturesYouControl,
-                        Filter = new CardFilter{CreatureType = "Goblin"}
-                    },
                     Effects = new List<Effect>
                     {
                         new StaticGiveAbilityEffect
                         {
-                            Ability = new HasteAbility()
+                            TargetType = TargetType.OtherCreaturesYouControl,
+                            Ability = new HasteAbility(),
+                            Filter = new CardFilter{CreatureType = "Goblin"}
                         }
                     }
                 }
@@ -1205,17 +1198,12 @@ public class CardDatabase : ICardDatabase
                     new StaticAbility
                     {
                         ApplyWhenIn = ZoneType.Discard,
-                        EntitiesAffectedInfo = new EntitiesAffectedInfo
-                        {
-                            EntitiesAffected = EntityType.OtherCreaturesYouControl,
-
-                        },
                         Effects = new List<Effect>()
                         {
                             new StaticGiveAbilityEffect
                             {
                                 Ability = new FlyingAbility(),
-
+                                TargetType = TargetType.OtherCreaturesYouControl
                             }
                         }
                     }

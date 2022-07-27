@@ -69,9 +69,9 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         }
     }
 
-    private bool HasEffectFromSource(CardInstance cardToCheck, CardInstance source, StaticAbility sourceAbility)
+    private bool HasEffectFromSource(CardGameEntity entityToCheck, CardInstance source, StaticAbility sourceAbility)
     {
-        return cardToCheck.ContinuousEffects.Where(ce => ce.SourceCard == source && ce.SourceAbility == sourceAbility).Any();
+        return entityToCheck.ContinuousEffects.Where(ce => ce.SourceCard == source && ce.SourceAbility == sourceAbility).Any();
     }
 
     private void Apply(CardInstance source, StaticAbility sourceAbility)
@@ -96,9 +96,9 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         }
     }
 
-    private void ApplyTo(ContinuousEffect effect, CardInstance unit)
+    private void ApplyTo(ContinuousEffect effect, CardGameEntity entity)
     {
-        unit.ContinuousEffects.Add(effect);
+        entity.ContinuousEffects.Add(effect);
         //Note this makes it so that static abilities with multiple effects will not work.
         var sourceEffect = effect.SourceAbility.Effects.First();
 
@@ -107,7 +107,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
             cardGame.Log("Continuous effects are only supported for 1 effect at a time... if you are seeing this message it is likely you have a bug and it is time to update");
         }
 
-        sourceEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { unit });
+        sourceEffect.Apply(cardGame, cardGame.GetOwnerOfCard(effect.SourceCard), effect.SourceCard, new List<CardGameEntity> { entity });
     }
 
     /// <summary>
@@ -160,30 +160,37 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
     }
 
     //TODO - fix this.
-    private List<CardInstance> GetUnitsToApplyAbility(CardInstance source, StaticAbility sourceAbility)
+    private List<CardGameEntity> GetUnitsToApplyAbility(CardInstance source, StaticAbility sourceAbility)
     {
-        var filter = sourceAbility.EntitiesAffectedInfo.Filter;
-        var entitiesAffected = sourceAbility.EntitiesAffectedInfo.EntitiesAffected;
+        //TODO - only one effect per static ability?
 
-        switch (entitiesAffected)
+        var effect = sourceAbility.Effects.First();
+        var targetType = effect.TargetType;
+        var filter = effect.Filter;
+
+        switch (targetType)
         {
-            case EntityType.Self:
-                return new List<CardInstance> { source };
-            case EntityType.OtherCreaturesYouControl:
+            case TargetType.Self:
+                {
+                    return new List<CardGameEntity> { cardGame.GetOwnerOfCard(source) };
+                }
+            case TargetType.UnitSelf:
+                return new List<CardGameEntity> { source };
+            case TargetType.OtherCreaturesYouControl:
                 {
                     var owner = cardGame.GetOwnerOfCard((CardInstance)source);
                     return ApplyFilter(
                         cardGame.GetUnitsInPlay().Where(u => u.OwnerId == owner.PlayerId && u.EntityId != source.EntityId).ToList(),
-                        filter);
+                        filter).Cast<CardGameEntity>().ToList();
                 }
-            case EntityType.CardsInHand:
+            case TargetType.CardsInHand:
                 {
                     var owner = cardGame.GetOwnerOfCard((CardInstance)source);
-                    return ApplyFilter(owner.Hand.Cards, filter);
+                    return ApplyFilter(owner.Hand.Cards, filter).Cast<CardGameEntity>().ToList();
                 }
             default:
                 {
-                    throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {sourceAbility.EntitiesAffectedInfo.EntitiesAffected} is not handled");
+                    throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {effect.TargetType} is not handled");
                 }
         }
     }

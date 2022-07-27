@@ -138,6 +138,8 @@ public enum TargetType
     Opponent,
     AllUnits,
     OurUnits,
+    CardsInHand,
+    OtherCreaturesYouControl,
     OpponentUnits,
     UnitSelf, //Self Unit
     TargetPlayers,

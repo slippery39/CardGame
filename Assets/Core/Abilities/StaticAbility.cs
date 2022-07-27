@@ -45,31 +45,42 @@ public class StaticAbility : CardAbility
     {
         get
         {
-            switch (EntitiesAffected)
-            {
-                case EntityType.Self:
-                    return $"This {string.Join(" and ", Effects.Select(e => e.RulesText))}";
-                case EntityType.OtherCreaturesYouControl:
-                    {
-                        var startOfText = Filter?.CreatureType == null ? "Other creatures" : $"Other {Filter.CreatureType}s";
-                        return $"{startOfText} you control {string.Join(" and ", Effects.Select(e => e.RulesText))}";
-                    }
-                case EntityType.CardsInHand:
-                    {
-                        var startOfText = Filter?.CreatureType == null ? " Cards " : $"{Filter.CreatureType} cards";
-                        return $@"{startOfText} In your hand {Effects.Select(e => e.RulesText).First()}";
-                    }
-                default:
-                    return "Rules Text Not Defined";
-            }
+            return String.Join(" and ", Effects.Select(eff =>
+             {
+                 string cardType = "";
+
+                 switch (eff.TargetType)
+                 {
+                     case TargetType.CardsInHand:
+                         {
+                             cardType = "Cards you play";
+                             break;
+                         }
+                     case TargetType.OtherCreaturesYouControl:
+                         {
+                             cardType = "Other units you control";
+                             break;
+                         }
+                     default:
+                         {
+                             throw new Exception($"Unhandled TargetType {eff.TargetType.ToString()} in StaticAbility rules text");
+                         }
+                 }
+
+                 //TODO apply filter for goblins or something.
+
+                 return eff.RulesText.Replace("#cardType", cardType);
+             })
+                );
+
         }
     }
 
-    public EntitiesAffectedInfo EntitiesAffectedInfo { get; set; }
+    //public EntitiesAffectedInfo EntitiesAffectedInfo { get; set; }
     public ZoneType ApplyWhenIn { get; set; } = ZoneType.InPlay;
 
-    private EntityType EntitiesAffected => EntitiesAffectedInfo.EntitiesAffected;
-    private CardFilter Filter => EntitiesAffectedInfo.Filter;
+    //private EntityType EntitiesAffected => EntitiesAffectedInfo.EntitiesAffected;
+    //private CardFilter Filter => EntitiesAffectedInfo.Filter;
 }
 
 public enum StaticAbilityEntitiesAffected
@@ -85,7 +96,7 @@ public enum StaticAbilityEntitiesAffected
 //TODO - replace with a PumpEffect with a StaticInfo
 public class StaticPumpEffect : Effect
 {
-    public override string RulesText => $" gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
+    public override string RulesText => $"#cardType# gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
     public int Power { get; set; }
     public int Toughness { get; set; }
 
@@ -121,7 +132,7 @@ public class StaticPumpEffect : Effect
 //TODO - replace with with a mana effect with a static info
 public class StaticManaReductionEffect : Effect
 {
-    public override string RulesText => $" cost {ReductionAmount} less to play.";
+    public override string RulesText => $"#cardType# cost {ReductionAmount} less to play.";
     public string ReductionAmount { get; set; }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
@@ -174,10 +185,43 @@ public class ModReduceManaCost : Modification, IModifyManaCost
     }
 }
 
+public class StaticPlayAdditionalLandEffect : Effect
+{
+    public int Amount { get; set; }
+    public override string RulesText => $"You may play an additional {Amount} mana cards each turn";
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        foreach (var entity in entitiesToApply)
+        {
+            var playerEntity = entity as Player;
+
+            if (playerEntity == null)
+            {
+                continue;
+            }
+
+            var manaPerTurnModification = new ManaPerTurnModification
+            {
+                Amount = Amount,
+                OneTurnOnly = false
+            };
+
+            manaPerTurnModification.StaticInfo = new StaticInfo
+            {
+                SourceAbility = source.Abilities.Where(ab => ab.Effects.Contains(this)).First(),
+                SourceCard = source
+            };
+
+            playerEntity.Modifications.Add(manaPerTurnModification);
+        }
+    }
+}
+
 //TODO - replace with a GiveAbility effect with a static info
 public class StaticGiveAbilityEffect : Effect
 {
-    public override string RulesText => $" gain {Ability.RulesText}.";
+    public override string RulesText => $"#cardType# gain {Ability.RulesText}.";
     public CardAbility Ability { get; set; }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

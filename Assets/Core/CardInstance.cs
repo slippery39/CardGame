@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static DefaultContinousEffectSystem;
 
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
@@ -125,9 +124,9 @@ public class CardInstance : CardGameEntity
 
     //Hard coding in shield counters for now...
     public int Shields { get; set; }
-    public List<ContinuousEffect> ContinuousEffects { get; set; }
+  
 
-    public List<Modification> Modifications { get; set; } = new List<Modification>();
+    
     public List<Counter> Counters { get; set; } = new List<Counter>();
     public bool IsOfType<T>()
     {
