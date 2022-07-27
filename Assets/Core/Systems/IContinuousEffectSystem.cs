@@ -42,7 +42,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
         var cardsInPlay = cardGame.GetCardsInPlay();
         var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard => discard.Cards);
 
-        foreach (var card in cardGame.GetEntities<CardInstance>())
+        foreach (var card in cardGame.GetEntities<CardGameEntity>())
         {
             var continousEffectsOnUnit = card.ContinuousEffects;
 
@@ -116,7 +116,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
     /// <param name="sourceCard"></param>
     private void RemoveContinuousEffects(CardInstance sourceCard)
     {
-        foreach (var card in cardGame.GetEntities<CardInstance>())
+        foreach (var card in cardGame.GetEntities<CardGameEntity>())
         {
             //Remove all continuous effects
             card.ContinuousEffects = card.ContinuousEffects.Where(ce => ce.SourceCard != sourceCard).ToList();
@@ -126,18 +126,23 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
             card.Modifications = modificationsToKeep;
 
             //Remove any abilities that come from the source
-            card.Abilities = card.Abilities.Where(ab =>
+            var cardInstance = card as CardInstance;
+
+            if (cardInstance != null)
             {
-                var components = ab.Components.GetOfType<ContinuousAblityComponent>();
-
-                if (components.Where(comp => comp.SourceCard == sourceCard).Any())
+                cardInstance.Abilities = cardInstance.Abilities.Where(ab =>
                 {
-                    return false;
-                }
+                    var components = ab.Components.GetOfType<ContinuousAblityComponent>();
 
-                return true;
+                    if (components.Where(comp => comp.SourceCard == sourceCard).Any())
+                    {
+                        return false;
+                    }
 
-            }).ToList();
+                    return true;
+
+                }).ToList();
+            }
         }
     }
 

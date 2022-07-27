@@ -61,6 +61,11 @@ public class StaticAbility : CardAbility
                              cardType = "Other units you control";
                              break;
                          }
+                     case TargetType.Self:
+                         {
+                             cardType = "You";
+                             break;
+                         }
                      default:
                          {
                              throw new Exception($"Unhandled TargetType {eff.TargetType.ToString()} in StaticAbility rules text");
@@ -188,7 +193,7 @@ public class ModReduceManaCost : Modification, IModifyManaCost
 public class StaticPlayAdditionalLandEffect : Effect
 {
     public int Amount { get; set; }
-    public override string RulesText => $"You may play an additional {Amount} mana cards each turn";
+    public override string RulesText => $"#cardType# may play an additional {Amount} mana cards each turn";
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {

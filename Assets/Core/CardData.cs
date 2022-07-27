@@ -2425,18 +2425,25 @@ public class CardDatabase : ICardDatabase
             }
         });
 
-        _cards.Add(new SpellCardData
+        _cards.Add(new UnitCardData
         {
             Name = "Oracle of Mul Daya",
             ManaCost = "3G",
             Colors = new List<CardColor> { CardColor.Green },
-            Effects = new List<Effect>
+            Power = 2,
+            Toughness = 2,
+            Abilities = new List<CardAbility>
             {
-                new PlayAdditionalLandEffect
+                new StaticAbility
                 {
-                    Amount = 1,
-                    OneTurnOnly = false,
-                    IsStatic = true
+                    Effects = new List<Effect>
+                    {
+                       new StaticPlayAdditionalLandEffect
+                       {
+                            Amount = 1,
+                            TargetType = TargetType.Self
+                       }
+                    }
                 }
             }
         });
