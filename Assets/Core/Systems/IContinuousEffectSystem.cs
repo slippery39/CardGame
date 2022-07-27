@@ -71,39 +71,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
 
     private bool HasEffectFromSource(CardInstance cardToCheck, CardInstance source, StaticAbility sourceAbility)
     {
-
         return cardToCheck.ContinuousEffects.Where(ce => ce.SourceCard == source && ce.SourceAbility == sourceAbility).Any();
-
-        /*
-         * Not sure if we need this code or not?
-         */
-
-        //We check if it has a modification or an added ability from the static ability.
-        if (cardToCheck.Modifications.Where(m => m.StaticInfo.SourceCard == source && m.StaticInfo.SourceAbility == sourceAbility).Count() > 0)
-        {
-            return true;
-        }
-
-
-        if (cardToCheck.Abilities.Where(ab =>
-        {
-
-            var comp = ab.GetComponent<ContinuousAblityComponent>();
-
-            if (comp == null)
-            {
-                return false;
-            }
-            return comp.SourceCard == source && comp.SourceAbility == sourceAbility;
-        }
-        )
-        .Count() > 0
-        )
-        {
-            return true;
-        }
-
-        return false;
     }
 
     private void Apply(CardInstance source, StaticAbility sourceAbility)
