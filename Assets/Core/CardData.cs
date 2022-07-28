@@ -2444,6 +2444,16 @@ public class CardDatabase : ICardDatabase
                             TargetType = TargetType.Self
                        }
                     }
+                },
+                new StaticAbility
+                {
+                    Effects = new List<Effect>
+                    {
+                        new OracleOfMulDayaEffect()
+                        {
+                            TargetType = TargetType.Self
+                        }
+                    }
                 }
             }
         });

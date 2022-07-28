@@ -15,13 +15,14 @@ public class SnapcasterMageEffect : Effect
         //Two ways we can implement this.
         //Give all spells in the graveyard Flashback,
         //Give the player some sort of "Emblem" that allows them to cast one spell from their graveyard.
-        var modification = new SnapcasterMageModification(player)
+        var modification = new SnapcasterMageModification()
         {
             OneTurnOnly = true
         };
         cardGame.PlayerAbilitySystem.GiveModification(player, modification);//snapcaster mage emblem)
     }
 }
+
 
 
 public interface IOnSpellCast
@@ -32,12 +33,6 @@ public interface IOnSpellCast
 
 public class SnapcasterMageModification : Modification, IModifyCastZones, IOnSpellCast
 {
-
-    public SnapcasterMageModification(Player owner)
-    {
-
-    }
-
     public List<ZoneType> ModifyCastZones(CardGame cardGame, CardInstance card, List<ZoneType> originalCastZones)
     {
         if (card.IsOfType<SpellCardData>())

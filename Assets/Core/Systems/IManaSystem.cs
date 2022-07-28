@@ -14,6 +14,8 @@ public interface IManaSystem
     void ResetManaAndEssence(Player player);
     bool CanPlayCard(Player player, CardInstance card);
     bool CanPlayManaCard(Player player, CardInstance card);
+
+    void PlayManaCardFromEffect(Player player, CardInstance card, bool forceEmpty);
     void PlayManaCard(Player player, CardInstance card);
 
     void PlayManaCard(Player player, CardInstance card, bool forceEmpty);
@@ -99,16 +101,9 @@ public class DefaultManaSystem : IManaSystem
         PlayManaCard(player, card, false);
     }
 
-    public void PlayManaCard(Player player, CardInstance card, bool forceEmpty)
+    private void HandleManaCard(Player player, CardInstance card, bool forceEmpty)
     {
-        //If played from the hand, count it as mana played this turn.
-        if (cardGame.GetZoneOfCard(card).ZoneType == ZoneType.Hand)
-        {
-            player.ManaPlayedThisTurn++;
-        }
-
         var manaCard = card.CurrentCardData as ManaCardData;
-
 
         if (!(forceEmpty) && (manaCard.ReadyImmediately == true || (manaCard.ReadyImmediately == false && manaCard.ReadyCondition?.IsReady(cardGame, player) == true)))
         {
@@ -130,7 +125,18 @@ public class DefaultManaSystem : IManaSystem
         //Trigger any mana enters play effects
         cardGame.HandleTriggeredAbilities(player.GetCardsInPlay(), TriggerType.SelfManaPlayed);
 
-        cardGame.ZoneChangeSystem.MoveToZone(card, player.DiscardPile);
+        cardGame.ZoneChangeSystem.MoveToZone(card, player.Exile);
+    }
+
+    public void PlayManaCardFromEffect(Player player, CardInstance card, bool forceEmpty)
+    {
+        HandleManaCard(player, card, forceEmpty);
+    }
+
+    public void PlayManaCard(Player player, CardInstance card, bool forceEmpty)
+    {
+        player.ManaPlayedThisTurn++;
+        HandleManaCard(player, card, forceEmpty);
     }
 
     public bool CanPayManaCost(Player player, string manaCost)

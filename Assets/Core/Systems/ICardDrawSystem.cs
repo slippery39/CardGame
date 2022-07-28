@@ -35,7 +35,7 @@ public class DefaultCardDrawSystem : ICardDrawSystem
     public void DrawOpeningHand(Player player)
     {
         int cardsToDraw = 4;
-        int manaToDraw = 2;
+        int manaToDraw = 3;
         //Should grab 3 mana cards automatically
         var manaCards = player.Deck.Cards.Where(card => card.CurrentCardData is ManaCardData).Randomize();
         var nonManaCards = player.Deck.Cards.Where(card => !(card.CurrentCardData is ManaCardData)).Randomize();

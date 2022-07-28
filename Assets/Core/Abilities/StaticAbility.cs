@@ -223,6 +223,56 @@ public class StaticPlayAdditionalLandEffect : Effect
     }
 }
 
+public class OracleOfMulDayaEffect : Effect
+{
+    public override string RulesText => "You may play lands from the top of your deck";
+    public override TargetType TargetType { get; set; } = TargetType.Self;
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        foreach (var entity in entitiesToApply)
+        {
+            var playerEntity = entity as Player;
+
+            if (playerEntity == null)
+            {
+                continue;
+            }
+
+            var modification = new OracleOfMulDayaModification()
+            {
+                OneTurnOnly = false
+            };
+
+            modification.StaticInfo = new StaticInfo
+            {
+                SourceAbility = source.Abilities.Where(ab => ab.Effects.Contains(this)).First(),
+                SourceCard = source
+            };
+
+            cardGame.PlayerAbilitySystem.GiveModification(playerEntity, modification);
+        }
+    }
+}
+
+public class OracleOfMulDayaModification : Modification, IModifyCastZones
+{
+
+    public List<ZoneType> ModifyCastZones(CardGame cardGame, CardInstance card, List<ZoneType> originalCastZones)
+    {
+        if (card.CardType == "Mana" && cardGame.GetOwnerOfCard(card).Deck.GetTopCard() == card)
+        {
+            return originalCastZones.Union(new List<ZoneType> { ZoneType.Deck }).ToList();
+        }
+        else
+        {
+            return originalCastZones;
+        }
+    }
+}
+
+
+
+
 //TODO - replace with a GiveAbility effect with a static info
 public class StaticGiveAbilityEffect : Effect
 {

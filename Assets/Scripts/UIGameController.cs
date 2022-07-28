@@ -154,6 +154,7 @@ public class UIGameController : MonoBehaviour
         entities.AddRange(GetUICardsInLane());
         entities.AddRange(GetUICardsInHand());
         entities.AddRange(GetUIItems());
+        entities.AddRange(_deck.GetComponentsInChildren<UICard>(true));
 
         return entities;
     }
@@ -204,7 +205,7 @@ public class UIGameController : MonoBehaviour
         //Testing out our graveyard.
         _testGraveyard.SetZone(_cardGame.ActivePlayer.DiscardPile);
         _items.SetZone(_cardGame.ActivePlayer.Items);
-        _deck.SetZone(_cardGame.ActivePlayer.Deck,true);
+        _deck.SetZone(_cardGame.ActivePlayer.Deck, true);
     }
     private void UpdateLanes(Transform laneInScene, List<Lane> lanes)
     {

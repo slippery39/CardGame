@@ -275,6 +275,7 @@ public class CardGame
         //Can only play the card if it is in the owners hand.
         //We have hard coded in flashback here.
 
+        
         var castZones = new List<ZoneType> { ZoneType.Hand };
 
         //figure out where the card can be cast from
@@ -556,7 +557,7 @@ public class CardGame
 
         //Testing out if we can instantiate an affinity deck.
 
-        /*
+
         var decklist = Decklist.ConvertToDeck(Decklist.RGValakut2011());
 
         decklist.ForEach(card =>
@@ -566,7 +567,7 @@ public class CardGame
 
         player.Deck.Shuffle();
         return;
-        */
+
 
         //OLD Randomize code
 

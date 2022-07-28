@@ -48,7 +48,7 @@ public class CardLayout : MonoBehaviour
 
         for (var i = 0; i < cards.Length; i++)
         {
-            cards[i].transform.localPosition = new Vector3(0, 0, 0);
+            cards[i].transform.localPosition = new Vector3(0, 0, i);
             cards[i].transform.localScale = new Vector3(cardScaling, cardScaling, cardScaling);
             cards[i].GetComponent<SortingGroup>().sortingOrder = cards.Length - i;
         }
