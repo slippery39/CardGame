@@ -14,6 +14,11 @@ public class CardInstance : CardGameEntity
     private bool _isSummoningSick = true;
     private CardGame _cardGame;
 
+    public IZone GetZone()
+    {
+        return _cardGame.GetZoneOfCard(this);
+    }
+
     #region Public Properties
     public BaseCardData CurrentCardData
     {
@@ -124,9 +129,10 @@ public class CardInstance : CardGameEntity
 
     //Hard coding in shield counters for now...
     public int Shields { get; set; }
-  
 
-    
+    //Controls whether or not the card is revealed to the player. Only factors for cards in hidden information zones (i.e. the deck).
+    public bool RevealedToOwner { get; set; } = false;
+
     public List<Counter> Counters { get; set; } = new List<Counter>();
     public bool IsOfType<T>()
     {

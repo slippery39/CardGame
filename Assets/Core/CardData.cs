@@ -2454,6 +2454,16 @@ public class CardDatabase : ICardDatabase
                             TargetType = TargetType.Self
                         }
                     }
+                },
+                new StaticAbility
+                {
+                    Effects = new List<Effect>
+                    {
+                        new StaticRevealTopCardEffect
+                        {
+                            TargetType = TargetType.Self
+                        }
+                    }
                 }
             }
         });

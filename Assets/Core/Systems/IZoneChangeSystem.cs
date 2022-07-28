@@ -38,17 +38,8 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         //remove any continuous effects in play that are from the associated card
         var unitsInPlay = cardGame.GetUnitsInPlay();
 
-        //Its right here?? yay.
-        /*
-        foreach (var unit in unitsInPlay)
-        {
-            unit.ContinuousEffects = unit.ContinuousEffects.Where(ce => ce.SourceCard != card).ToList();
-        }
-        */
-
         currentZone.Remove(card);
         zoneTo.Add(card);
-
 
         //Apply any ETB Triggers
         if (currentZone.ZoneType != ZoneType.InPlay && (zoneTo.ZoneType == ZoneType.InPlay || zoneTo.ZoneType == ZoneType.Items))
@@ -61,6 +52,9 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         {
             OnDeathTriggers(card);
         }
+
+        //Check State Based Effects
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 
     private void OnDeathTriggers(CardInstance card)

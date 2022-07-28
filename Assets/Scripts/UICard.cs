@@ -57,8 +57,10 @@ public class UICard : UIGameEntity
 
     #endregion
 
-    public void SetAsUnknownCard()
+    public void SetAsHiddenCard()
     {
+        _backOfCard.gameObject.SetActive(true);
+        _frontOfCard.gameObject.SetActive(false);
     }
 
     public void SetCardData(BaseCardData cardData)
@@ -103,8 +105,14 @@ public class UICard : UIGameEntity
 
     public void SetCardData(CardInstance cardInstance)
     {
-        _backOfCard.gameObject.SetActive(false);
+        if (cardInstance.GetZone().ZoneType == ZoneType.Deck && cardInstance.RevealedToOwner == false)
+        {
+            SetAsHiddenCard();
+            return;
+        }
 
+        _backOfCard.gameObject.SetActive(false);
+        _frontOfCard.gameObject.SetActive(true);
         _cardInstance = cardInstance;
         EntityId = cardInstance.EntityId;
         var cardData = cardInstance.CurrentCardData;
@@ -188,7 +196,6 @@ public class UICard : UIGameEntity
                 case CardColor.Colorless: _cardFrame.sprite = colorlessCardFrame; break;
                 default: _cardFrame.sprite = colorlessCardFrame; break;
             }
-
         }
     }
 

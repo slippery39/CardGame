@@ -25,6 +25,16 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
         CheckForDeadUnits();
         cardGame.ContinuousEffectSystem.ApplyStaticEffects();
         cardGame.ContinuousEffectSystem.RemoveStaticEffects();
+
+        cardGame.Player1.Modifications.GetOfType<IOnAfterStateBasedEffects>().ForEach(mod =>
+        {
+            mod.OnAfterStateBasedEffects(cardGame, cardGame.Player1);
+        });
+
+        cardGame.Player2.Modifications.GetOfType<IOnAfterStateBasedEffects>().ForEach(mod =>
+        {
+            mod.OnAfterStateBasedEffects(cardGame, cardGame.Player2);
+        });
     }
 
     private void CheckForDeadUnits()

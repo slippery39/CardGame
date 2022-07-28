@@ -190,6 +190,50 @@ public class ModReduceManaCost : Modification, IModifyManaCost
     }
 }
 
+public class StaticRevealTopCardEffect : Effect
+{
+    public override string RulesText => "You can look at the top card of your deck";
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        foreach (var entity in entitiesToApply)
+        {
+            var playerEntity = entity as Player;
+
+            if (playerEntity == null)
+            {
+                continue;
+            }
+
+            var revealTopCardModification = new RevealTopCardModification()
+            {
+                OneTurnOnly = false
+            };
+
+            revealTopCardModification.StaticInfo = new StaticInfo
+            {
+                SourceAbility = source.Abilities.Where(ab => ab.Effects.Contains(this)).First(),
+                SourceCard = source
+            };
+
+            playerEntity.Modifications.Add(revealTopCardModification);
+        }
+    }
+}
+
+public interface IOnAfterStateBasedEffects
+{
+    void OnAfterStateBasedEffects(CardGame cardGame, Player player);
+}
+
+public class RevealTopCardModification : Modification, IOnAfterStateBasedEffects
+{
+    public void OnAfterStateBasedEffects(CardGame cardGame, Player player)
+    {
+        player.Deck.GetTopCard().RevealedToOwner = true;
+    }
+}
+
 public class StaticPlayAdditionalLandEffect : Effect
 {
     public int Amount { get; set; }
