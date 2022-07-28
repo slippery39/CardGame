@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ZoneViewer : MonoBehaviour
@@ -18,16 +19,29 @@ public class ZoneViewer : MonoBehaviour
         return zoneViewer;
     }
 
-    public void SetZone(IZone zone)
+    public void SetCards(List<CardInstance> cards, bool setReverse = false)
+    {
+
+    }
+
+    public void SetZone(IZone zone, bool setReverse = false)
     {
         //Get any already made ui cards;
         var alreadyMadeUICards = _cards.GetComponentsInChildren<UICard>(true);
 
         _zone = zone;
 
-        for (var i = 0; i < zone.Cards.Count; i++)
+        var cardsToSet = zone.Cards.ToList();
+
+        if (setReverse)
         {
-            var card = zone.Cards[i];
+            cardsToSet.Reverse();
+        }
+
+        for (var i = 0; i < cardsToSet.Count; i++)
+        {
+            cardsToSet = cardsToSet.ToList();
+            var card = cardsToSet[i];
             if (i >= alreadyMadeUICards.Length)
             {
                 var cardGameObject = UICardFactory.CreateCard(card);
@@ -40,7 +54,7 @@ public class ZoneViewer : MonoBehaviour
             }
         }
 
-        if (alreadyMadeUICards.Length > zone.Cards.Count)
+        if (alreadyMadeUICards.Length > cardsToSet.Count)
         {
             for (var i = zone.Cards.Count; i < alreadyMadeUICards.Length; i++)
             {

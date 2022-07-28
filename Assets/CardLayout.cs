@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering;
 
-[ExecuteInEditMode]
 public class CardLayout : MonoBehaviour
 {
     [SerializeField]
@@ -38,12 +40,17 @@ public class CardLayout : MonoBehaviour
 
     private void StackCards(UICard[] cards)
     {
+
+        if (!cards.Any())
+        {
+            return;
+        }
+
         for (var i = 0; i < cards.Length; i++)
         {
-            var x = 0;
-            var y = 0;
-            cards[i].transform.localPosition = new Vector3(0, 0, i * 0.1f);
+            cards[i].transform.localPosition = new Vector3(0, 0, 0);
             cards[i].transform.localScale = new Vector3(cardScaling, cardScaling, cardScaling);
+            cards[i].GetComponent<SortingGroup>().sortingOrder = cards.Length - i;
         }
     }
 
@@ -59,6 +66,9 @@ public class CardLayout : MonoBehaviour
 
             cards[i].transform.localPosition = new Vector3(x, y, 0f);
             cards[i].transform.localScale = new Vector3(cardScaling, cardScaling, cardScaling);
+            cards[i].GetComponentsInChildren<Renderer>().ToList().ForEach(x => x.sortingOrder = 0);
+            cards[i].GetComponentsInChildren<TextMeshPro>().ToList().ForEach(x => x.sortingOrder = 0);
+            cards[i].CardArtRenderer.sortingOrder = 1;
         }
     }
 }
