@@ -47,7 +47,7 @@ public class GameUISummonUnitState : IGameUIState
 
     public void OnDestroy()
     {
-        foreach (UILane uiLane in _stateMachine.GameController.GetUILanes())
+        foreach (UILane uiLane in _stateMachine.GameController.GetUIEntities().GetOfType<UILane>())
         {
             uiLane.StopHighlight();
         }
