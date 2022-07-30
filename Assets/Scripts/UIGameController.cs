@@ -47,8 +47,10 @@ public class UIGameController : MonoBehaviour
 
         _stateMachine = GetComponent<GameUIStateMachine>();
 
-        _player1Board.SetPlayer(_cardGame.Player1);
-        _player2Board.SetPlayer(_cardGame.Player2);
+        var player1HideStuff = _cardGame.ActivePlayer != _cardGame.Player1;
+        var player2HideStuff = _cardGame.ActivePlayer != _cardGame.Player2;
+        _player1Board.SetPlayer(_cardGame.Player1, player1HideStuff);
+        _player2Board.SetPlayer(_cardGame.Player2, player2HideStuff);
 
         UpdateUI();
     }
@@ -133,6 +135,9 @@ public class UIGameController : MonoBehaviour
     {
         _actionStateIndicator.text = _stateMachine.GetMessage();
         _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
+
+        _player1Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player1;
+        _player2Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player2;
     }
 
     //TEST METHODS

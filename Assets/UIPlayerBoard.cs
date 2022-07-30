@@ -21,9 +21,20 @@ public class UIPlayerBoard : MonoBehaviour
     [SerializeField]
     private Player _player;
 
+    [SerializeField]
+    private bool _hideHiddenInfo;
+
+    public bool HideHiddenInfo { get => _hideHiddenInfo; set => _hideHiddenInfo = value; }
+
     public void SetPlayer(Player player)
     {
+        SetPlayer(player, false);
+    }
+
+    public void SetPlayer(Player player, bool hideHiddenInfo)
+    {
         _player = player;
+        HideHiddenInfo = hideHiddenInfo;
         InitUIEntityIds(_player);
     }
 
@@ -91,17 +102,25 @@ public class UIPlayerBoard : MonoBehaviour
         var hand = player.Hand;
         for (int i = 0; i < uiCards.Length; i++)
         {
+            var uiCard = uiCards[i];
             //If there is no card in the game state for a lane, just hide the card.
             if (hand.Cards.Count <= i || hand.Cards[i] == null)
             {
-                uiCards[i].gameObject.SetActive(false);
+                uiCard.gameObject.SetActive(false);
                 continue;
             }
             else
             {
-                uiCards[i].gameObject.SetActive(true);
+                uiCard.gameObject.SetActive(true);
             }
-            uiCards[i].GetComponent<UICard>().SetCardData(hand.Cards[i]);
+            if (HideHiddenInfo)
+            {
+                uiCard.SetAsHiddenCard();
+            }
+            else
+            {
+                uiCard.SetCardData(hand.Cards[i]);
+            }
         }
     }
 
