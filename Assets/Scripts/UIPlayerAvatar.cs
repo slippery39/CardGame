@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-[ExecuteInEditMode]
+
 public class UIPlayerAvatar : UIGameEntity
 {
     [SerializeField]
@@ -16,6 +16,13 @@ public class UIPlayerAvatar : UIGameEntity
     [SerializeField]
     private SpriteRenderer _highlight;
 
+    private Renderer _renderer;
+
+    void Start()
+    {
+        _renderer = GetComponent<Renderer>();
+    }
+
     public void SetMana(int amount)
     {
         _manaText.text = $@"Mana : {amount}";
@@ -23,8 +30,8 @@ public class UIPlayerAvatar : UIGameEntity
 
     public void Update()
     {
-        _manaText.renderer.sortingOrder = this.GetComponent<Renderer>().sortingOrder + 1;
-        _healthText.renderer.sortingOrder = this.GetComponent<Renderer>().sortingOrder + 1;
+        _manaText.renderer.sortingOrder = _renderer.sortingOrder + 1;
+        _healthText.renderer.sortingOrder = _renderer.sortingOrder + 1;
     }
 
     public void SetMana(ManaPool manaPool)
@@ -32,13 +39,16 @@ public class UIPlayerAvatar : UIGameEntity
         var colorlessMana = manaPool.CurrentColorlessMana;
         var colorsCount = manaPool.CurrentColoredMana;
 
-        string text = $@"Colorless : {colorlessMana}";
+
+        string text = "";
+
+        if (manaPool.TotalColorlessMana > 0) text += $@"Colorless : {colorlessMana} / {manaPool.TotalColorlessMana}";
 
         foreach (var manaType in colorsCount.Keys)
         {
-            if (colorsCount[manaType] == 0) continue;
+            if (manaPool.TotalColoredMana[manaType] == 0) continue;
 
-            text += $@"{Environment.NewLine} {manaType.ToString()}:{colorsCount[manaType]}";
+            text += $@"{Environment.NewLine} {manaType.ToString()}:{colorsCount[manaType]} / {manaPool.TotalColoredMana[manaType]}";
         }
 
         _manaText.text = text;
