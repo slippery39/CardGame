@@ -37,6 +37,9 @@ public class SummoningTrapEffect : Effect
 
         cardGame.UnitSummoningSystem.SummonUnit(player, cardsToCheck.First(), player.GetEmptyLanes().First().EntityId);
 
+        //Should actually put the rest on the bottom.
+        cardGame.CardDrawSystem.Shuffle(player);
+
         //TODO - grab the first one.
 
     }

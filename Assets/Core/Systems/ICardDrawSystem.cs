@@ -6,6 +6,7 @@ public interface ICardDrawSystem
     void DrawOpeningHand(Player player);
     void GrabRandomCardFromDeck(Player player, CardFilter filter);
     void GrabFromTopOfDeck(Player player, CardFilter filter, int amountToLookAt, int amountToGrab);
+    void Shuffle(Player player);
 }
 
 
@@ -97,6 +98,11 @@ public class DefaultCardDrawSystem : ICardDrawSystem
             player.Deck.Cards.Remove(card);
             player.Deck.Cards.Insert(0, card);
         }
+    }
+
+    public void Shuffle(Player player)
+    {
+        player.Deck.Shuffle();
     }
 
 

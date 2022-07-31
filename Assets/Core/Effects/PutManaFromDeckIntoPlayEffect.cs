@@ -27,6 +27,8 @@ public class PutManaFromDeckIntoPlayEffect : Effect
             //TODO - should be either tapped or untapped.
             cardGame.ManaSystem.PlayManaCardFromEffect(player, manaCardToPlay, ForceEmpty);
             manaCards.Remove(manaCardToPlay);
+
+            cardGame.CardDrawSystem.Shuffle(player);
         }
     }
 }
