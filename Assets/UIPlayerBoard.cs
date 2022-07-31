@@ -54,7 +54,7 @@ public class UIPlayerBoard : MonoBehaviour
         UpdateHand(player);
         UpdateMana(player);
         _avatar.SetHealth(player.Health);
-        _graveyard.SetZone(player.DiscardPile);
+        _graveyard.SetZone(player.DiscardPile, true);
         _items.SetZone(player.Items);
         _deck.SetZone(player.Deck, true);
     }
