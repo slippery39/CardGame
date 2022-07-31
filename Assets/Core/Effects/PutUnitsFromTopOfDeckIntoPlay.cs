@@ -4,18 +4,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-public class SummoningTrapEffect : Effect
+public class PutUnitsFromTopOfDeckIntoPlay : Effect
 {
-    public override string RulesText => "Put the highest generic mana cost unit from the top 7 cards of your deck into play.";
+    public int Amount { get; set; } = 1;
+    public int CardsToLookAt { get; set; }
+    public override string RulesText => $"Put the highest generic mana cost unit from the top {CardsToLookAt} cards of your deck into play.";
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         var cardsToCheck = player.Deck.Cards.ToList();
         cardsToCheck.Reverse();
 
-        cardsToCheck = cardsToCheck.Take(7).ToList();
+        cardsToCheck = cardsToCheck.Take(Amount).ToList();
 
         cardsToCheck = cardsToCheck.Where(c => c.IsOfType<UnitCardData>()).ToList();
+
+        cardsToCheck = CardFilter.ApplyFilter(cardsToCheck, Filter);
 
         if (cardsToCheck.Count == 0)
         {
@@ -35,13 +39,15 @@ public class SummoningTrapEffect : Effect
         cardGame.Log(string.Join(", ", cardsToCheck.Select(c => c.ManaCost)));
         cardGame.Log("---------");
 
-        cardGame.UnitSummoningSystem.SummonUnit(player, cardsToCheck.First(), player.GetEmptyLanes().First().EntityId);
+        var amountToPutIntoPlay = Math.Min(cardsToCheck.Count, Amount);
 
+        for (var i = 0; i < amountToPutIntoPlay; i++)
+        {
+            cardGame.UnitSummoningSystem.SummonUnit(player, cardsToCheck.First(), player.GetEmptyLanes().First().EntityId);
+            cardsToCheck.RemoveAt(0);
+        }
         //Should actually put the rest on the bottom.
         cardGame.CardDrawSystem.Shuffle(player);
-
-        //TODO - grab the first one.
-
     }
 }
 

@@ -25,14 +25,29 @@ public enum CardType
     Mana
 }
 
+public interface IManaFilter
+{
+    bool Check(CardInstance cardToCheck);
+}
+
+
+public class LessThanManaFilter : IManaFilter
+{
+    public int Amount { get; set; }
+    public bool Check(CardInstance cardToCheck)
+    {
+        var mana = new Mana(cardToCheck.ManaCost);
+        return mana.ColorlessMana < Amount;
+    }
+}
 
 public class CardFilter
 {
     public string CreatureType { get; set; }
     public string Subtype { get; set; }
     public string CardType { get; set; }
-    //Temporary, would like an actual search by card type.
-    public bool SpellsOnly { get; set; } = false;
+    public IManaFilter ManaCheck { get; set; }
+
     public bool Not { get; set; } = false; //Search for things that don't match the criteria.
 
     public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)
@@ -45,12 +60,14 @@ public class CardFilter
         Func<CardInstance, bool> creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType;
         Func<CardInstance, bool> subTypeFilter = x => x.Subtype?.ToLower() == filter.Subtype.ToLower();
         Func<CardInstance, bool> cardTypeFilter = x => x.IsOfType(filter.CardType);
+        Func<CardInstance, bool> manaFilter = x => filter.ManaCheck.Check(x);
 
         if (filter.Not)
         {
             creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType != filter.CreatureType;
             subTypeFilter = x => x.Subtype?.ToLower() != filter.Subtype.ToLower();
             cardTypeFilter = x => !x.IsOfType(filter.CardType);
+            manaFilter = x => !filter.ManaCheck.Check(x);
         }
 
         //TODO - need to apply a NOT to everything (but how?)
@@ -71,6 +88,11 @@ public class CardFilter
         if (filter.CardType != null && filter.CardType.Trim() != "")
         {
             list = list.Where(cardTypeFilter).ToList();
+        }
+
+        if (filter.ManaCheck != null)
+        {
+            list = list.Where(manaFilter).ToList();
         }
         return list;
     }

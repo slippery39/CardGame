@@ -2011,7 +2011,7 @@ public class CardDatabase : ICardDatabase
                     Amount = 1,
                     Filter = new CardFilter
                     {
-                        SpellsOnly = true
+                       CardType = "Spell"
                     }
                 }
                 }
@@ -2479,7 +2479,37 @@ public class CardDatabase : ICardDatabase
             },
             Effects = new List<Effect>
             {
-                new SummoningTrapEffect()
+                new PutUnitsFromTopOfDeckIntoPlay()
+                {
+                    CardsToLookAt = 7,
+                    Amount = 1,
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Collected Company",
+            ManaCost = "3G",
+            Colors = new List<CardColor> { CardColor.Green },
+            Abilities = new List<CardAbility>
+            {
+               new RespondToOpponentEndOfTurnAbility()
+            },
+            Effects = new List<Effect>
+            {
+                new PutUnitsFromTopOfDeckIntoPlay
+                {
+                    CardsToLookAt = 6,
+                    Amount = 2,
+                    Filter = new CardFilter
+                    {
+                        ManaCheck = new LessThanManaFilter
+                        {
+                            Amount = 4
+                        }
+                    }
+                }
             }
         });
 

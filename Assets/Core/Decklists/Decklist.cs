@@ -62,6 +62,7 @@ public static class Decklist
         //Note we replaced Khalni Heart Expedition with Rampant Growth
         //Also replaced Evolving Wilds / Terramorphic Expanse / Verdant Catacombs with other Red Green Lands (Rootbound Crag / Stomping Ground)
         //Replaced Avenger of Zendikar with a 4th Inferno Titan
+        //1 Raging Ravine replaced with copperline gorge
         return $@"Creature (10)
                         4 Inferno Titan
                         2 Oracle of Mul Daya
@@ -78,10 +79,9 @@ public static class Decklist
                         Land(28)
                         4 Rootbound Crag
                         4 Stomping Ground
-                        2 Copperline Gorge
+                        3 Copperline Gorge
                         2 Forest 
                         10 Mountain
-                        1 Raging Ravine
                         4 Valakut, The Molten Pinnacle
                         ";
     }

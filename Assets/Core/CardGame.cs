@@ -552,13 +552,13 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
-       card.Abilities.GetOfType<StaticAbility>().Any());
+       card is UnitCardData || card.Name == "Collected Company");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 
         //Testing out if we can instantiate an affinity deck.
 
-
+        /*
         var decklist = Decklist.ConvertToDeck(Decklist.RGValakut2011());
 
         decklist.ForEach(card =>
@@ -568,6 +568,7 @@ public class CardGame
 
         player.Deck.Shuffle();
         return;
+        */
 
 
         //OLD Randomize code
@@ -580,6 +581,11 @@ public class CardGame
         for (int i = 0; i < 60 - cardsToAdd; i++)
         {
             AddCardToGame(player, cardDB.GetCardData(manaName), player.Deck);
+        }
+
+        for (int i = 0; i < 15; i++)
+        {
+            AddCardToGame(player, cardDB.GetCardData("Collected Company"), player.Deck);
         }
 
         player.Deck.Shuffle();

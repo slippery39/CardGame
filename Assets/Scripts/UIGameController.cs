@@ -27,6 +27,9 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private UIPlayerBoard _player2Board;
 
+    [SerializeField]
+    private UICard _cardPopup;
+
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
 
     //Singleton Pattern, should only be one game controller per unity scene.
@@ -127,6 +130,17 @@ public class UIGameController : MonoBehaviour
     {
         //Do something here?
         _stateMachine.HandleSelection(clickInfo.EntityId);
+    }
+
+    public void HandlePointerEnter(int entityId)
+    {
+        var entity = _cardGame.GetEntities<CardInstance>().Where(c => c.EntityId == entityId).FirstOrDefault();
+        if (entity == null)
+        {
+            return;
+        }
+
+        _cardPopup.SetCardData(entity);
     }
 
     #region Private Methods
