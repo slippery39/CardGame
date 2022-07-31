@@ -2468,6 +2468,22 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Summoning Trap",
+            ManaCost = "4GG",
+            Colors = new List<CardColor> { CardColor.Green },
+            Abilities = new List<CardAbility>
+            {
+                new RespondToOpponentEndOfTurnAbility()
+            },
+            Effects = new List<Effect>
+            {
+                new SummoningTrapEffect()
+            }
+        });
+
+
 
 
         //Affinity Deck

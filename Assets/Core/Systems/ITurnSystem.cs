@@ -71,6 +71,20 @@ public class DefaultTurnSystem : ITurnSystem
         //Trigger any End of turn abilities
         cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnEnd);
 
+        //Handle any RespondToEndOfTurnAbilities (Like Summoning Trap);
+        var respondToEndOfTurnCards = cardGame.InactivePlayer.Hand.Cards.Where(card => card.Abilities.GetOfType<RespondToOpponentEndOfTurnAbility>().Any()).ToList();
+
+        foreach (var card in respondToEndOfTurnCards)
+        {
+            var abilities = card.GetAbilitiesAndComponents<RespondToOpponentEndOfTurnAbility>();
+            foreach (var ab in abilities)
+            {
+                ab.AtOpponentEndOfTurn(cardGame, card);
+            }
+        }
+
+
+
         //Remove any temporary abilities
         cardGame.GetUnitsInPlay().ForEach(c =>
         c.Abilities = c.Abilities

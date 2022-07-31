@@ -34,4 +34,24 @@ public class RespondToCastAbility : CardAbility
     }
 }
 
+public class RespondToOpponentEndOfTurnAbility : CardAbility
+{
+    public override string RulesText => "Respond - Opponents End Of Turn - Cast this spell";
+
+    public void AtOpponentEndOfTurn(CardGame cardGame, CardInstance sourceCard)
+    {
+        //This does not work because it checks if the person casting the spell is the ActivePlayer...
+        //..we need a new method that does not check that.
+        if (!cardGame.CanPlayCard(sourceCard, false))
+        {
+            return;
+        }
+
+        var owner = cardGame.GetOwnerOfCard(sourceCard);
+        //Check if the spell is still on the stack.. (to handle the edge case that it has been cancelled already)
+        cardGame.Log($"Summoning Trap has been played by {owner.Name}");
+        cardGame.PlayCard(owner, sourceCard, 0, new List<CardGameEntity> { }, false);
+    }
+}
+
 

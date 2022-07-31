@@ -258,7 +258,8 @@ public class CardGame
         return card;
     }
 
-    public bool CanPlayCard(CardInstance card)
+
+    public bool CanPlayCard(CardInstance card, bool checkIfActivePlayer = true)
     {
         if (card == null)
         {
@@ -267,7 +268,7 @@ public class CardGame
 
         var owner = GetOwnerOfCard(card);
 
-        if (ActivePlayer != owner)
+        if (checkIfActivePlayer && ActivePlayer != owner)
         {
             return false;
         }
@@ -275,7 +276,7 @@ public class CardGame
         //Can only play the card if it is in the owners hand.
         //We have hard coded in flashback here.
 
-        
+
         var castZones = new List<ZoneType> { ZoneType.Hand };
 
         //figure out where the card can be cast from
@@ -353,10 +354,10 @@ public class CardGame
 
 
     //PlayCard needs an ActionInfo
-    public void PlayCard(Player player, CardInstance cardToPlay, int targetId, List<CardGameEntity> costChoices)
+    public void PlayCard(Player player, CardInstance cardToPlay, int targetId, List<CardGameEntity> costChoices, bool checkIfActivePlayer = true)
     {
 
-        if (!CanPlayCard(cardToPlay.EntityId))
+        if (!CanPlayCard(cardToPlay, checkIfActivePlayer))
         {
             Log("Unable to play the card");
             return;
