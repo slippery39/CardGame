@@ -366,6 +366,7 @@ public class CardGame
         if (cardToPlay.CurrentCardData is ManaCardData)
         {
             ManaSystem.PlayManaCard(player, cardToPlay);
+            _stateBasedEffectSystem.CheckStateBasedEffects();
         }
         else if (cardToPlay.CurrentCardData is UnitCardData)
         {
@@ -425,7 +426,6 @@ public class CardGame
             ManaSystem.SpendMana(player, cardToPlay.ManaCost);
             ResolvingSystem.Add(cardToPlay, null);
             _stateBasedEffectSystem.CheckStateBasedEffects();
-
         }
     }
 
@@ -552,7 +552,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         var cardsToSelectFrom = cardDB.GetAll().Where(card =>
-       card is UnitCardData || card.Name == "Collected Company");
+       card.Name == "Arcbound Ravager");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 

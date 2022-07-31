@@ -143,6 +143,8 @@ public class DefaultResolvingSystem : IResolvingSystem
             return;
         }
 
+        //We will need the ability to partially resolve spells (i.e. spells with choice effects like Careful study)
+        //but not fully resolve it until the choices have been chosen
         var nextIndex = _internalStack.Count - 1;
         var resolvingThing = _internalStack[nextIndex];
         _internalStack.RemoveAt(nextIndex);

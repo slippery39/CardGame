@@ -52,9 +52,6 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         {
             OnDeathTriggers(card);
         }
-
-        //Check State Based Effects
-        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 
     private void OnDeathTriggers(CardInstance card)
