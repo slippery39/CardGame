@@ -28,6 +28,9 @@ public class UIGameController : MonoBehaviour
     private UIPlayerBoard _player2Board;
 
     [SerializeField]
+    private ZoneViewer _zonePopupWindow;
+
+    [SerializeField]
     private UICard _cardPopup;
 
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
@@ -141,6 +144,12 @@ public class UIGameController : MonoBehaviour
         }
 
         _cardPopup.SetCardData(entity);
+    }
+
+    public void HandleViewGraveyardClick()
+    {
+        _zonePopupWindow.gameObject.SetActive(true);
+        _zonePopupWindow.SetZone(CardGame.ActivePlayer.DiscardPile);
     }
 
     #region Private Methods

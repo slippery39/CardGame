@@ -19,11 +19,6 @@ public class ZoneViewer : MonoBehaviour
         return zoneViewer;
     }
 
-    public void SetCards(List<CardInstance> cards, bool setReverse = false)
-    {
-
-    }
-
     public void SetZone(IZone zone, bool setReverse = false)
     {
         //Get any already made ui cards;

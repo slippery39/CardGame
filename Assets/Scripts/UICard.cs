@@ -4,7 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class UICard : UIGameEntity
+public class UICard : UIGameEntity, IUICard
 {
 
     [SerializeField]

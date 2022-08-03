@@ -67,7 +67,7 @@ public class CardLayout : MonoBehaviour
             cards[i].transform.localPosition = new Vector3(x, y, 0f);
             cards[i].transform.localScale = new Vector3(cardScaling, cardScaling, cardScaling);
             cards[i].GetComponentsInChildren<Renderer>().ToList().ForEach(x => x.sortingOrder = 0);
-            cards[i].GetComponentsInChildren<TextMeshPro>().ToList().ForEach(x => x.sortingOrder = 0);
+            cards[i].GetComponentsInChildren<TextMeshPro>().ToList().ForEach(x => x.sortingOrder = 2);
             cards[i].CardArtRenderer.sortingOrder = 1;
         }
     }
