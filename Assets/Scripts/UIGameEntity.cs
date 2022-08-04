@@ -13,6 +13,9 @@ using UnityEngine.EventSystems;
 public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
 {
     [SerializeField]
+    bool clickEventsEnabled = true;
+
+    [SerializeField]
     int _entityId;
     public int EntityId { get => _entityId; set => _entityId = value; }
 
@@ -34,7 +37,8 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
-        UIGameController.Instance.HandleClick(new UIGameControllerClickEvent { EntityId = EntityId });
+        if (clickEventsEnabled)
+            UIGameController.Instance.HandleClick(new UIGameControllerClickEvent { EntityId = EntityId });
         //Output to console the clicked GameObject's name and the following message. You can replace this with your own actions for when clicking the GameObject.
     }
 

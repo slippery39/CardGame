@@ -5,8 +5,15 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+[ExecuteInEditMode]
 public class UICard2D : UIGameEntity, IUICard
 {
+
+    [SerializeField]
+    private bool _showAsUnknown = false;
+
+    [Header("Card Properties")]
+
     [SerializeField]
     private Image _cardFrame;
 
@@ -36,6 +43,9 @@ public class UICard2D : UIGameEntity, IUICard
 
     private CardInstance _cardInstance;
 
+    [Header("Card Frame References")]
+
+
     [SerializeField]
     private Sprite whiteCardFrame;
     [SerializeField]
@@ -57,10 +67,27 @@ public class UICard2D : UIGameEntity, IUICard
         _backOfCard.gameObject.SetActive(true);
     }
 
+#if UNITY_EDITOR
+    public void Update()
+    {
+        if (_showAsUnknown)
+        {
+            SetAsUnknownCard();
+        }
+        else
+        {
+            _backOfCard.gameObject.SetActive(false);
+            _frontOfCard.gameObject.SetActive(true);
+        }
+    }
+#endif
+
+
     public void SetCardData(CardInstance cardInstance)
     {
         if (cardInstance.GetZone().ZoneType == ZoneType.Deck && cardInstance.RevealedToOwner == false)
         {
+            _showAsUnknown = true;
             SetAsUnknownCard();
             return;
         }
