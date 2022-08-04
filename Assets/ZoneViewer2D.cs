@@ -19,6 +19,12 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
     [SerializeField]
     private Button _exitButton;
 
+    [SerializeField]
+    private float _cardWidth = 375f;
+
+    [SerializeField]
+    private float _cardScaling = 0.5f;
+
     private IZone _zone;
 
     public void SetZone(IZone zone, bool setReverse = false)
@@ -27,6 +33,7 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         SetNameOfZoneText(zone);
         SetCardsInZone(zone, setReverse);
         SetContainerSize();
+        HideScrollbar();
     }
 
     void Awake()
@@ -40,7 +47,7 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         var _cardsViewRect = _cardsContainer.GetComponent<RectTransform>();
         //Setting the size of the "container" based on how many cards there are
         //225 is the width of the UI card (350) * its scaling (0.5) + a little padding (25)
-        _cardsViewRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _cardsContainer.GetComponentsInChildren<IUICard>().Count() * (375f * 0.5f));
+        _cardsViewRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _cardsContainer.GetComponentsInChildren<IUICard>().Count() * (_cardWidth * _cardScaling));
     }
 
     private void Exit()
@@ -50,8 +57,33 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
 
     private void BindViewToScrollBar(float value)
     {
+        //Scrollbar Max Scroll should be the width of the container - the width of the canvas
+
+        var widthOfCanvas = transform.GetComponentInParent<Canvas>().pixelRect.width;
         var _cardsViewRect = _cardsContainer.GetComponent<RectTransform>();
-        _cardsViewRect.anchoredPosition = new Vector3(value * -1 * _cardsContainer.GetComponent<RectTransform>().rect.width, _cardsViewRect.localPosition.y, _cardsViewRect.localPosition.z);
+
+        //X Position should be a Lerp of the scrollbar value and 
+
+        var maxPositionVal = (_cardsViewRect.rect.width - widthOfCanvas);
+        var xPosition = Mathf.Lerp(0, -1 * maxPositionVal, value);
+        _cardsViewRect.anchoredPosition = new Vector3(xPosition, _cardsViewRect.localPosition.y, _cardsViewRect.localPosition.z);
+    }
+
+    private void HideScrollbar()
+    {
+        var widthOfCanvas = transform.GetComponentInParent<Canvas>().pixelRect.width;
+        var _cardsViewRect = _cardsContainer.GetComponent<RectTransform>();
+
+        if (_cardsViewRect.rect.width <= widthOfCanvas)
+        {
+            _scrollbar.gameObject.SetActive(false);
+            return;
+        }
+        else
+        {
+            _scrollbar.enabled = true;
+            _scrollbar.gameObject.SetActive(true);
+        }
     }
 
     private void SetNameOfZoneText(IZone zone)
@@ -71,6 +103,8 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
             cardsToSet.Reverse();
         }
 
+        var scalingVector = new Vector3(_cardScaling, _cardScaling, _cardScaling);
+
         for (var i = 0; i < cardsToSet.Count; i++)
         {
             cardsToSet = cardsToSet.ToList();
@@ -81,13 +115,20 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
                 cardGameObject.AddComponent<LayoutElement>();
                 cardGameObject.transform.SetParent(_cardsContainer.transform, false);
                 cardGameObject.transform.localPosition = new Vector3(0, 0, 0); //actual position will be handled by the layout group.
-                cardGameObject.GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 375);
+
+                var rect = cardGameObject.GetComponent<RectTransform>();
+
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _cardWidth);
+                rect.localScale = scalingVector;
             }
             else
             {
                 alreadyMadeUICards[i].SetCardData(card);
                 alreadyMadeUICards[i].SetActive(true);
-                ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>().SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 375);
+
+                var rect = ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>();
+                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _cardWidth);
+                rect.localScale = scalingVector;
             }
         }
 
