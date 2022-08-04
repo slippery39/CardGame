@@ -8,6 +8,8 @@ public interface IUICard
 {
     void SetCardData(CardInstance cardInstance);
     void SetCardData(BaseCardData cardData);
-    void SetAsHiddenCard();
+    void SetAsUnknownCard();
+
+    void SetActive(bool active);
 }
 

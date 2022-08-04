@@ -27,11 +27,14 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private UIPlayerBoard _player2Board;
 
-    [SerializeField]
-    private ZoneViewer _zonePopupWindow;
+
+    //private ZoneViewer _zonePopupWindow;
 
     [SerializeField]
     private UICard _cardPopup;
+
+    [SerializeField]
+    private GameObject _zonePopupWindow;
 
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
 
@@ -103,6 +106,11 @@ public class UIGameController : MonoBehaviour
                 _cardGame.ManaSystem.AddMana(_cardGame.ActivePlayer, "1*");
             }
 
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                _cardGame.TestFillGraveyard();
+            }
+
             _stateMachine.CurrentState.HandleInput();
 
         }
@@ -148,8 +156,8 @@ public class UIGameController : MonoBehaviour
 
     public void HandleViewGraveyardClick()
     {
-        _zonePopupWindow.gameObject.SetActive(true);
-        _zonePopupWindow.SetZone(CardGame.ActivePlayer.DiscardPile);
+        _zonePopupWindow.SetActive(true);
+        _zonePopupWindow.GetComponent<IZoneViewer>().SetZone(CardGame.ActivePlayer.DiscardPile);
     }
 
     #region Private Methods

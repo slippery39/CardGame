@@ -115,7 +115,7 @@ public class UIPlayerBoard : MonoBehaviour
             }
             if (HideHiddenInfo)
             {
-                uiCard.SetAsHiddenCard();
+                uiCard.SetAsUnknownCard();
             }
             else
             {

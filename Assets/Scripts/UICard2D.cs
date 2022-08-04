@@ -51,7 +51,7 @@ public class UICard2D : UIGameEntity, IUICard
     [SerializeField]
     private Sprite multicolorCardFrame;
 
-    public void SetAsHiddenCard()
+    public void SetAsUnknownCard()
     {
         _frontOfCard.gameObject.SetActive(false);
         _backOfCard.gameObject.SetActive(true);
@@ -61,7 +61,7 @@ public class UICard2D : UIGameEntity, IUICard
     {
         if (cardInstance.GetZone().ZoneType == ZoneType.Deck && cardInstance.RevealedToOwner == false)
         {
-            SetAsHiddenCard();
+            SetAsUnknownCard();
             return;
         }
 
@@ -156,5 +156,10 @@ public class UICard2D : UIGameEntity, IUICard
     public void SetCardData(BaseCardData cardData)
     {
         throw new System.NotImplementedException();
+    }
+
+    public void SetActive(bool active)
+    {
+        gameObject.SetActive(active);
     }
 }

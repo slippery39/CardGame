@@ -496,6 +496,19 @@ public class CardGame
         return null; //card cannot be found.
     }
 
+    public void TestFillGraveyard()
+    {
+        var db = new CardDatabase();
+        var cards = db.GetAll();
+        for (var i = 0; i < 20; i++)
+        {
+            var randomCard = cards.Randomize().First();
+            AddCardToGame(Player1, randomCard, Player1.DiscardPile);
+            randomCard = cards.Randomize().First();
+            AddCardToGame(Player2, randomCard, Player2.DiscardPile);
+        }
+    }
+
     public bool IsInPlay(CardInstance card)
     {
         var zone = GetZoneOfCard(card);

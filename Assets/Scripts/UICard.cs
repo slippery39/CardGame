@@ -57,7 +57,7 @@ public class UICard : UIGameEntity, IUICard
 
     #endregion
 
-    public void SetAsHiddenCard()
+    public void SetAsUnknownCard()
     {
         _backOfCard.gameObject.SetActive(true);
         _frontOfCard.gameObject.SetActive(false);
@@ -107,7 +107,7 @@ public class UICard : UIGameEntity, IUICard
     {
         if (cardInstance.GetZone().ZoneType == ZoneType.Deck && cardInstance.RevealedToOwner == false)
         {
-            SetAsHiddenCard();
+            SetAsUnknownCard();
             return;
         }
 
@@ -214,5 +214,10 @@ public class UICard : UIGameEntity, IUICard
     public override void StopHighlight()
     {
         _highlight.gameObject.SetActive(false);
+    }
+
+    public void SetActive(bool active)
+    {
+        gameObject.SetActive(active);
     }
 }
