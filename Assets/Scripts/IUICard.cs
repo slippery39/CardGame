@@ -9,7 +9,6 @@ public interface IUICard
     void SetCardData(CardInstance cardInstance);
     void SetCardData(BaseCardData cardData);
     void SetAsUnknownCard();
-
     void SetActive(bool active);
 }
 

@@ -134,7 +134,6 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         for (var i = 0; i < alreadyMadeUICards.Count(); i++)
         {
             var rect = ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>();
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _cardWidth);
             rect.localScale = scalingVector;
         }
     }
@@ -165,8 +164,6 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
                 cardGameObject.transform.localPosition = new Vector3(0, 0, 0); //actual position will be handled by the layout group.
 
                 var rect = cardGameObject.GetComponent<RectTransform>();
-
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _cardWidth);
                 rect.localScale = scalingVector;
             }
             else
@@ -175,7 +172,6 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
                 alreadyMadeUICards[i].SetActive(true);
 
                 var rect = ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>();
-                rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, _cardWidth);
                 rect.localScale = scalingVector;
             }
         }

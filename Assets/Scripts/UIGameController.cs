@@ -17,7 +17,7 @@ public class UIGameController : MonoBehaviour
     private TextMeshPro _turnIndicator;
 
     [SerializeField]
-    private TextMeshPro _actionStateIndicator;
+    private TextMeshProUGUI _actionStateIndicator;
 
     [SerializeField]
     private GameUIStateMachine _stateMachine;
@@ -56,11 +56,8 @@ public class UIGameController : MonoBehaviour
         CheckForCardsWithoutManaCosts();
 
         _stateMachine = GetComponent<GameUIStateMachine>();
-
-        var player1HideStuff = _cardGame.ActivePlayer != _cardGame.Player1;
-        var player2HideStuff = _cardGame.ActivePlayer != _cardGame.Player2;
-        _player1Board.SetPlayer(_cardGame.Player1, player1HideStuff);
-        _player2Board.SetPlayer(_cardGame.Player2, player2HideStuff);
+        _player1Board.SetPlayer(_cardGame.Player1);
+        _player2Board.SetPlayer(_cardGame.Player2);
 
         UpdateUI();
     }

@@ -904,7 +904,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 400, y: 100}
+  m_SizeDelta: {x: 375, y: 523}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &6643724056952912600
 MonoBehaviour:
@@ -920,7 +920,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clickEventsEnabled: 1
   _entityId: 0
-  _showAsUnknown: 0
   _cardFrame: {fileID: 6643724055278664396}
   _cardArt: {fileID: 6643724056844739453}
   _cardName: {fileID: 6643724055891192299}

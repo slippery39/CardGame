@@ -8,12 +8,9 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class UICard2D : UIGameEntity, IUICard
 {
-
-    [SerializeField]
     private bool _showAsUnknown = false;
 
     [Header("Card Properties")]
-
     [SerializeField]
     private Image _cardFrame;
 
@@ -85,6 +82,15 @@ public class UICard2D : UIGameEntity, IUICard
 
     public void SetCardData(CardInstance cardInstance)
     {
+        if (cardInstance == null)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(true);
+        }
+
         if (cardInstance.GetZone().ZoneType == ZoneType.Deck && cardInstance.RevealedToOwner == false)
         {
             _showAsUnknown = true;

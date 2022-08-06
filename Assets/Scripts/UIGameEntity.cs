@@ -10,7 +10,7 @@ using UnityEngine.EventSystems;
 /// 
 /// Examples: Cards, Players, Lanes, etc...
 /// </summary>
-public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler
+public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
     bool clickEventsEnabled = true;
@@ -37,6 +37,7 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
+        Debug.Log($"Pointer has been clicked for {name} -EntityID: {EntityId}");
         if (clickEventsEnabled)
             UIGameController.Instance.HandleClick(new UIGameControllerClickEvent { EntityId = EntityId });
         //Output to console the clicked GameObject's name and the following message. You can replace this with your own actions for when clicking the GameObject.
@@ -44,6 +45,17 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        Debug.Log($"Pointer has been entered for {name} - EntityID:  {EntityId} ");
         UIGameController.Instance.HandlePointerEnter(EntityId);
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+
     }
 }

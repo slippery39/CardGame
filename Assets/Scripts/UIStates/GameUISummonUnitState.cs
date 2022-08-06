@@ -47,12 +47,11 @@ public class GameUISummonUnitState : IGameUIState
 
     public void OnDestroy()
     {
-        foreach (UILane uiLane in _stateMachine.GameController.GetUIEntities().GetOfType<UILane>())
+        foreach (UIGameEntity entity in _stateMachine.GameController.GetUIEntities())
         {
-            uiLane.StopHighlight();
+            entity.StopHighlight();
         }
     }
-
     public void HandleSelection(int entityId)
     {
         var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _unitToSummon).Select(ent => ent.EntityId);

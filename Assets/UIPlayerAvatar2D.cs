@@ -3,31 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-
-public class UIPlayerAvatar : UIGameEntity
+public class UIPlayerAvatar2D : UIGameEntity
 {
-    [SerializeField]
-    private TextMeshPro _healthText;
 
     [SerializeField]
-    private TextMeshPro _manaText;
+    private TextMeshProUGUI _healthText;
 
     [SerializeField]
-    private SpriteRenderer _highlight;
+    private TextMeshProUGUI _manaText;
 
-    private Renderer _renderer;
-
-    void Start()
-    {
-        _renderer = GetComponent<Renderer>();
-    }
-
-    public void Update()
-    {
-        _manaText.renderer.sortingOrder = _renderer.sortingOrder + 1;
-        _healthText.renderer.sortingOrder = _renderer.sortingOrder + 1;
-    }
+    [SerializeField]
+    private Image _highlight;
 
     public void SetMana(ManaPool manaPool)
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIPlayerBoard : MonoBehaviour
+public class UIPlayerBoard3D : UIPlayerBoard
 {
     [SerializeField]
     private UIPlayerAvatar _avatar;
@@ -21,12 +21,7 @@ public class UIPlayerBoard : MonoBehaviour
     [SerializeField]
     private Player _player;
 
-    [SerializeField]
-    private bool _hideHiddenInfo;
-
-    public bool HideHiddenInfo { get => _hideHiddenInfo; set => _hideHiddenInfo = value; }
-
-    public void SetPlayer(Player player)
+    public override void SetPlayer(Player player)
     {
         SetPlayer(player, false);
     }
@@ -36,6 +31,13 @@ public class UIPlayerBoard : MonoBehaviour
         _player = player;
         HideHiddenInfo = hideHiddenInfo;
         InitUIEntityIds(_player);
+    }
+
+    public override List<UIGameEntity> GetUIEntities()
+    {
+        var entities = new List<UIGameEntity>();
+        entities.AddRange(this.GetComponentsInChildren<UIGameEntity>(true));
+        return entities;
     }
 
     // Update is called once per frame
@@ -72,12 +74,7 @@ public class UIPlayerBoard : MonoBehaviour
         _avatar.EntityId = player.EntityId;
     }
 
-    public List<UIGameEntity> GetUIEntities()
-    {
-        var entities = new List<UIGameEntity>();
-        entities.AddRange(this.GetComponentsInChildren<UIGameEntity>(true));
-        return entities;
-    }
+
 
     private void UpdateLanes(Player player)
     {
