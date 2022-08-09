@@ -10,6 +10,9 @@ public class UICard2D : UIGameEntity, IUICard
 {
     private bool _showAsUnknown = false;
 
+    [SerializeField]
+    private GameObject _highlight;
+
     [Header("Card Properties")]
     [SerializeField]
     private Image _cardFrame;
@@ -194,5 +197,22 @@ public class UICard2D : UIGameEntity, IUICard
     public void SetActive(bool active)
     {
         gameObject.SetActive(active);
+    }
+
+    public override void Highlight()
+    {
+        _highlight.gameObject.SetActive(true);
+        _highlight.GetComponent<Image>().color = Color.green;
+    }
+
+    public override void Highlight(Color highlightColor)
+    {
+        _highlight.gameObject.SetActive(true);
+        _highlight.GetComponent<Image>().color = highlightColor;
+    }
+
+    public override void StopHighlight()
+    {
+        _highlight.gameObject.SetActive(false);
     }
 }

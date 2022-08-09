@@ -44,7 +44,6 @@ public class UILane2D : UIGameEntity, IPointerClickHandler
 
     public new void OnPointerClick(PointerEventData pointerEventData)
     {
-        Debug.Log("Is this firing?? For my UILane2D??");
         base.OnPointerClick(pointerEventData);
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, raycastResults);
