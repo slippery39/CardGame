@@ -96,6 +96,9 @@ public class TriggeredAbility : CardAbility
                 case TriggerType.AtTurnStart:
                     text = "At the start of your turn ";
                     break;
+                case TriggerType.AtTurnEnd:
+                    text += "At the end of the turn ";
+                    break;
                 default:
                     text += "";
                     break;
