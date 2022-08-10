@@ -1148,7 +1148,6 @@ public class CardDatabase : ICardDatabase
                 ManaCost = "1U",
                 Power = 1,
                 Toughness = 1,
-                ArtPath = $"{ArtPath}Merfolk Looter",
                 CreatureType = "Merfolk",
                 Colors = new List<CardColor> { CardColor.Blue },
                 Abilities = new List<CardAbility>
@@ -1380,7 +1379,6 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Careful Study",
             ManaCost = "U",
-            ArtPath = $"{ArtPath}Careful Study",
             Colors = new List<CardColor> { CardColor.Blue },
             Effects = new List<Effect>
             {

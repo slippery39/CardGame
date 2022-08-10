@@ -189,7 +189,7 @@ public class UIGameController : MonoBehaviour
         var allCards = new CardDatabase().GetAll();
         foreach (var card in allCards)
         {
-            if (card.ManaCost == null)
+            if (!(card is ManaCardData) && card.ManaCost == null)
             {
                 Debug.LogWarning($@"Warning: Mana cost is null for {card.Name}");
             }
