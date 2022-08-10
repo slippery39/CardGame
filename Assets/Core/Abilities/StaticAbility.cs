@@ -49,17 +49,20 @@ public class StaticAbility : CardAbility
             return String.Join(" and ", Effects.Select(eff =>
              {
                  string rulesText = "";
+                 string defaultCardType = "";
 
                  switch (eff.TargetType)
                  {
                      case TargetType.CardsInHand:
                          {
-                             rulesText = "#cardType#s you play";
+                             defaultCardType = "cards";
+                             rulesText = "#cardType# you play";
                              break;
                          }
                      case TargetType.OtherCreaturesYouControl:
                          {
-                             rulesText = "Other #cardType#s you control";
+                             defaultCardType = "units";
+                             rulesText = "Other #cardType# you control";
                              break;
                          }
                      case TargetType.PlayerSelf:
@@ -74,8 +77,15 @@ public class StaticAbility : CardAbility
                  }
 
                  //TODO apply filter for goblins or something.
+                 rulesText = eff.RulesText.Replace("#targetType#", rulesText);
 
-                 return eff.RulesText.Replace("#targetType#", rulesText).Replace("#cardType#", eff.Filter.RulesTextString());
+                 if (eff.Filter != null)
+                 {
+                     defaultCardType = eff.Filter.RulesTextString() + "s";                      
+                 }
+                 rulesText = rulesText.Replace("#cardType#", defaultCardType);
+
+                 return rulesText;
 
              })
                 );
@@ -103,7 +113,7 @@ public enum StaticAbilityEntitiesAffected
 //TODO - replace with a PumpEffect with a StaticInfo
 public class StaticPumpEffect : Effect
 {
-    public override string RulesText => $"#cardType# gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
+    public override string RulesText => $"#targetType# gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
     public int Power { get; set; }
     public int Toughness { get; set; }
 
