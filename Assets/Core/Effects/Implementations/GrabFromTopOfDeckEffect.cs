@@ -9,12 +9,33 @@ public class GrabFromTopOfDeckEffect : Effect
         {
             var str = $"draw up to {Amount} #cardType# from the top {CardsToLookAt} cards of your deck";
 
+            if (CardsToLookAt == 1)
+            {
+                str = $"draw a #cardType# from the top {CardsToLookAt} card of your deck";
+            }
+            else if (CardsToLookAt == Amount)
+            {
+                str = $"draw all #cardType# from the top {CardsToLookAt} cards of your deck";
+            }
+            else if (Amount == 1)
+            {
+                str = $"draw a #cardType# from the top {CardsToLookAt} cards of your deck";
+            }
+
             if (Filter?.CreatureType != null)
             {
-                return str.Replace("#cardType#", Filter.CreatureType);
+                var needsPlural = Amount > 1;
+                var cardStr = Filter.CreatureType;
+                if (needsPlural)
+                {
+                    cardStr += "s";
+                }
+                return str.Replace("#cardType#", cardStr);
             }
             else
             {
+                var needsPlural = Amount > 1;
+                var cardStr = needsPlural ? "cards" : "card";
                 return str.Replace("#cardType#", "card");
             }
         }

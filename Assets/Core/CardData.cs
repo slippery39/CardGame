@@ -1099,8 +1099,7 @@ public class CardDatabase : ICardDatabase
                             {
                                 CardsToLookAt = 5,
                                 Filter = new CardFilter{ CreatureType = "Goblin" },
-                                Amount = 9999 //need a way to say as many as possible.
-
+                                Amount = 5 //need a way to say as many as possible.
                             }
                         }
                     }
