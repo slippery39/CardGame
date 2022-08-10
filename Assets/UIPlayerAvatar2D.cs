@@ -29,7 +29,7 @@ public class UIPlayerAvatar2D : UIGameEntity
 
         foreach (var manaType in colorsCount.Keys)
         {
-            if (manaPool.TotalColoredMana[manaType] == 0) continue;
+            if (manaPool.TotalColoredMana[manaType] == 0 && manaPool.CurrentColoredMana[manaType] == 0) continue;
 
             text += $@"{Environment.NewLine} {manaType.ToString()}:{colorsCount[manaType]} / {manaPool.TotalColoredMana[manaType]}";
         }
