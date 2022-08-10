@@ -41,29 +41,30 @@ public class EntitiesAffectedInfo
 
 public class StaticAbility : CardAbility
 {
+   
     public override string RulesText
     {
         get
         {
             return String.Join(" and ", Effects.Select(eff =>
              {
-                 string cardType = "";
+                 string rulesText = "";
 
                  switch (eff.TargetType)
                  {
                      case TargetType.CardsInHand:
                          {
-                             cardType = "Cards you play";
+                             rulesText = "#cardType#s you play";
                              break;
                          }
                      case TargetType.OtherCreaturesYouControl:
                          {
-                             cardType = "Other units you control";
+                             rulesText = "Other #cardType#s you control";
                              break;
                          }
                      case TargetType.PlayerSelf:
                          {
-                             cardType = "You";
+                             rulesText = "You";
                              break;
                          }
                      default:
@@ -74,7 +75,8 @@ public class StaticAbility : CardAbility
 
                  //TODO apply filter for goblins or something.
 
-                 return eff.RulesText.Replace("#cardType", cardType);
+                 return eff.RulesText.Replace("#targetType#", rulesText).Replace("#cardType#", eff.Filter.RulesTextString());
+
              })
                 );
 
@@ -137,7 +139,26 @@ public class StaticPumpEffect : Effect
 //TODO - replace with with a mana effect with a static info
 public class StaticManaReductionEffect : Effect
 {
-    public override string RulesText => $"#cardType# cost {ReductionAmount} less to play.";
+    public override string RulesText
+    {
+        get
+        {
+            //Generic
+
+            //Cards you play cost 1 less;
+            //Goblins you play cost 1 less;
+            //Units you play cost 1 less;
+            //#cardType# #targetType# cost 1 less;
+
+            //Goblins cost 1 less
+
+            //Target Type is handled by the parent ability of this effect, in there it also handles the CardFilter part of it.
+
+            var str = $"#targetType# cost {ReductionAmount} less to play.";
+
+            return str;
+        }
+    }
     public string ReductionAmount { get; set; }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
@@ -320,7 +341,7 @@ public class OracleOfMulDayaModification : Modification, IModifyCastZones
 //TODO - replace with a GiveAbility effect with a static info
 public class StaticGiveAbilityEffect : Effect
 {
-    public override string RulesText => $"#cardType# gain {Ability.RulesText}.";
+    public override string RulesText => $"#targetType# gain {Ability.RulesText}.";
     public CardAbility Ability { get; set; }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

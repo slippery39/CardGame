@@ -28,12 +28,18 @@ public enum CardType
 public interface IManaFilter
 {
     bool Check(CardInstance cardToCheck);
+    string RulesTextString();
 }
 
 
 public class LessThanManaFilter : IManaFilter
 {
     public int Amount { get; set; }
+
+    public string RulesTextString()
+    {
+        return $"less than {Amount} colorless mana";
+    }
     public bool Check(CardInstance cardToCheck)
     {
         var mana = new Mana(cardToCheck.ManaCost);
@@ -49,6 +55,31 @@ public class CardFilter
     public IManaFilter ManaCheck { get; set; }
 
     public bool Not { get; set; } = false; //Search for things that don't match the criteria.
+
+    public string RulesTextString()
+    {
+        if (CreatureType != null)
+        {
+            return CreatureType;
+        }
+
+        if (Subtype != null)
+        {
+            return Subtype;
+        }
+
+        if (CardType != null)
+        {
+            return CardType;
+        }
+
+        if (ManaCheck != null)
+        {
+            return ManaCheck.RulesTextString();
+        }
+
+        return "card";
+    }
 
     public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)
     {
