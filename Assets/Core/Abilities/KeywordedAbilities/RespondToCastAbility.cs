@@ -36,7 +36,7 @@ public class RespondToCastAbility : CardAbility
 
 public class RespondToOpponentEndOfTurnAbility : CardAbility
 {
-    public override string RulesText => "Respond - Opponents End Of Turn - Cast this spell";
+    public override string RulesText => "Respond - Opponents End Of Turn: ";
 
     public void AtOpponentEndOfTurn(CardGame cardGame, CardInstance sourceCard)
     {
