@@ -142,6 +142,11 @@ public class UICard2D : UIGameEntity, IUICard
         _cardManaCost.text = cardInstance.ManaCost;
         _cardType.text = cardData.CardType;
 
+        if (cardData is ManaCardData)
+        {
+            _cardType.text += " - " +(cardData as ManaCardData).ManaAdded;
+        }
+
         if (cardData is UnitCardData)
         {
             _cardCombatStats.text = cardInstance.Power + " / " + (cardInstance.Toughness - cardInstance.DamageTaken);
