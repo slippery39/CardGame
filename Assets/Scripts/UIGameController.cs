@@ -32,7 +32,7 @@ public class UIGameController : MonoBehaviour
     //private ZoneViewer _zonePopupWindow;
 
     [SerializeField]
-    private UICard _cardPopup;
+    private UICard2D _cardPopup;
 
     [SerializeField]
     private GameObject _zonePopupWindow;
