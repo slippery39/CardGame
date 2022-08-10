@@ -10,6 +10,11 @@ public class CreateTokenEffect<T> : Effect where T : BaseCardData
         {
             if (TokenData is UnitCardData unitData)
             {
+                if (unitData.RulesText.IsEmpty())
+                {
+                    return $"Create a {unitData.Power}/{unitData.Toughness} {unitData.Name} unit token";
+                }
+
                 return $"Create a {unitData.Power}/{unitData.Toughness} {unitData.Name} unit token with {unitData.RulesText}";
             }
             else if (TokenData is ItemCardData itemData)

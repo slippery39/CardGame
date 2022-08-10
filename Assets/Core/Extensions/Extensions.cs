@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 public static class Extensions
 {
+    public static bool IsEmpty (this string source)
+    {
+        return (source == null || source.Trim().Length == 0);
+    }
 
     public static List<T> GetOfType<T>(this IEnumerable<object> source)
     {

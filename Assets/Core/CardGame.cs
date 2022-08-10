@@ -564,7 +564,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Shivan Dragon");
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Mogg War Marshal");
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Deep Analysis");
         var cardsToAdd = 45;
 

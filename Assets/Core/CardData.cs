@@ -10,7 +10,7 @@ public static class TokenHelper
     {
         return new UnitCardData()
         {
-            Name = "Goblin Token",
+            Name = "Goblin",
             ManaCost = "0",
             Power = 1,
             Toughness = 1,
