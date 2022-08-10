@@ -54,10 +54,12 @@ public class CardInstance : CardGameEntity
 
             if (_currentCardData is SpellCardData)
             {
-                var spellData = _currentCardData as SpellCardData;
-                str += string.Join("\r\n", spellData.Effects.Select(ab => ab.RulesText)).Replace("#this#", Name);
+                var additionalCostText = AdditionalCost != null ? $"Additional Cost : {AdditionalCost.RulesText}\r\n" : "";
+                var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
+                var effectsText = string.Join("\r\n", Effects.Select(ef => ef.RulesText));
+                str = additionalCostText + abilitiesText + effectsText;
+                str = str.Replace("#this#", Name);
             }
-
             return str;
         }
     }
