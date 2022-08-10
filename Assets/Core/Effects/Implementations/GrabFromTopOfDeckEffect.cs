@@ -22,21 +22,16 @@ public class GrabFromTopOfDeckEffect : Effect
                 str = $"draw a #cardType# from the top {CardsToLookAt} cards of your deck";
             }
 
-            if (Filter?.CreatureType != null)
+            var needsPlural = Amount > 1;
+
+            if (Filter != null)
             {
-                var needsPlural = Amount > 1;
-                var cardStr = Filter.CreatureType;
-                if (needsPlural)
-                {
-                    cardStr += "s";
-                }
-                return str.Replace("#cardType#", cardStr);
+                return str.Replace("#cardType#", Filter.RulesTextString(needsPlural).ToLower());
             }
             else
             {
-                var needsPlural = Amount > 1;
                 var cardStr = needsPlural ? "cards" : "card";
-                return str.Replace("#cardType#", "card");
+                return str.Replace("#cardType#", cardStr);
             }
         }
     }
