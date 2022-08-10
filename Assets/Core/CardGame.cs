@@ -565,7 +565,7 @@ public class CardGame
         //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         //var cardsToSelectFrom = cardDB.GetAll();
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Goblin Warchief");
+        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Augur of Bolas");
         var cardsToAdd = 45;
 
         //Testing out if we can instantiate an affinity deck.

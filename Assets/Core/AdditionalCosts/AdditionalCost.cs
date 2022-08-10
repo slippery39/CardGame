@@ -28,7 +28,7 @@ public enum CardType
 public interface IManaFilter
 {
     bool Check(CardInstance cardToCheck);
-    string RulesTextString();
+    string RulesTextString(bool plural = false);
 }
 
 
@@ -36,9 +36,9 @@ public class LessThanManaFilter : IManaFilter
 {
     public int Amount { get; set; }
 
-    public string RulesTextString()
+    public string RulesTextString(bool plural = false)
     {
-        return $" less than {Amount} colorless mana cost";
+        return $"less than {Amount} colorless mana cost";
     }
     public bool Check(CardInstance cardToCheck)
     {
@@ -56,7 +56,7 @@ public class CardFilter
 
     public bool Not { get; set; } = false; //Search for things that don't match the criteria.
 
-    public string RulesTextString()
+    public string RulesTextString(bool plural = false)
     {
 
         var str = "card";
@@ -75,6 +75,11 @@ public class CardFilter
             str = CardType;
         }
 
+        if (plural)
+        {
+            str += "s";
+        }
+
         if (ManaCheck != null)
         {
             str = str + " with " + ManaCheck.RulesTextString();
@@ -82,6 +87,7 @@ public class CardFilter
 
         return str;
     }
+
 
     public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)
     {

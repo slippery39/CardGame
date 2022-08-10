@@ -23,10 +23,10 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
 
             if (Filter != null)
             {                
-                defaultCardType = Filter.RulesTextString();
+                defaultCardType = Filter.RulesTextString(true);
             }
 
-            return $"Put the {Amount} highest generic mana cost {defaultCardType} from the top {CardsToLookAt} cards of your deck into play";
+            return $"Put the {Amount} highest generic mana cost {defaultCardType.ToLower()} from the top {CardsToLookAt} cards of your deck into play";
         }
 
     }
