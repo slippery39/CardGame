@@ -5,6 +5,7 @@ using System.Linq;
 
 public static class TokenHelper
 {
+    private static string ArtPath = "CardArt/";
     public static UnitCardData GoblinToken()
     {
         return new UnitCardData()
@@ -13,7 +14,7 @@ public static class TokenHelper
             ManaCost = "0",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/Goblin Token",
+            ArtPath = $"{ArtPath}Goblin Token",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red }
         };
@@ -204,6 +205,8 @@ public interface ICardDatabase
 public class CardDatabase : ICardDatabase
 {
     private List<BaseCardData> _cards;
+
+    private string ArtPath = $"CardArt/";
     public CardDatabase()
     {
         _cards = new List<BaseCardData>();
@@ -216,14 +219,14 @@ public class CardDatabase : ICardDatabase
             Power = 2,
             Toughness = 2,
             Colors = new List<CardColor> { CardColor.Green },
-            ArtPath = "CardArt/GrizzlyBear"
+            ArtPath = $"{ArtPath}GrizzlyBear"
         });
 
         _cards.Add(new SpellCardData()
         {
             Name = "Lightning Bolt",
             ManaCost = "R",
-            ArtPath = "CardArt/LightningBolt",
+            ArtPath = $"{ArtPath}LightningBolt",
             Colors = new List<CardColor> { CardColor.Red },
             Effects = new List<Effect>()
             {
@@ -239,7 +242,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Lightning Helix",
             ManaCost = "RW",
-            ArtPath = "CardArt/LightningHelix",
+            ArtPath = $"{ArtPath}LightningHelix",
             Colors = new List<CardColor>() { CardColor.Red, CardColor.White },
             Effects = new List<Effect>()
             {
@@ -258,7 +261,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Giant Growth",
             ManaCost = "G",
-            ArtPath = "CardArt/GiantGrowth",
+            ArtPath = $"{ArtPath}GiantGrowth",
             Colors = new List<CardColor>() { CardColor.Green },
             Effects = new List<Effect>()
             {
@@ -274,7 +277,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Ancestral Recall",
             ManaCost = "U",
-            ArtPath = "CardArt/AncestralRecall",
+            ArtPath = $"{ArtPath}AncestralRecall",
             Colors = new List<CardColor>() { CardColor.Blue },
             Effects = new List<Effect>()
             {
@@ -289,7 +292,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Black Lotus",
             ManaCost = "0",
-            ArtPath = "CardArt/BlackLotus",
+            ArtPath = $"{ArtPath}BlackLotus",
             Colors = new List<CardColor>() { CardColor.Colorless },
             Effects = new List<Effect>()
             {
@@ -306,7 +309,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1U",
             Power = 1,
             Toughness = 2,
-            ArtPath = "CardArt/StormCrow",
+            ArtPath = $"{ArtPath}StormCrow",
             Colors = new List<CardColor>() { CardColor.Blue },
             Abilities = new List<CardAbility>()
             {
@@ -320,7 +323,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1R",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/GoblinRaider",
+            ArtPath = $"{ArtPath}GoblinRaider",
             CreatureType = "Goblin",
             Colors = new List<CardColor>() { CardColor.Red },
             Abilities = new List<CardAbility>()
@@ -335,7 +338,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1W",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/AjanisSunstriker",
+            ArtPath = $"{ArtPath}AjanisSunstriker",
             Colors = new List<CardColor>() { CardColor.White },
             Abilities = new List<CardAbility>()
             {
@@ -349,7 +352,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "B",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/TyphoidRats",
+            ArtPath = $"{ArtPath}TyphoidRats",
             Colors = new List<CardColor>() { CardColor.Black },
             Abilities = new List<CardAbility>()
             {
@@ -364,7 +367,7 @@ public class CardDatabase : ICardDatabase
             Power = 5,
             Toughness = 7,
             Colors = new List<CardColor> { CardColor.Colorless },
-            ArtPath = "CardArt/HexplateGolem"
+            ArtPath = $"{ArtPath}HexplateGolem"
         }); ;
 
         _cards.Add(new UnitCardData()
@@ -373,7 +376,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1BB",
             Power = 2,
             Toughness = 3,
-            ArtPath = "CardArt/VampireNighthawk",
+            ArtPath = $"{ArtPath}VampireNighthawk",
             Colors = new List<CardColor>() { CardColor.Black },
             Abilities = new List<CardAbility>()
             {
@@ -389,7 +392,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "UB",
             Power = 2,
             Toughness = 1,
-            ArtPath = "CardArt/InkfathomInfiltrator",
+            ArtPath = $"{ArtPath}InkfathomInfiltrator",
             Colors = new List<CardColor>() { CardColor.Blue, CardColor.Black },
             Abilities = new List<CardAbility>()
             {
@@ -404,7 +407,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "5GG",
             Power = 9,
             Toughness = 9,
-            ArtPath = "CardArt/KalonianBehemoth",
+            ArtPath = $"{ArtPath}KalonianBehemoth",
             Colors = new List<CardColor>() { CardColor.Green },
             Abilities = new List<CardAbility>()
                {
@@ -418,7 +421,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1U",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/InvisibleStalker",
+            ArtPath = $"{ArtPath}InvisibleStalker",
             Colors = new List<CardColor> { CardColor.Blue },
             Abilities = new List<CardAbility>()
                {
@@ -433,7 +436,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "3RRR",
             Power = 6,
             Toughness = 5,
-            ArtPath = "CardArt/RorixBladewing",
+            ArtPath = $"{ArtPath}RorixBladewing",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>()
             {
@@ -452,7 +455,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/LlanowarElves",
+            ArtPath = $"{ArtPath}LlanowarElves",
             Abilities = new List<CardAbility>()
             {
                 new ActivatedAbility("0",new TemporaryManaEffect{Amount=1})
@@ -465,7 +468,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "3",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/ProdigalSorcerer",
+            ArtPath = $"{ArtPath}ProdigalSorcerer",
             Abilities = new List<CardAbility>()
             {
                 new ActivatedAbility("0", new DamageEffect{Amount=1})
@@ -487,7 +490,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1G",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/ElvishVisionary",
+            ArtPath = $"{ArtPath}ElvishVisionary",
             Colors = new List<CardColor>() { CardColor.Green },
             Abilities = new List<CardAbility>()
             {
@@ -510,7 +513,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "4U",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/Mulldrifter",
+            ArtPath = $"{ArtPath}Mulldrifter",
             Colors = new List<CardColor>() { CardColor.Blue },
             Abilities = new List<CardAbility>()
             {
@@ -532,7 +535,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1B",
             Power = 2,
             Toughness = 1,
-            ArtPath = "CardArt/DarkConfidant",
+            ArtPath = $"{ArtPath}DarkConfidant",
             Colors = new List<CardColor> { CardColor.Black },
             Abilities = new List<CardAbility>()
             {
@@ -550,7 +553,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "4GG",
             Power = 6,
             Toughness = 6,
-            ArtPath = "CardArt/ColossalDreadmaw",
+            ArtPath = $"{ArtPath}ColossalDreadmaw",
             Colors = new List<CardColor>() { CardColor.Green },
             Abilities = new List<CardAbility>()
             {
@@ -565,7 +568,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "RRR",
             Power = 6,
             Toughness = 1,
-            ArtPath = "CardArt/BallLightning",
+            ArtPath = $"{ArtPath}BallLightning",
             Colors = new List<CardColor>() { CardColor.Red },
             Abilities = new List<CardAbility>()
             {
@@ -583,7 +586,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "U",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/DelverOfSecrets",
+            ArtPath = $"{ArtPath}DelverOfSecrets",
             Colors = new List<CardColor> { CardColor.Blue },
             Abilities = new List<CardAbility>()
             {
@@ -598,7 +601,7 @@ public class CardDatabase : ICardDatabase
                             ManaCost = "U",
                             Power = 3,
                             Toughness = 2,
-                            ArtPath = "CardArt/InsectileAberration",
+                            ArtPath = $"{ArtPath}InsectileAberration",
                             Colors = new List<CardColor>{CardColor.Blue},
                             Abilities = new List<CardAbility>()
                             {
@@ -614,7 +617,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Murder",
             ManaCost = "1BB",
-            ArtPath = "CardArt/Murder",
+            ArtPath = $"{ArtPath}Murder",
             Colors = new List<CardColor>() { CardColor.Black },
             Effects = new List<Effect>()
             {
@@ -629,7 +632,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Day of Judgment",
             ManaCost = "2WW",
-            ArtPath = "CardArt/DayofJudgment",
+            ArtPath = $"{ArtPath}DayofJudgment",
             Colors = new List<CardColor>() { CardColor.White },
             Effects = new List<Effect>()
             {
@@ -645,7 +648,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Pyroclasm",
             ManaCost = "1R",
-            ArtPath = "CardArt/Pyroclasm",
+            ArtPath = $"{ArtPath}Pyroclasm",
             Colors = new List<CardColor> { CardColor.Red },
             Effects = new List<Effect>()
             {
@@ -661,7 +664,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Zealous Persecution",
             ManaCost = "WB",
-            ArtPath = "CardArt/ZealousPersecution",
+            ArtPath = $"{ArtPath}ZealousPersecution",
             Colors = new List<CardColor> { CardColor.White, CardColor.Black },
             Effects = new List<Effect>
             {
@@ -686,7 +689,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "WWW",
             Power = 3,
             Toughness = 3,
-            ArtPath = "CardArt/BenalishMarshall",
+            ArtPath = $"{ArtPath}BenalishMarshall",
             Colors = new List<CardColor> { CardColor.White },
             Abilities = new List<CardAbility>
             {
@@ -711,7 +714,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "4RR",
             Power = 5,
             Toughness = 5,
-            ArtPath = "CardArt/ShivanDragon",
+            ArtPath = $"{ArtPath}ShivanDragon",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
             {
@@ -734,7 +737,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Wastes",
             ManaAdded = "1",
-            ArtPath = "CardArt/Wastes",
+            ArtPath = $"{ArtPath}Wastes",
         });
 
         _cards.Add(new ManaCardData()
@@ -742,14 +745,14 @@ public class CardDatabase : ICardDatabase
             Name = "City of Brass",
             ManaAdded = "1*",
             Colors = new List<CardColor>() { CardColor.Red, CardColor.White, CardColor.Blue, CardColor.Black, CardColor.Green },
-            ArtPath = "CardArt/CityOfBrass"
+            ArtPath = $"{ArtPath}CityOfBrass"
         });
 
         _cards.Add(new ManaCardData()
         {
             Name = "Plains",
             ManaAdded = "1W",
-            ArtPath = "CardArt/Plains",
+            ArtPath = $"{ArtPath}Plains",
             Colors = new List<CardColor> { CardColor.White }
         });
 
@@ -758,7 +761,7 @@ public class CardDatabase : ICardDatabase
             Name = "Island",
             ManaAdded = "1U",
             Colors = new List<CardColor> { CardColor.Blue },
-            ArtPath = "CardArt/Island"
+            ArtPath = $"{ArtPath}Island"
         });
 
         _cards.Add(new ManaCardData()
@@ -766,7 +769,7 @@ public class CardDatabase : ICardDatabase
             Name = "Swamp",
             ManaAdded = "1B",
             Colors = new List<CardColor> { CardColor.Black },
-            ArtPath = "CardArt/Swamp"
+            ArtPath = $"{ArtPath}Swamp"
         });
 
         _cards.Add(new ManaCardData()
@@ -774,7 +777,7 @@ public class CardDatabase : ICardDatabase
             Name = "Mountain",
             ManaAdded = "1R",
             Colors = new List<CardColor> { CardColor.Red },
-            ArtPath = "CardArt/Mountain"
+            ArtPath = $"{ArtPath}Mountain"
         });
 
         _cards.Add(new ManaCardData()
@@ -782,7 +785,7 @@ public class CardDatabase : ICardDatabase
             Name = "Forest",
             ManaAdded = "1G",
             Colors = new List<CardColor> { CardColor.Green },
-            ArtPath = "CardArt/Forest"
+            ArtPath = $"{ArtPath}Forest"
         });
 
 
@@ -792,7 +795,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "R",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/Mogg Fanatic",
+            ArtPath = $"{ArtPath}Mogg Fanatic",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -818,7 +821,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1BB",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/UnspeakableSymbolite",
+            ArtPath = $"{ArtPath}UnspeakableSymbolite",
             Colors = new List<CardColor> { CardColor.Black },
             Abilities = new List<CardAbility>
             {
@@ -847,7 +850,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "2B",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/Nantuko Husk",
+            ArtPath = $"{ArtPath}Nantuko Husk",
             Colors = new List<CardColor> { CardColor.Black },
             Abilities = new List<CardAbility>
             {
@@ -875,7 +878,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "R",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/Skirk Prospector",
+            ArtPath = $"{ArtPath}Skirk Prospector",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -905,7 +908,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "R",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/Goblin Sledder",
+            ArtPath = $"{ArtPath}Goblin Sledder",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -936,7 +939,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "3RR",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/Siege Gang Commander",
+            ArtPath = $"{ArtPath}Siege Gang Commander",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -948,7 +951,7 @@ public class CardDatabase : ICardDatabase
                                 ManaCost = "0",
                                 Power = 1,
                                 Toughness =1,
-                                ArtPath = "CardArt/Goblin Token",
+                                ArtPath = $"{ArtPath}Goblin Token",
                                 CreatureType = "Goblin",
                                 Colors = new List<CardColor>{CardColor.Red }
                             })
@@ -983,7 +986,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1R",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/Mogg War Marshall",
+            ArtPath = $"{ArtPath}Mogg War Marshall",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -1004,7 +1007,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1R",
             Power = 1,
             Toughness = 2,
-            ArtPath = "CardArt/Goblin Piledriver",
+            ArtPath = $"{ArtPath}Goblin Piledriver",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -1023,7 +1026,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1RR",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/Goblin Warchief",
+            ArtPath = $"{ArtPath}Goblin Warchief",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -1063,7 +1066,7 @@ public class CardDatabase : ICardDatabase
                 ManaCost = "2R",
                 Power = 1,
                 Toughness = 1,
-                ArtPath = "CardArt/Goblin Matron",
+                ArtPath = $"{ArtPath}Goblin Matron",
                 CreatureType = "Goblin",
                 Colors = new List<CardColor> { CardColor.Red },
                 Abilities = new List<CardAbility>
@@ -1093,7 +1096,7 @@ public class CardDatabase : ICardDatabase
                    ManaCost = "3R",
                    Power = 2,
                    Toughness = 2,
-                   ArtPath = "CardArt/Goblin Ringleader",
+                   ArtPath = $"{ArtPath}Goblin Ringleader",
                    CreatureType = "Goblin",
                    Colors = new List<CardColor> { CardColor.Red },
                    Abilities = new List<CardAbility>
@@ -1157,7 +1160,7 @@ public class CardDatabase : ICardDatabase
                 ManaCost = "1U",
                 Power = 1,
                 Toughness = 1,
-                ArtPath = "CardArt/Merfolk Looter",
+                ArtPath = $"{ArtPath}Merfolk Looter",
                 CreatureType = "Merfolk",
                 Colors = new List<CardColor> { CardColor.Blue },
                 Abilities = new List<CardAbility>
@@ -1189,7 +1192,7 @@ public class CardDatabase : ICardDatabase
            ManaCost = "3U",
            Power = 2,
            Toughness = 2,
-           ArtPath = "CardArt/Wonder",
+           ArtPath = $"{ArtPath}Wonder",
            CreatureType = "Incarnation",
            Colors = new List<CardColor> { CardColor.Blue },
            Abilities = new List<CardAbility>
@@ -1217,7 +1220,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1G",
             Power = 2,
             Toughness = 2,
-            ArtPath = "CardArt/Wild Mongrel",
+            ArtPath = $"{ArtPath}Wild Mongrel",
             Colors = new List<CardColor> { CardColor.Green },
             Abilities = new List<CardAbility>
     {
@@ -1244,7 +1247,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1U",
             Power = 1,
             Toughness = 3,
-            ArtPath = "CardArt/Aquamoeba",
+            ArtPath = $"{ArtPath}Aquamoeba",
             Colors = new List<CardColor> { CardColor.Blue },
             Abilities = new List<CardAbility>
             {
@@ -1268,7 +1271,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "G",
             Power = 1,
             Toughness = 1,
-            ArtPath = "CardArt/Aquamoeba",
+            ArtPath = $"{ArtPath}Aquamoeba",
             Colors = new List<CardColor> { CardColor.Green },
             Abilities = new List<CardAbility>
             {
@@ -1288,7 +1291,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Deep Analysis",
             ManaCost = "3U",
-            ArtPath = "CardArt/Deep Analysis",
+            ArtPath = $"{ArtPath}Deep Analysis",
             Colors = new List<CardColor> { CardColor.Blue },
             Effects = new List<Effect>
             {
@@ -1338,7 +1341,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "5BBB",
             Power = 7,
             Toughness = 7,
-            ArtPath = "CardArt/Griselbrand",
+            ArtPath = $"{ArtPath}Griselbrand",
             Colors = new List<CardColor> { CardColor.Black },
             Abilities = new List<CardAbility>
     {
@@ -1366,7 +1369,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "BBB",
             Power = 3,
             Toughness = 3,
-            ArtPath = "CardArt/Greedy Merchant",
+            ArtPath = $"{ArtPath}Greedy Merchant",
             Colors = new List<CardColor> { CardColor.Black },
             Abilities = new List<CardAbility>
     {
@@ -1392,7 +1395,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Careful Study",
             ManaCost = "U",
-            ArtPath = "CardArt/Careful Study",
+            ArtPath = $"{ArtPath}Careful Study",
             Colors = new List<CardColor> { CardColor.Blue },
             Effects = new List<Effect>
             {
@@ -1413,7 +1416,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Chromatic Sphere",
             ManaCost = "1",
-            ArtPath = "CardArt/Chromatic Sphere",
+            ArtPath = $"{ArtPath}Chromatic Sphere",
             Colors = new List<CardColor> { }, //Colorless,
             Subtype = "Artifact",
             Abilities = new List<CardAbility>
@@ -1554,7 +1557,7 @@ public class CardDatabase : ICardDatabase
             Name = "Arcbound Worker",
             ManaCost = "1",
             Subtype = "Artifact",
-            ArtPath = "CardArt/ArcboundWorker",
+            ArtPath = $"{ArtPath}ArcboundWorker",
             Colors = new List<CardColor> { },
             Abilities = new List<CardAbility>
             {
@@ -1572,7 +1575,7 @@ public class CardDatabase : ICardDatabase
             Name = "Arcbound Ravager",
             ManaCost = "2",
             Subtype = "Artifact",
-            ArtPath = "CardArt/ArcboundRavager",
+            ArtPath = $"{ArtPath}ArcboundRavager",
             Colors = new List<CardColor> { },
             Abilities = new List<CardAbility>
             {
@@ -1608,7 +1611,7 @@ public class CardDatabase : ICardDatabase
             Colors = new List<CardColor> { CardColor.Red },
             Power = 1,
             Toughness = 2,
-            ArtPath = "CardArt/Atog",
+            ArtPath = $"{ArtPath}Atog",
             Abilities = new List<CardAbility>
             {
                 new ActivatedAbility
@@ -1638,7 +1641,7 @@ public class CardDatabase : ICardDatabase
             Colors = new List<CardColor> { CardColor.Blue },
             Power = 3,
             Toughness = 2,
-            ArtPath = "CardArt/SomberHoverguard",
+            ArtPath = $"{ArtPath}SomberHoverguard",
             Abilities = new List<CardAbility>
             {
                 new FlyingAbility(),
@@ -2554,7 +2557,7 @@ public class CardDatabase : ICardDatabase
               ManaCost = "B",
               Power = 1,
               Toughness = 1,
-              ArtPath = "CardArt/Fume Spitter",
+              ArtPath = $"{ArtPath}Fume Spitter",
               Colors = new List<CardColor> { CardColor.Black },
               Abilities = new List<CardAbility>
               {
@@ -2577,7 +2580,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "1R",
             Power = 2,
             Toughness = 1,
-            ArtPath = "CardArt/CrimsonMage",
+            ArtPath = $"{ArtPath}CrimsonMage",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
             {
@@ -2595,7 +2598,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "4",
             Power = 4,
             Toughness = 4,
-            ArtPath = "CardArt/Masticore",
+            ArtPath = $"{ArtPath}Masticore",
             Colors = new List<CardColor> { CardColor.Colorless },
             Abilities = new List<CardAbility>
             {
@@ -2617,7 +2620,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Doomed Traveler",
             ManaCost = "1"
-            ArtPath = "CardArt/Doomed Traveler",
+            ArtPath = $"{ArtPath}Doomed Traveler",
             Power = 1,
             Toughness = 1,
             Abilities = new List<CardAbility>()
@@ -2635,7 +2638,7 @@ public class CardDatabase : ICardDatabase
                     ManaCost = "2",
                     Power = 2,
                     Toughness = 1,
-                    ArtPath = "CardArt/SnapcasterMage",
+                    ArtPath = $"{ArtPath}SnapcasterMage",
                     Abilities = new List<CardAbility>()
                     {
                         new TriggeredAbility
