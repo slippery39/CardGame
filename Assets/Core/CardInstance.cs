@@ -57,7 +57,7 @@ public class CardInstance : CardGameEntity
                 var additionalCostText = AdditionalCost != null ? $"Additional Cost : {AdditionalCost.RulesText}\r\n" : "";
                 var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
                 var effectsText = string.Join("\r\n", Effects.Select(ef => ef.RulesText));
-                str = additionalCostText + abilitiesText + effectsText;
+                str = additionalCostText + "\r\n" + abilitiesText + "\r\n" + effectsText;
                 str = str.Replace("#this#", Name);
             }
             return str;
