@@ -38,7 +38,7 @@ public class LessThanManaFilter : IManaFilter
 
     public string RulesTextString()
     {
-        return $"less than {Amount} colorless mana";
+        return $" less than {Amount} colorless mana cost";
     }
     public bool Check(CardInstance cardToCheck)
     {
@@ -58,27 +58,29 @@ public class CardFilter
 
     public string RulesTextString()
     {
+
+        var str = "card";
         if (CreatureType != null)
         {
-            return CreatureType;
+            str =  CreatureType;
         }
 
         if (Subtype != null)
         {
-            return Subtype;
+            str =  Subtype;
         }
 
         if (CardType != null)
         {
-            return CardType;
+            str = CardType;
         }
 
         if (ManaCheck != null)
         {
-            return ManaCheck.RulesTextString();
+            str = str + " with " + ManaCheck.RulesTextString();
         }
 
-        return "card";
+        return str;
     }
 
     public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)

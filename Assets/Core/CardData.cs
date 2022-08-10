@@ -2488,6 +2488,7 @@ public class CardDatabase : ICardDatabase
                     Amount = 2,
                     Filter = new CardFilter
                     {
+                        CardType = "Unit",
                         ManaCheck = new LessThanManaFilter
                         {
                             Amount = 4

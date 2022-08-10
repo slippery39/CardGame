@@ -8,7 +8,28 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
 {
     public int Amount { get; set; } = 1;
     public int CardsToLookAt { get; set; }
-    public override string RulesText => $"Put the highest generic mana cost unit from the top {CardsToLookAt} cards of your deck into play.";
+    public override string RulesText
+    {
+
+        get
+        {
+
+            if (Amount == 1)
+            {
+                return $"Put the highest generic mana cost unit from the top {CardsToLookAt} cards of your deck into play";
+            }
+
+            var defaultCardType = "units";
+
+            if (Filter != null)
+            {                
+                defaultCardType = Filter.RulesTextString();
+            }
+
+            return $"Put the {Amount} highest generic mana cost {defaultCardType} from the top {CardsToLookAt} cards of your deck into play";
+        }
+
+    }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
