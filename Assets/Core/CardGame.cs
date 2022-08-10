@@ -572,7 +572,7 @@ public class CardGame
         //Testing out if we can instantiate an affinity deck.
 
         
-        var decklist = Decklist.ConvertToDeck(Decklist.RGValakut2011());
+        var decklist = Decklist.ConvertToDeck(Decklist.Affinity2004());
 
         decklist.ForEach(card =>
         {
