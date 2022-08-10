@@ -2621,7 +2621,7 @@ public class CardDatabase : ICardDatabase
         {
             if (card.ArtPath == null)
             {
-                card.ArtPath = $"{ArtPath}{card.Name.Replace(" ", "").Replace(",","")}";
+                card.ArtPath = $"{ArtPath}{card.Name.Replace(" ", "").Replace(",","").Replace("'","")}";
             }
         }
 
