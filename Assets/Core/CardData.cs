@@ -719,12 +719,12 @@ public class CardDatabase : ICardDatabase
                 new FlyingAbility(),
                 new ActivatedAbility()
                 {
-                    ManaCost = "1",
+                    ManaCost = "R",
                     Effects = new List<Effect>{ new PumpUnitEffect()
                     {
                         Power = 1,
                         Toughness = 0,
-                        TargetType = TargetType.Self
+                        TargetType = TargetType.UnitSelf
                     }
                     }
                 }
@@ -1158,12 +1158,12 @@ public class CardDatabase : ICardDatabase
                         {
                             new DrawCardEffect
                             {
-                                TargetType = TargetType.Self,
+                                TargetType = TargetType.PlayerSelf,
                                 Amount = 1
                             },
                             new DiscardCardEffect
                             {
-                                TargetType= TargetType.Self,
+                                TargetType= TargetType.PlayerSelf,
                                 Amount = 1
                             }
                         }
@@ -1383,12 +1383,12 @@ public class CardDatabase : ICardDatabase
             {
                 new DrawCardEffect()
                 {
-                    TargetType = TargetType.Self,
+                    TargetType = TargetType.PlayerSelf,
                     Amount = 2
                 },
                 new DiscardCardEffect()
                 {
-                    TargetType= TargetType.Self,
+                    TargetType= TargetType.PlayerSelf,
                     Amount = 2
                 }
             }
@@ -2032,12 +2032,12 @@ public class CardDatabase : ICardDatabase
                 new MillEffect
                 {
                     Amount = 2,
-                    TargetType = TargetType.Self
+                    TargetType = TargetType.PlayerSelf
                 },
                 new DrawCardEffect
                 {
                     Amount = 1,
-                    TargetType = TargetType.Self
+                    TargetType = TargetType.PlayerSelf
                 }
             }
         });
@@ -2181,7 +2181,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 2,
-                            TargetType = TargetType.Self
+                            TargetType = TargetType.PlayerSelf
                         }
                     }
                 }
@@ -2425,7 +2425,7 @@ public class CardDatabase : ICardDatabase
                        new StaticPlayAdditionalLandEffect
                        {
                             Amount = 1,
-                            TargetType = TargetType.Self
+                            TargetType = TargetType.PlayerSelf
                        }
                     }
                 },
@@ -2435,7 +2435,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new OracleOfMulDayaEffect()
                         {
-                            TargetType = TargetType.Self
+                            TargetType = TargetType.PlayerSelf
                         }
                     }
                 },
@@ -2445,7 +2445,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new StaticRevealTopCardEffect
                         {
-                            TargetType = TargetType.Self
+                            TargetType = TargetType.PlayerSelf
                         }
                     }
                 }

@@ -175,7 +175,7 @@ public class DefaultContinousEffectSystem : IContinuousEffectSystem
 
         switch (targetType)
         {
-            case TargetType.Self:
+            case TargetType.PlayerSelf:
                 {
                     return new List<CardGameEntity> { cardGame.GetOwnerOfCard(source) };
                 }

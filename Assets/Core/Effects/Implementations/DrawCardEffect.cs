@@ -20,7 +20,7 @@ public class DrawCardEffect : Effect
     }
 
     public int Amount { get; set; }
-    public override TargetType TargetType { get; set; } = TargetType.Self;
+    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {

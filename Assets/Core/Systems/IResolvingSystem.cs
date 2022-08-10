@@ -169,7 +169,7 @@ public class DefaultResolvingSystem : IResolvingSystem
 
                         var player = cardGame.GetOwnerOfCard(resolvingAbility.Source);
 
-                        var effectsWithChoices = activatedAbility.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.Self);
+                        var effectsWithChoices = activatedAbility.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.PlayerSelf);
 
                         if (effectsWithChoices.Any())
                         {
@@ -206,7 +206,7 @@ public class DefaultResolvingSystem : IResolvingSystem
                 //For now we are just considering discard effects
                 //TODO - the way we are doing this will cause bugs in the future. We need a way of "pausing" the resolving of the spell until all of the choices are
                 //done.
-                var effectsWithChoices = spellCardData.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.Self);
+                var effectsWithChoices = spellCardData.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.PlayerSelf);
 
                 if (effectsWithChoices.Any())
                 {

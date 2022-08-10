@@ -17,7 +17,7 @@ public interface ITargetSystem
 
 public static class TargetHelper
 {
-    public static List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.Self, TargetType.RandomOpponentOrUnits, TargetType.OpenLane, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
+    public static List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.RandomOpponentOrUnits, TargetType.OpenLane, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
 
     public static bool NeedsTargets(ActivatedAbility ability)
     {
@@ -51,7 +51,7 @@ public class DefaultTargetSystem : ITargetSystem
         {
             case TargetType.None:
                 return new List<CardGameEntity> { effectSource };
-            case TargetType.Self:
+            case TargetType.PlayerSelf:
                 {
                     if (effect is PumpUnitEffect)
                     {

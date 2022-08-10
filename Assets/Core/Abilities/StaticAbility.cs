@@ -61,7 +61,7 @@ public class StaticAbility : CardAbility
                              cardType = "Other units you control";
                              break;
                          }
-                     case TargetType.Self:
+                     case TargetType.PlayerSelf:
                          {
                              cardType = "You";
                              break;
@@ -270,7 +270,7 @@ public class StaticPlayAdditionalLandEffect : Effect
 public class OracleOfMulDayaEffect : Effect
 {
     public override string RulesText => "You may play lands from the top of your deck";
-    public override TargetType TargetType { get; set; } = TargetType.Self;
+    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         foreach (var entity in entitiesToApply)
