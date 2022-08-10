@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
+using UnityEngine;
 
 public static class TokenHelper
 {
@@ -49,7 +49,7 @@ public abstract class BaseCardData
     public BaseCardData()
     {
         Colors = new List<CardColor>();
-        Abilities = new List<CardAbility>();
+        Abilities = new List<CardAbility>();   
     }
 }
 
@@ -206,7 +206,7 @@ public class CardDatabase : ICardDatabase
 {
     private List<BaseCardData> _cards;
 
-    private string ArtPath = $"CardArt/";
+    private string ArtPath = $"MTGCardArt/";
     public CardDatabase()
     {
         _cards = new List<BaseCardData>();
@@ -2614,6 +2614,16 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
+
+
+        //Use Default ArtPaths
+        foreach (var card in _cards)
+        {
+            if (card.ArtPath == null)
+            {
+                card.ArtPath = $"{ArtPath}{card.Name.Replace(" ", "")}";
+            }
+        }
 
         /*
         _cards.Add(new UnitCardData()
