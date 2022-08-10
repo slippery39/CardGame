@@ -219,7 +219,6 @@ public class CardDatabase : ICardDatabase
             Power = 2,
             Toughness = 2,
             Colors = new List<CardColor> { CardColor.Green },
-            ArtPath = $"{ArtPath}GrizzlyBear"
         });
 
         _cards.Add(new SpellCardData()
@@ -1402,7 +1401,6 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Chromatic Sphere",
             ManaCost = "1",
-            ArtPath = $"{ArtPath}Chromatic Sphere",
             Colors = new List<CardColor> { }, //Colorless,
             Subtype = "Artifact",
             Abilities = new List<CardAbility>
@@ -2213,7 +2211,7 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new ManaCardData
         {
-            Name = "Valakut, The Molten Pinnacle",
+            Name = "Valakut, The Molten Pinacle",
             ManaAdded = "1",
             ReadyImmediately = false,
             Colors = new List<CardColor> { },
