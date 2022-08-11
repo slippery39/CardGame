@@ -8,6 +8,11 @@ using UnityEngine.UI;
 [ExecuteInEditMode]
 public class UICard2D : UIGameEntity, IUICard
 {
+    [Header("Debugging")]
+    [SerializeField]
+    private bool _revealedToOwner;
+
+    [Header("Random")]
     private bool _showAsUnknown = false;
 
     [SerializeField]
@@ -63,28 +68,15 @@ public class UICard2D : UIGameEntity, IUICard
 
     public void SetAsUnknownCard()
     {
+        _showAsUnknown = true;
         _frontOfCard.gameObject.SetActive(false);
         _backOfCard.gameObject.SetActive(true);
     }
 
-#if UNITY_EDITOR
-    public void Update()
-    {
-        if (_showAsUnknown)
-        {
-            SetAsUnknownCard();
-        }
-        else
-        {
-            _backOfCard.gameObject.SetActive(false);
-            _frontOfCard.gameObject.SetActive(true);
-        }
-    }
-#endif
-
 
     public void SetCardData(CardInstance cardInstance)
     {
+
         if (cardInstance == null)
         {
             gameObject.SetActive(false);
@@ -94,6 +86,9 @@ public class UICard2D : UIGameEntity, IUICard
             gameObject.SetActive(true);
         }
 
+        _revealedToOwner = cardInstance.RevealedToOwner;
+
+        //Cards that are revealed to owner
         if (cardInstance.GetZone().ZoneType == ZoneType.Deck && cardInstance.RevealedToOwner == false)
         {
             _showAsUnknown = true;
@@ -101,6 +96,7 @@ public class UICard2D : UIGameEntity, IUICard
             return;
         }
 
+        _showAsUnknown = false;
         _backOfCard.gameObject.SetActive(false);
         _frontOfCard.gameObject.SetActive(true);
         _cardInstance = cardInstance;
@@ -144,7 +140,7 @@ public class UICard2D : UIGameEntity, IUICard
 
         if (cardData is ManaCardData)
         {
-            _cardType.text += " - " +(cardData as ManaCardData).ManaAdded;
+            _cardType.text += " - " + (cardData as ManaCardData).ManaAdded;
         }
 
         if (cardData is UnitCardData)

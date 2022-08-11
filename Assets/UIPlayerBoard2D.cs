@@ -98,10 +98,16 @@ public class UIPlayerBoard2D : UIPlayerBoard
 
     private void UpdateHand(Player player)
     {
+        _hand.SetZone(player.Hand,false,HideHiddenInfo);
+        return;
+
+        //old code
+
         var uiCards = _hand.GetComponentsInChildren<UICard2D>(true);
         var hand = player.Hand;
         for (int i = 0; i < uiCards.Length; i++)
         {
+       
             var uiCard = uiCards[i];
             //If there is no card in the game state for a lane, just hide the card.
             if (hand.Cards.Count <= i || hand.Cards[i] == null)
@@ -111,10 +117,15 @@ public class UIPlayerBoard2D : UIPlayerBoard
             }
             else
             {
+                if (i > 7)
+                {
+                    var test = 0;
+                }
                 uiCard.gameObject.SetActive(true);
             }
             if (HideHiddenInfo)
             {
+       
                 uiCard.SetAsUnknownCard();
             }
             else

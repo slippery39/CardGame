@@ -6,6 +6,6 @@ using System.Threading.Tasks;
 
 public interface IZoneViewer
 {
-    void SetZone(IZone zone, bool setReverse = false);
+    void SetZone(IZone zone, bool setReverse = false, bool hiddenInfo = false);
 }
 

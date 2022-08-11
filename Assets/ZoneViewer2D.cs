@@ -45,11 +45,11 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
 
     private IZone _zone;
 
-    public void SetZone(IZone zone, bool setReverse = false)
+    public void SetZone(IZone zone, bool setReverse = false, bool hiddenInfo = false)
     {
         _zone = zone;
         SetNameOfZoneText(zone);
-        SetCardsInZone(zone, setReverse);
+        SetCardsInZone(zone, setReverse, hiddenInfo);
         SetContainerSize();
         HideScrollbar();
     }
@@ -67,9 +67,11 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         _nameOfZone.gameObject.SetActive(_showZoneName);
 
 #if UNITY_EDITOR
+        /*
         SetContainerSize();
         HideScrollbar();
         SetCardSizes();
+        */
 #endif
     }
 
@@ -138,7 +140,7 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         }
     }
 
-    private void SetCardsInZone(IZone zone, bool setReverse = false)
+    private void SetCardsInZone(IZone zone, bool setReverse = false, bool hiddenInfo = false)
     {
         //Get any already made ui cards;
         var alreadyMadeUICards = _cardsContainer.GetComponentsInChildren<IUICard>();
@@ -154,11 +156,16 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
 
         for (var i = 0; i < cardsToSet.Count; i++)
         {
-            cardsToSet = cardsToSet.ToList();
             var card = cardsToSet[i];
             if (i >= alreadyMadeUICards.Length)
             {
                 var cardGameObject = UICardFactory.CreateCard2D(card);
+
+                if (hiddenInfo)
+                {
+                    cardGameObject.GetComponent<UICard2D>().SetAsUnknownCard();
+                }
+
                 cardGameObject.AddComponent<LayoutElement>();
                 cardGameObject.transform.SetParent(_cardsContainer.transform, false);
                 cardGameObject.transform.localPosition = new Vector3(0, 0, 0); //actual position will be handled by the layout group.
@@ -168,9 +175,21 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
             }
             else
             {
-                alreadyMadeUICards[i].SetCardData(card);
                 alreadyMadeUICards[i].SetActive(true);
-
+                
+                if (hiddenInfo)
+                {
+                    if (i > 7)
+                    {
+                        var test = 0;
+                    }
+                    alreadyMadeUICards[i].SetAsUnknownCard();
+                }
+                else
+                {
+                    alreadyMadeUICards[i].SetCardData(card);
+                }
+                
                 var rect = ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>();
                 rect.localScale = scalingVector;
             }

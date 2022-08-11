@@ -6,10 +6,6 @@ using UnityEngine;
 
 public class UIGameController : MonoBehaviour
 {
-
-    [SerializeField]
-    private GameObject _uiCardTemplate;
-
     [SerializeField]
     private CardGame _cardGame;
 

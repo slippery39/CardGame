@@ -19,7 +19,7 @@ public class ZoneViewer : MonoBehaviour, IZoneViewer
         return zoneViewer;
     }
 
-    public void SetZone(IZone zone, bool setReverse = false)
+    public void SetZone(IZone zone, bool setReverse = false, bool hiddenInfo = false)
     {
         //Get any already made ui cards;
         var alreadyMadeUICards = _cards.GetComponentsInChildren<UICard>(true);
