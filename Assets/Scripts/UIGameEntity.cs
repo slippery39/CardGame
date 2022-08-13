@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,14 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
     int _entityId;
     public int EntityId { get => _entityId; set => _entityId = value; }
 
+    //Set in Awake.
+    public Action<UIGameControllerClickEvent> OnClickHandler;
+
+    public void Awake()
+    {
+        OnClickHandler = HandleOnClick;
+    }
+
     //Override these as necessary
     public virtual void Highlight()
     {
@@ -39,8 +48,14 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
     {
         Debug.Log($"Pointer has been clicked for {name} -EntityID: {EntityId}");
         if (clickEventsEnabled)
-            UIGameController.Instance.HandleClick(new UIGameControllerClickEvent { EntityId = EntityId });
+            OnClickHandler(new UIGameControllerClickEvent { EntityId = EntityId });
         //Output to console the clicked GameObject's name and the following message. You can replace this with your own actions for when clicking the GameObject.
+    }
+
+    //Our default handle click method.. can be overriden if necessary.
+    private void HandleOnClick(UIGameControllerClickEvent eventData)
+    {
+        UIGameController.Instance.HandleClick(new UIGameControllerClickEvent { EntityId = EntityId });
     }
 
     public void OnPointerEnter(PointerEventData eventData)

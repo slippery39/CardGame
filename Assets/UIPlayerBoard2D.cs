@@ -26,6 +26,18 @@ public class UIPlayerBoard2D : UIPlayerBoard
     [SerializeField]
     private Player _player;
 
+    public UICard2D DeckOnUI { get => _deckOnUI; set => _deckOnUI = value; }
+    public UICard2D GraveyardOnUI { get => _graveyardOnUI; set => _graveyardOnUI = value; }
+
+    void Start()
+    {
+        GraveyardOnUI.OnClickHandler = new System.Action<UIGameControllerClickEvent>(data =>
+        {
+            Debug.Log("Is the graveyard being handled correctly?");
+            UIGameController.Instance.HandleViewGraveyardClick();
+        });
+    }
+
     public override List<UIGameEntity> GetUIEntities()
     {
         var entities = new List<UIGameEntity>();
@@ -58,24 +70,24 @@ public class UIPlayerBoard2D : UIPlayerBoard
 
         if (player.DiscardPile.Cards.Any())
         {
-            _graveyardOnUI.gameObject.SetActive(true);
-            _graveyardOnUI.SetCardData(player.DiscardPile.Cards.Last());
+            GraveyardOnUI.gameObject.SetActive(true);
+            GraveyardOnUI.SetCardData(player.DiscardPile.Cards.Last());
         }
         else
         {
-            _graveyardOnUI.gameObject.SetActive(false);
+            GraveyardOnUI.gameObject.SetActive(false);
         }
 
         _items.SetZone(player.Items);
 
         if (player.Deck.Cards.Any())
         {
-            _deckOnUI.gameObject.SetActive(true);
-            _deckOnUI.SetCardData(player.Deck.Cards.Last());
+            DeckOnUI.gameObject.SetActive(true);
+            DeckOnUI.SetCardData(player.Deck.Cards.Last());
         }
         else
         {
-            _deckOnUI.gameObject.SetActive(false);
+            DeckOnUI.gameObject.SetActive(false);
         }
     }
 
@@ -98,7 +110,7 @@ public class UIPlayerBoard2D : UIPlayerBoard
 
     private void UpdateHand(Player player)
     {
-        _hand.SetZone(player.Hand,false,HideHiddenInfo);
+        _hand.SetZone(player.Hand, false, HideHiddenInfo);
         return;
 
         //old code
@@ -107,7 +119,7 @@ public class UIPlayerBoard2D : UIPlayerBoard
         var hand = player.Hand;
         for (int i = 0; i < uiCards.Length; i++)
         {
-       
+
             var uiCard = uiCards[i];
             //If there is no card in the game state for a lane, just hide the card.
             if (hand.Cards.Count <= i || hand.Cards[i] == null)
@@ -117,15 +129,11 @@ public class UIPlayerBoard2D : UIPlayerBoard
             }
             else
             {
-                if (i > 7)
-                {
-                    var test = 0;
-                }
                 uiCard.gameObject.SetActive(true);
             }
             if (HideHiddenInfo)
             {
-       
+
                 uiCard.SetAsUnknownCard();
             }
             else
