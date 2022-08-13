@@ -2208,7 +2208,7 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new ManaCardData
         {
-            Name = "Valakut, The Molten Pinacle",
+            Name = "Valakut, The Molten Pinnacle",
             ManaAdded = "1",
             ReadyImmediately = false,
             Colors = new List<CardColor> { },
