@@ -149,10 +149,10 @@ public class UIGameController : MonoBehaviour
         _cardPopup.SetCardData(entity);
     }
 
-    public void HandleViewGraveyardClick()
+    public void HandleViewGraveyardClick(Player player)
     {
         _zonePopupWindow.SetActive(true);
-        _zonePopupWindow.GetComponent<IZoneViewer>().SetZone(CardGame.ActivePlayer.DiscardPile);
+        _zonePopupWindow.GetComponent<IZoneViewer>().SetZone(player.DiscardPile);
     }
 
     #region Private Methods
