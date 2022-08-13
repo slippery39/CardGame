@@ -137,6 +137,7 @@ public class DefaultManaSystem : IManaSystem
     {
         player.ManaPlayedThisTurn++;
         HandleManaCard(player, card, forceEmpty);
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 
     public bool CanPayManaCost(Player player, string manaCost)
