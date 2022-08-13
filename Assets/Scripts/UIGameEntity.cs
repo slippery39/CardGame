@@ -25,6 +25,10 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     public void Awake()
     {
+        if (this is UILane2D)
+        {
+            Debug.Log($"{this.gameObject.name} has awoken");
+        }
         OnClickHandler = HandleOnClick;
     }
 
@@ -48,7 +52,12 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
     {
         Debug.Log($"Pointer has been clicked for {name} -EntityID: {EntityId}");
         if (clickEventsEnabled)
+        {
+            Debug.Log("On Pointer Click Test Messages --");
+            Debug.Log(OnClickHandler);
+            Debug.Log(this.name);
             OnClickHandler(new UIGameControllerClickEvent { EntityId = EntityId });
+        }
         //Output to console the clicked GameObject's name and the following message. You can replace this with your own actions for when clicking the GameObject.
     }
 

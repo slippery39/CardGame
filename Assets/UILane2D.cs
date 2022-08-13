@@ -12,8 +12,9 @@ public class UILane2D : UIGameEntity, IPointerClickHandler
     [SerializeField]
     private UICard2D _uiCard;
 
-    private void Awake()
+    private new void Awake()
     {
+        base.Awake();
         _uiCard = GetComponentInChildren<UICard2D>();
     }
 
