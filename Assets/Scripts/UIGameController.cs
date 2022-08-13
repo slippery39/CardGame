@@ -127,6 +127,7 @@ public class UIGameController : MonoBehaviour
 
         entities.AddRange(_player1Board.GetUIEntities());
         entities.AddRange(_player2Board.GetUIEntities());
+        entities.AddRange(_zonePopupWindow.GetComponentsInChildren<UIGameEntity>());
 
         return entities;
     }

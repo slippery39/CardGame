@@ -30,12 +30,12 @@ public class GameUIIdleState : IGameUIState
         }
         else if (card.CurrentCardData is ManaCardData)
         {
-           _cardGame.ManaSystem.PlayManaCard(ActingPlayer, card);
+            _cardGame.ManaSystem.PlayManaCard(ActingPlayer, card);
         }
         else if (card.CurrentCardData is SpellCardData || card.CurrentCardData is ItemCardData)
         {
-            
-           _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
+
+            _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
         }
         else
         {
@@ -71,11 +71,33 @@ public class GameUIIdleState : IGameUIState
     {
     }
 
+    public void OnUpdate()
+    {
+
+        //Need to highlight all castable cards.
+        foreach (var uiEntity in _stateMachine.GameController.GetUIEntities())
+        {
+            if (_cardGame.CanPlayCard(uiEntity.EntityId))
+            {
+                uiEntity.Highlight();
+            }
+            else
+            {
+                uiEntity.StopHighlight();
+            }
+        };
+    }
+
     public void OnApply()
     {
     }
     public void OnDestroy()
     {
+        //Need to highlight all castable cards.
+        foreach (var uiEntity in _stateMachine.GameController.GetUIEntities())
+        {
+            uiEntity.StopHighlight();
+        };
     }
 
     public void HandleSelection(int entityId)
