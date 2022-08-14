@@ -54,6 +54,11 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         HideScrollbar();
     }
 
+    public void SetCards(List<BaseCardData> cards)
+    {
+
+    }
+
     void Awake()
     {
         _scrollbar.onValueChanged.AddListener(BindViewToScrollBar);
@@ -179,10 +184,6 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
                 
                 if (hiddenInfo)
                 {
-                    if (i > 7)
-                    {
-                        var test = 0;
-                    }
                     alreadyMadeUICards[i].SetAsUnknownCard();
                 }
                 else

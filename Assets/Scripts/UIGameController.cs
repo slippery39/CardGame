@@ -50,12 +50,7 @@ public class UIGameController : MonoBehaviour
         //Check to see if any cards exist that don't have images.
         CheckForCardsWithoutImages();
         CheckForCardsWithoutManaCosts();
-
         _stateMachine = GetComponent<GameUIStateMachine>();
-        _player1Board.SetPlayer(_cardGame.Player1);
-        _player2Board.SetPlayer(_cardGame.Player2);
-
-        UpdateUI();
     }
 
     private void Update()
@@ -119,6 +114,15 @@ public class UIGameController : MonoBehaviour
 
         UpdateUI();
         _stateMachine.CurrentState.OnUpdate();
+    }
+
+    public void StartGame(Decklist player1Deck, Decklist player2Deck)
+    {
+        _cardGame.SetupDecks(player1Deck, player2Deck);
+        _cardGame.StartGame();
+        _player1Board.SetPlayer(_cardGame.Player1);
+        _player2Board.SetPlayer(_cardGame.Player2);
+        UpdateUI();
     }
 
     public IEnumerable<UIGameEntity> GetUIEntities()

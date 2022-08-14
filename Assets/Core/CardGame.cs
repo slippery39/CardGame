@@ -137,9 +137,27 @@ public class CardGame
             PlayerId = 2,
             Health = _startingPlayerHealth
         });
-        AddRandomCardsToDeck();
+    }
 
-        //Need to use the card draw system to draw the opening hand.
+
+    public void SetupDecks(Decklist player1Decklist, Decklist player2Decklist)
+    {
+        player1Decklist.ToDeck().ForEach(card =>
+        {
+            AddCardToGame(Player1, card, Player1.Deck);
+        });
+
+
+        player2Decklist.ToDeck().ForEach(card =>
+        {
+            AddCardToGame(Player2, card, Player2.Deck);
+        });
+    }
+
+    public void StartGame()
+    {
+        Player1.Deck.Shuffle();
+        Player2.Deck.Shuffle();
         _cardDrawSystem.DrawOpeningHand(Player1);
         _cardDrawSystem.DrawOpeningHand(Player2);
     }
@@ -571,7 +589,7 @@ public class CardGame
         //Testing out if we can instantiate an affinity deck.
 
 
-        var decklist = Decklist.ConvertToDeck(Decklist.RGValakut2011());
+        var decklist = FamousDecks.RGValakut2011().ToDeck();
 
         decklist.ForEach(card =>
         {
