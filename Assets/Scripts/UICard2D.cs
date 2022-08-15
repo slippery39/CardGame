@@ -69,6 +69,7 @@ public class UICard2D : UIGameEntity, IUICard
     public void SetAsUnknownCard()
     {
         _showAsUnknown = true;
+        EntityId = -1;
         _frontOfCard.gameObject.SetActive(false);
         _backOfCard.gameObject.SetActive(true);
     }
