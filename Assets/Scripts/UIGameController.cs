@@ -105,10 +105,23 @@ public class UIGameController : MonoBehaviour
         }
         else if (_cardGame.CurrentGameState == GameState.WaitingForChoice)
         {
+            //TODO - We want to add in Sleight of Hand here..
+            //We would need
             //Temporary Hack to make it not automatically happen.
-            if (!(_stateMachine.CurrentState is GameUIDiscardAsPartOfSpellState))
+
+            if (_cardGame.ChoiceInfoNeeded is DiscardCardEffect)
             {
-                _stateMachine.ChangeState(new GameUIDiscardAsPartOfSpellState(_stateMachine, _cardGame.ChoiceInfoNeeded as DiscardCardEffect));
+                if (!(_stateMachine.CurrentState is GameUIDiscardAsPartOfSpellState))
+                {
+                    _stateMachine.ChangeState(new GameUIDiscardAsPartOfSpellState(_stateMachine, _cardGame.ChoiceInfoNeeded as DiscardCardEffect));
+                }
+            }
+            else if (_cardGame.ChoiceInfoNeeded is SleightOfHandEffect)
+            {
+                if (!(_stateMachine.CurrentState is GameUISleightOfHandEffect))
+                {
+                    _stateMachine.ChangeState(new GameUISleightOfHandEffect(_stateMachine, _cardGame.ChoiceInfoNeeded as SleightOfHandEffect));
+                }
             }
         }
 
@@ -136,6 +149,18 @@ public class UIGameController : MonoBehaviour
         return entities;
     }
 
+    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView)
+    {
+        _zonePopupWindow.SetActive(true);
+        _zonePopupWindow.GetComponent<CardsViewer2D>().SetCards(cardsToView, "Select a card to put in your hand");
+        _zonePopupWindow.GetComponent<CardsViewer2D>().ShowExitButton = false;
+    }
+
+    public void CloseChoiceWindow()
+    {
+        _zonePopupWindow.SetActive(false);
+    }
+
     public void HandleClick(UIGameControllerClickEvent clickInfo)
     {
         //Do something here?
@@ -156,7 +181,8 @@ public class UIGameController : MonoBehaviour
     public void HandleViewGraveyardClick(Player player)
     {
         _zonePopupWindow.SetActive(true);
-        _zonePopupWindow.GetComponent<IZoneViewer>().SetZone(player.DiscardPile);
+        _zonePopupWindow.GetComponent<ICardsViewer>().SetCards(player.DiscardPile.Cards, $"{player.Name}'s Discard");
+        _zonePopupWindow.GetComponent<ICardsViewer>();
     }
 
     #region Private Methods

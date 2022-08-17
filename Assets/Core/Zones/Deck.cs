@@ -30,4 +30,10 @@ public class Deck : IZone
         var card = cards[cards.Count - 1];
         return card;
     }
+
+    public void MoveToBottom(CardInstance card)
+    {
+        Remove(card);
+        cards.Insert(0, card);
+    }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class ZoneViewer2D : MonoBehaviour, IZoneViewer
+public class CardsViewer2D : MonoBehaviour, ICardsViewer
 {
     [Header("Zone Viewer Properties")]
     [SerializeField]
@@ -31,7 +31,7 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
     private GameObject _cardsContainer;
 
     [SerializeField]
-    private TextMeshProUGUI _nameOfZone;
+    private TextMeshProUGUI _title;
 
     [SerializeField]
     private Button _exitButton;
@@ -43,20 +43,17 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
     [SerializeField]
     private float _cardScaling = 0.5f;
 
-    private IZone _zone;
+    private IEnumerable<ICard> _cards;
 
-    public void SetZone(IZone zone, bool setReverse = false, bool hiddenInfo = false)
+    public bool ShowExitButton { get => _showExitButton; set => _showExitButton = value; }
+
+    public void SetCards(IEnumerable<ICard> cards, string name, bool setReverse = false, bool hiddenInfo = false)
     {
-        _zone = zone;
-        SetNameOfZoneText(zone);
-        SetCardsInZone(zone, setReverse, hiddenInfo);
+        _cards = cards;
+        SetViewerTitle(name);
+        SetCardsInZone(cards, setReverse, hiddenInfo);
         SetContainerSize();
         HideScrollbar();
-    }
-
-    public void SetCards(List<BaseCardData> cards)
-    {
-
     }
 
     void Awake()
@@ -69,7 +66,7 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
     {
         _exitButton.gameObject.SetActive(_showExitButton);
         _background.gameObject.SetActive(_showBackGround);
-        _nameOfZone.gameObject.SetActive(_showZoneName);
+        _title.gameObject.SetActive(_showZoneName);
 
 #if UNITY_EDITOR
         /*
@@ -125,9 +122,9 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         }
     }
 
-    private void SetNameOfZoneText(IZone zone)
+    private void SetViewerTitle(string name)
     {
-        _nameOfZone.SetText($"Viewing {zone.Name}");
+        _title.SetText(name);
     }
 
     /// <summary>
@@ -145,12 +142,12 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
         }
     }
 
-    private void SetCardsInZone(IZone zone, bool setReverse = false, bool hiddenInfo = false)
+    private void SetCardsInZone(IEnumerable<ICard> cards, bool setReverse = false, bool hiddenInfo = false)
     {
         //Get any already made ui cards;
         var alreadyMadeUICards = _cardsContainer.GetComponentsInChildren<IUICard>();
 
-        var cardsToSet = zone.Cards.ToList();
+        var cardsToSet = cards.ToList();
 
         if (setReverse)
         {
@@ -198,7 +195,7 @@ public class ZoneViewer2D : MonoBehaviour, IZoneViewer
 
         if (alreadyMadeUICards.Length > cardsToSet.Count)
         {
-            for (var i = zone.Cards.Count; i < alreadyMadeUICards.Length; i++)
+            for (var i = cards.Count(); i < alreadyMadeUICards.Length; i++)
             {
                 alreadyMadeUICards[i].SetActive(false);
             }

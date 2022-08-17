@@ -21,8 +21,18 @@ public static class TokenHelper
     }
 }
 
+public interface ICard
+{
+    string Name { get; set; }
+    string RulesText { get; }
+    string ManaCost { get; }
+    string CardType { get; }
+    List<CardColor> Colors { get; }
+    string ArtPath { get; }
+}
 
-public abstract class BaseCardData
+
+public abstract class BaseCardData : ICard
 {
     public string Name { get; set; }
     public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name); } }
@@ -2494,6 +2504,20 @@ public class CardDatabase : ICardDatabase
                             Amount = 4
                         }
                     }
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Sleight of Hand",
+            ManaCost = "U",
+            Colors = new List<CardColor> { CardColor.Blue},
+            Effects = new List<Effect>
+            {
+                new SleightOfHandEffect
+                {
+
                 }
             }
         });

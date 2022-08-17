@@ -243,10 +243,15 @@ public class CardGame
 
     internal void MakeChoice(List<CardInstance> entitiesSelected)
     {
+        //Right now as of August 16 2022, Careful Study, Sleight of Hand and Chrome Mox use this...
         if (CurrentGameState != GameState.WaitingForChoice)
         {
             return;
         }
+
+        var effectChoice = ChoiceInfoNeeded as IEffectWithChoice;
+
+        effectChoice.OnChoicesSelected(this, ActivePlayer, entitiesSelected.Cast<CardGameEntity>().ToList());
 
         //This is mainly to get chrome mox working.
         GetCardsInPlay().ForEach(card =>
@@ -259,9 +264,10 @@ public class CardGame
 
         //For now we are just handling discard choices....
         //In the future we might have other choices, like choosing a creature to sacrifice or perhaps some other choice like choosing a type to destroy?
-        DiscardSystem.Discard(ActivePlayer, entitiesSelected);
+        //TODO - Careful Study should have this as part of its effect choice.
+        //DiscardSystem.Discard(ActivePlayer, entitiesSelected);
+            ResolvingSystem.Continue();
 
-        CurrentGameState = GameState.WaitingForAction;
     }
 
     public CardInstance GetCardById(int entityId)

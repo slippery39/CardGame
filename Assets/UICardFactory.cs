@@ -5,29 +5,30 @@ using UnityEngine;
 public class UICardFactory : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _cardPrefab;
-
-    [SerializeField]
     private GameObject _cardPrefab2D;
     // Start is called before the first frame update
 
     public static UICardFactory Instance;
 
-    public GameObject CardPrefab { get => _cardPrefab; set => _cardPrefab = value; }
     public GameObject CardPrefab2D { get => _cardPrefab2D; set => _cardPrefab2D = value; }
-
-    public static GameObject CreateCard(CardInstance card)
-    {
-        var cardObject = GameObject.Instantiate(Instance.CardPrefab);
-        cardObject.GetComponent<UICard>().SetCardData(card);
-        return cardObject;
-    }
 
     public static GameObject CreateCard2D(CardInstance card)
     {
         var cardObject = GameObject.Instantiate(Instance.CardPrefab2D);
         cardObject.GetComponent<UICard2D>().SetCardData(card);
         return cardObject;
+    }
+
+    public static GameObject CreateCard2D(ICard card)
+    {
+        if (card is CardInstance)
+        {
+            return CreateCard2D((CardInstance)card);
+        }
+        else
+        {
+            throw new System.Exception("ERROR : Create Card 2D is not properly handling the creation of card. Possibly an unsupported class type");
+        }
     }
 
     private void Awake()
@@ -42,16 +43,9 @@ public class UICardFactory : MonoBehaviour
         }
 
         //Sanity Checks
-
-        if (CardPrefab == null)
-        {
-            Debug.LogError("No card prefab has been set for the UICardFactory");
-        }
-
         if (CardPrefab2D == null)
         {
             Debug.LogError("No card prefab 2D has been set for the UICardFactory");
-
         }
     }
 }

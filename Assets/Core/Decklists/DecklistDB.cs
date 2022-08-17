@@ -169,7 +169,17 @@ public class FamousDecks : DecklistDB
         {
             UWDelver2012(),
             RGValakut2011(),
-            Affinity2004()
+            Affinity2004(),
+            new Decklist
+            {
+                Name = "Test Deck",
+                Cards = $@"
+                    30 Island
+                    30 Chrome Mox
+                    30 Sleight of Hand
+                    30 Careful Study
+                "
+            }
         };
     }
 }

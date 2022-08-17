@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 6697048672632676008}
   - component: {fileID: 6697048672632676023}
   m_Layer: 0
-  m_Name: NameOfZone
+  m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -705,7 +705,7 @@ MonoBehaviour:
   _background: {fileID: 6697048674355900781}
   _scrollbar: {fileID: 6697048673784615566}
   _cardsContainer: {fileID: 6697048672780107208}
-  _nameOfZone: {fileID: 6697048672632676023}
+  _title: {fileID: 6697048672632676023}
   _exitButton: {fileID: 6697048673992632731}
   _cardWidth: 375
   _cardScaling: 0.5

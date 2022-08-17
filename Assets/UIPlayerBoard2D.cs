@@ -12,10 +12,10 @@ public class UIPlayerBoard2D : UIPlayerBoard
     [SerializeField]
     private Transform _lanes;
     [SerializeField]
-    private ZoneViewer2D _hand;
+    private CardsViewer2D _hand;
 
     [SerializeField]
-    private ZoneViewer2D _items;
+    private CardsViewer2D _items;
 
     [SerializeField]
     private UICard2D _deckOnUI; //only shows the top card
@@ -78,7 +78,7 @@ public class UIPlayerBoard2D : UIPlayerBoard
             GraveyardOnUI.gameObject.SetActive(false);
         }
 
-        _items.SetZone(player.Items);
+        _items.SetCards(player.Items.Cards, "");
 
         if (player.Deck.Cards.Any())
         {
@@ -110,37 +110,7 @@ public class UIPlayerBoard2D : UIPlayerBoard
 
     private void UpdateHand(Player player)
     {
-        _hand.SetZone(player.Hand, false, HideHiddenInfo);
-        return;
-
-        //old code
-
-        var uiCards = _hand.GetComponentsInChildren<UICard2D>(true);
-        var hand = player.Hand;
-        for (int i = 0; i < uiCards.Length; i++)
-        {
-
-            var uiCard = uiCards[i];
-            //If there is no card in the game state for a lane, just hide the card.
-            if (hand.Cards.Count <= i || hand.Cards[i] == null)
-            {
-                uiCard.gameObject.SetActive(false);
-                continue;
-            }
-            else
-            {
-                uiCard.gameObject.SetActive(true);
-            }
-            if (HideHiddenInfo)
-            {
-
-                uiCard.SetAsUnknownCard();
-            }
-            else
-            {
-                uiCard.SetCardData(hand.Cards[i]);
-            }
-        }
+        _hand.SetCards(player.Hand.Cards, "", false, HideHiddenInfo);
     }
     private void UpdateMana(Player player)
     {

@@ -116,38 +116,24 @@ public class UICard2D : UIGameEntity, IUICard
         {
             _cardCombatStats.gameObject.SetActive(true);
             _cardManaCost.gameObject.SetActive(true);
+            _cardCombatStats.text = cardInstance.Power + " / " + (cardInstance.Toughness - cardInstance.DamageTaken);
         }
         else if (cardData is ManaCardData)
         {
             _cardCombatStats.gameObject.SetActive(false);
             _cardManaCost.gameObject.SetActive(false);
+            _cardType.text += " - " + (cardData as ManaCardData).ManaAdded;
         }
         else if (cardData is ItemCardData)
         {
             _cardCombatStats.gameObject.SetActive(false);
         }
 
-        //Warning: we might want to update this to the CardInstanceAttributes..
         _cardName.text = cardData.Name;
         _cardRulesText.text = cardInstance.RulesText;
-
-        if (cardInstance.Shields > 0)
-        {
-            _cardRulesText.text += $"\r\n {cardInstance.Shields} Shields";
-        }
-
         _cardManaCost.text = cardInstance.ManaCost;
         _cardType.text = cardData.CardType;
 
-        if (cardData is ManaCardData)
-        {
-            _cardType.text += " - " + (cardData as ManaCardData).ManaAdded;
-        }
-
-        if (cardData is UnitCardData)
-        {
-            _cardCombatStats.text = cardInstance.Power + " / " + (cardInstance.Toughness - cardInstance.DamageTaken);
-        }
         Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
         _cardArt.sprite = art;
 
@@ -191,9 +177,17 @@ public class UICard2D : UIGameEntity, IUICard
         }
     }
 
-    public void SetCardData(BaseCardData cardData)
+    public void SetCardData(ICard card)
     {
-        throw new System.NotImplementedException();
+        //temporary hack while we figure out the best way to properly handle non CardInstance cards (i.e. like ones we would view in deck building)
+        if (card is CardInstance)
+        {
+            SetCardData(card as CardInstance);
+        }
+        else
+        {
+            throw new System.NotImplementedException("ERROR : Trying to SetCardData in UICard2D for an unimplemented class type...");
+        }
     }
 
     public void SetActive(bool active)

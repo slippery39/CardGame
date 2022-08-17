@@ -12,6 +12,10 @@ public interface IResolvingSystem
 
     public void Cancel(ResolvingActionInfo action);
 
+    public bool IsResolvingEffect { get; }
+
+    public void Continue();
+
     public void ResolveNext();
 }
 
@@ -51,6 +55,11 @@ public class DefaultResolvingSystem : IResolvingSystem
     //Can only hold card instances.
     private IZone stackZone = new ResolvingStack();
     public IZone Stack { get { return stackZone; } }
+
+    public bool IsResolvingEffect => _effectsToResolve != null && _effectsToResolve.Any();
+    private Stack<Effect> _effectsToResolve;
+
+    private ResolvingCardInstanceActionInfo _currentResolvingCardInstance;
 
     public DefaultResolvingSystem(CardGame cardGame)
     {
@@ -136,8 +145,48 @@ public class DefaultResolvingSystem : IResolvingSystem
         cardGame.Log($"has been cancelled (by mana leak probably");
     }
 
+    //Resolves effects one by one until it hits an effect that requires the player to make a choice.
+    public void Continue()
+    {
+        var player = cardGame.GetOwnerOfCard(_currentResolvingCardInstance.CardInstance);
+
+        if (!_effectsToResolve.Any())
+        {
+            cardGame.CurrentGameState = GameState.WaitingForAction;
+            return;
+        }
+
+        var effect = _effectsToResolve.Pop();
+        if (effect is IEffectWithChoice)
+        {
+            var effectWithChoice = effect as IEffectWithChoice;
+            effectWithChoice.ChoiceSetup(cardGame, player, _currentResolvingCardInstance.CardInstance);
+
+            //wait for the choice to be made.
+            cardGame.PromptPlayerForChoice(player, effect);
+            return;
+        }
+        else
+        {
+            //Apply effects one at a time.
+            cardGame.EffectsProcessor.ApplyEffect(player, _currentResolvingCardInstance.CardInstance, effect, _currentResolvingCardInstance.Targets);
+        }
+
+        if (!IsResolvingEffect)
+        {
+            cardGame.CurrentGameState = GameState.WaitingForAction;
+        }
+    }
+
     public void ResolveNext()
     {
+
+        if (IsResolvingEffect)
+        {
+            Continue();
+            return;
+        }
+
         if (_internalStack.Count == 0)
         {
             return;
@@ -198,21 +247,53 @@ public class DefaultResolvingSystem : IResolvingSystem
             {
                 //if doesn't need a choice:
                 var player = cardGame.GetOwnerOfCard(resolvingCardInstance.CardInstance);
-                cardGame.SpellCastingSystem.CastSpell(player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets, resolvingCardInstance);
 
                 var spellCardData = resolvingCardInstance.CardInstance.CurrentCardData as SpellCardData;
+                var effectsWithChoices = spellCardData.Effects.Where(e => (e is DiscardCardEffect || e is SleightOfHandEffect) && e.TargetType == TargetType.PlayerSelf);
 
-                //if does need a choice upon resolution, the game needs to account for that.
-                //For now we are just considering discard effects
-                //TODO - the way we are doing this will cause bugs in the future. We need a way of "pausing" the resolving of the spell until all of the choices are
-                //done.
-                var effectsWithChoices = spellCardData.Effects.Where(e => e is DiscardCardEffect && e.TargetType == TargetType.PlayerSelf);
-
-                if (effectsWithChoices.Any())
+                if (!effectsWithChoices.Any())
                 {
-                    cardGame.PromptPlayerForChoice(player, effectsWithChoices.First());
+                    cardGame.SpellCastingSystem.CastSpell(player, resolvingCardInstance.CardInstance, resolvingCardInstance.Targets, resolvingCardInstance);
+                    return;
                 }
-                //TODO - Properly Handle choices that must be made upon resolving spells.
+
+                //TODO Cast Spell needs to be a process
+
+                //Effects Flow with Choices
+
+                //If we are selecting a choice as a part of resolving an effect, then the resolving system will always be in a 
+                //partially resolving state.
+
+                //Check to see if any choices are needed for the effect
+                //If not, we can resolve the whole spell
+                //If so, resolve everything until the next effect with a choice
+                //Save the current spot in our resolving spell here.
+                //Prompt the card game that the player needs to make a choice.
+                //When the user makes the choice, continue on resolving the spell.
+
+
+                _effectsToResolve = new Stack<Effect>(spellCardData.Effects);
+
+                //TODO - Left off here,  
+                while (_effectsToResolve.Any())
+                {
+                    _currentResolvingCardInstance = resolvingCardInstance;
+                    var effect = _effectsToResolve.Pop();
+                    if (effect is IEffectWithChoice)
+                    {
+                        var effectWithChoice = effect as IEffectWithChoice;
+                        effectWithChoice.ChoiceSetup(cardGame, player, resolvingCardInstance.CardInstance);
+                        //wait for the choice to be made.
+                        cardGame.PromptPlayerForChoice(player, effect);
+                        return;
+                    }
+                    else
+                    {
+                        //Apply effects one at a time.
+                        cardGame.EffectsProcessor.ApplyEffect(player, resolvingCardInstance.CardInstance, effect, resolvingCardInstance.Targets);
+                    }
+                }
+
             }
             else if (resolvingCardInstance.CardInstance.CurrentCardData is ItemCardData)
             {

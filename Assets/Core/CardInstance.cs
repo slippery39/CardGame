@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
-public class CardInstance : CardGameEntity
+public class CardInstance : CardGameEntity, ICard
 {
     private BaseCardData _originalCardData;
     private BaseCardData _currentCardData;
@@ -60,6 +60,12 @@ public class CardInstance : CardGameEntity
                 str = additionalCostText + "\r\n" + abilitiesText + "\r\n" + effectsText;
                 str = str.Replace("#this#", Name);
             }
+
+            if (Shields > 0)
+            {
+                str += $"\r\n {Shields} Shields";
+            }
+
             return str;
         }
     }
@@ -246,6 +252,8 @@ public class CardInstance : CardGameEntity
         get { return _toughnessWithoutMods; }
         set { _toughnessWithoutMods = value; }
     }
+
+    public string ArtPath => _currentCardData.ArtPath;
 
     #endregion
 
