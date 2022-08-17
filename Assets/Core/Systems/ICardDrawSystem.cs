@@ -105,6 +105,10 @@ public class DefaultCardDrawSystem : ICardDrawSystem
     public void Shuffle(Player player)
     {
         player.Deck.Shuffle();
+        player.Deck.Cards.ForEach(c =>
+        {
+            c.RevealedToOwner = false;
+        });
     }
 
     public void PutIntoHand(Player player, CardInstance card)

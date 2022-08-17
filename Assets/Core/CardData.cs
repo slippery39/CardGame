@@ -2522,6 +2522,20 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "RampantGrowth2",
+            ManaCost = "1U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Effects = new List<Effect>
+            {
+                new RampantGrowthChoiceEffect()
+                {
+
+                }
+            }
+        });
+
 
 
 

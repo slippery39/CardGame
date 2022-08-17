@@ -9,12 +9,45 @@ public interface IEffectWithChoice
     List<CardInstance> GetValidChoices(CardGame cardGame, Player player);
     void ChoiceSetup(CardGame cardGame, Player player, CardInstance source);
     void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices);
+
+    string ChoiceMessage { get;}
+}
+
+public class RampantGrowthChoiceEffect : Effect, IEffectWithChoice
+{
+    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
+    public override string RulesText => "Put a mana from your deck into play";
+
+    public string ChoiceMessage { get => "Choose a mana to card to put into play from your deck"; }
+
+    public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
+    {
+        return player.Deck.Cards.Where(c => c.IsOfType<ManaCardData>()).ToList();
+    }
+
+    public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
+    {
+        GetValidChoices(cardGame,player).ForEach(c => c.RevealedToOwner = true);
+    }
+
+    public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
+    {
+        cardGame.ManaSystem.PlayManaCardFromEffect(player, choices.Cast<CardInstance>().First(), true);
+        cardGame.CardDrawSystem.Shuffle(player);
+    }
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        return;
+    }
 }
 
 public class SleightOfHandEffect : Effect, IEffectWithChoice
 {
     public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
     public override string RulesText => "Look at the top two cards of your deck. Put one of them into your hand and the other on the bottom of your library";
+
+    public string ChoiceMessage => "Choose a card to put into your hand.";
 
     private List<CardInstance> _cardsSeen = new List<CardInstance>();
 

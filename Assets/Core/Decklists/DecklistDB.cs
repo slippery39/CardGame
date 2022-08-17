@@ -179,6 +179,7 @@ public class FamousDecks : DecklistDB
                     30 Sleight of Hand
                     30 Careful Study
                     30 Merfolk Looter
+                    30 RampantGrowth2
                 "
             }
         };

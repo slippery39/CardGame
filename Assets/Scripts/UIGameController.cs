@@ -116,11 +116,11 @@ public class UIGameController : MonoBehaviour
                     _stateMachine.ChangeState(new GameUIDiscardAsPartOfSpellState(_stateMachine, _cardGame.ChoiceInfoNeeded as DiscardCardEffect));
                 }
             }
-            else if (_cardGame.ChoiceInfoNeeded is SleightOfHandEffect)
+            else if (_cardGame.ChoiceInfoNeeded is SleightOfHandEffect || _cardGame.ChoiceInfoNeeded is RampantGrowthChoiceEffect)
             {
-                if (!(_stateMachine.CurrentState is GameUISleightOfHandEffect))
+                if (!(_stateMachine.CurrentState is GameUIChoiceAsPartOfResolveState))
                 {
-                    _stateMachine.ChangeState(new GameUISleightOfHandEffect(_stateMachine, _cardGame.ChoiceInfoNeeded as SleightOfHandEffect));
+                    _stateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(_stateMachine, _cardGame.ChoiceInfoNeeded as IEffectWithChoice));
                 }
             }
         }
@@ -149,10 +149,10 @@ public class UIGameController : MonoBehaviour
         return entities;
     }
 
-    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView)
+    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView,string title)
     {
         _zonePopupWindow.SetActive(true);
-        _zonePopupWindow.GetComponent<CardsViewer2D>().SetCards(cardsToView, "Select a card to put in your hand");
+        _zonePopupWindow.GetComponent<CardsViewer2D>().SetCards(cardsToView,title);
         _zonePopupWindow.GetComponent<CardsViewer2D>().ShowExitButton = false;
     }
 

@@ -20,6 +20,8 @@ public class DiscardCardEffect : Effect, IEffectWithChoice
     public int Amount { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
 
+    public string ChoiceMessage => $"Discard {Amount} cards";
+
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         //DISCARDING BY CHOICE IS HANDLED SOMEWHERE ELSE RIGHT NOW
