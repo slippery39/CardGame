@@ -178,6 +178,7 @@ public class FamousDecks : DecklistDB
                     30 Chrome Mox
                     30 Sleight of Hand
                     30 Careful Study
+                    30 Merfolk Looter
                 "
             }
         };

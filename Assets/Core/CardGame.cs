@@ -21,7 +21,6 @@ public class CardGame
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
     private IHealingSystem _healingSystem;
-    private ISpellCastingSystem _spellCastingSystem;
     private IZoneChangeSystem _zoneChangeSystem;
     private IStateBasedEffectSystem _stateBasedEffectSystem;
     private ICardGameLogger _cardGameLogger;
@@ -70,7 +69,6 @@ public class CardGame
     public ITurnSystem TurnSystem { get => _turnSystem; set => _turnSystem = value; }
     public ISacrificeSystem SacrificeSystem { get => _sacrificeSystem; set => _sacrificeSystem = value; }
     public IDestroySystem DestroySystem { get => _destroySystem; set => _destroySystem = value; }
-    public ISpellCastingSystem SpellCastingSystem { get => _spellCastingSystem; set => _spellCastingSystem = value; }
     public IResolvingSystem ResolvingSystem { get => _resolvingSystem; set => _resolvingSystem = value; }
     public IContinuousEffectSystem ContinuousEffectSystem { get => _continuousEffectSystem; set => _continuousEffectSystem = value; }
 
@@ -93,7 +91,6 @@ public class CardGame
         _battleSystem = new DefaultBattleSystem(this);
         _damageSystem = new DefaultDamageSystem(this);
         _healingSystem = new DefaultHealingSystem(this);
-        _spellCastingSystem = new DefaultSpellCastingSystem(this);
         _zoneChangeSystem = new DefaultZoneChangeSystem(this);
         _stateBasedEffectSystem = new DefaultStateBasedEffectSystem(this);
         _unitPumpSystem = new DefaultUnitPumpSystem(this);
