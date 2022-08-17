@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 //Would probably be an ImprintAbility<T> where T is the Effect?
 //Maybe it would be a double generic <ActivatedAbility,Effect>
 //<StaticAbility,Effect>
-public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade //generic interface for ContainsAbility
+public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//generic interface for ContainsAbility
 {
     /// <summary>
     /// The card that the imprint ability is on.

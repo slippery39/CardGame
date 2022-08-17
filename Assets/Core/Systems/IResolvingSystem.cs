@@ -57,7 +57,7 @@ public class DefaultResolvingSystem : IResolvingSystem
     public IZone Stack { get { return stackZone; } }
 
     public bool IsResolvingEffect => _effectsToResolve != null && _effectsToResolve.Any();
-    private Stack<Effect> _effectsToResolve;
+    private Queue<Effect> _effectsToResolve;
 
     private ResolvingCardInstanceActionInfo _currentResolvingCardInstance;
 
@@ -148,15 +148,18 @@ public class DefaultResolvingSystem : IResolvingSystem
     //Resolves effects one by one until it hits an effect that requires the player to make a choice.
     public void Continue()
     {
-        var player = cardGame.GetOwnerOfCard(_currentResolvingCardInstance.CardInstance);
-
-        if (!_effectsToResolve.Any())
+        if (!IsResolvingEffect)
         {
             cardGame.CurrentGameState = GameState.WaitingForAction;
+            _currentResolvingCardInstance = null;
+            _effectsToResolve = null;
             return;
         }
 
-        var effect = _effectsToResolve.Pop();
+        var player = cardGame.GetOwnerOfCard(_currentResolvingCardInstance.CardInstance);
+
+      
+        var effect = _effectsToResolve.Dequeue();
         if (effect is IEffectWithChoice)
         {
             var effectWithChoice = effect as IEffectWithChoice;
@@ -271,14 +274,15 @@ public class DefaultResolvingSystem : IResolvingSystem
                 //Prompt the card game that the player needs to make a choice.
                 //When the user makes the choice, continue on resolving the spell.
 
-
-                _effectsToResolve = new Stack<Effect>(spellCardData.Effects);
+                
+                _effectsToResolve = new Queue<Effect>(spellCardData.Effects);
+                _effectsToResolve.Reverse();
 
                 //TODO - Left off here,  
                 while (_effectsToResolve.Any())
                 {
                     _currentResolvingCardInstance = resolvingCardInstance;
-                    var effect = _effectsToResolve.Pop();
+                    var effect = _effectsToResolve.Dequeue();
                     if (effect is IEffectWithChoice)
                     {
                         var effectWithChoice = effect as IEffectWithChoice;

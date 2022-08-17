@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
-public class DiscardCardEffect : Effect
+public class DiscardCardEffect : Effect, IEffectWithChoice
 {
     public override string RulesText
     {
@@ -42,6 +43,21 @@ public class DiscardCardEffect : Effect
             }
         }
         */
+    }
+
+    public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
+    {
+        
+    }
+
+    public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
+    {
+        return player.Hand.Cards;
+    }
+
+    public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
+    {
+        cardGame.DiscardSystem.Discard(player,choices.Cast<CardInstance>().ToList());
     }
 }
 

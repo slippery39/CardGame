@@ -182,7 +182,7 @@ public class UIGameController : MonoBehaviour
     {
         _zonePopupWindow.SetActive(true);
         _zonePopupWindow.GetComponent<ICardsViewer>().SetCards(player.DiscardPile.Cards, $"{player.Name}'s Discard");
-        _zonePopupWindow.GetComponent<ICardsViewer>();
+        _zonePopupWindow.GetComponent<ICardsViewer>().ShowExitButton = true;
     }
 
     #region Private Methods

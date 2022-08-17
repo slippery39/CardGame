@@ -260,13 +260,7 @@ public class CardGame
                 component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded)
             );
         });
-
-
-        //For now we are just handling discard choices....
-        //In the future we might have other choices, like choosing a creature to sacrifice or perhaps some other choice like choosing a type to destroy?
-        //TODO - Careful Study should have this as part of its effect choice.
-        //DiscardSystem.Discard(ActivePlayer, entitiesSelected);
-            ResolvingSystem.Continue();
+        ResolvingSystem.Continue();
 
     }
 
