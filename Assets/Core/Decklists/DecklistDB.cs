@@ -183,6 +183,7 @@ public class FamousDecks : DecklistDB
                     30 RampantGrowth2
                     30 Telling Time
                     30 Thoughtseize
+                    60 Augur of Bolas2
                 "
             }
         };

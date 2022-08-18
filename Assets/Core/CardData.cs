@@ -2013,6 +2013,33 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        //Testing out choices on triggered abilities
+        _cards.Add(new UnitCardData
+        {
+            Name = "Augur of Bolas2",
+            ManaCost = "1U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Power = 1,
+            Toughness = 3,
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility{
+                TriggerType = TriggerType.SelfEntersPlay,
+                Effects = new List<Effect>{
+                new ChooseFromTopOfDeckEffect
+                {
+                    CardsToLookAt = 3,
+                    Amount = 1,
+                    Filter = new CardFilter
+                    {
+                       CardType = "Spell"
+                    }
+                }
+                }
+                }
+            }
+        });
+
         _cards.Add(new SpellCardData
         {
             Name = "Vapor Snag",

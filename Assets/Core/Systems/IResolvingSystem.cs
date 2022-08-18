@@ -268,7 +268,7 @@ public class DefaultResolvingSystem : IResolvingSystem
                 case TriggeredAbility:
                     {
                         var triggeredAbility = (TriggeredAbility)resolvingAbility.Ability;
-                        cardGame.EffectsProcessor.ApplyEffects(resolvingAbility.Owner, resolvingAbility.Source, triggeredAbility.Effects, new List<CardGameEntity>());
+                        ResolveEffects(resolvingThing, triggeredAbility.Effects);
                         return;
                     }
                 case ActivatedAbility:
