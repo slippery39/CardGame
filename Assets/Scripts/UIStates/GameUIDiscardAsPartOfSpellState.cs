@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-//Note currently we are only handling discard choices.
+//Now used in our GameUIChoiseAsPartOfResolveState class.
 public class GameUIDiscardAsPartOfSpellState : IGameUIState
 {
     private CardGame _cardGame;

@@ -105,24 +105,10 @@ public class UIGameController : MonoBehaviour
         }
         else if (_cardGame.CurrentGameState == GameState.WaitingForChoice)
         {
-            //TODO - We want to add in Sleight of Hand here..
-            //We would need
-            //Temporary Hack to make it not automatically happen.
-
-            if (_cardGame.ChoiceInfoNeeded is DiscardCardEffect)
-            {
-                if (!(_stateMachine.CurrentState is GameUIDiscardAsPartOfSpellState))
-                {
-                    _stateMachine.ChangeState(new GameUIDiscardAsPartOfSpellState(_stateMachine, _cardGame.ChoiceInfoNeeded as DiscardCardEffect));
-                }
-            }
-            else if (_cardGame.ChoiceInfoNeeded is SleightOfHandEffect || _cardGame.ChoiceInfoNeeded is RampantGrowthChoiceEffect)
-            {
                 if (!(_stateMachine.CurrentState is GameUIChoiceAsPartOfResolveState))
                 {
                     _stateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(_stateMachine, _cardGame.ChoiceInfoNeeded as IEffectWithChoice));
                 }
-            }
         }
 
         UpdateUI();
