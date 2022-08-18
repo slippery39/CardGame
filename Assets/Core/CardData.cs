@@ -2536,6 +2536,20 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Telling Time",
+            ManaCost = "1U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Effects = new List<Effect>
+            {
+                new TellingTimeEffect()
+                {
+
+                }
+            }
+        });
+
 
 
 

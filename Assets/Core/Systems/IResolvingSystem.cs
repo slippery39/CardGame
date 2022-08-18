@@ -197,7 +197,7 @@ public class DefaultResolvingSystem : IResolvingSystem
                 effectWithChoice.ChoiceSetup(cardGame, player, _currentResolvingAction.Source);
 
                 //wait for the choice to be made.
-                cardGame.PromptPlayerForChoice(player, effect);
+                cardGame.PromptPlayerForChoice(player, effectWithChoice);
                 return;
             }
             else

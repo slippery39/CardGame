@@ -77,7 +77,7 @@ public class CardGame
 
     public IModificationsSystem ModificationsSystem { get => _modificationsSystem; set => _modificationsSystem = value; }
     public GameState CurrentGameState { get; set; }
-    public Effect ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
+    public IEffectWithChoice ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
     internal IAdditionalCostSystem AdditionalCostSystem { get => _additionalCostSystem; set => _additionalCostSystem = value; }
 
     public ICountersSystem CountersSystem { get; set; }
@@ -253,12 +253,14 @@ public class CardGame
         //This is mainly to get chrome mox working.
         GetCardsInPlay().ForEach(card =>
         {
-            card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ForEach(component =>
-                component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded)
-            );
+            if (entitiesSelected.Any())
+            {
+                card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ForEach(component =>
+                    component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded)
+                );
+            }
         });
         ResolvingSystem.Continue();
-
     }
 
     public CardInstance GetCardById(int entityId)
@@ -445,7 +447,7 @@ public class CardGame
     }
 
 
-    public void PromptPlayerForChoice(Player player, Effect effectThatNeedsChoice)
+    public void PromptPlayerForChoice(Player player, IEffectWithChoice effectThatNeedsChoice)
     {
         CurrentGameState = GameState.WaitingForChoice;//GameState.WaitingForChoice;
         ChoiceInfoNeeded = effectThatNeedsChoice;

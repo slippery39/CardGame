@@ -180,6 +180,7 @@ public class FamousDecks : DecklistDB
                     30 Careful Study
                     30 Merfolk Looter
                     30 RampantGrowth2
+                    60 Telling Time
                 "
             }
         };

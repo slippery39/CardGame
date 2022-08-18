@@ -38,7 +38,7 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
 
         //Need a callback to when the 
     }
-    public void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, Effect effectWithChoice)
+    public void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, IEffectWithChoice effectWithChoice)
     {
         //This should only happen once.
         if (effectWithChoice == _imprintDiscardEffect)
@@ -66,6 +66,6 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
 
 public interface IOnResolveChoiceMade
 {
-    void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, Effect effectWithChoice);
+    void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, IEffectWithChoice effectWithChoice);
 }
 

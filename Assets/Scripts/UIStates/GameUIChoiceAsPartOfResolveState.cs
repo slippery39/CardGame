@@ -52,6 +52,12 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
                     _internalState.OnApply();
                     break;
                 }
+            case IMultiChoiceEffect mce:
+                {
+                    _internalState = new GameUIMultiChoiceState(_stateMachine, mce);
+                    _internalState.OnApply();
+                    break;
+                }
             default:
                 {
                     _stateMachine.GameController.ViewChoiceWindow(_sourceEffect.GetValidChoices(_cardGame, _actingPlayer), GetMessage());
