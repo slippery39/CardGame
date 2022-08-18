@@ -8,8 +8,7 @@ public interface IEffectWithChoice
 {
     List<CardInstance> GetValidChoices(CardGame cardGame, Player player);
     void ChoiceSetup(CardGame cardGame, Player player, CardInstance source);
-    void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices);   
-
+    void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices); 
     string ChoiceMessage { get; }
 }
 
@@ -24,7 +23,7 @@ public interface IMultiChoiceEffect : IEffectWithChoice
 public class TellingTimeEffect : Effect, IMultiChoiceEffect
 {
 
-    private List<CardInstance> _chosenCards;
+    private List<CardInstance> _chosenCards = new List<CardInstance>();
     public string ChoiceMessage
     {
         get
@@ -52,7 +51,9 @@ public class TellingTimeEffect : Effect, IMultiChoiceEffect
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
-        return player.Deck.Cards.TakeLast(3).Where(c => !_chosenCards.Contains(c)).ToList();
+        var cards = player.Deck.Cards.TakeLast(3).ToList();
+        cards = cards.Where(c=>!_chosenCards.Contains(c)).ToList();
+        return cards;
     }
     public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
@@ -121,6 +122,52 @@ public class RampantGrowthChoiceEffect : Effect, IEffectWithChoice
         return;
     }
 }
+
+
+public class ThoughtseizeEffect : Effect, IEffectWithChoice
+{
+    public override TargetType TargetType { get; set; } = TargetType.Opponent;
+    public override string RulesText => "Look at your opponents hand. Choose 1 non mana card from it and discard it";
+
+    public string ChoiceMessage => "Choose a card to discard.";
+
+    private List<CardInstance> _cardsSeen = new List<CardInstance>();
+
+    public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
+    {
+        return cardGame.InactivePlayer.Hand.Cards.Where(c => c.IsOfType<ManaCardData>() == false).ToList();
+    }
+
+    public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
+    {
+        _cardsSeen = GetValidChoices(cardGame, player);
+
+        //Reveal the cards so that the player can make a choice
+        _cardsSeen.ForEach(card =>
+        {
+            //Revealed to all
+            card.RevealedToOwner = true;
+        });
+    }
+
+    public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
+    {
+        //Discard the choices
+        choices.ForEach(choice =>
+        {
+            var card = choice as CardInstance;
+            cardGame.DiscardSystem.Discard(cardGame.InactivePlayer, card);
+        });
+    }
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        //This should apply the actual effect after the cards are chosen....
+        //Basically choice setup should be called before Apply, then once the cards are chosen we call apply with the chosen cards.
+        return;
+    }
+}
+
 
 public class SleightOfHandEffect : Effect, IEffectWithChoice
 {

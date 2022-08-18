@@ -175,12 +175,14 @@ public class FamousDecks : DecklistDB
                 Name = "Test Deck",
                 Cards = $@"
                     30 Island
+                    30 Swamp
                     30 Chrome Mox
                     30 Sleight of Hand
                     30 Careful Study
                     30 Merfolk Looter
                     30 RampantGrowth2
-                    60 Telling Time
+                    30 Telling Time
+                    30 Thoughtseize
                 "
             }
         };

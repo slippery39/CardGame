@@ -194,6 +194,12 @@ public class DefaultResolvingSystem : IResolvingSystem
             if (effect is IEffectWithChoice)
             {
                 var effectWithChoice = effect as IEffectWithChoice;
+
+                //If there are no valid choices to make, then automatically resolve it.
+                if (effectWithChoice.GetValidChoices(cardGame,player).Any()== false)
+                {
+                    continue;
+                }
                 effectWithChoice.ChoiceSetup(cardGame, player, _currentResolvingAction.Source);
 
                 //wait for the choice to be made.

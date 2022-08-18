@@ -2550,6 +2550,20 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Thoughtseize",
+            ManaCost = "B",
+            Colors = new List<CardColor> { CardColor.Black },
+            Effects = new List<Effect>
+            {
+                new ThoughtseizeEffect()
+                {
+
+                }
+            }
+        });
+
 
 
 
