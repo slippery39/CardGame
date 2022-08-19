@@ -30,7 +30,7 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
         var owner = cardGame.GetOwnerOfCard(source);
         SourceCard = source;
 
-        if (owner.Hand.Cards.Count > 0)
+        if (owner.Hand.Any())
         {
             //Technically Imprint Exiles the card.
             cardGame.PromptPlayerForChoice(owner, _imprintDiscardEffect);

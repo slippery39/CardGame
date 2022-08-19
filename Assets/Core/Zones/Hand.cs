@@ -1,20 +1,11 @@
 ﻿using System.Collections.Generic;
 
-public class Hand : IZone
+public class Hand : Zone 
 {
-
-    private List<CardInstance> _cards = new List<CardInstance>();
-    public string Name => "Hand";
-    public List<CardInstance> Cards { get { return _cards; } }
-    public ZoneType ZoneType => ZoneType.Hand;
-
-    public void Add(CardInstance card)
+    public Hand()
     {
-        _cards.Add(card);
-    }
-    public void Remove(CardInstance card)
-    {
-        _cards.Remove(card);
+        _zoneType = ZoneType.Hand;
+        _name = "Hand";
     }
 }
 

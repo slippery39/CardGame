@@ -138,9 +138,9 @@ public class LookAtOpponentHandEffect : Effect
             return;
         }
 
-        foreach(var c in opponent.Hand.Cards)
+        foreach (var card in opponent.Hand)
         {
-            c.RevealedToAll = true;
+            card.RevealedToAll = true;
         }
     }
 }
@@ -157,17 +157,15 @@ public class ThoughtseizeEffect : Effect, IEffectWithChoice
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
-        return cardGame.InactivePlayer.Hand.Cards.Where(c => c.IsOfType<ManaCardData>() == false).ToList();
+        return cardGame.InactivePlayer.Hand.Where(c => c.IsOfType<ManaCardData>() == false).ToList();
     }
 
     public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
-        //Reveal the cards so that the player can make a choice
-        cardGame.InactivePlayer.Hand.Cards.ForEach(card =>
+        foreach (var card in cardGame.InactivePlayer.Hand)
         {
-            //Revealed to all
             card.RevealedToAll = true;
-        });
+        }
     }
 
     public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)

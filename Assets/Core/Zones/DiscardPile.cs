@@ -1,20 +1,11 @@
 ﻿using System.Collections.Generic;
 
-public class DiscardPile : IZone
+public class DiscardPile : Zone
 {
-    private List<CardInstance> _cards = new List<CardInstance>();
-    public string Name => "Discard";
-    public List<CardInstance> Cards => _cards;
-    public ZoneType ZoneType => ZoneType.Discard;
-
-    public void Add(CardInstance card)
+    public DiscardPile()
     {
-        _cards.Add(card);
-    }
-
-    public void Remove(CardInstance card)
-    {
-        _cards.Remove(card);
+        _zoneType = ZoneType.Discard;
+        _name = "Discard";
     }
 }
 

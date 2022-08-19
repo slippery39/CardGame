@@ -500,7 +500,7 @@ public class CardGame
     public CardInstance GetCardThatHasResponseAbility(RespondToCastAbility ability)
     {
         //Check players hands;
-        var cardsInHand = Player1.Hand.Cards.Union(Player2.Hand.Cards).ToList();
+        var cardsInHand = Player1.Hand.Union(Player2.Hand).ToList();
 
         foreach (var card in cardsInHand)
         {

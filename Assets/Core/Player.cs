@@ -57,7 +57,7 @@ public class Player : CardGameEntity
             return manaThatCanBePlayed;
         }
     }
-    public int Mana => _manaPool.CurrentColorlessMana;
+
     public ManaPool ManaPool { get => _manaPool; }
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 
@@ -66,12 +66,6 @@ public class Player : CardGameEntity
     #endregion
 
     #region Public Methods
-
-    public bool IsOwnerOfCard(CardGame cardGame, CardInstance card)
-    {
-        return Hand.Cards.Contains(card) || DiscardPile.Cards.Contains(card) || Lanes.SelectMany(l => l.Cards).Contains(card);
-    }
-
     public List<CardInstance> GetUnitsInPlay()
     {
         return Lanes.Where(l => l.IsEmpty() == false).Select(l => l.UnitInLane).ToList();

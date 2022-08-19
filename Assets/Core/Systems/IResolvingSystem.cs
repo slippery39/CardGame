@@ -83,7 +83,7 @@ public class DefaultResolvingSystem : IResolvingSystem
         //Search each players hands for RespondToCastAbilities
         //And resolve those abilities if necessary.
         //TODO - possibly we only need to look for the opponents cards.
-        var playersHands = cardGame.Player1.Hand.Cards.Union(cardGame.Player2.Hand.Cards);
+        var playersHands = cardGame.Player1.Hand.Union(cardGame.Player2.Hand);
         playersHands.Where(card => card.Abilities.GetOfType<RespondToCastAbility>().Any()).ToList()
         .ForEach(card =>
             {

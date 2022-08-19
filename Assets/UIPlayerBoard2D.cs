@@ -110,7 +110,7 @@ public class UIPlayerBoard2D : UIPlayerBoard
 
     private void UpdateHand(Player player)
     {
-        _hand.SetCards(player.Hand.Cards, "", false, HideHiddenInfo);
+        _hand.SetCards(player.Hand, "", false, HideHiddenInfo);
     }
     private void UpdateMana(Player player)
     {

@@ -44,6 +44,7 @@ public enum ZoneType
 }
 
 //A generic zone that can be used if no extra functionality is needed.
+//Hand and Discard both are sort of non unique zones.
 public class Zone : IZone, IEnumerable<CardInstance>
 {
 

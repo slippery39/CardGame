@@ -271,14 +271,11 @@ public class DiscardCardAdditionalCost : AdditionalCost
 
     public override bool CanPay(CardGame cardGame, Player player, CardGameEntity source)
     {
-        var cardsInHand = player.Hand.Cards;
-
-        return cardsInHand.Any();
+        return player.Hand.Any();
     }
 
     public override void PayCost(CardGame cardGame, Player player, CardGameEntity sourceCard, CostInfo costInfo)
     {
-        //Creature to sacrifice should be in the cost info.
         var cardsToDiscard = costInfo.EntitiesChosen.Cast<CardInstance>().ToList();
 
         foreach (var entity in cardsToDiscard)
@@ -288,10 +285,7 @@ public class DiscardCardAdditionalCost : AdditionalCost
     }
     public override List<CardGameEntity> GetValidChoices(CardGame cardGame, Player player, CardGameEntity sourceEntity)
     {
-        //The valid choices are the players units in play
-        var choices = player.Hand.Cards;
-
-        return choices.Cast<CardGameEntity>().ToList();
+        return player.Hand.Cast<CardGameEntity>().ToList();
     }
 }
 
