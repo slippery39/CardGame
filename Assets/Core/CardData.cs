@@ -1967,6 +1967,10 @@ public class CardDatabase : ICardDatabase
             },
             Effects = new List<Effect>
             {
+                new LookAtOpponentHandEffect
+                {
+
+                },
                 new DrawCardEffect
                 {
                     Amount = 1

@@ -8,7 +8,7 @@ public interface IEffectWithChoice
 {
     List<CardInstance> GetValidChoices(CardGame cardGame, Player player);
     void ChoiceSetup(CardGame cardGame, Player player, CardInstance source);
-    void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices); 
+    void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices);
     string ChoiceMessage { get; }
 }
 
@@ -52,7 +52,7 @@ public class TellingTimeEffect : Effect, IMultiChoiceEffect
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
         var cards = player.Deck.Cards.TakeLast(3).ToList();
-        cards = cards.Where(c=>!_chosenCards.Contains(c)).ToList();
+        cards = cards.Where(c => !_chosenCards.Contains(c)).ToList();
         return cards;
     }
     public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
@@ -61,7 +61,7 @@ public class TellingTimeEffect : Effect, IMultiChoiceEffect
         GetValidChoices(cardGame, player).ForEach(c => c.RevealedToOwner = true);
     }
 
-    public void MakeChoice(CardGame cardGame,Player player,CardGameEntity choice)
+    public void MakeChoice(CardGame cardGame, Player player, CardGameEntity choice)
     {
         if (_chosenCards.Contains(choice))
         {
@@ -124,6 +124,28 @@ public class RampantGrowthChoiceEffect : Effect, IEffectWithChoice
 }
 
 
+public class LookAtOpponentHandEffect : Effect
+{
+    public override TargetType TargetType { get; set; } = TargetType.Opponent;
+    public override string RulesText => "Look at your opponents hand";
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        var opponent = entitiesToApply.First() as Player;
+        if (opponent == null)
+        {
+            cardGame.Log("Entity to apply a Look At Opponent Hand Effect should be a player");
+            return;
+        }
+
+        foreach(var c in opponent.Hand.Cards)
+        {
+            c.RevealedToAll = true;
+        }
+    }
+}
+
+
 public class ThoughtseizeEffect : Effect, IEffectWithChoice
 {
     public override TargetType TargetType { get; set; } = TargetType.Opponent;
@@ -140,13 +162,11 @@ public class ThoughtseizeEffect : Effect, IEffectWithChoice
 
     public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
-        _cardsSeen = GetValidChoices(cardGame, player);
-
         //Reveal the cards so that the player can make a choice
-        _cardsSeen.ForEach(card =>
+        cardGame.InactivePlayer.Hand.Cards.ForEach(card =>
         {
             //Revealed to all
-            card.RevealedToOwner = true;
+            card.RevealedToAll = true;
         });
     }
 

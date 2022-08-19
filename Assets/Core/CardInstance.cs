@@ -19,6 +19,11 @@ public class CardInstance : CardGameEntity, ICard
         return _cardGame.GetZoneOfCard(this);
     }
 
+    public Player GetOwner()
+    {
+        return _cardGame.GetOwnerOfCard(this);
+    }
+
     #region Public Properties
     public BaseCardData CurrentCardData
     {
@@ -140,6 +145,7 @@ public class CardInstance : CardGameEntity, ICard
 
     //Controls whether or not the card is revealed to the player. Only factors for cards in hidden information zones (i.e. the deck).
     public bool RevealedToOwner { get; set; } = false;
+    public bool RevealedToAll { get; set; } = false;
 
     public List<Counter> Counters { get; set; } = new List<Counter>();
     public bool IsOfType<T>()
@@ -254,6 +260,8 @@ public class CardInstance : CardGameEntity, ICard
     }
 
     public string ArtPath => _currentCardData.ArtPath;
+
+    public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
 
     #endregion
 

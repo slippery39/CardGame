@@ -163,11 +163,6 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
             {
                 var cardGameObject = UICardFactory.CreateCard2D(card);
 
-                if (hiddenInfo)
-                {
-                    cardGameObject.GetComponent<UICard2D>().SetAsUnknownCard();
-                }
-
                 cardGameObject.AddComponent<LayoutElement>();
                 cardGameObject.transform.SetParent(_cardsContainer.transform, false);
                 cardGameObject.transform.localPosition = new Vector3(0, 0, 0); //actual position will be handled by the layout group.
@@ -178,15 +173,7 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
             else
             {
                 alreadyMadeUICards[i].SetActive(true);
-                
-                if (hiddenInfo)
-                {
-                    alreadyMadeUICards[i].SetAsUnknownCard();
-                }
-                else
-                {
-                    alreadyMadeUICards[i].SetCardData(card);
-                }
+                alreadyMadeUICards[i].SetCardData(card);
                 
                 var rect = ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>();
                 rect.localScale = scalingVector;
