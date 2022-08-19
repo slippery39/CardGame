@@ -228,6 +228,7 @@ public class DefaultResolvingSystem : IResolvingSystem
         if (!effectsWithChoices.Any())
         {
             cardGame.EffectsProcessor.ApplyEffects(player, info.Source, effects.ToList(), info.Targets);
+            CompleteResolve();
             return;
         }
 
