@@ -51,7 +51,7 @@ public class TellingTimeEffect : Effect, IMultiChoiceEffect
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
-        var cards = player.Deck.Cards.TakeLast(3).ToList();
+        var cards = player.Deck.TakeLast(3).ToList();
         cards = cards.Where(c => !_chosenCards.Contains(c)).ToList();
         return cards;
     }
@@ -200,12 +200,12 @@ public class SleightOfHandEffect : Effect, IEffectWithChoice
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
-        return player.Deck.Cards.TakeLast(2).ToList();
+        return player.Deck.TakeLast(2).ToList();
     }
 
     public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
-        _cardsSeen = player.Deck.Cards.TakeLast(2).ToList();
+        _cardsSeen = player.Deck.TakeLast(2).ToList();
 
         //Reveal the cards so that the player can make a choice
         _cardsSeen.ForEach(card =>

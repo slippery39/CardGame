@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,17 +44,22 @@ public enum ZoneType
 }
 
 //A generic zone that can be used if no extra functionality is needed.
-public class Zone : IZone
+public class Zone : IZone, IEnumerable<CardInstance>
 {
 
-    private ZoneType _zoneType;
-    private string _name;
-    private List<CardInstance> _cards;
+    protected ZoneType _zoneType;
+    protected string _name;
+    protected List<CardInstance> _cards;
 
     public ZoneType ZoneType { get { return _zoneType; } }
 
     public string Name { get { return _name; } }
     public List<CardInstance> Cards { get { return _cards; } }
+
+    public Zone()
+    {
+        _cards = new List<CardInstance>();
+    }
 
     public Zone(ZoneType zoneType, string name)
     {
@@ -70,6 +76,16 @@ public class Zone : IZone
     public void Remove(CardInstance card)
     {
         _cards.Remove(card);
+    }
+
+    public IEnumerator<CardInstance> GetEnumerator()
+    {
+        return ((IEnumerable<CardInstance>)_cards).GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return ((IEnumerable)_cards).GetEnumerator();
     }
 }
 

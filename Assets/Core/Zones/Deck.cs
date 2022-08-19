@@ -1,39 +1,29 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-public class Deck : IZone
+public class Deck : Zone
 {
-    public string Name => "Deck";
-
-    private List<CardInstance> cards = new List<CardInstance>();
-    public List<CardInstance> Cards => cards;
-    public ZoneType ZoneType { get => ZoneType.Deck; }
-
-    public void Add(CardInstance card)
+    public Deck()
     {
-        cards.Add(card);
-    }
-
-    public void Remove(CardInstance card)
-    {
-        cards.Remove(card);
+        _name = "Deck";
+        _zoneType = ZoneType.Deck;
     }
 
     public void Shuffle()
     {
-        cards = cards.Randomize().ToList();
+        _cards = _cards.Randomize().ToList();
     }
 
     public CardInstance GetTopCard()
     {
         //The top of our deck will be the last card added to the list.
-        var card = cards[cards.Count - 1];
+        var card = _cards[_cards.Count - 1];
         return card;
     }
 
     public void MoveToBottom(CardInstance card)
     {
         Remove(card);
-        cards.Insert(0, card);
+        _cards.Insert(0, card);
     }
 }
