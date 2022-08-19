@@ -92,10 +92,10 @@ public class UICard2D : UIGameEntity, IUICard
         //if revealed to all && zonetype is in the hand then show it
         var isInDeck = cardInstance.GetZone().ZoneType == ZoneType.Deck;
         var isInHand = cardInstance.GetZone().ZoneType == ZoneType.Hand;
-        var isInPlay = new List<ZoneType> { ZoneType.InPlay,ZoneType.Items,ZoneType.Stack }.Contains(cardInstance.GetZone().ZoneType);
+        var isVisible = new List<ZoneType> { ZoneType.InPlay,ZoneType.Items,ZoneType.Stack,ZoneType.Discard,ZoneType.Exile }.Contains(cardInstance.GetZone().ZoneType);
         var isOwnTurn = cardInstance.CardGame.ActivePlayer == cardInstance.GetOwner();
 
-        var shouldSeeCard = isInPlay || cardInstance.RevealedToAll || (isInDeck && _revealedToOwner && isOwnTurn) || (isInHand  && isOwnTurn);
+        var shouldSeeCard = isVisible || cardInstance.RevealedToAll || (isInDeck && _revealedToOwner && isOwnTurn) || (isInHand  && isOwnTurn);
 
         //Cards that are revealed to owner
         if (!shouldSeeCard)
