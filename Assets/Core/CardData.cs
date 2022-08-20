@@ -1147,6 +1147,8 @@ public class CardDatabase : ICardDatabase
             Name = "Gempalm Incinerator",
             ManaCost = "2R",
             CreatureType = "Goblin",
+            Power = 2,
+            Toughness = 1,
             OtherPlayOptions = new List<BaseCardData>
             {
                 new SpellCardData
@@ -1168,16 +1170,23 @@ public class CardDatabase : ICardDatabase
         });
         */
         
+        
 
-        /*
+        
         _cards.Add(new UnitCardData
         {
             Name = "Goblin Sharpshooter",
             ManaCost = "2R",
             CreatureType = "Goblin",
+            Power = 1,
+            Toughness = 1,
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
             {
+                new DontUnexhaustAbility()
+                {
+
+                },
                 new TriggeredAbility
                 {
                     TriggerType = TriggerType.SomethingDies,
@@ -1195,8 +1204,10 @@ public class CardDatabase : ICardDatabase
                 },
                 new ActivatedAbility
                 {
+                    ExhaustOnUse = true,
                     Effects = new List<Effect>
                     {
+                        
                         new DamageEffect
                         {
                             Amount = 1
@@ -1205,7 +1216,7 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
-        */
+        
 
         //Need to have a way to implement MountainWalk
         _cards.Add(new UnitCardData
@@ -1257,7 +1268,7 @@ public class CardDatabase : ICardDatabase
                                 {
                                     new ActivatedAbility()
                                     {
-                                        OncePerTurn = true,
+                                        OncePerTurnOnly = true,
                                         ManaCost = "1",
                                         Effects = new List<Effect>
                                         {
@@ -1333,7 +1344,7 @@ public class CardDatabase : ICardDatabase
                 {
                     new ActivatedAbility()
                     {
-                        OncePerTurn = true,
+                        ExhaustOnUse = true,
                         Effects = new List<Effect>
                         {
                             new DrawCardEffect
@@ -1613,7 +1624,7 @@ public class CardDatabase : ICardDatabase
                 new ActivatedAbility()
                 {
                     ManaCost = "1",
-                    OncePerTurn = true,
+                    OncePerTurnOnly = true,
                     Effects = new List<Effect>
                     {
                         new PumpPowerByNumberOfArtifactsEffect()
@@ -1890,7 +1901,7 @@ public class CardDatabase : ICardDatabase
                                 {
                                     new ActivatedAbility()
                                     {
-                                        OncePerTurn = true,
+                                        OncePerTurnOnly = true,
                                         ManaCost = "1",
                                         Effects = new List<Effect>
                                         {
@@ -1933,7 +1944,7 @@ public class CardDatabase : ICardDatabase
                                 {
                                     new ActivatedAbility()
                                     {
-                                        OncePerTurn = true,
+                                        OncePerTurnOnly = true,
                                         ManaCost = "1",
                                         Effects = new List<Effect>
                                         {
@@ -1976,7 +1987,7 @@ public class CardDatabase : ICardDatabase
                                 {
                                     new ActivatedAbility()
                                     {
-                                        OncePerTurn = true,
+                                        OncePerTurnOnly = true,
                                         ManaCost = "1",
                                         Effects = new List<Effect>
                                         {
@@ -2292,7 +2303,7 @@ public class CardDatabase : ICardDatabase
                 new ActivatedAbility
                 {
                     ManaCost = "2",
-                    OncePerTurn = true,
+                    OncePerTurnOnly = true,
                     Effects = new List<Effect>
                     {
                         new PumpPowerByNumberOfSpellsInGraveyardEffect
@@ -2344,7 +2355,7 @@ public class CardDatabase : ICardDatabase
                                 {
                                     new ActivatedAbility()
                                     {
-                                        OncePerTurn = true,
+                                        OncePerTurnOnly = true,
                                         ManaCost = "UW",
                                         AdditionalCost = new ExileRandomCreatureFromDiscardAdditionalCost(),
                                         Effects = new List<Effect>

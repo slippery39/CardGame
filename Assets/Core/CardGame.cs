@@ -292,8 +292,6 @@ public class CardGame
 
         //Can only play the card if it is in the owners hand.
         //We have hard coded in flashback here.
-
-
         var castZones = new List<ZoneType> { ZoneType.Hand };
 
         //figure out where the card can be cast from
@@ -315,12 +313,10 @@ public class CardGame
         {
             return false;
         }
-        //Other checks: is the card in the players hand. Otherwise they cannot play it.
 
         if (card.IsOfType<ManaCardData>())
         {
             return ManaSystem.CanPlayManaCard(ActivePlayer, card);
-            //check if we can the mana card.
         }
         else
         {

@@ -42,7 +42,12 @@ public class DefaultTurnSystem : ITurnSystem
         //Remove any ability cooldowns
         foreach (var unit in unitsAndItems)
         {
-            var activatedAbilities = unit.GetAbilitiesAndComponents<ActivatedAbility>().Where(ability => ability.OncePerTurn);
+            //Unexhaust any units
+            if (unit.Abilities.GetOfType<DontUnexhaustAbility>().Any() == false)
+            {
+                unit.IsExhausted = false;
+            }
+            var activatedAbilities = unit.GetAbilitiesAndComponents<ActivatedAbility>().Where(ability => ability.OncePerTurnOnly);
             foreach (var ab in activatedAbilities)
             {
                 //Remove all ability cooldowns.

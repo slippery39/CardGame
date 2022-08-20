@@ -44,9 +44,15 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         }
 
         //If its a once per turn ability, place an ability cooldown component on it.
-        if (activatedAbility.OncePerTurn)
+        if (activatedAbility.OncePerTurnOnly)
         {
             activatedAbility.Components.Add(new AbilityCooldown());
+        }
+
+        //Exhaust the card if nec essary
+        if (activatedAbility.ExhaustOnUse)
+        {
+            card.IsExhausted = true;
         }
 
         //Check if it has targets or not to call the appropriate method.
@@ -65,6 +71,14 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
     {
         var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault();
 
+        //Changing to take into account exhaustion.        
+        if (activatedAbility.ExhaustOnUse && card.IsExhausted)
+        {
+            cardGame.Log("Cannot use ability because the card is exhausted");
+            return false;
+        }
+
+        //For abilities that can only be used once per turn, but do not exhaust the card (i.e. Basking Rootwalla's Pump Ability)
         if (activatedAbility.GetComponent<AbilityCooldown>() != null)
         {
             cardGame.Log("Cannot use ability because its on cooldown");

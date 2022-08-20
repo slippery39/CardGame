@@ -28,3 +28,24 @@ public class MillEffect : Effect
     }
 }
 
+public class UnExhaustEffect : Effect
+{
+    public override string RulesText => $"Unexhaust this card";
+
+    public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
+    {
+        foreach (var entity in entitiesToApply)
+        {
+            var instance = entity as CardInstance;
+            if (instance == null)
+            {
+                continue;
+            }
+            cardGame.Log($"{source.Name} has been unexhausted");
+            instance.IsExhausted = false;
+        }        
+    }
+}
+
+
+

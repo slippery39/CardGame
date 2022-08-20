@@ -51,7 +51,7 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
             ActivatedAbility = new ActivatedAbility
             {
                 ManaCost = "0",
-                OncePerTurn = true,
+                OncePerTurnOnly = true,
                 Effects = new List<Effect>
                 {
                     ImprintEffect

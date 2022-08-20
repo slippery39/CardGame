@@ -12,6 +12,7 @@ public class CardInstance : CardGameEntity, ICard
     private BaseCardData _currentCardData;
     private int _ownerId;
     private bool _isSummoningSick = true;
+    private bool _isExhausted = false; //exhausted will be our term for tapped
     private CardGame _cardGame;
 
     public IZone GetZone()
@@ -55,7 +56,15 @@ public class CardInstance : CardGameEntity, ICard
     {
         get
         {
-            var str = string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name);
+            var str = "";
+            if (_isExhausted && !(_currentCardData is SpellCardData))
+            {
+                str += "EXHAUSTED \r\n";
+            }
+
+            str += string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
+
+            
 
             if (_currentCardData is SpellCardData)
             {
@@ -63,13 +72,14 @@ public class CardInstance : CardGameEntity, ICard
                 var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
                 var effectsText = string.Join("\r\n", Effects.Select(ef => ef.RulesText));
                 str = additionalCostText + "\r\n" + abilitiesText + "\r\n" + effectsText;
-                str = str.Replace("#this#", Name);
             }
 
             if (Shields > 0)
             {
                 str += $"\r\n {Shields} Shields";
             }
+
+            str = str.Replace("#this", Name);
 
             return str;
         }
@@ -113,7 +123,6 @@ public class CardInstance : CardGameEntity, ICard
             {
                 modifiedCost = costModifier.ModifyManaCost(_cardGame, this, modifiedCost);
             }
-
             return modifiedCost;
         }
     }
@@ -262,6 +271,7 @@ public class CardInstance : CardGameEntity, ICard
     public string ArtPath => _currentCardData.ArtPath;
 
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
+    public bool IsExhausted { get => _isExhausted; set => _isExhausted = value; }
 
     #endregion
 

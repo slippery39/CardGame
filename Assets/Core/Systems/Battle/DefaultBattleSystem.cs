@@ -34,17 +34,23 @@ public class DefaultBattleSystem : IBattleSystem
 
         //Determine whether or not the unit can attack.
         var unitCanAttack = attackingLane.UnitInLane.IsSummoningSick ? false : true;
+
         foreach (var canAttackAb in attackingLane.UnitInLane.GetAbilitiesAndComponents<IModifyCanAttack>())
         {
             unitCanAttack = canAttackAb.CanAttack(cardGame, attackingLane.UnitInLane);
         };
+
+        //if it is exhausted it can't attack no matter what
+        if (attackingLane.UnitInLane.IsExhausted)
+        {
+            unitCanAttack = false;
+        }
 
         if (!unitCanAttack)
         {
             cardGame.Log($@"{attackingLane.UnitInLane.Name} cannot attack!");
             return;
         }
-
         else if (defendingLane.IsEmpty() || !DefenderCanBlock(attackingLane, defendingLane))
         {
             //Attacking an empty lane trigger any on attack abilities
@@ -73,6 +79,10 @@ public class DefaultBattleSystem : IBattleSystem
             cardGame.Log($"Battle System Attacking Player : {cardGame.ActivePlayerId} for Lane {(laneIndex + 1)}");
             FightUnits(attackingLane, defendingLane);
         }
+
+        //unit is exhausted after attacking
+        //note if we implement vigilance we would need a way to override this
+        attackingLane.UnitInLane.IsExhausted = true;
     }
 
 

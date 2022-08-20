@@ -29,7 +29,8 @@ public class ActivatedAbility : CardAbility
     public string ManaCost { get; set; }
     public AdditionalCost AdditionalCost { get; set; } = null;
     public CardFilter Filter { get; internal set; }
-    public bool OncePerTurn { get; set; } = false;
+    public bool OncePerTurnOnly { get; set; } = false;
+    public bool ExhaustOnUse { get; set; } = false;
 
     public bool HasAdditionalCost()
     {
