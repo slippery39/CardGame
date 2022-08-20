@@ -59,7 +59,7 @@ public abstract class BaseCardData : ICard
     public BaseCardData()
     {
         Colors = new List<CardColor>();
-        Abilities = new List<CardAbility>();   
+        Abilities = new List<CardAbility>();
     }
 }
 
@@ -939,7 +939,7 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new UnitCardData()
         {
-            Name = "Siege Gang Commander",
+            Name = "Siege-gang Commander",
             ManaCost = "3RR",
             Power = 2,
             Toughness = 2,
@@ -1115,6 +1115,176 @@ public class CardDatabase : ICardDatabase
                     }
                    }
                });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Seething Song",
+            ManaCost = "2R",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>
+            {
+                new AddTempManaEffect
+                {
+                    ManaToAdd = "5RRRRR"
+                }
+            }
+        });
+
+
+        //We need to implement multiple different things for this one, so lets just do it one at a time.
+        /* Implenting Cycling:
+         * 
+         * Step 1 - Multiple Cast Choices
+         * Make an UI Interface for checking and giving the player a choice on what way to play a card
+         * This should potentially work with any card type (would be a way to implement split cards as well)
+         * Implement Gempalm Incinerator like a split card (i.e Get this working with a basic spell (i.e Deal 3 Damage and Draw a Card))
+         * Cycling would then be an ability that automatically encapsulates the split card type casting
+         */
+        
+        /*
+        _cards.Add(new UnitCardData
+        {
+            Name = "Gempalm Incinerator",
+            ManaCost = "2R",
+            CreatureType = "Goblin",
+            OtherPlayOptions = new List<BaseCardData>
+            {
+                new SpellCardData
+                {
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                           Amount = 2,
+                           TargetType = TargetType.TargetUnits
+                        },
+                        new DrawCardEffect
+                        {
+                            Amount = 1
+                        }
+                    }
+                }
+            }
+        });
+        */
+        
+
+        /*
+        _cards.Add(new UnitCardData
+        {
+            Name = "Goblin Sharpshooter",
+            ManaCost = "2R",
+            CreatureType = "Goblin",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SomethingDies,
+                    Filter = new CardFilter
+                    {
+                        CardType = "Unit"
+                    },
+                    Effects = new List<Effect>
+                    {
+                        new UnExhaustEffect
+                        {
+                            TargetType = TargetType.UnitSelf
+                        }
+                    }
+                },
+                new ActivatedAbility
+                {
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                            Amount = 1
+                        }
+                    }
+                }
+            }
+        });
+        */
+
+        //Need to have a way to implement MountainWalk
+        _cards.Add(new UnitCardData
+        {
+            Name = "Goblin King",
+            ManaCost = "1RR",
+            Power = 2,
+            Toughness = 2,
+            CreatureType = "Goblin",
+            Abilities = new List<CardAbility>
+            {
+                new StaticAbility
+                {
+                    Effects = new List<Effect>
+                    {
+                        new StaticPumpEffect
+                        {
+                            Power = 1,
+                            Toughness = 1,
+                            TargetType = TargetType.OtherCreaturesYouControl,
+                            Filter = new CardFilter
+                            {
+                                CreatureType = "Goblin"
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        _cards.Add(new ManaCardData
+        {
+            Name = "Goblin Burrows",
+            ManaAdded = "1",
+            Abilities = new List<CardAbility>()
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new CreateTokenEffect<ItemCardData>
+                        {
+                            TokenData = new ItemCardData()
+                            {
+                                Name = "Goblin Burrows",
+                                Subtype = "Artifact",
+                                Abilities = new List<CardAbility>
+                                {
+                                    new ActivatedAbility()
+                                    {
+                                        OncePerTurn = true,
+                                        ManaCost = "1",
+                                        Effects = new List<Effect>
+                                        {
+                                            new PumpUnitEffect
+                                            {
+                                                TargetType = TargetType.TargetUnits,
+                                                Power = 2,
+                                                Toughness = 0,
+                                                Filter = new CardFilter
+                                                {
+                                                    CreatureType = "Goblin"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+                            AmountOfTokens = 1
+                        }
+                    }
+                }
+            }
+
+
+
+
+        });
 
 
 
@@ -2543,7 +2713,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Sleight of Hand",
             ManaCost = "U",
-            Colors = new List<CardColor> { CardColor.Blue},
+            Colors = new List<CardColor> { CardColor.Blue },
             Effects = new List<Effect>
             {
                 new SleightOfHandEffect
@@ -2700,7 +2870,7 @@ public class CardDatabase : ICardDatabase
         {
             if (card.ArtPath == null)
             {
-                card.ArtPath = $"{ArtPath}{card.Name.Replace(" ", "").Replace(",","").Replace("'","")}";
+                card.ArtPath = $"{ArtPath}{card.Name.Replace(" ", "").Replace(",", "").Replace("'", "")}";
             }
         }
 

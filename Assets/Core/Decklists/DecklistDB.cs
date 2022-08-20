@@ -124,6 +124,31 @@ public class FamousDecks : DecklistDB
         };
     }
 
+    public static Decklist EXTGoblins2005()
+    {
+        return new Decklist
+        {
+            Name = "EXT - Goblins 2005",
+            Format = "Extended",
+            Cards = $@"Lands (20)
+                    2 Goblin Burrows
+                    18 Mountain
+                    Creatures (33)
+                    2 Goblin Sledder
+                    4 Skirk Prospector
+                    4 Goblin Piledriver
+                    4 Goblin Matron
+                    4 Goblin Warchief
+                    4 Goblin Ringleader
+                    4 Gempalm Incinerator
+                    3 Goblin Sharpshooter
+                    2 Siege-Gang Commander
+                    2 Goblin King
+                    3 Chrome Mox
+                    4 Seething Song"
+        };
+    }
+
     public static Decklist RGValakut2011()
     {
         //Note we replaced Khalni Heart Expedition with Rampant Growth
@@ -170,6 +195,7 @@ public class FamousDecks : DecklistDB
             UWDelver2012(),
             RGValakut2011(),
             Affinity2004(),
+            EXTGoblins2005(),
             new Decklist
             {
                 Name = "Test Deck",
