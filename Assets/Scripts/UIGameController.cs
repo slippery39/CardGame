@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,9 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private UIPlayerBoard _player2Board;
 
+    [SerializeField]
+    private UIChooseCastModePopup _chooseCastModePopup;
+
 
     //private ZoneViewer _zonePopupWindow;
 
@@ -43,6 +47,17 @@ public class UIGameController : MonoBehaviour
     {
         Instance = this;
         _cardGame = new CardGame();
+    }
+
+    internal void ShowCastModePopup(CardInstance card)
+    {
+        _chooseCastModePopup.gameObject.SetActive(true);
+        _chooseCastModePopup.SetCard(card);
+    }
+
+    internal void CloseCastModePopup()
+    {
+        _chooseCastModePopup.gameObject.SetActive(false);
     }
 
     void Start()
@@ -153,6 +168,15 @@ public class UIGameController : MonoBehaviour
         _stateMachine.HandleSelection(clickInfo.EntityId);
     }
 
+    public void HandleCastChoice(int castChoiceInfo)
+    {
+        if (_stateMachine.CurrentState is IGameUIStateHandleCastChoice)
+        {
+            Debug.Log($"Cast Choice Handled {castChoiceInfo}");
+            (_stateMachine.CurrentState as IGameUIStateHandleCastChoice).HandleCastChoiceSelection(castChoiceInfo);
+        }
+    }
+
     public void HandlePointerEnter(int entityId)
     {
         var entity = _cardGame.GetEntities<CardInstance>().Where(c => c.EntityId == entityId).FirstOrDefault();
@@ -176,7 +200,10 @@ public class UIGameController : MonoBehaviour
     private void UpdateUI()
     {
         _actionStateIndicator.text = _stateMachine.GetMessage();
-        _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
+        if (_turnIndicator != null)
+        {
+            _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
+        }
 
         _player1Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player1;
         _player2Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player2;

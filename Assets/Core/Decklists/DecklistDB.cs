@@ -140,7 +140,7 @@ public class FamousDecks : DecklistDB
                     4 Goblin Matron
                     4 Goblin Warchief
                     4 Goblin Ringleader
-                    4 Gempalm Incinerator
+                    100 Gempalm Incinerator
                     3 Goblin Sharpshooter
                     2 Siege-Gang Commander
                     2 Goblin King

@@ -14,7 +14,6 @@ public class CardInstance : CardGameEntity, ICard
     private bool _isSummoningSick = true;
     private bool _isExhausted = false; //exhausted will be our term for tapped
     private CardGame _cardGame;
-
     public IZone GetZone()
     {
         return _cardGame.GetZoneOfCard(this);
@@ -39,12 +38,6 @@ public class CardInstance : CardGameEntity, ICard
                 _toughnessWithoutMods = ((UnitCardData)_currentCardData).Toughness;
             }
         }
-    }
-
-    //Testing out this method for getting the card data
-    public T GetCardData<T>() where T : BaseCardData
-    {
-        return _currentCardData as T;
     }
 
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
@@ -273,6 +266,12 @@ public class CardInstance : CardGameEntity, ICard
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
     public bool IsExhausted { get => _isExhausted; set => _isExhausted = value; }
 
+    /// <summary>
+    /// Variables for Double Sided Cards.
+    /// </summary>
+    public CardInstance BackCard { get; set; }
+    public CardInstance FrontCard { get; set; }
+
     #endregion
 
     public CardInstance(CardGame cardGame, BaseCardData cardData)
@@ -283,7 +282,35 @@ public class CardInstance : CardGameEntity, ICard
         _currentCardData = cardData.Clone();
         Abilities = _currentCardData.Abilities.ToList();
 
+        //WIP - not finalized yet
+        //We may need to treat split cards and double faced cards as instanced cards for them to properly work with the other systems.
+
+        if (_currentCardData.BackCard != null)
+        {
+            BackCard = new CardInstance(cardGame, _currentCardData.BackCard);
+            BackCard.FrontCard = this;
+        }
+
         if (_currentCardData is UnitCardData)
+        {
+            var unitCardData = (UnitCardData)_currentCardData;
+            _powerWithoutMods = unitCardData.Power;
+            _toughnessWithoutMods = unitCardData.Toughness;
+        }
+    }
+
+    public void TransformToCardData(BaseCardData cardData)
+    {
+        //We reset any continuous effects and abilities?
+        ContinuousEffects = new List<ContinuousEffect>();
+        Abilities = _currentCardData.Abilities.ToList();
+
+        _currentCardData = cardData;
+
+        //reset the back card if necessary.
+        _currentCardData.BackCard = null;
+
+        if (cardData is UnitCardData)
         {
             var unitCardData = (UnitCardData)_currentCardData;
             _powerWithoutMods = unitCardData.Power;
@@ -325,6 +352,11 @@ public class CardInstance : CardGameEntity, ICard
     public List<T> GetMods<T>()
     {
         return GetAbilitiesAndComponents<T>().Union(Modifications.GetOfType<T>()).Union(Counters.GetOfType<T>()).ToList();
+    }
+
+    public bool HasMultipleCastModes()
+    {
+        return _currentCardData.BackCard != null;
     }
 
     public bool HasActivatedAbility()

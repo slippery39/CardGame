@@ -24,7 +24,16 @@ public class GameUIIdleState : IGameUIState
     private void HandleCardSelectedFromHand(CardInstance card)
     {
         //Figure out what type of card it is, and move to the appropriate state.
-        if (card.CurrentCardData is UnitCardData)
+        if (card.Name == "Gempalm Incinerator")
+        {
+            var test = 0;
+        }
+
+        if (card.HasMultipleCastModes())
+        {
+            _stateMachine.ChangeState(new GameUIChooseCastModeState(_stateMachine, card));
+        }
+        else if (card.CurrentCardData is UnitCardData)
         {
             _stateMachine.ChangeState(new GameUISummonUnitState(_stateMachine, card));
         }

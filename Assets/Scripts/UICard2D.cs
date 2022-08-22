@@ -74,6 +74,58 @@ public class UICard2D : UIGameEntity, IUICard
         _backOfCard.gameObject.SetActive(true);
     }
 
+    private void SetCardDataInternal(ICard cardData)
+    {
+        if (cardData is SpellCardData)
+        {
+            _cardCombatStats.gameObject.SetActive(false);
+            _cardManaCost.gameObject.SetActive(true);
+        }
+        //in case it has already been hidden previously.
+        else if (cardData is UnitCardData)
+        {
+            var unitCard = cardData as UnitCardData;
+            _cardCombatStats.gameObject.SetActive(true);
+            _cardManaCost.gameObject.SetActive(true);
+            _cardCombatStats.text = unitCard.Power + " / " + (unitCard.Toughness);
+        }
+        else if (cardData is ManaCardData)
+        {
+            _cardCombatStats.gameObject.SetActive(false);
+            _cardManaCost.gameObject.SetActive(false);
+            _cardType.text += " - " + (cardData as ManaCardData).ManaAdded;
+        }
+        else if (cardData is ItemCardData)
+        {
+            _cardCombatStats.gameObject.SetActive(false);
+        }
+
+        _cardName.text = cardData.Name;
+        _cardRulesText.text = cardData.RulesText;
+        _cardManaCost.text = cardData.ManaCost;
+        _cardType.text = cardData.CardType;
+        Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
+
+        //If failed look up the name of the card
+        if (art == null)
+        {
+            art = Resources.Load<Sprite>(cardData.Name);
+        }
+
+        _cardArt.sprite = art;
+
+        if (art == null)
+        {
+            _cardArt.color = Color.black;
+        }
+        else
+        {
+            _cardArt.color = Color.white;
+        }
+
+        SetCardFrame(cardData);
+    }
+
 
     public void SetCardData(CardInstance cardInstance)
     {
@@ -145,7 +197,48 @@ public class UICard2D : UIGameEntity, IUICard
         Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
         _cardArt.sprite = art;
 
+        if (art == null)
+        {
+            _cardArt.color = Color.black;
+        }
+        else
+        {
+            _cardArt.color = Color.white;
+        }
+
         SetCardFrame();
+    }
+
+    private void SetCardFrame(ICard cardData)
+    {
+        if (cardData.Colors == null || !cardData.Colors.Any())
+        {
+            //default to colorless frame;
+            _cardFrame.sprite = colorlessCardFrame;
+            return;
+        }
+
+        if (cardData.Colors.Count > 1)
+        {
+            //Do a multicolor frame.
+            _cardFrame.sprite = multicolorCardFrame;
+        }
+        else
+        {
+            var color = cardData.Colors.First();
+
+            //Do a single color frame.
+            switch (color)
+            {
+                case CardColor.White: _cardFrame.sprite = whiteCardFrame; break;
+                case CardColor.Blue: _cardFrame.sprite = blueCardFrame; break;
+                case CardColor.Green: _cardFrame.sprite = greenCardFrame; break;
+                case CardColor.Red: _cardFrame.sprite = redCardFrame; break;
+                case CardColor.Black: _cardFrame.sprite = blackCardFrame; break;
+                case CardColor.Colorless: _cardFrame.sprite = colorlessCardFrame; break;
+                default: _cardFrame.sprite = colorlessCardFrame; break;
+            }
+        }
     }
 
     private void SetCardFrame()
@@ -194,7 +287,7 @@ public class UICard2D : UIGameEntity, IUICard
         }
         else
         {
-            throw new System.NotImplementedException("ERROR : Trying to SetCardData in UICard2D for an unimplemented class type...");
+            SetCardDataInternal(card);
         }
     }
 

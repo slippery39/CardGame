@@ -997,6 +997,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clickEventsEnabled: 1
   _entityId: 0
+  _revealedToOwner: 0
   _highlight: {fileID: 5884981593430967452}
   _cardFrame: {fileID: 6643724055278664396}
   _cardArt: {fileID: 6643724056844739453}

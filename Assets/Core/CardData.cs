@@ -40,6 +40,7 @@ public abstract class BaseCardData : ICard
     public abstract string CardType { get; }
     public string Subtype { get; set; } = "";
     public List<CardColor> Colors { get; set; }
+    public BaseCardData BackCard { get; set; } = null;
     public string ArtPath { get; set; }
     public List<CardAbility> Abilities { get; set; }
     public AdditionalCost AdditionalCost { get; set; }
@@ -88,7 +89,8 @@ public class UnitCardData : BaseCardData
             Colors = Colors,
             Abilities = Abilities.ToList(), //todo - potential deep clone.
             CreatureType = CreatureType,
-            Subtype = Subtype
+            Subtype = Subtype,
+            BackCard = BackCard
         };
     }
 }
@@ -127,7 +129,8 @@ public class SpellCardData : BaseCardData
             Abilities = Abilities.ToList(), //todo - potential deep clone.
             Effects = Effects.ToList(),
             AdditionalCost = AdditionalCost, //clone this?
-            Subtype = Subtype
+            Subtype = Subtype,
+            BackCard = BackCard
         };
     }
 }
@@ -939,7 +942,7 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new UnitCardData()
         {
-            Name = "Siege-gang Commander",
+            Name = "Siege-Gang Commander",
             ManaCost = "3RR",
             Power = 2,
             Toughness = 2,
@@ -1140,8 +1143,8 @@ public class CardDatabase : ICardDatabase
          * Implement Gempalm Incinerator like a split card (i.e Get this working with a basic spell (i.e Deal 3 Damage and Draw a Card))
          * Cycling would then be an ability that automatically encapsulates the split card type casting
          */
-        
-        /*
+
+
         _cards.Add(new UnitCardData
         {
             Name = "Gempalm Incinerator",
@@ -1149,11 +1152,13 @@ public class CardDatabase : ICardDatabase
             CreatureType = "Goblin",
             Power = 2,
             Toughness = 1,
-            OtherPlayOptions = new List<BaseCardData>
+            Colors = new List<CardColor> { CardColor.Red },
+            BackCard = new SpellCardData
             {
-                new SpellCardData
-                {
-                    Effects = new List<Effect>
+                Name = "Gempalm Incinerate",
+                ManaCost = "1R",
+                Colors = new List<CardColor> { CardColor.Red },
+                Effects = new List<Effect>
                     {
                         new DamageEffect
                         {
@@ -1165,14 +1170,12 @@ public class CardDatabase : ICardDatabase
                             Amount = 1
                         }
                     }
-                }
             }
-        });
-        */
-        
-        
 
-        
+        });
+
+
+
         _cards.Add(new UnitCardData
         {
             Name = "Goblin Sharpshooter",
@@ -1207,7 +1210,7 @@ public class CardDatabase : ICardDatabase
                     ExhaustOnUse = true,
                     Effects = new List<Effect>
                     {
-                        
+
                         new DamageEffect
                         {
                             Amount = 1
@@ -1216,7 +1219,7 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
-        
+
 
         //Need to have a way to implement MountainWalk
         _cards.Add(new UnitCardData

@@ -163,6 +163,12 @@ public class CardGame
     {
         var owner = _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
 
+        //Might be a double sided card. Check the front card for the owner
+        if (owner == null)
+        {
+            owner = _players.Where(p => p.PlayerId == unitInstance.FrontCard.OwnerId).FirstOrDefault();
+        }
+
         if (owner == null)
         {
             throw new Exception("Could not find owner for card");
@@ -182,6 +188,12 @@ public class CardGame
 
     public IZone GetZoneOfCard(CardInstance card)
     {
+        //Edge case for double sided cards.. If this card doesn't yet exist in a zone then grab the Front cards zone.
+        if (card.FrontCard != null)
+        {
+            return GetZoneOfCard(card.FrontCard);
+        }
+
         return GetZones().Where(zone => zone.Cards.Select(c => c.EntityId).Contains(card.EntityId)).FirstOrDefault();
     }
 
@@ -203,6 +215,12 @@ public class CardGame
         var cardInstance = new CardInstance(this, data);
         cardInstance.OwnerId = player.PlayerId;
         RegisterEntity(cardInstance);
+
+        if (cardInstance.BackCard != null)
+        {
+            RegisterEntity(cardInstance.BackCard);
+        }
+
         zone.Add(cardInstance);
     }
 
@@ -229,6 +247,7 @@ public class CardGame
     private void RegisterEntity(CardGameEntity entity)
     {
         entity.EntityId = GetNextEntityId();
+
         _registeredEntities.Add(entity);
     }
 
@@ -376,6 +395,14 @@ public class CardGame
             return;
         }
 
+        //NOTE - If we are playing the back part of the double sided card, then we transform the card before playing it.
+        //Potential TODO - Allow us to create different OnPlay rules for different types of cards.
+        if (cardToPlay.FrontCard != null)
+        {
+            cardToPlay.FrontCard.TransformToCardData(cardToPlay.CurrentCardData);
+            cardToPlay = cardToPlay.FrontCard;
+        }
+
         if (cardToPlay.CurrentCardData is ManaCardData)
         {
             ManaSystem.PlayManaCard(player, cardToPlay);
@@ -394,6 +421,7 @@ public class CardGame
                 ResolvingSystem.Add(cardToPlay, targetAsEntity);
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
+            //TODO - We should check this before we do the double sided card stuff.
             else
             {
                 Log("Invalid Lane chosen for summoning unit");
@@ -593,28 +621,6 @@ public class CardGame
 
         player.Deck.Shuffle();
         return;
-
-
-
-
-        //OLD Randomize code
-
-        for (int i = 0; i < cardsToAdd; i++)
-        {
-            AddCardToGame(player, cardsToSelectFrom.Randomize().ToList()[0], player.Deck);
-        }
-
-        for (int i = 0; i < 60 - cardsToAdd; i++)
-        {
-            AddCardToGame(player, cardDB.GetCardData(manaName), player.Deck);
-        }
-
-        for (int i = 0; i < 15; i++)
-        {
-            AddCardToGame(player, cardDB.GetCardData("Collected Company"), player.Deck);
-        }
-
-        player.Deck.Shuffle();
     }
 
     void AddRandomCardsToDeck()
