@@ -384,6 +384,18 @@ public class CardGame
         return CanPlayCard(card);
     }
 
+    //WIP - Starting to use Actions instead of calling methods directly.
+    public void ProcessAction(CardGameAction action)
+    {
+        if (action.IsValidAction(this))
+        {
+            action.DoAction(this);
+        }
+        else
+        {
+            Log("Could not perform action");
+        }
+    }
 
     //PlayCard needs an ActionInfo
     public void PlayCard(Player player, CardInstance cardToPlay, int targetId, List<CardGameEntity> costChoices, bool checkIfActivePlayer = true)
