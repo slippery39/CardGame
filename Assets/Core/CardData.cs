@@ -1156,7 +1156,7 @@ public class CardDatabase : ICardDatabase
             {
                 Name = "Timbercrown Pathway",
                 ManaAdded = "1G",
-                Colors = new List<CardColor>() { CardColor.Green},
+                Colors = new List<CardColor>() { CardColor.Green },
             }
         });
 
@@ -1245,6 +1245,7 @@ public class CardDatabase : ICardDatabase
             Power = 2,
             Toughness = 2,
             CreatureType = "Goblin",
+            Colors = new List<CardColor> {CardColor.Red},
             Abilities = new List<CardAbility>
             {
                 new StaticAbility
