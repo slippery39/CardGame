@@ -140,7 +140,7 @@ public class FamousDecks : DecklistDB
                     4 Goblin Matron
                     4 Goblin Warchief
                     4 Goblin Ringleader
-                    100 Gempalm Incinerator
+                    4 Gempalm Incinerator
                     3 Goblin Sharpshooter
                     2 Siege-Gang Commander
                     2 Goblin King
@@ -200,17 +200,8 @@ public class FamousDecks : DecklistDB
             {
                 Name = "Test Deck",
                 Cards = $@"
-                    30 Island
-                    100 Swamp
-                    30 Chrome Mox
-                    30 Sleight of Hand
-                    30 Careful Study
-                    30 Merfolk Looter
-                    30 RampantGrowth2
-                    30 Telling Time
-                    100 Thoughtseize
-                    100 Gitaxian Probe
-                    30 Augur of Bolas2
+                    30 Cragcrown Pathway
+                    30 Gempalm Incinerator
                 "
             }
         };

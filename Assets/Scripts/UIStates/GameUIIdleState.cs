@@ -43,7 +43,6 @@ public class GameUIIdleState : IGameUIState
         }
         else if (card.CurrentCardData is SpellCardData || card.CurrentCardData is ItemCardData)
         {
-
             _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
         }
         else

@@ -149,7 +149,8 @@ public class ItemCardData : BaseCardData
             ArtPath = ArtPath,
             Colors = Colors,
             Abilities = Abilities.ToList(), //todo - potential deep clone.
-            Subtype = Subtype
+            Subtype = Subtype,
+            BackCard = BackCard
         };
     }
 }
@@ -173,7 +174,8 @@ public class ManaCardData : BaseCardData
             ArtPath = ArtPath,
             Abilities = Abilities.ToList(),
             ReadyImmediately = ReadyImmediately,
-            ReadyCondition = ReadyCondition
+            ReadyCondition = ReadyCondition,
+            BackCard = BackCard
         };
     }
 }
@@ -1143,6 +1145,20 @@ public class CardDatabase : ICardDatabase
          * Implement Gempalm Incinerator like a split card (i.e Get this working with a basic spell (i.e Deal 3 Damage and Draw a Card))
          * Cycling would then be an ability that automatically encapsulates the split card type casting
          */
+
+        //DFC Test (Double Faced Cards)
+        _cards.Add(new ManaCardData
+        {
+            Name = "Cragcrown Pathway",
+            ManaAdded = "1R",
+            Colors = new List<CardColor> { CardColor.Red },
+            BackCard = new ManaCardData
+            {
+                Name = "Timbercrown Pathway",
+                ManaAdded = "1G",
+                Colors = new List<CardColor>() { CardColor.Green},
+            }
+        });
 
 
         _cards.Add(new UnitCardData

@@ -70,7 +70,10 @@ public class GameUIChooseCastModeState: IGameUIState, IGameUIStateHandleCastChoi
         }
         else if (instance.IsOfType<ManaCardData>())
         {
-            _cardGame.ManaSystem.PlayManaCard(_actingPlayer, instance);
+            _cardGame.PlayCard(_actingPlayer, instance, 0, null);
+            _stateMachine.ToIdle();
+            //this never hits the CardGame.PlayCard method, which is why it is not working for our double faced land cards.
+            //_cardGame.ManaSystem.PlayManaCard(_actingPlayer, instance);
         }
         else if (instance.IsOfType<SpellCardData>() || instance.IsOfType<ItemCardData>())
         {
