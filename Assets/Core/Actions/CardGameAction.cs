@@ -67,18 +67,24 @@ public class PlaySpellAction : CardGameAction
 
 public class ActivateAbilityAction : CardGameAction
 {
-    public CardInstance sourceCard;
-    public ActivatedAbility ability;
-    public List<CardGameEntity> additionalCostChoices;
+    public CardInstance CardWithAbility { get; set; }
+    public ActivatedAbility Ability { get; set; }
+    public List<CardGameEntity> AdditionalCostChoices { get; set; }
+    public List<CardGameEntity> Targets { get; set; }
 
     public override void DoAction(CardGame cardGame)
     {
-        throw new NotImplementedException();
+        cardGame.ActivatedAbilitySystem.ActivateAbililty(Player, CardWithAbility, new ActivateAbilityInfo
+        {
+            Targets = Targets,
+            Choices = AdditionalCostChoices
+        });
     }
 
     public override bool IsValidAction(CardGame cardGame)
     {
-        throw new NotImplementedException();
+        //TODO - Check the additional costs selected and targets and other things.
+        return cardGame.ActivatedAbilitySystem.CanActivateAbility(Player, CardWithAbility);
     }
 }
 

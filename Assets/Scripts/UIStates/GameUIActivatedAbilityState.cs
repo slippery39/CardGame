@@ -86,12 +86,21 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
 
     public void ActivateAbility()
     {
-        _cardGame.ActivatedAbilitySystem.ActivateAbililty(_actingPlayer, _cardWithAbility, new ActivateAbilityInfo
+        var abilityAction = new ActivateAbilityAction
         {
+            Player = _actingPlayer,
             Targets = SelectedTargets,
-            Choices = SelectedChoices
-        });
+            CardWithAbility = _cardWithAbility,
+            AdditionalCostChoices = SelectedChoices
+        };
 
+        if (!abilityAction.IsValidAction(_cardGame))
+        {
+            Debug.Log($"Could not activate ability");
+            return;
+        }
+
+        _cardGame.ProcessAction(abilityAction);
         _stateMachine.ToIdle();
     }
 
