@@ -39,7 +39,17 @@ public class GameUIIdleState : IGameUIState
         }
         else if (card.CurrentCardData is ManaCardData)
         {
-            _cardGame.ManaSystem.PlayManaCard(ActingPlayer, card);
+            var playManaAction = new PlayManaAction
+            {
+                Player = ActingPlayer,
+                Card = card
+            };
+
+            if (!playManaAction.IsValidAction(_cardGame))
+            {
+                return;
+            }
+            _cardGame.ProcessAction(playManaAction);
         }
         else if (card.CurrentCardData is SpellCardData || card.CurrentCardData is ItemCardData)
         {
@@ -47,9 +57,6 @@ public class GameUIIdleState : IGameUIState
         }
         else
         {
-            //TODO - handle items... 
-            //handle items now... items might have targets?
-            //Really we should just have a PlayingCardState... 
         }
     }
 

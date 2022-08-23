@@ -92,20 +92,21 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
 
     public override void DoAction()
     {
-        //We need to change this to account for any additional costs and targets.
-        int target;
-
-        //Temporary, should really just be a list of CardGameEntities.
-        if (SelectedTargets != null && SelectedTargets.Any())
+        var spellAction = new PlaySpellAction
         {
-            target = SelectedTargets[0].EntityId;
-        }
-        else
+            Player = _actingPlayer,
+            Targets = SelectedTargets,
+            Spell = _spellToCast,
+            AdditionalChoices = SelectedChoices
+        };
+
+        if (!spellAction.IsValidAction(_cardGame))
         {
-            target = 0;
+            Debug.Log($"Could not play {_spellToCast.Name}");
+            return;
         }
 
-        _cardGame.PlayCard(_actingPlayer, _spellToCast, target, SelectedChoices);
+        _cardGame.ProcessAction(spellAction);
         _stateMachine.ToIdle();
     }
 }

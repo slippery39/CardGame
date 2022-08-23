@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class GameUIChooseCastModeState: IGameUIState, IGameUIStateHandleCastChoice
+public class GameUIChooseCastModeState : IGameUIState, IGameUIStateHandleCastChoice
 {
     private CardGame _cardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
@@ -46,7 +46,7 @@ public class GameUIChooseCastModeState: IGameUIState, IGameUIStateHandleCastChoi
 
     public void HandleSelection(int entityId)
     {
-        return; 
+        return;
     }
 
     public void HandleCastChoiceSelection(int castChoiceId)
@@ -63,22 +63,29 @@ public class GameUIChooseCastModeState: IGameUIState, IGameUIStateHandleCastChoi
     }
 
     private void HandleCastChoice(CardInstance instance)
-    {        
+    {
         if (instance.IsOfType<UnitCardData>())
         {
-            _stateMachine.ChangeState(new GameUISummonUnitState(_stateMachine,instance ));
+            _stateMachine.ChangeState(new GameUISummonUnitState(_stateMachine, instance));
         }
         else if (instance.IsOfType<ManaCardData>())
         {
-            _cardGame.PlayCard(_actingPlayer, instance, 0, null);
-            _stateMachine.ToIdle();
-            //this never hits the CardGame.PlayCard method, which is why it is not working for our double faced land cards.
-            //_cardGame.ManaSystem.PlayManaCard(_actingPlayer, instance);
+            var playManaAction = new PlayManaAction
+            {
+                Player = _actingPlayer,
+                Card = instance
+            };
+
+            if (!playManaAction.IsValidAction(_cardGame))
+            {
+                return;
+            }
+            _cardGame.ProcessAction(playManaAction);
         }
         else if (instance.IsOfType<SpellCardData>() || instance.IsOfType<ItemCardData>())
         {
-            _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine,instance));
-        }        
+            _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, instance));
+        }
     }
 }
 

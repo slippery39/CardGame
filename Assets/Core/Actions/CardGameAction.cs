@@ -44,16 +44,24 @@ public class PlayManaAction : CardGameAction
 
 public class PlaySpellAction : CardGameAction
 {
-    //Cost Choices etc..
-    //Targets etc..
+    public List<CardGameEntity> Targets { get; set; }
+    public List<CardGameEntity> AdditionalChoices { get; set; }
+    public CardInstance Spell { get; set; }
+
     public override void DoAction(CardGame cardGame)
     {
-        throw new NotImplementedException();
+        int target = 0;
+        if (Targets!=null && Targets.Any())
+        {
+            target = Targets.Select(t => t.EntityId).First();
+        }
+        cardGame.PlayCard(Player, Spell,target, AdditionalChoices);
     }
 
     public override bool IsValidAction(CardGame cardGame)
     {
-        throw new NotImplementedException();
+        //TODO - Also need to check the targets and the Additional Choices to make sure they are valid. 
+        return cardGame.CanPlayCard(Spell);
     }
 }
 

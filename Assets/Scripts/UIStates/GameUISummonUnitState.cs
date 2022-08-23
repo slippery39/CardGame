@@ -67,11 +67,10 @@ public class GameUISummonUnitState : IGameUIState
             return;
         }
 
-        summonUnitAction.DoAction(_cardGame);
+        _cardGame.ProcessAction(summonUnitAction);
         _stateMachine.ToIdle();
 
         /*
-
         //Might want to move this into the action itself.
         var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
 
