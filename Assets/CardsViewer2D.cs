@@ -69,11 +69,11 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
         _title.gameObject.SetActive(_showZoneName);
 
 #if UNITY_EDITOR
-        /*
+        
         SetContainerSize();
         HideScrollbar();
         SetCardSizes();
-        */
+        
 #endif
     }
 
