@@ -90,17 +90,35 @@ public class ActivateAbilityAction : CardGameAction
 
 public class FightAction : CardGameAction
 {
-    public CardInstance sourceCard;
+    public int LaneIndex { get; set; }
 
     public override void DoAction(CardGame cardGame)
     {
-        throw new NotImplementedException();
+        cardGame.BattleSystem.Battle(LaneIndex);
     }
 
     public override bool IsValidAction(CardGame cardGame)
     {
-        throw new NotImplementedException();
+        return cardGame.BattleSystem.CanBattle(LaneIndex);
     }
 }
+
+
+/*
+public class ResolveChoiceAction : CardGameAction
+{
+    public override void DoAction(CardGame cardGame)
+    {
+        cardGame.MakeChoice(choices);
+    }
+
+    public override bool IsValidAction(CardGame cardGame)
+    {
+        //all choices selected must exist in the GetValidChoices() method
+        ChoiceInfoNeeded.
+        return choices.cardGame.ChoiceInfoNeeded.GetValidChoices()
+    }
+}
+*/
 
 

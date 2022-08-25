@@ -68,6 +68,15 @@ public class UIGameController : MonoBehaviour
         _stateMachine = GetComponent<GameUIStateMachine>();
     }
 
+    private FightAction CreateFightAction(int laneIndex)
+    {
+        return new FightAction
+        {
+            Player = _cardGame.ActivePlayer,
+            LaneIndex = laneIndex
+        };
+    }
+
     private void Update()
     {
 
@@ -75,23 +84,23 @@ public class UIGameController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                _cardGame.BattleSystem.Battle(0);
+                _cardGame.ProcessAction(CreateFightAction(0));
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                _cardGame.BattleSystem.Battle(1);
+                _cardGame.ProcessAction(CreateFightAction(1));
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                _cardGame.BattleSystem.Battle(2);
+                _cardGame.ProcessAction(CreateFightAction(2));
             }
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                _cardGame.BattleSystem.Battle(3);
+                _cardGame.ProcessAction(CreateFightAction(3));
             }
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                _cardGame.BattleSystem.Battle(4);
+                _cardGame.ProcessAction(CreateFightAction(4));
             }
 
             //Test Hotkey for testing our Battle System.
@@ -120,10 +129,10 @@ public class UIGameController : MonoBehaviour
         }
         else if (_cardGame.CurrentGameState == GameState.WaitingForChoice)
         {
-                if (!(_stateMachine.CurrentState is GameUIChoiceAsPartOfResolveState))
-                {
-                    _stateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(_stateMachine, _cardGame.ChoiceInfoNeeded as IEffectWithChoice));
-                }
+            if (!(_stateMachine.CurrentState is GameUIChoiceAsPartOfResolveState))
+            {
+                _stateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(_stateMachine, _cardGame.ChoiceInfoNeeded));
+            }
         }
 
         UpdateUI();
@@ -150,10 +159,10 @@ public class UIGameController : MonoBehaviour
         return entities;
     }
 
-    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView,string title)
+    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title)
     {
         _zonePopupWindow.SetActive(true);
-        _zonePopupWindow.GetComponent<CardsViewer2D>().SetCards(cardsToView,title);
+        _zonePopupWindow.GetComponent<CardsViewer2D>().SetCards(cardsToView, title);
         _zonePopupWindow.GetComponent<CardsViewer2D>().ShowExitButton = false;
     }
 
