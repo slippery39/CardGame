@@ -53,9 +53,6 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
         Debug.Log($"Pointer has been clicked for {name} -EntityID: {EntityId}");
         if (clickEventsEnabled)
         {
-            Debug.Log("On Pointer Click Test Messages --");
-            Debug.Log(OnClickHandler);
-            Debug.Log(this.name);
             OnClickHandler(new UIGameControllerClickEvent { EntityId = EntityId });
         }
         //Output to console the clicked GameObject's name and the following message. You can replace this with your own actions for when clicking the GameObject.
@@ -69,7 +66,7 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Debug.Log($"Pointer has been entered for {name} - EntityID:  {EntityId} ");
+       // Debug.Log($"Pointer has been entered for {name} - EntityID:  {EntityId} ");
         UIGameController.Instance.HandlePointerEnter(EntityId);
     }
 

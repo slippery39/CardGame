@@ -36,7 +36,7 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
         var cardsToCheck = player.Deck.Cards.ToList();
         cardsToCheck.Reverse();
 
-        cardsToCheck = cardsToCheck.Take(Amount).ToList();
+        cardsToCheck = cardsToCheck.Take(CardsToLookAt).ToList();
 
         cardsToCheck = cardsToCheck.Where(c => c.IsOfType<UnitCardData>()).ToList();
 

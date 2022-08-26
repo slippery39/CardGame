@@ -2306,8 +2306,42 @@ public class CardDatabase : ICardDatabase
             Colors = new List<CardColor> { CardColor.Blue },
             Abilities = new List<CardAbility>
             {
-                new RespondToCastAbility
+                new RespondToCastManaLeak
                 {
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Remand",
+            ManaCost = "1U",
+            Colors = new List<CardColor> { CardColor.Blue },
+            Abilities = new List<CardAbility>
+            {
+                new RespondToCastRemand
+                {
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Dragonstorm",
+            ManaCost = "8R",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>
+            {
+                new StormEffect{
+                ChildEffect = new PutUnitsFromTopOfDeckIntoPlay
+                {
+                    CardsToLookAt = 100,
+                    Amount = 1,
+                    Filter = new CardFilter
+                    {
+                        CreatureType = "Dragon"
+                    }
+                }
                 }
             }
         });
@@ -2432,6 +2466,28 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new ManaCardData
         {
+            Name = "Steam Vents",
+            ManaAdded = "1RU",
+            Colors = new List<CardColor> { CardColor.Blue, CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility()
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                            Amount = 2,
+                            TargetType = TargetType.PlayerSelf
+                        }
+                    }
+                }
+            }
+        });
+
+        _cards.Add(new ManaCardData
+        {
             Name = "Rootbound Crag",
             ManaAdded = "1RG",
             ReadyImmediately = false,
@@ -2445,6 +2501,15 @@ public class CardDatabase : ICardDatabase
             ManaAdded = "1RG",
             ReadyImmediately = false,
             Colors = new List<CardColor> { CardColor.Green, CardColor.Red },
+            ReadyCondition = new LessThan3ManaReadyCondition() { },
+        });
+
+        _cards.Add(new ManaCardData
+        {
+            Name = "Spirebluff Canal",
+            ManaAdded = "1RU",
+            ReadyImmediately = false,
+            Colors = new List<CardColor> { CardColor.Blue, CardColor.Red },
             ReadyCondition = new LessThan3ManaReadyCondition() { },
         });
 
@@ -2796,6 +2861,22 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        /*
+         * Dragonstorm Cards Outline.
+         */
+        _cards.Add(new SpellCardData
+        {
+            Name = "Rite of Flame",
+            ManaCost = "R",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>
+            {
+                new RiteOfFlameEffect
+                {
+                }
+            }
+        });
+
 
 
 
@@ -2869,6 +2950,32 @@ public class CardDatabase : ICardDatabase
                     ManaCost = "R",
                     Effects = new List<Effect>{new AddTempAbilityEffect(new HasteAbility()) }
                 }
+            }
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Bogardan Hellkite",
+            ManaCost = "6RR",
+            CreatureType = "Dragon",
+            Colors = new List<CardColor> { CardColor.Red },
+            Power = 5,
+            Toughness = 5,
+            Abilities = new List<CardAbility>
+            {
+                new FlyingAbility(),
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>
+                    {
+                        new DamageEffect
+                        {
+                            Amount = 5,
+                            TargetType = TargetType.RandomOpponentOrUnits
+                        }
+                    }
+                },
             }
         });
 

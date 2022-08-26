@@ -149,6 +149,39 @@ public class FamousDecks : DecklistDB
         };
     }
 
+    public static Decklist URDragonstorm2006()
+    {
+        return new Decklist
+        {
+            //Shivan reef has been replaced with spirebluff canal
+            Name = "UR Dragonstorm (2006)",
+            Format = "Standard",
+            Cards = $@"
+                Instant (16)
+                4 Gigadrowse
+                4 Remand
+                4 Seething Song
+                4 Telling Time
+                Sorcery (12)
+                4 Dragonstorm
+                4 Rite of Flame
+                4 Sleight of Hand
+                Artifact (4)
+                4 Lotus Bloom
+                Creature (6)
+                4 Bogardan Hellkite
+                2 Hunted Dragon
+                Land (25)
+                2 Calciform Pools
+                3 Dreadship Reef
+                8 Island
+                4 Mountain
+                4 Spirebluff Canal
+                4 Steam Vents
+            "
+        };
+    }
+
     public static Decklist RGValakut2011()
     {
         //Note we replaced Khalni Heart Expedition with Rampant Growth
@@ -196,6 +229,7 @@ public class FamousDecks : DecklistDB
             RGValakut2011(),
             Affinity2004(),
             EXTGoblins2005(),
+            URDragonstorm2006(),
             new Decklist
             {
                 Name = "Test Deck",

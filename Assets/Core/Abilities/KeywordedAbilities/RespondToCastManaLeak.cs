@@ -5,7 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 
 //Creating this for Mana Leak, but should be able to expand it for any Instant type effects we want in our game.
-public class RespondToCastAbility : CardAbility
+
+public interface IRespondToCast
+{    void BeforeSpellResolve(CardGame cardGame,  ResolvingCardInstanceActionInfo info);
+}
+
+public class RespondToCastManaLeak : CardAbility, IRespondToCast
 {
     public override string RulesText => "Respond - Opponent casts a spell and has 2 colorless mana or less : Cancel the spell";
 
@@ -28,6 +33,36 @@ public class RespondToCastAbility : CardAbility
         {
             //Cancel the spell.. 
             cardGame.ResolvingSystem.Cancel(info);
+            //This card should get moved to the graveyard, (not treating it as a cast for now)
+            cardGame.ZoneChangeSystem.MoveToZone(cardWithAbility, ownerOfCardWithAbility.DiscardPile);
+        }
+    }
+}
+
+public class RespondToCastRemand : CardAbility, IRespondToCast
+{
+    public override string RulesText => "Respond - Opponent casts a spell : Return the spell to hand, draw a card";
+
+    public void BeforeSpellResolve(CardGame cardGame, ResolvingCardInstanceActionInfo info)
+    {
+        cardGame.Log("Checking if remand is firing here??");
+        //We need some way to know who the owner of this ability is.
+        var cardWithAbility = cardGame.GetCardThatHasResponseAbility(this);
+        var ownerOfCardWithAbility = cardGame.GetOwnerOfCard(cardWithAbility);
+
+        var ownerOfSpellCast = cardGame.GetOwnerOfCard(info.CardInstance);
+
+        var spellCastIsByOpponent = ownerOfSpellCast != ownerOfCardWithAbility;
+
+        if (spellCastIsByOpponent)
+        {
+            //Cancel the spell.. 
+            cardGame.ResolvingSystem.Cancel(info,false);
+            //This card should get moved to the graveyard, (not treating it as a cast for now)
+            cardGame.ZoneChangeSystem.MoveToZone(info.CardInstance, ownerOfSpellCast.Hand);
+            cardGame.CardDrawSystem.DrawCard(ownerOfCardWithAbility);
+            cardGame.Log($"Remand was cast, returning {info.CardInstance.Name} to its owners hand");
+
             //This card should get moved to the graveyard, (not treating it as a cast for now)
             cardGame.ZoneChangeSystem.MoveToZone(cardWithAbility, ownerOfCardWithAbility.DiscardPile);
         }

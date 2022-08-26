@@ -533,14 +533,14 @@ public class CardGame
         return player1Units.Concat(player2Units).ToList();
     }
 
-    public CardInstance GetCardThatHasResponseAbility(RespondToCastAbility ability)
+    public CardInstance GetCardThatHasResponseAbility(IRespondToCast ability)
     {
         //Check players hands;
         var cardsInHand = Player1.Hand.Union(Player2.Hand).ToList();
 
         foreach (var card in cardsInHand)
         {
-            if (card.Abilities.Contains(ability))
+            if (card.Abilities.Contains((CardAbility)ability))
             {
                 return card;
             }

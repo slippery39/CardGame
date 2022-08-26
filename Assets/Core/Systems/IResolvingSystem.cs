@@ -10,7 +10,7 @@ public interface IResolvingSystem
 
     public void Add(CardAbility ability, CardInstance source, CardGameEntity target);
 
-    public void Cancel(ResolvingActionInfo action);
+    public void Cancel(ResolvingActionInfo action, bool moveToDiscard = true);
 
     public bool IsResolvingEffect { get; }
 
@@ -84,10 +84,10 @@ public class DefaultResolvingSystem : IResolvingSystem
         //And resolve those abilities if necessary.
         //TODO - possibly we only need to look for the opponents cards.
         var playersHands = cardGame.Player1.Hand.Union(cardGame.Player2.Hand);
-        playersHands.Where(card => card.Abilities.GetOfType<RespondToCastAbility>().Any()).ToList()
+        playersHands.Where(card => card.Abilities.GetOfType<IRespondToCast>().Any()).ToList()
         .ForEach(card =>
             {
-                card.GetAbilitiesAndComponents<RespondToCastAbility>().ForEach(ab =>
+                card.GetAbilitiesAndComponents<IRespondToCast>().ForEach(ab =>
                 {
                     ab.BeforeSpellResolve(cardGame, resolvingCardInstance);
                 });
@@ -133,13 +133,13 @@ public class DefaultResolvingSystem : IResolvingSystem
         this.ResolveNext();
     }
 
-    public void Cancel(ResolvingActionInfo action)
+    public void Cancel(ResolvingActionInfo action, bool moveToDiscard = true)
     {
         _internalStack.Remove(action);
 
         var caAction = action as ResolvingCardInstanceActionInfo;
 
-        if (caAction != null)
+        if (caAction != null && moveToDiscard)
         {
             cardGame.ZoneChangeSystem.MoveToZone(caAction.CardInstance, cardGame.GetOwnerOfCard(caAction.CardInstance).DiscardPile);
         }
