@@ -104,21 +104,21 @@ public class FightAction : CardGameAction
 }
 
 
-/*
 public class ResolveChoiceAction : CardGameAction
 {
+    public List<CardInstance> Choices { get; set; }
     public override void DoAction(CardGame cardGame)
     {
-        cardGame.MakeChoice(choices);
+        cardGame.MakeChoice(Choices);
     }
 
     public override bool IsValidAction(CardGame cardGame)
     {
-        //all choices selected must exist in the GetValidChoices() method
-        ChoiceInfoNeeded.
-        return choices.cardGame.ChoiceInfoNeeded.GetValidChoices()
+        //All choices must exist in the GetValidChoices method.
+        //TODO - Must also have selected the correct amount of choices.
+        return Choices.Except(cardGame.ChoiceInfoNeeded.GetValidChoices(cardGame, Player)).Count() == 0;
     }
 }
-*/
+
 
 

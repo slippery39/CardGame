@@ -62,10 +62,17 @@ public class UIGameController : MonoBehaviour
 
     void Start()
     {
+        LogCardStats();
         //Check to see if any cards exist that don't have images.
         CheckForCardsWithoutImages();
         CheckForCardsWithoutManaCosts();
         _stateMachine = GetComponent<GameUIStateMachine>();
+    }
+
+    private void LogCardStats()
+    {
+        var allCards = new CardDatabase();
+        Debug.Log($"Total Number of cards : {allCards.GetAll().Count}");
     }
 
     private FightAction CreateFightAction(int laneIndex)

@@ -92,12 +92,25 @@ public class GameUIMultiChoiceState : IGameUIState
             return;
         }
 
+
         _sourceEffect.MakeChoice(_cardGame,_actingPlayer,entitySelected);
 
         if (_sourceEffect.Choices.Count >= _sourceEffect.NumberOfChoices)
         {
-            //Otherwise let's send the choice over to the card game.
-            _cardGame.MakeChoice(_cardsChosen);
+
+            var makeChoiceAction = new ResolveChoiceAction
+            {
+                Player = _actingPlayer,
+                Choices = _cardsChosen
+            };
+
+            if (!makeChoiceAction.IsValidAction(_cardGame))
+            {
+                //TODO - Should probably clear out the choice or something here?
+                return;
+            }
+
+            _cardGame.ProcessAction(makeChoiceAction);
             _stateMachine.ToIdle();
         }
     }

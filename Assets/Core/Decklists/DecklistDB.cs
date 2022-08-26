@@ -200,8 +200,11 @@ public class FamousDecks : DecklistDB
             {
                 Name = "Test Deck",
                 Cards = $@"
-                    30 Cragcrown Pathway
-                    30 Gempalm Incinerator
+                    30 Island
+                    30 Swamp
+                    30 Thoughtseize
+                    30 Telling Time
+                    30 Sleight of Hand
                 "
             }
         };

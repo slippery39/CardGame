@@ -18,7 +18,7 @@ public class GameUIIdleState : IGameUIState
 
     public string GetMessage()
     {
-        return "Play a card from your hand (using numeric keys) or press B to fight";
+        return "Play a card or activate an ability";
     }
 
     private void HandleCardSelectedFromHand(CardInstance card)

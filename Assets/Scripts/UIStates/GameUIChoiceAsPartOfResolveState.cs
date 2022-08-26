@@ -92,7 +92,20 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
 
         var entitySelected = _cardGame.GetEntities<CardInstance>().Where(e => e.EntityId == entityId).FirstOrDefault();
         _cardsChosen.Add(entitySelected);
-        _cardGame.MakeChoice(_cardsChosen);
+
+        var makeChoiceAction = new ResolveChoiceAction
+        {
+            Player = _actingPlayer,
+            Choices = _cardsChosen
+        };
+
+        if (!makeChoiceAction.IsValidAction(_cardGame))
+        {
+            //TODO - Should probably clear out the choice or something here?
+            return;
+        }
+
+        _cardGame.ProcessAction(makeChoiceAction);
         _stateMachine.ToIdle();
     }
 }
