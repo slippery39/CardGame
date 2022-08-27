@@ -312,7 +312,7 @@ public class CardDatabase : ICardDatabase
             {
                 new AddTempManaEffect()
                 {
-                    ManaToAdd = "***"
+                    ManaToAdd = "3***"
                 }
             }
         });
@@ -2342,6 +2342,51 @@ public class CardDatabase : ICardDatabase
                         CreatureType = "Dragon"
                     }
                 }
+                }
+            }
+        });
+
+        _cards.Add(new ItemCardData
+        {
+            Name = "Lotus Bloom",
+            ManaCost = "0",
+            Abilities =new List<CardAbility>
+            {
+                new SuspendAbility()
+                {
+                    Turns = 3
+                }
+            }
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Hunted Dragon",
+            ManaCost = "3RR",
+            Power = 6,
+            Toughness = 6,
+            CreatureType ="Dragon",
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility>
+            {
+                new FlyingAbility(),
+                new HasteAbility(),
+                new TriggeredAbility(){
+                    TriggerType = TriggerType.SelfEntersPlay,
+                    Effects = new List<Effect>{
+                                    new CreateTokenEffect<UnitCardData>
+                {
+                    TargetType = TargetType.Opponent,
+                    AmountOfTokens = 3,
+                    TokenData = new UnitCardData
+                    {
+                        Name = "Soldier",
+                        Power = 2,
+                        Toughness = 2,
+                        Colors = new List<CardColor> {CardColor.White}
+                    }
+                }
+                    }
                 }
             }
         });

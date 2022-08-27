@@ -154,6 +154,7 @@ public class FamousDecks : DecklistDB
         return new Decklist
         {
             //Shivan reef has been replaced with spirebluff canal
+            //Replacing Lotus Bloom with Black Lotus (for now..)
             Name = "UR Dragonstorm (2006)",
             Format = "Standard",
             Cards = $@"
@@ -167,7 +168,7 @@ public class FamousDecks : DecklistDB
                 4 Rite of Flame
                 4 Sleight of Hand
                 Artifact (4)
-                4 Lotus Bloom
+                4 Black Lotus
                 Creature (6)
                 4 Bogardan Hellkite
                 2 Hunted Dragon

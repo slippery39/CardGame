@@ -50,6 +50,8 @@ public class CardGame
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
+
+    public int SpellsCastThisTurn { get; set; } = 0;
     public ICardGameLogger Logger { get => _cardGameLogger; }
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
@@ -422,6 +424,7 @@ public class CardGame
         }
         else if (cardToPlay.CurrentCardData is UnitCardData)
         {
+            SpellsCastThisTurn++;
             var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
             var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
@@ -442,6 +445,7 @@ public class CardGame
         }
         else if (cardToPlay.CurrentCardData is SpellCardData)
         {
+            SpellsCastThisTurn++;
             if (!_targetSystem.CardNeedsTargets(player, cardToPlay))
             {
                 ManaSystem.SpendMana(player, cardToPlay.ManaCost);
@@ -476,6 +480,7 @@ public class CardGame
         }
         else if (cardToPlay.IsOfType<ItemCardData>())
         {
+            SpellsCastThisTurn++;
             ManaSystem.SpendMana(player, cardToPlay.ManaCost);
             ResolvingSystem.Add(cardToPlay, null);
             _stateBasedEffectSystem.CheckStateBasedEffects();

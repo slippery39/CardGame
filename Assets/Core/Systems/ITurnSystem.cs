@@ -30,6 +30,7 @@ public class DefaultTurnSystem : ITurnSystem
     }
     public void StartTurn()
     {
+        cardGame.SpellsCastThisTurn = 0;
         //Reset any summoning sick units
         var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
         foreach (var unit in activePlayersUnits)

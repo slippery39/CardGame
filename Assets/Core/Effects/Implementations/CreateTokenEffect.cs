@@ -46,14 +46,19 @@ public class CreateTokenEffect<T> : Effect where T : BaseCardData
         if (this is CreateTokenEffect<UnitCardData>)
         {
             //put in open lanes. 
+            var playerForTokens = player;
+            if (TargetType == TargetType.Opponent)
+            {
+                playerForTokens = cardGame.Players.Where(p => p != player).FirstOrDefault();
+            }
 
-            var emptyLanes = player.GetEmptyLanes();
+            var emptyLanes = playerForTokens.GetEmptyLanes();
             for (var i = 0; i < AmountOfTokens; i++)
             {
-                var emptyLane = player.GetEmptyLanes().FirstOrDefault();
+                var emptyLane = playerForTokens.GetEmptyLanes().FirstOrDefault();
                 if (emptyLane != null)
                 {
-                    cardGame.AddCardToGame(player, TokenData, emptyLane);
+                    cardGame.AddCardToGame(playerForTokens, TokenData, emptyLane);
                 }
             }
         }

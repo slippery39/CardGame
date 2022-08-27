@@ -3,6 +3,7 @@ using System.Linq;
 
 public class ActivatedAbility : CardAbility
 {
+    public ZoneType ActivateZone { get; set; } = ZoneType.InPlay; //default to in play.
     public override string RulesText
     {
         get
