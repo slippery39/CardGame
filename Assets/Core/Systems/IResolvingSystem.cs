@@ -4,7 +4,7 @@ using System.Linq;
 
 public interface IResolvingSystem
 {
-    public void Add(CardInstance cardInstance, CardGameEntity target);
+    public void Add(CardInstance cardInstance, CardGameEntity target = null);
     public IZone Stack { get; }
     public void Add(CardAbility ability, CardInstance source);
 
@@ -66,13 +66,20 @@ public class DefaultResolvingSystem : IResolvingSystem
         this.cardGame = cardGame;
     }
 
-    public void Add(CardInstance cardInstance, CardGameEntity target)
+    public void Add(CardInstance cardInstance, CardGameEntity target = null)
     {
+        List<CardGameEntity> targets = new List<CardGameEntity>();
+
+
+        if (target != null)
+        {
+            targets.Add(target);
+        }
         var resolvingCardInstance = new ResolvingCardInstanceActionInfo
         {
             Source = cardInstance,
             CardInstance = cardInstance,
-            Targets = new List<CardGameEntity> { target },
+            Targets = targets,
             SourceZone = cardGame.GetZoneOfCard(cardInstance),
         };
 
@@ -196,7 +203,7 @@ public class DefaultResolvingSystem : IResolvingSystem
                 var effectWithChoice = effect as IEffectWithChoice;
 
                 //If there are no valid choices to make, then automatically resolve it.
-                if (effectWithChoice.GetValidChoices(cardGame,player).Any()== false)
+                if (effectWithChoice.GetValidChoices(cardGame, player).Any() == false)
                 {
                     continue;
                 }

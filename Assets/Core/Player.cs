@@ -14,7 +14,7 @@ public class Player : CardGameEntity
     private Hand _hand;
     private DiscardPile _discardPile;
     private Deck _deck;
-    private IZone _exile;
+    private Zone _exile;
     private IZone _items;
     private ManaPool _manaPool;
 
@@ -41,7 +41,7 @@ public class Player : CardGameEntity
     public DiscardPile DiscardPile { get => _discardPile; set => _discardPile = value; }
     public Deck Deck { get => _deck; set => _deck = value; }
     //public int Mana { get => _mana; set => _mana = value; }
-    public IZone Exile { get => _exile; set => _exile = value; }
+    public Zone Exile { get => _exile; set => _exile = value; }
     public int ManaPlayedThisTurn { get; set; } = 0;
     public int TotalManaThatCanBePlayedThisTurn
     {

@@ -5,19 +5,18 @@ using System.Linq;
 
 public class SuspendAbility : ActivatedAbility
 {
-    public override string RulesText => $"Suspend {Turns}";
+    public override string RulesText => $"Suspend for {Turns} turns";
     public int Turns { get; set; }
 
-
-
-    public SuspendAbility()
+    public SuspendAbility(int turnsToSuspend)
     {
         ActivateZone = ZoneType.Hand;
+        Turns = turnsToSuspend;
         Effects = new List<Effect>
         {
             new SuspendEffect
             {
-                Turns = Turns
+                Turns = turnsToSuspend
             }
         };
     }
@@ -26,17 +25,47 @@ public class SuspendAbility : ActivatedAbility
 public class SuspendEffect : Effect
 {
     public override string RulesText => "";
+    public int Turns { get; set; }
+
+    public CardInstance SourceCard { get; set; }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
-        //Move to exile.
         cardGame.ZoneChangeSystem.MoveToZone(source, player.Exile);
-        //Put a suspended component on it
-        //suspended component will have counters
-        
-        //suspended component has an ITurnStart interface
-        //on iturnstart remove a counter
-        //if it has 0 counters, cast the card / put it into play.
+        source.Modifications.Add(new SuspendedComponent
+        {
+            TurnsLeft = Turns,
+            Source = source
+        });
+    }
+}
+
+public interface IOnTurnStart
+{
+    void OnTurnStart(CardGame cardGame, Player player, CardInstance source);
+}
+
+public class SuspendedComponent : Modification, IOnTurnStart
+{
+    public int TurnsLeft { get; set; } //the counters on it
+
+    public CardInstance Source { get; set; }
+    public void OnTurnStart(CardGame cardGame, Player player, CardInstance source)
+    {
+
+        //Remove a 'counter'  from the source.
+        TurnsLeft--;
+
+        cardGame.Log($"Turns left for suspend : {this.TurnsLeft}");
+
+        if (TurnsLeft == 0)
+        {
+            cardGame.Log($"Suspend has been finished!, trying to add to stack");
+            //Also remove this component from the card.
+            Source.RemoveModification(this);
+            //Move the card onto the stack.
+            cardGame.ResolvingSystem.Add(Source);
+        }
     }
 }
 

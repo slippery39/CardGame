@@ -168,7 +168,7 @@ public class FamousDecks : DecklistDB
                 4 Rite of Flame
                 4 Sleight of Hand
                 Artifact (4)
-                4 Black Lotus
+                4 Lotus Bloom
                 Creature (6)
                 4 Bogardan Hellkite
                 2 Hunted Dragon

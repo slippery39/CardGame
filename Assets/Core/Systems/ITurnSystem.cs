@@ -56,6 +56,24 @@ public class DefaultTurnSystem : ITurnSystem
             }
         }
 
+        //Remove Before Comitting - Temporary Code For Testing Out Lotus Bloom 
+        //We need to call a ToList() here or else we get an error if a card moves
+        //to a different zone as a result of OnTurnStart.
+        //of course this then means we need to actually make sure that the card is
+        //in the proper zone as the OnTUrnStart method is called
+        foreach (var card in cardGame.ActivePlayer.Exile.ToList())
+        {
+            if (cardGame.GetZoneOfCard(card).ZoneType != ZoneType.Exile)
+            {
+                continue;
+            }
+            var turnStartMods = card.Modifications.GetOfType<IOnTurnStart>();
+            foreach (var mod in turnStartMods)
+            {
+               mod.OnTurnStart(cardGame, cardGame.ActivePlayer, card);
+            }
+        };
+
         cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnStart);
         //Reset any spent mana
         cardGame.ManaSystem.ResetManaAndEssence(cardGame.ActivePlayer);

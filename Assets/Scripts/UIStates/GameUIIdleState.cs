@@ -119,6 +119,22 @@ public class GameUIIdleState : IGameUIState
             return;
         }
 
+        //Temporary Code to Handle Lotus Bloom for trsting purposes. Remove before pushing.
+        //TODO - Lotus Bloom - be able to handle cards with more than one activated ability.
+        //For now we will assume the activated abilities are in different zones.
+        if (card.Name == "Lotus Bloom")
+        {
+            Debug.Log("Test : Handling Lotus Bloom");
+            if (_cardGame.GetZoneOfCard(card).ZoneType == ZoneType.Hand)
+            {
+                Debug.Log("Activating Ability for Lotus Bloom");
+                _cardGame.ActivatedAbilitySystem.ActivateAbililty(ActingPlayer, card, new ActivateAbilityInfo
+                {
+
+                });
+            }
+        }
+        //TOOD Lotus Bloom - handling activated abilities for cards not in play.
         var isCardInPlay = _cardGame.IsInPlay(card);
 
         if (isCardInPlay)

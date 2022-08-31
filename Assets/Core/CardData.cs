@@ -2352,9 +2352,8 @@ public class CardDatabase : ICardDatabase
             ManaCost = "0",
             Abilities =new List<CardAbility>
             {
-                new SuspendAbility()
+                new SuspendAbility(3)
                 {
-                    Turns = 3
                 }
             }
         });
