@@ -29,7 +29,7 @@ public class Player : CardGameEntity
         DiscardPile = new DiscardPile();
         Deck = new Deck();
         Exile = new Zone(ZoneType.Exile, "Exile");
-        Items = new Zone(ZoneType.Items, "Items");
+        Items = new Zone(ZoneType.InPlay, "Items");
         InitLanes(numberOfLanes);
     }
 

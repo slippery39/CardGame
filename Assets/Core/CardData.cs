@@ -2350,10 +2350,22 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Lotus Bloom",
             ManaCost = "0",
-            Abilities =new List<CardAbility>
+            Abilities = new List<CardAbility>
             {
                 new SuspendAbility(3)
                 {
+                    ActivationZone = ZoneType.Hand
+                },
+                new ActivatedAbility()
+                {
+                    AdditionalCost = new SacrificeSelfAdditionalCost(),
+                    Effects = new List<Effect>
+                    {
+                        new AddTempManaEffect
+                        {
+                            ManaToAdd = "3***"
+                        }
+                    }
                 }
             }
         });
@@ -2364,7 +2376,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "3RR",
             Power = 6,
             Toughness = 6,
-            CreatureType ="Dragon",
+            CreatureType = "Dragon",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
             {

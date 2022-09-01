@@ -69,7 +69,7 @@ public class DefaultResolvingSystem : IResolvingSystem
     public void Add(CardInstance cardInstance, CardGameEntity target = null)
     {
         List<CardGameEntity> targets = new List<CardGameEntity>();
-
+        cardGame.SpellsCastThisTurn++;
 
         if (target != null)
         {

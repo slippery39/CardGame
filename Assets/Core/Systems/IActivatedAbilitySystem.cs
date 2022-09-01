@@ -19,7 +19,10 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
     }
     public void ActivateAbililty(Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo)
     {
-        var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault();
+        //TODO - Get Ability that matches Activation Zone
+        var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault(a => a.ActivationZone == cardGame.GetZoneOfCard(card).ZoneType);
+
+        //Might be a bug here with ZoneType.Items
 
         //Validating if we have the proper info to be able to correctly activate the ability;
         if (activateAbilityInfo == null && (activatedAbility.HasTargets() || activatedAbility.HasAdditionalCostChoices()))
@@ -38,7 +41,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         cardGame.ManaSystem.SpendMana(player, activatedAbility.ManaCost);
 
         //Pay any additional costs.
-         if (activatedAbility.HasAdditionalCost())
+        if (activatedAbility.HasAdditionalCost())
         {
             cardGame.AdditionalCostSystem.PayAdditionalCost(player, card, activatedAbility.AdditionalCost, new CostInfo() { EntitiesChosen = activateAbilityInfo.Choices });
         }
@@ -69,6 +72,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
     public bool CanActivateAbility(Player player, CardInstance card)
     {
+        //TODO - Multiple Activated Abilities - Check ActivateZone
         var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault();
 
         //Changing to take into account exhaustion.        

@@ -10,7 +10,7 @@ public class SuspendAbility : ActivatedAbility
 
     public SuspendAbility(int turnsToSuspend)
     {
-        ActivateZone = ZoneType.Hand;
+        ActivationZone = ZoneType.Hand;
         Turns = turnsToSuspend;
         Effects = new List<Effect>
         {

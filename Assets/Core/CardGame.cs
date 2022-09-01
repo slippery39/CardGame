@@ -423,8 +423,7 @@ public class CardGame
             _stateBasedEffectSystem.CheckStateBasedEffects();
         }
         else if (cardToPlay.CurrentCardData is UnitCardData)
-        {
-            SpellsCastThisTurn++;
+        {            
             var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
             var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
@@ -444,8 +443,7 @@ public class CardGame
             }
         }
         else if (cardToPlay.CurrentCardData is SpellCardData)
-        {
-            SpellsCastThisTurn++;
+        {            
             if (!_targetSystem.CardNeedsTargets(player, cardToPlay))
             {
                 ManaSystem.SpendMana(player, cardToPlay.ManaCost);
@@ -479,8 +477,7 @@ public class CardGame
             }
         }
         else if (cardToPlay.IsOfType<ItemCardData>())
-        {
-            SpellsCastThisTurn++;
+        {            
             ManaSystem.SpendMana(player, cardToPlay.ManaCost);
             ResolvingSystem.Add(cardToPlay, null);
             _stateBasedEffectSystem.CheckStateBasedEffects();
@@ -570,7 +567,7 @@ public class CardGame
     public bool IsInPlay(CardInstance card)
     {
         var zone = GetZoneOfCard(card);
-        return new List<ZoneType> { ZoneType.InPlay, ZoneType.Items }.Contains(zone.ZoneType);
+        return new List<ZoneType> { ZoneType.InPlay }.Contains(zone.ZoneType);
     }
 
     public List<CardInstance> GetCardsInPlay()

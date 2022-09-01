@@ -40,7 +40,6 @@ public enum ZoneType
     Deck,
     Stack,
     Exile,
-    Items
 }
 
 //A generic zone that can be used if no extra functionality is needed.

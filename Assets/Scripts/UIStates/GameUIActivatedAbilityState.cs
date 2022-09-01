@@ -58,9 +58,14 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
         _internalState?.OnApply();
     }
 
+
     private ActivatedAbility GetActivatedAbility()
-    {
-        return _cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().First();
+    {        
+        //Need to check by zone.
+        return _cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().First(ab =>
+        {
+            return ab.ActivationZone == _cardGame.GetZoneOfCard(_cardWithAbility).ZoneType;
+        });
     }
 
     public override void OnDestroy()
