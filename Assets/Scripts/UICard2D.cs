@@ -126,6 +126,17 @@ public class UICard2D : UIGameEntity, IUICard
         SetCardFrame(cardData);
     }
 
+    /// <summary>
+    /// Set the UICard as if it is a display of an action choice.
+    /// For example, it could be an action to activate an ability, in which case it should have the rules text for that specific ability.
+    /// The rules text will be defined by the action type itself and not by this.
+    /// </summary>
+    /// <param name="action"></param>
+    public void SetFromAction(CardGameAction action)
+    {
+        SetCardData(action.SourceCard);
+        _cardRulesText.text = action.ToUIString();
+    }
 
     public void SetCardData(CardInstance cardInstance)
     {

@@ -57,7 +57,7 @@ public class CardInstance : CardGameEntity, ICard
 
             str += string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
 
-            
+
 
             if (_currentCardData is SpellCardData)
             {
@@ -354,9 +354,53 @@ public class CardInstance : CardGameEntity, ICard
         return GetAbilitiesAndComponents<T>().Union(Modifications.GetOfType<T>()).Union(Counters.GetOfType<T>()).ToList();
     }
 
-    public bool HasMultipleCastModes()
+    /// <summary>
+    /// Gets all available things that can be done with the card
+    /// For example, is it castable, can we activate an ability on it?
+    /// </summary>
+    /// <returns></returns>
+    public List<CardGameAction> GetAvailableActions()
     {
-        return _currentCardData.BackCard != null;
+        var actions = new List<CardGameAction>();
+
+        if (CardGame.CanPlayCard(this))
+        {
+            //Need to check the type of card it is and create an associated action
+            actions.Add(CardGameAction.CreatePlayCardAction(this));
+        }
+        if (BackCard != null)
+        {
+            if (CardGame.CanPlayCard(BackCard))
+            {
+                actions.Add(CardGameAction.CreatePlayCardAction(BackCard));
+            }
+        }
+
+        foreach (var ability in GetActivatedAbilities())
+        {
+            if (_cardGame.ActivatedAbilitySystem.CanActivateAbility(this, ability))
+            {
+                actions.Add(CardGameAction.CreateAction(this, ability));
+            }
+        }
+
+        return actions;
+    }
+
+    public List<ActivatedAbility> GetActivatedAbilities()
+    {
+        return Abilities.GetOfType<ActivatedAbility>();
+    }
+
+    public bool HasMultipleOptions()
+    {
+        //First we need to get all the possible options for this card.
+        //Filter them by if its doable
+        //Can we pay the mana cost
+        //Can we pay the additional cost
+
+        return GetAvailableActions().Count() > 1;
+
     }
 
     public bool HasActivatedAbility()

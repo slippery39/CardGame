@@ -23,9 +23,9 @@ public class GameUIIdleState : IGameUIState
 
     private void HandleCardSelectedFromHand(CardInstance card)
     {
-        if (card.HasMultipleCastModes())
+        if (card.HasMultipleOptions())
         {
-            _stateMachine.ChangeState(new GameUIChooseCastModeState(_stateMachine, card));
+            _stateMachine.ChangeState(new GameUIChooseCardActionState(_stateMachine, card));
         }
         else if (card.CurrentCardData is UnitCardData)
         {
@@ -117,6 +117,12 @@ public class GameUIIdleState : IGameUIState
         {
             _cardGame.Log($"Could not find card with entity id {entityId}");
             return;
+        }
+
+        
+        if (card.HasMultipleOptions())
+        {
+
         }
 
         //Temporary Code to Handle Lotus Bloom for trsting purposes. Remove before pushing.

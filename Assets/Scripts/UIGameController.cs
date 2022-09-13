@@ -26,7 +26,7 @@ public class UIGameController : MonoBehaviour
     private UIPlayerBoard _player2Board;
 
     [SerializeField]
-    private UIChooseCastModePopup _chooseCastModePopup;
+    private UIChooseActionPopup _chooseActionChoicePopup;
 
 
     //private ZoneViewer _zonePopupWindow;
@@ -49,15 +49,16 @@ public class UIGameController : MonoBehaviour
         _cardGame = new CardGame();
     }
 
-    internal void ShowCastModePopup(CardInstance card)
+    internal void ShowActionChoicePopup(List<CardGameAction> actions)
     {
-        _chooseCastModePopup.gameObject.SetActive(true);
-        _chooseCastModePopup.SetCard(card);
+        //TODO - have a list of actions 
+        _chooseActionChoicePopup.gameObject.SetActive(true);
+        _chooseActionChoicePopup.SetCard(actions);
     }
 
-    internal void CloseCastModePopup()
+    internal void CloseActionChoicePopup()
     {
-        _chooseCastModePopup.gameObject.SetActive(false);
+        _chooseActionChoicePopup.gameObject.SetActive(false);
     }
 
     void Start()

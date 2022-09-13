@@ -23,6 +23,11 @@ public static class Extensions
         return source.OrderBy((item) => rnd.Next());
     }
 
+    public static bool IsNullOrEmpty<T>(this IEnumerable<T> source)
+    {
+        return source == null || !source.Any();
+    }
+
     /// <summary>
     /// Extension method that can check if a string is numeric.
     /// Call by using "ExampleString123".IsNumeric()

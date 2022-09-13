@@ -6,20 +6,91 @@ using System.Threading.Tasks;
 
 public abstract class CardGameAction
 {
+    public CardInstance SourceCard { get; set; }
     public Player Player { get; set; }
     public abstract void DoAction(CardGame cardGame);
     public abstract bool IsValidAction(CardGame cardGame);
+
+
+    //TODO - Create an ActivatedAbilityAction
+    public static CardGameAction CreateAction(CardInstance card, ActivatedAbility ability)
+    {
+        return new ActivateAbilityAction
+        {
+            SourceCard = card,
+            CardWithAbility = card,
+            Player = card.GetOwner(),
+            Ability = ability
+        };
+    }
+
+    public virtual string ToUIString()
+    {
+        if (SourceCard != null)
+        {
+            return SourceCard.RulesText;
+        }
+        else
+        {
+            return "[ACTION TEXT NEEDED]";
+        }
+      
+    }
+
+    public static CardGameAction CreatePlayCardAction(CardInstance cardToPlay)
+    {
+        //Check the type of the card to play.
+        //We need to make the appropriate action type based on the type of the card
+        if (cardToPlay.IsOfType<ManaCardData>())
+        {
+            return new PlayManaAction
+            {
+                Player = cardToPlay.GetOwner(),
+                SourceCard = cardToPlay,
+                Card = cardToPlay
+            };
+        }
+        else if (cardToPlay.IsOfType<UnitCardData>())
+        {
+            return new PlayUnitAction
+            {
+                Player = cardToPlay.GetOwner(),
+                SourceCard = cardToPlay,
+                Card = cardToPlay
+            };
+        }
+        else if (cardToPlay.IsOfType<SpellCardData>())
+        {
+            return new PlaySpellAction
+            {
+                Player = cardToPlay.GetOwner(),
+                SourceCard = cardToPlay,
+                Spell = cardToPlay,
+            };
+        }
+        else if (cardToPlay.IsOfType<ItemCardData>())
+        {
+            return new PlaySpellAction
+            {
+                Player = cardToPlay.GetOwner(),
+                SourceCard = cardToPlay,
+                Spell = cardToPlay
+            };
+        }
+
+        throw new Exception($"Card type not properly programmed in for {cardToPlay.Name}");
+    }
 }
 
 public class PlayUnitAction : CardGameAction
 {
-   public Lane Lane { get; set; }
-   public CardInstance Card { get; set; }
+    public Lane Lane { get; set; }
+    public CardInstance Card { get; set; }
 
-   public override bool IsValidAction(CardGame cardGame)
-   {
-        return Lane!=null && cardGame.CanPlayCard(Card) && Lane.IsEmpty();
-   }
+    public override bool IsValidAction(CardGame cardGame)
+    {
+        return Lane != null && cardGame.CanPlayCard(Card) && Lane.IsEmpty();
+    }
 
     public override void DoAction(CardGame cardGame)
     {
@@ -33,12 +104,17 @@ public class PlayManaAction : CardGameAction
     //Etc..
     public override void DoAction(CardGame cardGame)
     {
-        cardGame.PlayCard(Player, Card, 0 , null);
+        cardGame.PlayCard(Player, Card, 0, null);
     }
 
     public override bool IsValidAction(CardGame cardGame)
     {
         return cardGame.CanPlayCard(Card);
+    }
+
+    public override string ToUIString()
+    {
+        return SourceCard.RulesText;
     }
 }
 
@@ -51,11 +127,11 @@ public class PlaySpellAction : CardGameAction
     public override void DoAction(CardGame cardGame)
     {
         int target = 0;
-        if (Targets!=null && Targets.Any())
+        if (Targets != null && Targets.Any())
         {
             target = Targets.Select(t => t.EntityId).First();
         }
-        cardGame.PlayCard(Player, Spell,target, AdditionalChoices);
+        cardGame.PlayCard(Player, Spell, target, AdditionalChoices);
     }
 
     public override bool IsValidAction(CardGame cardGame)
@@ -79,6 +155,11 @@ public class ActivateAbilityAction : CardGameAction
             Targets = Targets,
             Choices = AdditionalCostChoices
         });
+    }
+
+    public override string ToUIString()
+    {
+        return Ability.RulesText;
     }
 
     public override bool IsValidAction(CardGame cardGame)

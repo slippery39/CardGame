@@ -597,6 +597,7 @@ public class CardGame
             var randomIndex = rng.Next(0, unitsOnly.Count());
             AddCardToGame(player, unitsOnly[randomIndex], lane);
         }
+
     }
 
     private void AddRandomCardsToHand(Player player)

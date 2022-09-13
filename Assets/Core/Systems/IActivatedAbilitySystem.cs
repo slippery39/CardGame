@@ -4,7 +4,9 @@ using System.Linq;
 
 public interface IActivatedAbilitySystem
 {
+    [Obsolete]
     bool CanActivateAbility(Player player, CardInstance card);
+    bool CanActivateAbility(CardInstance source, ActivatedAbility ability);
     public void ActivateAbililty(Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
 }
 
@@ -67,6 +69,37 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         {
             cardGame.ResolvingSystem.Add(activatedAbility, card);
         }
+    }
+
+    public bool CanActivateAbility(CardInstance card, ActivatedAbility activatedAbility)
+    {      
+        //Changing to take into account exhaustion.        
+        if (activatedAbility.ExhaustOnUse && card.IsExhausted)
+        {
+            cardGame.Log("Cannot use ability because the card is exhausted");
+            return false;
+        }
+
+        //For abilities that can only be used once per turn, but do not exhaust the card (i.e. Basking Rootwalla's Pump Ability)
+        if (activatedAbility.GetComponent<AbilityCooldown>() != null)
+        {
+            cardGame.Log("Cannot use ability because its on cooldown");
+            return false;
+        }
+
+        if (activatedAbility == null) { return false; }
+
+        var player = cardGame.GetOwnerOfCard(card);
+
+        var canPayManaCost = cardGame.ManaSystem.CanPayManaCost(player, (string)activatedAbility.ManaCost);
+        var canPayAdditionalCost = true;
+
+        if (activatedAbility.HasAdditionalCost())
+        {
+            canPayAdditionalCost = cardGame.AdditionalCostSystem.CanPayAdditionalCost(player, (CardInstance)card, activatedAbility.AdditionalCost);
+        }
+
+        return canPayManaCost && canPayAdditionalCost;
     }
 
 

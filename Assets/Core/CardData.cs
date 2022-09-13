@@ -2350,6 +2350,7 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Lotus Bloom",
             ManaCost = "0",
+            Subtype = "Artifact",
             Abilities = new List<CardAbility>
             {
                 new SuspendAbility(3)
