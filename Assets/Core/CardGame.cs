@@ -284,15 +284,14 @@ public class CardGame
         ResolvingSystem.Continue();
     }
 
+    /// <summary>
+    /// Gets a card by the specified entity id. If a card is not found, it will return null.
+    /// </summary>
+    /// <param name="entityId"></param>
+    /// <returns></returns>
     public CardInstance GetCardById(int entityId)
     {
         var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
-
-        if (card == null)
-        {
-            Logger.Log($"Could not find card, invalid entity id {entityId}");
-        }
-
         return card;
     }
 
