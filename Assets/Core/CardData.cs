@@ -1169,6 +1169,20 @@ public class CardDatabase : ICardDatabase
             Power = 2,
             Toughness = 1,
             Colors = new List<CardColor> { CardColor.Red },
+
+            //This is how it should look now:
+            Abilities = new List<CardAbility>
+            {
+                new CyclingAbility(new List<Effect>{new DamageEffect
+                {
+                    TargetType = TargetType.TargetUnits,
+                    Amount = 2
+                } })
+                {
+                    ManaCost = "1R",
+                }
+            },
+            /*
             BackCard = new SpellCardData
             {
                 Name = "Gempalm Incinerate",
@@ -1187,7 +1201,7 @@ public class CardDatabase : ICardDatabase
                         }
                     }
             }
-
+            */
         });
 
 
