@@ -21,37 +21,26 @@ public class GameUIIdleState : IGameUIState
         return "Play a card or activate an ability";
     }
 
+    //Grabbed from ChooseCardActionState, should probably put this in the base class?
+
+
+
+    //TODO - I don't think we need to differentiate between cards in hand and cards not in hand anymore, they should all work the same
+    //now, theo only thing that matters is that they have actions available for them.
     private void HandleCardSelectedFromHand(CardInstance card)
     {
         if (card.HasMultipleOptions())
         {
             _stateMachine.ChangeState(new GameUIChooseCardActionState(_stateMachine, card));
+            return;
         }
-        else if (card.CurrentCardData is UnitCardData)
+        if (card.GetAvailableActions().IsNullOrEmpty())
         {
-            _stateMachine.ChangeState(new GameUISummonUnitState(_stateMachine, card));
+            throw new System.Exception("Something weird happening in HandleCardSelectedFromHand(). Should never see this message");
         }
-        else if (card.CurrentCardData is ManaCardData)
-        {
-            var playManaAction = new PlayManaAction
-            {
-                Player = ActingPlayer,
-                Card = card
-            };
 
-            if (!playManaAction.IsValidAction(_cardGame))
-            {
-                return;
-            }
-            _cardGame.ProcessAction(playManaAction);
-        }
-        else if (card.CurrentCardData is SpellCardData || card.CurrentCardData is ItemCardData)
-        {
-            _stateMachine.ChangeState(new GameUICastingSpellState(_stateMachine, card));
-        }
-        else
-        {
-        }
+        var action = card.GetAvailableActions().First();
+        _stateMachine.HandleAction(action);
     }
 
     private void HandleCardActivatedAbility(CardInstance card)
@@ -83,10 +72,19 @@ public class GameUIIdleState : IGameUIState
     public void OnUpdate()
     {
 
-        //Need to highlight all castable cards.
+        //Change to grab all available actions, distinct it by the entity id associated with the action , then highlight those entityIds.
+
+        //Need to highlight all castable cards.      
         foreach (var uiEntity in _stateMachine.GameController.GetUIEntities())
         {
-            if (_cardGame.CanPlayCard(uiEntity.EntityId))
+
+            var card = _cardGame.GetCardById(uiEntity.EntityId);
+            if (card == null)
+            {
+                continue;
+            }
+            
+            if (card.GetAvailableActions().Any())
             {
                 uiEntity.Highlight();
             }
@@ -134,9 +132,7 @@ public class GameUIIdleState : IGameUIState
             return;
         }
 
-        var isCardCastable = _cardGame.CanPlayCard(entityId); //should probably be part of a system.
-
-        if (!isCardCastable)
+        if (card.GetAvailableActions().IsNullOrEmpty())
         {
             return;
         }

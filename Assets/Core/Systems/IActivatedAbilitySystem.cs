@@ -72,7 +72,12 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
     }
 
     public bool CanActivateAbility(CardInstance card, ActivatedAbility activatedAbility)
-    {      
+    {
+        //Activated Abilities can only be activated during the active players turn.
+        if (cardGame.GetOwnerOfCard(card)!= cardGame.ActivePlayer)
+        {
+            return false;
+        }
         //Changing to take into account exhaustion.        
         if (activatedAbility.ExhaustOnUse && card.IsExhausted)
         {
@@ -102,7 +107,7 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
         return canPayManaCost && canPayAdditionalCost;
     }
 
-
+    [Obsolete]
     public bool CanActivateAbility(Player player, CardInstance card)
     {
         //TODO - Multiple Activated Abilities - Check ActivateZone

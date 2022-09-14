@@ -33,6 +33,44 @@ public class GameUIStateMachine : MonoBehaviour
         return CurrentState.GetMessage();
     }
 
+    public void HandleAction(CardGameAction actionSelected)
+    {
+        switch (actionSelected)
+        {
+            case PlayUnitAction unitAction:
+                {
+                    ChangeState(new GameUISummonUnitState(this, unitAction.SourceCard));
+                    break;
+                }
+            case PlayManaAction playManaAction:
+                {
+                    if (!playManaAction.IsValidAction(_cardGame))
+                    {
+                        return;
+                    }
+                    _cardGame.ProcessAction(playManaAction);
+                    ToIdle();
+                    break;
+                }
+            case PlaySpellAction spellAction:
+                {
+                    ChangeState(new GameUICastingSpellState(this, spellAction.SourceCard));
+                    break;
+                }
+            //TODO - still need to make it so cards might have more than 1 ability.
+            case ActivateAbilityAction activateAbilityAction:
+                {
+                    ChangeState(new GameUIActivatedAbilityState(this, activateAbilityAction.SourceCard));
+                    break;
+                }
+            default:
+                {
+                    Debug.Log($"Unknown action type {actionSelected.GetType()} in GameUIChooseCardActionState");
+                    break;
+                }
+        }
+    }
+
     public void HandleSelection(int entityId)
     {
         CurrentState.HandleSelection(entityId);

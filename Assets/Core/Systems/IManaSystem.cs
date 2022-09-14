@@ -74,13 +74,17 @@ public class DefaultManaSystem : IManaSystem
 
 
     //How to we convert a costToPay into a ManaPool?
-    public bool CanPayManaCost(Mana costToPay, Mana payingPool)
+    private bool CanPayManaCost(Mana costToPay, Mana payingPool)
     {
         return payingPool.IsEnoughToPayCost(costToPay);
     }
 
     public bool CanPlayCard(Player player, CardInstance card)
     {
+        if (card.ManaCost == "")
+        {
+            return false;
+        }
         //TODO - Handle Non Integer Mana Costs.
         return CanPayManaCost(new Mana(card.ManaCost), player.ManaPool.CurrentMana);
     }
@@ -142,6 +146,11 @@ public class DefaultManaSystem : IManaSystem
 
     public bool CanPayManaCost(Player player, string manaCost)
     {
+        //Cards without mana costs cannot be played at all (i.e. Lotus Bloom and other suspend cards)
+        if (manaCost == "")
+        {
+            return false;
+        }
         return (player.ManaPool.CurrentMana.IsEnoughToPayCost(new Mana(manaCost))); ;
     }
 }

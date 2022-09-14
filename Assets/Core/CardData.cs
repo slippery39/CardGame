@@ -2363,7 +2363,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ItemCardData
         {
             Name = "Lotus Bloom",
-            ManaCost = "0",
+            ManaCost = "", //uncastable by regular means
             Subtype = "Artifact",
             Abilities = new List<CardAbility>
             {
