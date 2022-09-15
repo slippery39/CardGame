@@ -2997,6 +2997,28 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new ItemCardData
+        {
+            Name = "Gaea's Anthem",
+            ManaCost = "1GG",
+            Colors = new List<CardColor> { CardColor.Green },
+            Abilities = new List<CardAbility>
+            {
+                new StaticAbility
+                {
+                    Effects = new List<Effect>
+                    {
+                        new StaticPumpEffect
+                        {
+                            Power = 1,
+                            Toughness = 1,
+                            TargetType = TargetType.OtherCreaturesYouControl,
+                        }
+                    }
+                }
+            }
+        });
+
 
 
 

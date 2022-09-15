@@ -231,7 +231,7 @@ public class FamousDecks : DecklistDB
                     4 Thornweald Archer
                     4 Kavu Predator
                     4 Uktabi Drake
-                    4 Gaea’s Anthem
+                    4 Gaea's Anthem
                     4 Summoner’s Pact
                     3 Dead // Gone
                     4 Haze of Rage"
