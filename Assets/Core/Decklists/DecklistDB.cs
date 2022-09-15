@@ -183,6 +183,61 @@ public class FamousDecks : DecklistDB
         };
     }
 
+    public static Decklist GRHazeOfRage2006()
+    {
+
+        /*Original Decklist + Implementation Notes:
+         *          Lands(25)
+                    6 Mountain
+                    4 Forest
+                    1 Pendelhaven - can implement via item?
+                    2 Terramorphic Expanse
+                    4 Grove of the Burnwillows - going to be hard to implement
+                    4 Llanowar Reborn - can implement via giving the player a triggered ability that places the counter
+                    2 Kher Keep - can implement via item
+                    2 Horizon Canopy - can implement (sort of) via item
+
+                    Spells(35)
+                    4 Tarmogoyf
+                    4 Mogg War Marshal
+                    4 Thornweald Archer
+                    4 Kavu Predator
+                    4 Uktabi Drake
+                    4 Gaea’s Anthem
+                    4 Summoner’s Pact
+                    3 Dead // Gone
+                    4 Haze of Rage"
+         */
+
+
+        return new Decklist
+        {
+            Name = "GR Haze of Rage",
+            Format = "Time Spiral Block Constructed",
+            Cards = $@"
+                    Lands(25)
+                    6 Mountain
+                    4 Forest
+                    1 Pendelhaven
+                    2 Terramorphic Expanse
+                    4 Grove of the Burnwillows
+                    4 Llanowar Reborn
+                    2 Kher Keep
+                    2 Horizon Canopy
+
+                    Spells(35)
+                    4 Tarmogoyf
+                    4 Mogg War Marshal
+                    4 Thornweald Archer
+                    4 Kavu Predator
+                    4 Uktabi Drake
+                    4 Gaea’s Anthem
+                    4 Summoner’s Pact
+                    3 Dead // Gone
+                    4 Haze of Rage"
+        };
+    }
+
     public static Decklist RGValakut2011()
     {
         //Note we replaced Khalni Heart Expedition with Rampant Growth
