@@ -31,6 +31,8 @@ public class DefaultTurnSystem : ITurnSystem
     public void StartTurn()
     {
         cardGame.SpellsCastThisTurn = 0;
+        //Reset any spent mana
+        cardGame.ManaSystem.ResetManaAndEssence(cardGame.ActivePlayer);
         //Reset any summoning sick units
         var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
         foreach (var unit in activePlayersUnits)
@@ -55,6 +57,15 @@ public class DefaultTurnSystem : ITurnSystem
                 ab.Components = ab.Components.Where(c => !(c is AbilityCooldown)).ToList();
             }
         }
+        foreach (var card in cardGame.ActivePlayer.GetUnitsInPlay().Union(cardGame.ActivePlayer.Items.Cards))
+        {
+            var turnStartAbilities = card.Abilities.GetOfType<IOnTurnStart>();
+
+            foreach (var ab in turnStartAbilities)
+            {
+                ab.OnTurnStart(cardGame, cardGame.ActivePlayer, card);
+            }
+        }
 
         //Remove Before Comitting - Temporary Code For Testing Out Lotus Bloom 
         //We need to call a ToList() here or else we get an error if a card moves
@@ -67,16 +78,15 @@ public class DefaultTurnSystem : ITurnSystem
             {
                 continue;
             }
+
             var turnStartMods = card.Modifications.GetOfType<IOnTurnStart>();
             foreach (var mod in turnStartMods)
             {
-               mod.OnTurnStart(cardGame, cardGame.ActivePlayer, card);
+                mod.OnTurnStart(cardGame, cardGame.ActivePlayer, card);
             }
         };
 
         cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnStart);
-        //Reset any spent mana
-        cardGame.ManaSystem.ResetManaAndEssence(cardGame.ActivePlayer);
         //Active Player Gains A Mana - not anymore.
         //cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
         //Active Player draws a card

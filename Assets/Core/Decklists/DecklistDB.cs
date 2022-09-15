@@ -183,7 +183,7 @@ public class FamousDecks : DecklistDB
         };
     }
 
-    public static Decklist GRHazeOfRage2006()
+    public static Decklist GRHazeOfRage2007()
     {
 
         /*Original Decklist + Implementation Notes:
@@ -281,11 +281,13 @@ public class FamousDecks : DecklistDB
     {
         return new List<Decklist>
         {
+            
             UWDelver2012(),
             RGValakut2011(),
             Affinity2004(),
             EXTGoblins2005(),
             URDragonstorm2006(),
+            GRHazeOfRage2007(),
             new Decklist
             {
                 Name = "Test Deck",

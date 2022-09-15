@@ -1003,7 +1003,11 @@ public class CardDatabase : ICardDatabase
                     new CreateTokenEffect<UnitCardData>(TokenHelper.GoblinToken())),
 
                 new TriggeredAbility(TriggerType.SelfDies,
-                new CreateTokenEffect<UnitCardData>(TokenHelper.GoblinToken()))
+                new CreateTokenEffect<UnitCardData>(TokenHelper.GoblinToken())),
+                new EchoAbility
+                {
+                    EchoCost = "1R"
+                }
             }
         });
 
@@ -2947,6 +2951,54 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
+
+        /*
+         * RG Haze of Rage Deck:
+         *          4 Tarmogoyf
+                    4 Mogg War Marshal
+                    4 Thornweald Archer
+                    4 Kavu Predator
+                    4 Uktabi Drake
+                    4 Gaea’s Anthem
+                    4 Summoner’s Pact
+                    3 Dead // Gone
+                    4 Haze of Rage" 
+         */
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Thornweald Archer",
+            Power = 2,
+            Toughness = 1,
+            Colors = new List<CardColor> { CardColor.Green },
+            Abilities = new List<CardAbility>
+            {
+                new ReachAbility(),
+                new DeathtouchAbility()
+            }
+        });
+
+        //TODO Echo?
+        _cards.Add(new UnitCardData
+        {
+            Name = "Uktabi Drake",
+            ManaCost = "G",
+            Power = 2,
+            Toughness = 1,
+            Colors = new List<CardColor> { CardColor.Green },
+            Abilities = new List<CardAbility>
+            {
+                new FlyingAbility(),
+                new HasteAbility(),
+                new EchoAbility
+                {
+                    EchoCost = "1GG"
+                }
+            }
+        });
+
+
+
 
 
 

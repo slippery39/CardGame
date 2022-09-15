@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 
+
 public class ModularAbility : CardAbility, IOnSummon, IOnDeath
 {
     public int Amount { get; set; }
