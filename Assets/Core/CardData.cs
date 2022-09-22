@@ -3068,6 +3068,29 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData
+        {
+            Name = "Haze of Rage",
+            ManaCost = "1R",
+            Colors = new List<CardColor> { CardColor.Red },
+            /*Abilities = new List<CardAbility>
+            {
+                new BuybackAbility("2")
+            },*/
+            Effects = new List<Effect>
+            {
+                new StormEffect{
+                ChildEffect = new PumpUnitEffect
+                {
+                    TargetType = TargetType.OurUnits,
+                    Power = 1,
+                    Toughness =0
+                }
+            }
+                }
+        });
+
+
 
 
 
@@ -3253,6 +3276,6 @@ public class CardDatabase : ICardDatabase
 
     public BaseCardData GetCardData(string name)
     {
-        return _cards.Find(c => c.Name == name);
+        return _cards.Find(c => c.Name.ToLower() == name.ToLower());
     }
 }
