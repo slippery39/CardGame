@@ -3037,7 +3037,36 @@ public class CardDatabase : ICardDatabase
                 },
                 new PactLoseGameEffect("2GG")
             }
-        }); 
+        });
+
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Dead",
+            ManaCost = "R",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>
+            {
+                new DamageEffect
+                {
+                    Amount = 2,
+                    TargetType = TargetType.TargetUnits
+                }
+            },
+            BackCard = new SpellCardData
+            {
+                Name = "Gone",
+                ManaCost = "2R",
+                Colors = new List<CardColor> { CardColor.Red },
+                Effects = new List<Effect>
+                {
+                    new BounceUnitEffect
+                    {
+                        TargetType = TargetType.TargetUnits
+                    }
+                }
+            }
+        });
 
 
 
