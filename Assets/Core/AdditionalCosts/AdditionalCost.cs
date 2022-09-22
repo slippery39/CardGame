@@ -52,28 +52,48 @@ public class CardFilter
     public string CreatureType { get; set; }
     public string Subtype { get; set; }
     public string CardType { get; set; }
+
+    public CardColor? CardColor { get; set; }
     public IManaFilter ManaCheck { get; set; }
 
     public bool Not { get; set; } = false; //Search for things that don't match the criteria.
 
     public string RulesTextString(bool plural = false)
     {
+        /*
+         * 
+         * What is the order of operations?
+         * 
+         * i.e. Green Creature, Blue Sorcery, Basic Land
+         * i.e. Red Goblin Creature
+         * 
+         * {Color} {CreatureType} {Subtype} {CardType} card with {AdditionalAttributes - (has a keyworded ability, certain mana cost)}
+         * 
+         */
+        var str = "";
 
-        var str = "card";
+
+        if (CardColor != null)
+        {
+            str = $"{CardColor.ToString()}";
+        }
+
         if (CreatureType != null)
         {
-            str = CreatureType;
+            str += $" {CreatureType}";
         }
 
         if (Subtype != null)
         {
-            str = Subtype;
+            str += $" {Subtype}";
         }
 
         if (CardType != null)
         {
-            str = CardType;
+            str += $" {CardType}";
         }
+
+        str += " card";
 
         if (plural)
         {
@@ -82,7 +102,7 @@ public class CardFilter
 
         if (ManaCheck != null)
         {
-            str = str + " with " + ManaCheck.RulesTextString();
+            str += " with " + ManaCheck.RulesTextString();
         }
 
         return str;
@@ -96,6 +116,8 @@ public class CardFilter
             return list;
         }
 
+        //Need to add the cast here.
+        Func<CardInstance, bool> cardColorFilter = x => x.Colors.Contains((CardColor)filter.CardColor);
         Func<CardInstance, bool> creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType;
         Func<CardInstance, bool> subTypeFilter = x => x.Subtype?.ToLower() == filter.Subtype.ToLower();
         Func<CardInstance, bool> cardTypeFilter = x => x.IsOfType(filter.CardType);
@@ -103,10 +125,17 @@ public class CardFilter
 
         if (filter.Not)
         {
+
+            cardColorFilter = x => !(x.Colors.Contains((CardColor)filter.CardColor));
             creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType != filter.CreatureType;
             subTypeFilter = x => x.Subtype?.ToLower() != filter.Subtype.ToLower();
             cardTypeFilter = x => !x.IsOfType(filter.CardType);
             manaFilter = x => !filter.ManaCheck.Check(x);
+        }
+
+        if (filter.CardColor != null)
+        {
+            list = list.Where(cardColorFilter).ToList();
         }
 
         //TODO - need to apply a NOT to everything (but how?)

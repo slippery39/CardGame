@@ -2968,6 +2968,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new UnitCardData
         {
             Name = "Thornweald Archer",
+            ManaCost = "1G",
             Power = 2,
             Toughness = 1,
             Colors = new List<CardColor> { CardColor.Green },
@@ -3018,6 +3019,25 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
+
+        _cards.Add(new SpellCardData
+        {
+            Name = "Summoner's Pact",
+            ManaCost = "0",
+            Colors = new List<CardColor> { CardColor.Green },
+            Effects = new List<Effect>
+            {
+                new ChooseCardFromDeckIntoHandEffect()
+                {
+                    Filter = new CardFilter
+                    {
+                        CardColor = CardColor.Green,
+                        CardType = "unit" //change this to an enum, or at the very least a static string somewhere.
+                    }
+                },
+                new PactLoseGameEffect("2GG")
+            }
+        }); 
 
 
 

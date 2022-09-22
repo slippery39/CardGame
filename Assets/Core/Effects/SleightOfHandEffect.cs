@@ -94,6 +94,7 @@ public class TellingTimeEffect : Effect, IMultiChoiceEffect
     }
 }
 
+
 public class RampantGrowthChoiceEffect : Effect, IEffectWithChoice
 {
     public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;

@@ -85,6 +85,8 @@ public class CardGame
     public ICountersSystem CountersSystem { get; set; }
     public IPlayerModificationSystem PlayerAbilitySystem { get; set; }
 
+    public IWinLoseSystem WinLoseSystem { get; set; }
+
     #endregion
     #endregion
 
@@ -110,6 +112,7 @@ public class CardGame
         _discardSystem = new DefaultDiscardSystem(this);
         _modificationsSystem = new DefaultModificationSystem(this);
         _additionalCostSystem = new DefaultAdditionalCostSystem(this);
+        WinLoseSystem = new DefaultWinLoseSystem(this);
 
         CountersSystem = new DefaultCountersSystem(this);
         ItemSystem = new DefaultItemSystem(this);

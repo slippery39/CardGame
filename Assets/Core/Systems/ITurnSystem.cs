@@ -40,23 +40,14 @@ public class DefaultTurnSystem : ITurnSystem
             unit.IsSummoningSick = false;
         }
 
-        var unitsAndItems = cardGame.GetCardsInPlay(cardGame.ActivePlayer);
+        RefreshExhaustionAndCooldowns();
 
-        //Remove any ability cooldowns
-        foreach (var unit in unitsAndItems)
-        {
-            //Unexhaust any units
-            if (unit.Abilities.GetOfType<DontUnexhaustAbility>().Any() == false)
-            {
-                unit.IsExhausted = false;
-            }
-            var activatedAbilities = unit.GetAbilitiesAndComponents<ActivatedAbility>().Where(ability => ability.OncePerTurnOnly);
-            foreach (var ab in activatedAbilities)
-            {
-                //Remove all ability cooldowns.
-                ab.Components = ab.Components.Where(c => !(c is AbilityCooldown)).ToList();
-            }
-        }
+        /*
+         * TODO - There seems to be a pattern here of needing to grab all potential abilities / modifications on cards as well as players
+         * that implement a certain interface. In this case it is the IOnTurnStart interface, but we could for example have IOnTurnEnd, or IOnWhatever
+         * interfaces to implement as well. Lets make a method for that 
+         */
+
         foreach (var card in cardGame.ActivePlayer.GetUnitsInPlay().Union(cardGame.ActivePlayer.Items.Cards))
         {
             var turnStartAbilities = card.Abilities.GetOfType<IOnTurnStart>();
@@ -66,6 +57,12 @@ public class DefaultTurnSystem : ITurnSystem
                 ab.OnTurnStart(cardGame, cardGame.ActivePlayer, card);
             }
         }
+
+        cardGame.ActivePlayer.Modifications.GetOfType<IOnTurnStart>().ForEach(mod =>
+        {
+            //Shouldn't need to put null if its on a player or should we?
+            mod.OnTurnStart(cardGame, cardGame.ActivePlayer, null);
+        });
 
         //Remove Before Comitting - Temporary Code For Testing Out Lotus Bloom 
         //We need to call a ToList() here or else we get an error if a card moves
@@ -91,6 +88,27 @@ public class DefaultTurnSystem : ITurnSystem
         //cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
         //Active Player draws a card
         cardGame.CardDrawSystem.DrawCard(cardGame.ActivePlayer);
+    }
+
+    private void RefreshExhaustionAndCooldowns()
+    {
+        var unitsAndItems = cardGame.GetCardsInPlay(cardGame.ActivePlayer);
+
+        //Remove any ability cooldowns
+        foreach (var unit in unitsAndItems)
+        {
+            //Unexhaust any units
+            if (unit.Abilities.GetOfType<DontUnexhaustAbility>().Any() == false)
+            {
+                unit.IsExhausted = false;
+            }
+            var activatedAbilities = unit.GetAbilitiesAndComponents<ActivatedAbility>().Where(ability => ability.OncePerTurnOnly);
+            foreach (var ab in activatedAbilities)
+            {
+                //Remove all ability cooldowns.
+                ab.Components = ab.Components.Where(c => !(c is AbilityCooldown)).ToList();
+            }
+        }
     }
 
     public void EndTurn()

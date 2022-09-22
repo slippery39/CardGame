@@ -62,6 +62,7 @@ public class Player : CardGameEntity
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 
     public IZone Items { get => _items; set => _items = value; }
+    public bool IsLoser { get; set; } = false;
 
     #endregion
 

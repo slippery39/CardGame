@@ -157,7 +157,7 @@ public class CardInstance : CardGameEntity, ICard
 
     public bool IsOfType(string cardType)
     {
-        return CurrentCardData.CardType == cardType;
+        return CurrentCardData.CardType.ToLower() == cardType.ToLower();
     }
 
     private int _powerWithoutMods;

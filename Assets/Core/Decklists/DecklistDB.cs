@@ -209,7 +209,10 @@ public class FamousDecks : DecklistDB
                     4 Haze of Rage"
          */
 
-
+        /*
+         * 
+         * TODO - Tarmogoyf, Llanowar Reborn, Grove of the Burnwillows? Kher Keep, Horizon Canopy
+         */
         return new Decklist
         {
             Name = "GR Haze of Rage",
@@ -232,7 +235,7 @@ public class FamousDecks : DecklistDB
                     4 Kavu Predator
                     4 Uktabi Drake
                     4 Gaea's Anthem
-                    4 Summoner’s Pact
+                    4 Summoner's Pact
                     3 Dead // Gone
                     4 Haze of Rage"
         };

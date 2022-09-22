@@ -39,8 +39,6 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
             cardGame.Log("Potential infinite loop regarding death checks in our state based effects...");
         }
 
-
-
         cardGame.Player1.Modifications.GetOfType<IOnAfterStateBasedEffects>().ForEach(mod =>
         {
             mod.OnAfterStateBasedEffects(cardGame, cardGame.Player1);
@@ -50,6 +48,9 @@ public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
         {
             mod.OnAfterStateBasedEffects(cardGame, cardGame.Player2);
         });
+
+        //Check to see if any player has lost
+        cardGame.WinLoseSystem.CheckLosers();
     }
 
     //Returns true if something died, which means we have to apply/remove any static effects and check again.
