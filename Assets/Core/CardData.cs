@@ -3073,10 +3073,10 @@ public class CardDatabase : ICardDatabase
             Name = "Haze of Rage",
             ManaCost = "1R",
             Colors = new List<CardColor> { CardColor.Red },
-            /*Abilities = new List<CardAbility>
+            Abilities = new List<CardAbility>
             {
                 new BuybackAbility("2")
-            },*/
+            },
             Effects = new List<Effect>
             {
                 new StormEffect{

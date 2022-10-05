@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-
-
-
-
 public class AffinityAbility : CardAbility
 {
     public override string RulesText => $"Affinity for artifacts"; //only for artifacts right now.

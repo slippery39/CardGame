@@ -85,7 +85,14 @@ public class RespondToOpponentEndOfTurnAbility : CardAbility
         var owner = cardGame.GetOwnerOfCard(sourceCard);
         //Check if the spell is still on the stack.. (to handle the edge case that it has been cancelled already)
         cardGame.Log($"Summoning Trap has been played by {owner.Name}");
-        cardGame.PlayCard(owner, sourceCard, 0, new List<CardGameEntity> { }, false);
+
+        var action = new PlaySpellAction()
+        {
+            Player = owner,
+            CardToPlay = sourceCard,
+        };
+
+        cardGame.PlayCard(owner,action,false);
     }
 }
 

@@ -13,6 +13,8 @@ public interface IManaSystem
     void SpendMana(Player player, string cost);
     void ResetManaAndEssence(Player player);
     bool CanPlayCard(Player player, CardInstance card);
+
+    bool CanPlayCard(Player player, CardInstance card, List<ICastModifier> modifiers);
     bool CanPlayManaCard(Player player, CardInstance card);
 
     void PlayManaCardFromEffect(Player player, CardInstance card, bool forceEmpty);
@@ -87,6 +89,29 @@ public class DefaultManaSystem : IManaSystem
         }
         //TODO - Handle Non Integer Mana Costs.
         return CanPayManaCost(new Mana(card.ManaCost), player.ManaPool.CurrentMana);
+    }
+
+    public bool CanPlayCard(Player player, CardInstance card, List<ICastModifier> castModifiers)
+    {
+        if (castModifiers.IsNullOrEmpty())
+        {
+            return CanPlayCard(player, card);
+        }
+        
+        if (card.ManaCost == "")
+        {
+            return false;
+        }
+
+        var mana = new Mana(card.ManaCost);
+
+        foreach(var mod in castModifiers)
+        {
+            mana.AddFromString(mod.GetCost(card));
+        }
+
+        return CanPayManaCost(mana, player.ManaPool.CurrentMana);
+
     }
 
     public bool CanPlayManaCard(Player player, CardInstance card)

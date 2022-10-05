@@ -8,7 +8,7 @@ public class ResolvingActionInfo
     public CardInstance Source { get; set; }
 
     //public List<Effect> EffectsRemaining {get; set;} //when resolving a spell or ability, if we come across an effect that needs a choice, we "pause" the resolving of the spell
-    //public List<Effect> ResolvedEffects {get; set;}
+    //public List<Effect> ResolvedEffects {get; set;} 
     public List<CardGameEntity> Targets { get; set; }
 }
 
@@ -16,7 +16,14 @@ public class ResolvingAbilityActionInfo : ResolvingActionInfo
 {
     public CardAbility Ability { get; set; }
 }
+
 public class ResolvingCardInstanceActionInfo : ResolvingActionInfo
 {
+    public CardGameAction Action { get; set; }
     public CardInstance CardInstance { get; set; }
 }
+public class ResolvingCardInstanceActionInfo<T> : ResolvingCardInstanceActionInfo where T: CardGameAction
+{
+    public new T Action { get; set; }
+}
+

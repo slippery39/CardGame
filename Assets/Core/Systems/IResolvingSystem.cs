@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
+//TODO - add cast modifiers to the card instance add method.
 public interface IResolvingSystem
 {
-    public void Add(CardInstance cardInstance, CardGameEntity target = null);
+    public void Add(CardGameAction action, CardInstance cardInstance);
     public IZone Stack { get; }
     public void Add(CardAbility ability, CardInstance source);
 
@@ -66,20 +67,27 @@ public class DefaultResolvingSystem : IResolvingSystem
         this.cardGame = cardGame;
     }
 
-    public void Add(CardInstance cardInstance, CardGameEntity target = null)
+    public void Add<T>(T action) where T : CardGameAction
+    {
+        var resolvingCardInstanceAction = new ResolvingCardInstanceActionInfo<T>
+        {
+            Action = action,
+            SourceZone = cardGame.GetZoneOfCard(action.SourceCard)
+        };
+    }
+
+    //TODO - Refactor to use Actions instead.
+    public void Add(CardGameAction action, CardInstance cardInstance)
     {
         List<CardGameEntity> targets = new List<CardGameEntity>();
         cardGame.SpellsCastThisTurn++;
 
-        if (target != null)
-        {
-            targets.Add(target);
-        }
         var resolvingCardInstance = new ResolvingCardInstanceActionInfo
         {
+            Action = action, 
             Source = cardInstance,
             CardInstance = cardInstance,
-            Targets = targets,
+            Targets = action.Targets,
             SourceZone = cardGame.GetZoneOfCard(cardInstance),
         };
 
@@ -175,6 +183,24 @@ public class DefaultResolvingSystem : IResolvingSystem
                 else
                 {
                     cardGame.ZoneChangeSystem.MoveToZone(spell, cardGame.GetOwnerOfCard(spell).DiscardPile);
+                }
+            }
+
+            //Buyback
+            var resInfo = _currentResolvingAction as ResolvingCardInstanceActionInfo;
+
+            cardGame.Log("Testing for buyback:  ");
+            cardGame.Log($"{resInfo}");
+
+            if (resInfo != null) {
+                var action = resInfo.Action as PlaySpellAction;
+                cardGame.Log($"{action}");
+                if (action != null)
+                {
+                    //TODO - CastModifier is not being added here:
+                    cardGame.Log($"Cast Modifiers Count : {action.CastModifiers.Count}");
+                    action.CastModifiers?.ForEach
+                        (m => m.OnResolve(cardGame, resolvingCardInstance.Source));
                 }
             }
         }

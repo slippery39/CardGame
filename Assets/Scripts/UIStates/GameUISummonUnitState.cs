@@ -59,7 +59,7 @@ public class GameUISummonUnitState : IGameUIState
         {
             Player = _actingPlayer,
             SourceCard = _unitToSummon,
-            Card = _unitToSummon,
+            CardToPlay = _unitToSummon,
             Lane = _cardGame.GetEntities<Lane>().Where(l => l.EntityId == entityId).FirstOrDefault()
         };
 

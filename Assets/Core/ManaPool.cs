@@ -161,6 +161,17 @@ public class Mana
         return manaDict;
     }
 
+    public void AddFromString(string manaStr)
+    {
+        var manaToAdd = new Mana(manaStr);
+
+        foreach (var type in manaToAdd.ColoredMana.Keys)
+        {
+            ColoredMana[type] += manaToAdd.ColoredMana[type];
+        }
+        ColorlessMana += manaToAdd.ColorlessMana;
+    }
+
 
 }
 

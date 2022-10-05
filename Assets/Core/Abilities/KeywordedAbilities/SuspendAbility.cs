@@ -56,7 +56,9 @@ public class SuspendedComponent : Modification, IOnTurnStart
             //Also remove this component from the card.
             Source.RemoveModification(this);
             //Move the card onto the stack.
-            cardGame.ResolvingSystem.Add(Source);
+
+            var playCardAction = CardGameAction.CreatePlayCardAction(source);
+            cardGame.ResolvingSystem.Add(playCardAction,source);
         }
     }
 }

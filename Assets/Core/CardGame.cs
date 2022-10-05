@@ -299,7 +299,7 @@ public class CardGame
     }
 
 
-    public bool CanPlayCard(CardInstance card, bool checkIfActivePlayer = true)
+    public bool CanPlayCard(CardInstance card, bool checkIfActivePlayer = true, List<ICastModifier> modifiers = null)
     {
         if (card == null)
         {
@@ -343,7 +343,7 @@ public class CardGame
         }
         else
         {
-            if (!ManaSystem.CanPlayCard(owner, card))
+            if (!ManaSystem.CanPlayCard(owner, card,modifiers))
             {
                 return false;
             }
@@ -359,6 +359,8 @@ public class CardGame
                     return false;
                 }
             }
+
+
         }
         else if (card.IsOfType<ItemCardData>())
         {
@@ -401,9 +403,20 @@ public class CardGame
         }
     }
 
-    //PlayCard needs an ActionInfo
-    public void PlayCard(Player player, CardInstance cardToPlay, int targetId, List<CardGameEntity> costChoices, bool checkIfActivePlayer = true)
+    //TODO - Refactor PlayCard to be able to Take in ActionInfo
+    //TODO - Add the cast modifiers to the resolving system.
+    public void PlayCard(Player player, CardGameAction action, bool checkIfActivePlayer = true)
     {
+
+        var cardToPlay = action.CardToPlay;
+        var costChoices = action.AdditionalChoices;
+        var targetId = action.Targets?.FirstOrDefault()?.EntityId;
+
+        if (cardToPlay == null)
+        {
+            Log("Error, trying to play a null card?");
+            return;
+        }
 
         if (!CanPlayCard(cardToPlay, checkIfActivePlayer))
         {
@@ -434,7 +447,7 @@ public class CardGame
             {
                 ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
-                ResolvingSystem.Add(cardToPlay, targetAsEntity);
+                ResolvingSystem.Add(action,cardToPlay);
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             //TODO - We should check this before we do the double sided card stuff.
@@ -454,25 +467,35 @@ public class CardGame
                 {
                     mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay)); //etc...
                 });
-                ResolvingSystem.Add(cardToPlay, null);
+                
+                if (action.CardToPlay.Name.ToLower() == "haze of rage")
+                {
+                    var debugPoint = 0;
+                }
+                
+                ResolvingSystem.Add(action,cardToPlay);
+                
                 //Do we need our state based effects here?
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             else
             {
+                //TODO - Validation should happen on a different layer
                 var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
-                var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
+                var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);                
 
                 if (targetAsEntity != null)
                 {
                     ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                     AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
+
+                    //TODO - This should go to the ResolvingSystem.
                     player.Modifications.GetOfType<IOnSpellCast>().ForEach(mod =>
                     {
                         mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay));//etc...
                     });
-                    ResolvingSystem.Add(cardToPlay, targetAsEntity);
+                    ResolvingSystem.Add(action,cardToPlay);
                     //Do we need our state based effects here?
                     _stateBasedEffectSystem.CheckStateBasedEffects();
                 }
@@ -481,7 +504,7 @@ public class CardGame
         else if (cardToPlay.IsOfType<ItemCardData>())
         {            
             ManaSystem.SpendMana(player, cardToPlay.ManaCost);
-            ResolvingSystem.Add(cardToPlay, null);
+            ResolvingSystem.Add(action,cardToPlay);
             _stateBasedEffectSystem.CheckStateBasedEffects();
         }
     }
@@ -624,8 +647,6 @@ public class CardGame
         // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
         //var cardsToSelectFrom = cardDB.GetAll();
         var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Oracle of Mul Daya");
-        var cardsToAdd = 45;
-
         //Testing out if we can instantiate an affinity deck.
 
 

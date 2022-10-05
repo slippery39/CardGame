@@ -9,11 +9,21 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _spellToCast;
-    public GameUICastingSpellState(GameUIStateMachine stateMachine, CardInstance spellToCast)
+    private List<ICastModifier> _modifiers;
+    public GameUICastingSpellState(GameUIStateMachine stateMachine, CardInstance spellToCast, List<ICastModifier> modifiers = null)
     {
         _stateMachine = stateMachine;
         _cardGame = stateMachine.CardGame;
         _spellToCast = spellToCast;
+
+        if (modifiers != null)
+        {
+            _modifiers = modifiers;
+        }
+        else
+        {
+            _modifiers = new List<ICastModifier>();
+        }
 
         //Determine whether the ability has targets
         NeedsTargets = _cardGame.TargetSystem.CardNeedsTargets(_actingPlayer, _spellToCast);
@@ -96,8 +106,9 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
         {
             Player = _actingPlayer,
             Targets = SelectedTargets,
-            Spell = _spellToCast,
-            AdditionalChoices = SelectedChoices
+            CardToPlay = _spellToCast,
+            AdditionalChoices = SelectedChoices,
+            CastModifiers = _modifiers
         };
 
         if (!spellAction.IsValidAction(_cardGame))

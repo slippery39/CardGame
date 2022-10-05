@@ -33,6 +33,7 @@ public class GameUIStateMachine : MonoBehaviour
         return CurrentState.GetMessage();
     }
 
+    //TODO - We should actually just be passing in the action here. 
     public void HandleAction(CardGameAction actionSelected)
     {
         switch (actionSelected)
@@ -54,7 +55,7 @@ public class GameUIStateMachine : MonoBehaviour
                 }
             case PlaySpellAction spellAction:
                 {
-                    ChangeState(new GameUICastingSpellState(this, spellAction.SourceCard));
+                    ChangeState(new GameUICastingSpellState(this, spellAction.SourceCard,spellAction.CastModifiers));
                     break;
                 }
             //TODO - still need to make it so cards might have more than 1 ability.

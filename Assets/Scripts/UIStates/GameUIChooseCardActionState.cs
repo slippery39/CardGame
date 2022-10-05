@@ -39,7 +39,10 @@ public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastC
     public void OnApply()
     {
         //Show the cast modes window.
-        _stateMachine.GameController.ShowActionChoicePopup(_cardWithMultipleActions.GetAvailableActions());
+
+        var availableActions = _cardWithMultipleActions.GetAvailableActions();
+
+        _stateMachine.GameController.ShowActionChoicePopup(availableActions);
     }
 
     public void OnDestroy()
@@ -54,6 +57,9 @@ public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastC
 
     public void HandleCastChoiceSelection(int castChoiceId)
     {
+
+        var action = _cardWithMultipleActions.GetAvailableActions()[castChoiceId];
+        Debug.Log("Modifiers found in our choose card action state : " + action.CastModifiers.Count.ToString());
         _stateMachine.HandleAction(_cardWithMultipleActions.GetAvailableActions()[castChoiceId]);
     }
 
