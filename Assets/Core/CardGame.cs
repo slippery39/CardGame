@@ -466,13 +466,8 @@ public class CardGame
                 player.Modifications.GetOfType<IOnSpellCast>().ForEach(mod =>
                 {
                     mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay)); //etc...
-                });
-                
-                if (action.CardToPlay.Name.ToLower() == "haze of rage")
-                {
-                    var debugPoint = 0;
-                }
-                
+                });                
+
                 ResolvingSystem.Add(action,cardToPlay);
                 
                 //Do we need our state based effects here?
