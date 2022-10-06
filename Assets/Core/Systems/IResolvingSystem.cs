@@ -84,7 +84,7 @@ public class DefaultResolvingSystem : IResolvingSystem
 
         var resolvingCardInstance = new ResolvingCardInstanceActionInfo
         {
-            Action = action, 
+            Action = action,
             Source = cardInstance,
             CardInstance = cardInstance,
             Targets = action.Targets,
@@ -175,33 +175,26 @@ public class DefaultResolvingSystem : IResolvingSystem
             {
                 var spell = resolvingCardInstance.Source;
 
+                var resInfo = _currentResolvingAction as ResolvingCardInstanceActionInfo;
+                var action = resInfo.Action as PlaySpellAction;
+
+                action.CastModifiers?.ForEach
+                    (m => m.OnResolve(cardGame, resolvingCardInstance.Source));
+
+                IZone zoneTo = cardGame.GetOwnerOfCard(spell).DiscardPile;
+
+                //TODO - Flashback could be a CastModifier now instead? or maybe have a similar concept called CastMode?
                 //Temporary hack to get flashback working quickly.
                 if (resolvingCardInstance.SourceZone.ZoneType == ZoneType.Discard)
                 {
-                    cardGame.ZoneChangeSystem.MoveToZone(spell, cardGame.GetOwnerOfCard(spell).Exile);
+                    zoneTo = cardGame.GetOwnerOfCard(spell).Exile;
                 }
-                else
-                {
-                    cardGame.ZoneChangeSystem.MoveToZone(spell, cardGame.GetOwnerOfCard(spell).DiscardPile);
-                }
-            }
 
-            //Buyback
-            var resInfo = _currentResolvingAction as ResolvingCardInstanceActionInfo;
+                action.CastModifiers.GetOfType<IModifyZoneOnResolve>().ForEach(
+                    m => 
+                    zoneTo = m.ModifyZoneOnResolve(cardGame, zoneTo, spell));
 
-            cardGame.Log("Testing for buyback:  ");
-            cardGame.Log($"{resInfo}");
-
-            if (resInfo != null) {
-                var action = resInfo.Action as PlaySpellAction;
-                cardGame.Log($"{action}");
-                if (action != null)
-                {
-                    //TODO - CastModifier is not being added here:
-                    cardGame.Log($"Cast Modifiers Count : {action.CastModifiers.Count}");
-                    action.CastModifiers?.ForEach
-                        (m => m.OnResolve(cardGame, resolvingCardInstance.Source));
-                }
+                cardGame.ZoneChangeSystem.MoveToZone(spell, zoneTo);
             }
         }
 
