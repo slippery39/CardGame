@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 
 public class CardGame
@@ -343,7 +341,7 @@ public class CardGame
         }
         else
         {
-            if (!ManaSystem.CanPlayCard(owner, card,modifiers))
+            if (!ManaSystem.CanPlayCard(owner, card, modifiers))
             {
                 return false;
             }
@@ -438,7 +436,7 @@ public class CardGame
             _stateBasedEffectSystem.CheckStateBasedEffects();
         }
         else if (cardToPlay.CurrentCardData is UnitCardData)
-        {            
+        {
             var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
             var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
@@ -447,7 +445,7 @@ public class CardGame
             {
                 ManaSystem.SpendMana(player, cardToPlay.ManaCost);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
-                ResolvingSystem.Add(action,cardToPlay);
+                ResolvingSystem.Add(action, cardToPlay);
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             //TODO - We should check this before we do the double sided card stuff.
@@ -458,31 +456,50 @@ public class CardGame
             }
         }
         else if (cardToPlay.CurrentCardData is SpellCardData)
-        {            
+        {
+            //TODO - Check if we even need to check this here?  All this stuff might be able to be handled by our Actions now.
             if (!_targetSystem.CardNeedsTargets(player, cardToPlay))
             {
-                ManaSystem.SpendMana(player, cardToPlay.ManaCost);
+                var manaSpent = cardToPlay.ManaCost;
+
+                if (action.CastModifiers.Any())
+                {
+                    var mana = new Mana(manaSpent);
+                    mana.AddFromString(action.CastModifiers[0].GetCost(cardToPlay));
+                    manaSpent = mana.ToManaString();
+                }
+
+                ManaSystem.SpendMana(player, manaSpent);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
                 player.Modifications.GetOfType<IOnSpellCast>().ForEach(mod =>
                 {
                     mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay)); //etc...
-                });                
+                });
 
-                ResolvingSystem.Add(action,cardToPlay);
-                
+                ResolvingSystem.Add(action, cardToPlay);
+
                 //Do we need our state based effects here?
                 _stateBasedEffectSystem.CheckStateBasedEffects();
             }
             else
             {
-                //TODO - Validation should happen on a different layer
+                //TODO - This Validation should happen on a different layer
                 var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
-                var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);                
+                var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
 
                 if (targetAsEntity != null)
                 {
-                    ManaSystem.SpendMana(player, cardToPlay.ManaCost);
+                    var manaSpent = cardToPlay.ManaCost;
+
+                    if (action.CastModifiers.Any())
+                    {
+                        var mana = new Mana(manaSpent);
+                        mana.AddFromString(action.CastModifiers[0].GetCost(cardToPlay));
+                        manaSpent = mana.ToManaString();
+                    }
+
+                    ManaSystem.SpendMana(player, manaSpent);
                     AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
 
                     //TODO - This should go to the ResolvingSystem.
@@ -490,16 +507,16 @@ public class CardGame
                     {
                         mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay));//etc...
                     });
-                    ResolvingSystem.Add(action,cardToPlay);
+                    ResolvingSystem.Add(action, cardToPlay);
                     //Do we need our state based effects here?
                     _stateBasedEffectSystem.CheckStateBasedEffects();
                 }
             }
         }
         else if (cardToPlay.IsOfType<ItemCardData>())
-        {            
+        {
             ManaSystem.SpendMana(player, cardToPlay.ManaCost);
-            ResolvingSystem.Add(action,cardToPlay);
+            ResolvingSystem.Add(action, cardToPlay);
             _stateBasedEffectSystem.CheckStateBasedEffects();
         }
     }
