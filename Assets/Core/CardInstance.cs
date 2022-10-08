@@ -378,10 +378,6 @@ public class CardInstance : CardGameEntity, ICard
 
         foreach (var ability in Abilities.GetOfType<ICastModifier>())
         {
-            if (Abilities.GetOfType<ICastModifier>().Count > 1)
-            {
-                CardGame.Log("test...");
-            }
             //_cardGame.Log("Checking how many cast modifiers this has?");
             //_cardGame.Log($"{Abilities.GetOfType<ICastModifier>().Count()}");
             //Buyback TODO - need to check if we can actually play this card.
