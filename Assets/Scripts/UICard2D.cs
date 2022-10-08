@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class UICard2D : UIGameEntity, IUICard
+public class UICard2D : MonoBehaviour, IUICard
 {
     [Header("Debugging")]
     [SerializeField]
@@ -46,7 +46,8 @@ public class UICard2D : UIGameEntity, IUICard
     [SerializeField]
     private GameObject _frontOfCard;
 
-    private CardInstance _cardInstance;
+    //TODO - This should not be in here... the UICard should be a dumb container.
+    //private CardInstance _cardInstance;
 
     [Header("Card Frame References")]
 
@@ -68,8 +69,9 @@ public class UICard2D : UIGameEntity, IUICard
 
     public void SetAsUnknownCard()
     {
-        _showAsUnknown = true;
-        EntityId = -1;
+        _showAsUnknown = true;        
+        //TODO - How are we going to set this?
+        // EntityId = -1;
         _frontOfCard.gameObject.SetActive(false);
         _backOfCard.gameObject.SetActive(true);
     }
@@ -123,7 +125,7 @@ public class UICard2D : UIGameEntity, IUICard
             _cardArt.color = Color.white;
         }
 
-        SetCardFrame(cardData);
+        SetCardFrame(cardData.Colors);
     }
 
     /// <summary>
@@ -171,9 +173,9 @@ public class UICard2D : UIGameEntity, IUICard
         _showAsUnknown = false;
         _backOfCard.gameObject.SetActive(false);
         _frontOfCard.gameObject.SetActive(true);
-        _cardInstance = cardInstance;
 
-        EntityId = cardInstance.EntityId;
+        //TODO - Refaftor - EntityID will not be stored here anymore, figure out where to put it.
+        //EntityId = cardInstance.EntityId;
 
         var cardData = cardInstance.CurrentCardData;
 
@@ -217,63 +219,24 @@ public class UICard2D : UIGameEntity, IUICard
             _cardArt.color = Color.white;
         }
 
-        SetCardFrame();
+        SetCardFrame(cardInstance.Colors);
     }
 
-    private void SetCardFrame(ICard cardData)
+    private void SetCardFrame(List<CardColor> colors)
     {
-        if (cardData.Colors == null || !cardData.Colors.Any())
+        if (colors.IsNullOrEmpty())
         {
-            //default to colorless frame;
             _cardFrame.sprite = colorlessCardFrame;
             return;
         }
-
-        if (cardData.Colors.Count > 1)
+        else if (colors.Count > 1)
         {
             //Do a multicolor frame.
             _cardFrame.sprite = multicolorCardFrame;
         }
         else
         {
-            var color = cardData.Colors.First();
-
-            //Do a single color frame.
-            switch (color)
-            {
-                case CardColor.White: _cardFrame.sprite = whiteCardFrame; break;
-                case CardColor.Blue: _cardFrame.sprite = blueCardFrame; break;
-                case CardColor.Green: _cardFrame.sprite = greenCardFrame; break;
-                case CardColor.Red: _cardFrame.sprite = redCardFrame; break;
-                case CardColor.Black: _cardFrame.sprite = blackCardFrame; break;
-                case CardColor.Colorless: _cardFrame.sprite = colorlessCardFrame; break;
-                default: _cardFrame.sprite = colorlessCardFrame; break;
-            }
-        }
-    }
-
-    private void SetCardFrame()
-    {
-        if (_cardInstance == null)
-        {
-            _cardFrame.sprite = colorlessCardFrame;
-            return;
-        }
-        if (_cardInstance.Colors == null || !_cardInstance.Colors.Any())
-        {
-            //default to colorless frame;
-            _cardFrame.sprite = colorlessCardFrame;
-            return;
-        }
-
-        if (_cardInstance.Colors.Count > 1)
-        {
-            //Do a multicolor frame.
-            _cardFrame.sprite = multicolorCardFrame;
-        }
-        else
-        {
-            var color = _cardInstance.Colors.First();
+            var color = colors.First();
 
             //Do a single color frame.
             switch (color)

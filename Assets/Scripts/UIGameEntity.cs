@@ -11,6 +11,8 @@ using UnityEngine.EventSystems;
 /// 
 /// Examples: Cards, Players, Lanes, etc...
 /// </summary>
+/// 
+//TODO - This should be a component, not a class that gets inherited from.
 public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
