@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 public abstract class CardGameAction
 {
     public CardInstance SourceCard { get; set; }
-
     public CardInstance CardToPlay { get; set; }
     public Player Player { get; set; }
     public List<ICastModifier> CastModifiers { get; set; }
@@ -34,6 +33,10 @@ public abstract class CardGameAction
 
     public virtual string ToUIString()
     {
+        //TODO - Create rules texts here.
+        //If casting a regular card, remove all "casting" activated abilties from it and any cast modifiers.
+        //If casting with cast modifier, include all regular text + the cast modifier text
+        //If casting as activated ability, only include the activated ability text.
         if (SourceCard != null)
         {
             return SourceCard.RulesText;
@@ -42,7 +45,6 @@ public abstract class CardGameAction
         {
             return "[ACTION TEXT NEEDED]";
         }
-
     }
 
     public static CardGameAction CreatePlayCardAction(CardInstance cardToPlay, ICastModifier modifier = null)
@@ -108,6 +110,22 @@ public class PlayUnitAction : CardGameAction
     {
         cardGame.PlayCard(Player, this); //before, i think we need to pass in the Lane.EntityId somehow --(Player, CardToPlay, Lane.EntityId, null);
     }
+
+    public override string ToUIString()
+    {
+        return String.Join("\r\n", SourceCard.Abilities.Where(ab =>
+         {
+             var actAb = ab as ActivatedAbility;
+             if (actAb != null)
+             {
+                 return actAb.ActivationZone == ZoneType.InPlay;
+             }
+             return true;
+         })
+        .Select(ab => ab.RulesText)
+        );
+
+    }
 }
 
 public class PlayManaAction : CardGameAction
@@ -130,6 +148,10 @@ public class PlayManaAction : CardGameAction
 
 public class PlaySpellAction : CardGameAction
 {
+    public override string ToUIString()
+    {
+        return String.Join("\r\n",CardToPlay.Effects.Select(m => m.RulesText));   
+    }
     public override void DoAction(CardGame cardGame)
     {
         int target = 0;
