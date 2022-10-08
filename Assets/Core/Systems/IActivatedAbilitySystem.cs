@@ -73,6 +73,12 @@ public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
 
     public bool CanActivateAbility(CardInstance card, ActivatedAbility activatedAbility)
     {
+        //Need To Check The Zone
+        if (activatedAbility.ActivationZone != card.GetZone().ZoneType)
+        {
+            return false;
+        }
+
         //Activated Abilities can only be activated during the active players turn.
         if (cardGame.GetOwnerOfCard(card)!= cardGame.ActivePlayer)
         {
