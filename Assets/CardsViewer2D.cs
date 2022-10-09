@@ -172,8 +172,13 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
             }
             else
             {
+                //TODO - this code is very dirty... find a way to replace it
+                //Basically we want a way to have CardViewers not be directly tied to needing to handle Entity Id's
+                var cardAsCardInstance = card as CardInstance;
+                var cardAsMonoBehaviour = alreadyMadeUICards[i] as MonoBehaviour;
                 alreadyMadeUICards[i].SetActive(true);
                 alreadyMadeUICards[i].SetCardData(card);
+                cardAsMonoBehaviour.GetComponent<UIGameEntity>().EntityId = cardAsCardInstance.EntityId;
                 
                 var rect = ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>();
                 rect.localScale = scalingVector;
