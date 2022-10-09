@@ -27,27 +27,48 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
 
     public void Awake()
     {
-        if (this is UILane2D)
-        {
-            Debug.Log($"{this.gameObject.name} has awoken");
-        }
         OnClickHandler = HandleOnClick;
     }
 
     //Override these as necessary
     public virtual void Highlight()
     {
-        Debug.Log($@"{EntityId} should be getting highlighted!");
+        var highlightable = GetComponent<IHighlightable>();
+        if (highlightable != null)
+        {
+            highlightable.Highlight();
+        }
+        else
+        {
+            Debug.Log($@"{EntityId} should be getting highlighted!");
+        }
     }
 
     public virtual void Highlight(Color highlightColor)
     {
-        Debug.Log($@"{EntityId} should be getting highlighted with a specific color!");
+        var highlightable = GetComponent<IHighlightable>();
+        if (highlightable != null)
+        {
+            highlightable.Highlight(highlightColor);
+        }
+        else
+        {
+            Debug.Log($@"{EntityId} should be getting highlighted with a specific color!");
+
+        }
     }
 
     public virtual void StopHighlight()
     {
-        Debug.Log($@"{EntityId} should stop being highlighted!");
+        var highlightable = GetComponent<IHighlightable>();
+        if (highlightable != null)
+        {
+            highlightable.StopHighlight();
+        }
+        else
+        {
+            Debug.Log($@"{EntityId} should stop being highlighted");
+        }
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
@@ -57,7 +78,6 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
         {
             OnClickHandler(new UIGameControllerClickEvent { EntityId = EntityId });
         }
-        //Output to console the clicked GameObject's name and the following message. You can replace this with your own actions for when clicking the GameObject.
     }
 
     //Our default handle click method.. can be overriden if necessary.

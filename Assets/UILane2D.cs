@@ -29,7 +29,11 @@ public class UILane2D : UIGameEntity, IPointerClickHandler
 
     public void SetEmpty()
     {
-        _uiCard.EntityId = -1;
+        var uiGameEntity = _uiCard.GetComponent<UIGameEntity>();
+        if (uiGameEntity != null)
+        {
+            uiGameEntity.EntityId = -1;
+        }
         _uiCard.gameObject.SetActive(false);
     }
 

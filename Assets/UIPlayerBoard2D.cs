@@ -31,7 +31,7 @@ public class UIPlayerBoard2D : UIPlayerBoard
 
     void Start()
     {
-        GraveyardOnUI.OnClickHandler = new System.Action<UIGameControllerClickEvent>(data =>
+        GraveyardOnUI.GetComponent<UIGameEntity>().OnClickHandler = new System.Action<UIGameControllerClickEvent>(data =>
         {
             Debug.Log("Is the graveyard being handled correctly?");
             UIGameController.Instance.HandleViewGraveyardClick(_player);
