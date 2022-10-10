@@ -31,7 +31,7 @@ public class UIPlayerBoard2D : UIPlayerBoard
 
     void Start()
     {
-        GraveyardOnUI.OnClickHandler = new System.Action<UIGameControllerClickEvent>(data =>
+        GraveyardOnUI.GetComponent<UIGameEntity>().OnClickHandler = new System.Action<UIGameControllerClickEvent>(data =>
         {
             Debug.Log("Is the graveyard being handled correctly?");
             UIGameController.Instance.HandleViewGraveyardClick(_player);
@@ -123,7 +123,11 @@ public class UIPlayerBoard2D : UIPlayerBoard
         var uiLanes = _lanes.GetComponentsInChildren<UILane2D>(true);
         for (int i = 0; i < uiLanes.Length; i++)
         {
-            uiLanes[i].EntityId = player.Lanes[i].EntityId;
+            var uiGameEntity = uiLanes[i].GetComponent<UIGameEntity>();
+            if (uiGameEntity != null)
+            {
+                uiGameEntity.EntityId = player.Lanes[i].EntityId;
+            }
         }
 
         //Initialize the Player Avatars entity ids

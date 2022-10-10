@@ -57,10 +57,8 @@ public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastC
 
     public void HandleCastChoiceSelection(int castChoiceId)
     {
-
         var action = _cardWithMultipleActions.GetAvailableActions()[castChoiceId];
-        Debug.Log("Modifiers found in our choose card action state : " + action.CastModifiers.Count.ToString());
-        _stateMachine.HandleAction(_cardWithMultipleActions.GetAvailableActions()[castChoiceId]);
+       _stateMachine.HandleAction(_cardWithMultipleActions.GetAvailableActions()[castChoiceId]);
     }
 
 

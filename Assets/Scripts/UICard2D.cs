@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class UICard2D : UIGameEntity, IUICard
+public class UICard2D : MonoBehaviour, IUICard, IHighlightable
 {
     [Header("Debugging")]
     [SerializeField]
@@ -46,7 +46,8 @@ public class UICard2D : UIGameEntity, IUICard
     [SerializeField]
     private GameObject _frontOfCard;
 
-    private CardInstance _cardInstance;
+    //TODO - This should not be in here... the UICard should be a dumb container.
+    //private CardInstance _cardInstance;
 
     [Header("Card Frame References")]
 
@@ -68,8 +69,9 @@ public class UICard2D : UIGameEntity, IUICard
 
     public void SetAsUnknownCard()
     {
-        _showAsUnknown = true;
-        EntityId = -1;
+        _showAsUnknown = true;        
+        //TODO - How are we going to set this?
+        // EntityId = -1;
         _frontOfCard.gameObject.SetActive(false);
         _backOfCard.gameObject.SetActive(true);
     }
@@ -104,14 +106,13 @@ public class UICard2D : UIGameEntity, IUICard
         _cardRulesText.text = cardData.RulesText;
         _cardManaCost.text = cardData.ManaCost;
         _cardType.text = cardData.CardType;
-        Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
+        SetArt(cardData.ArtPath);
+        SetCardFrame(cardData.Colors);
+    }
 
-        //If failed look up the name of the card
-        if (art == null)
-        {
-            art = Resources.Load<Sprite>(cardData.Name);
-        }
-
+    private void SetArt(string artPath)
+    {
+        Sprite art = Resources.Load<Sprite>(artPath);
         _cardArt.sprite = art;
 
         if (art == null)
@@ -122,8 +123,6 @@ public class UICard2D : UIGameEntity, IUICard
         {
             _cardArt.color = Color.white;
         }
-
-        SetCardFrame(cardData);
     }
 
     /// <summary>
@@ -134,8 +133,47 @@ public class UICard2D : UIGameEntity, IUICard
     /// <param name="action"></param>
     public void SetFromAction(CardGameAction action)
     {
-        SetCardData(action.SourceCard);
-        _cardRulesText.text = action.ToUIString();
+        //SetCardData(action.SourceCard);
+        if (action.CardToPlay != null)
+        {
+            //TODO - need a way to clone the card?
+            var cardForAction = action.CardToPlay.ShallowClone();
+            cardForAction.Abilities = cardForAction.Abilities.Where(
+                ab =>
+                {
+                    var actAb = ab as ActivatedAbility;
+                    if (actAb != null)
+                    {
+                        if (actAb.ActivationZone == cardForAction.GetZone().ZoneType)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .ToList();
+            //This will not work for multiple cast modifiers.
+            if (action.CastModifiers.IsNullOrEmpty())
+            {
+                cardForAction.Abilities = cardForAction.Abilities.Where(ab => !(ab is ICastModifier)).ToList();
+            }
+
+            SetCardData(cardForAction);
+            //TODO - we need to hide all cast zone related activated abilities 
+            // i.e. cycling should not show on the card if its being cast normally
+            
+            //TODO - hide all CastModifier related abilities.
+        }
+        else //A non casting action, i.e. activated ability or something else.
+        {
+            //Hide all unrelated objects
+            _cardType.gameObject.SetActive(false);
+            _cardCombatStats.gameObject.SetActive(false);
+            _cardName.gameObject.SetActive(false);
+
+            SetArt(action.SourceCard.ArtPath);
+            _cardRulesText.text = action.ToUIString();
+        }
     }
 
     public void SetCardData(CardInstance cardInstance)
@@ -171,9 +209,9 @@ public class UICard2D : UIGameEntity, IUICard
         _showAsUnknown = false;
         _backOfCard.gameObject.SetActive(false);
         _frontOfCard.gameObject.SetActive(true);
-        _cardInstance = cardInstance;
 
-        EntityId = cardInstance.EntityId;
+        //TODO - Refaftor - EntityID will not be stored here anymore, figure out where to put it.
+        //EntityId = cardInstance.EntityId;
 
         var cardData = cardInstance.CurrentCardData;
 
@@ -217,63 +255,24 @@ public class UICard2D : UIGameEntity, IUICard
             _cardArt.color = Color.white;
         }
 
-        SetCardFrame();
+        SetCardFrame(cardInstance.Colors);
     }
 
-    private void SetCardFrame(ICard cardData)
+    private void SetCardFrame(List<CardColor> colors)
     {
-        if (cardData.Colors == null || !cardData.Colors.Any())
+        if (colors.IsNullOrEmpty())
         {
-            //default to colorless frame;
             _cardFrame.sprite = colorlessCardFrame;
             return;
         }
-
-        if (cardData.Colors.Count > 1)
+        else if (colors.Count > 1)
         {
             //Do a multicolor frame.
             _cardFrame.sprite = multicolorCardFrame;
         }
         else
         {
-            var color = cardData.Colors.First();
-
-            //Do a single color frame.
-            switch (color)
-            {
-                case CardColor.White: _cardFrame.sprite = whiteCardFrame; break;
-                case CardColor.Blue: _cardFrame.sprite = blueCardFrame; break;
-                case CardColor.Green: _cardFrame.sprite = greenCardFrame; break;
-                case CardColor.Red: _cardFrame.sprite = redCardFrame; break;
-                case CardColor.Black: _cardFrame.sprite = blackCardFrame; break;
-                case CardColor.Colorless: _cardFrame.sprite = colorlessCardFrame; break;
-                default: _cardFrame.sprite = colorlessCardFrame; break;
-            }
-        }
-    }
-
-    private void SetCardFrame()
-    {
-        if (_cardInstance == null)
-        {
-            _cardFrame.sprite = colorlessCardFrame;
-            return;
-        }
-        if (_cardInstance.Colors == null || !_cardInstance.Colors.Any())
-        {
-            //default to colorless frame;
-            _cardFrame.sprite = colorlessCardFrame;
-            return;
-        }
-
-        if (_cardInstance.Colors.Count > 1)
-        {
-            //Do a multicolor frame.
-            _cardFrame.sprite = multicolorCardFrame;
-        }
-        else
-        {
-            var color = _cardInstance.Colors.First();
+            var color = colors.First();
 
             //Do a single color frame.
             switch (color)
@@ -307,19 +306,19 @@ public class UICard2D : UIGameEntity, IUICard
         gameObject.SetActive(active);
     }
 
-    public override void Highlight()
+    public void Highlight()
     {
         _highlight.gameObject.SetActive(true);
         _highlight.GetComponent<Image>().color = Color.green;
     }
 
-    public override void Highlight(Color highlightColor)
+    public void Highlight(Color highlightColor)
     {
         _highlight.gameObject.SetActive(true);
         _highlight.GetComponent<Image>().color = highlightColor;
     }
 
-    public override void StopHighlight()
+    public void StopHighlight()
     {
         _highlight.gameObject.SetActive(false);
     }

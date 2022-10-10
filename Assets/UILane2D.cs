@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UILane2D : UIGameEntity, IPointerClickHandler
+public class UILane2D : UIGameEntity, IPointerClickHandler, IHighlightable
 {
     [SerializeField]
     private Image _highlight;
@@ -14,6 +14,7 @@ public class UILane2D : UIGameEntity, IPointerClickHandler
 
     private new void Awake()
     {
+        //what we actually need to do here is replace the UIGameEntity default handler with the custom one from the UILane2D
         base.Awake();
         _uiCard = GetComponentInChildren<UICard2D>();
     }
@@ -25,15 +26,25 @@ public class UILane2D : UIGameEntity, IPointerClickHandler
             _uiCard.gameObject.SetActive(true);
         }
         _uiCard.SetCardData(cardInstance);
+        _uiCard.GetComponent<UIGameEntity>().EntityId = cardInstance.EntityId;
     }
 
     public void SetEmpty()
     {
-        _uiCard.EntityId = -1;
+        var uiGameEntity = _uiCard.GetComponent<UIGameEntity>();
+        if (uiGameEntity != null)
+        {
+            uiGameEntity.EntityId = -1;
+        }
         _uiCard.gameObject.SetActive(false);
     }
 
     public override void Highlight()
+    {
+        _highlight.gameObject.SetActive(true);
+    }
+
+    public override void Highlight(Color highlightColor)
     {
         _highlight.gameObject.SetActive(true);
     }
@@ -46,6 +57,7 @@ public class UILane2D : UIGameEntity, IPointerClickHandler
     public new void OnPointerClick(PointerEventData pointerEventData)
     {
         base.OnPointerClick(pointerEventData);
+
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, raycastResults);
 
@@ -63,4 +75,6 @@ public class UILane2D : UIGameEntity, IPointerClickHandler
             }
         }
     }
+
+
 }

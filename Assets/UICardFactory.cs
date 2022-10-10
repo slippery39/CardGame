@@ -16,6 +16,8 @@ public class UICardFactory : MonoBehaviour
     {
         var cardObject = GameObject.Instantiate(Instance.CardPrefab2D);
         cardObject.GetComponent<UICard2D>().SetCardData(card);
+        var uiGameEntity = cardObject.AddComponent<UIGameEntity>();
+        uiGameEntity.EntityId = card.EntityId;
         return cardObject;
     }
 
