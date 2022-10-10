@@ -403,6 +403,11 @@ public class CardInstance : CardGameEntity, ICard
         return actions;
     }
 
+    public CardInstance ShallowClone()
+    {
+        return (CardInstance)this.MemberwiseClone();
+    }
+
     public List<ActivatedAbility> GetActivatedAbilities()
     {
         return Abilities.GetOfType<ActivatedAbility>();

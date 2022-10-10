@@ -67,7 +67,7 @@ public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHa
         }
         else
         {
-            Debug.Log($@"{EntityId} should stop being highlighted");
+            //Debug.Log($@"{EntityId} should stop being highlighted");
         }
     }
 

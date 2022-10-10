@@ -106,14 +106,13 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
         _cardRulesText.text = cardData.RulesText;
         _cardManaCost.text = cardData.ManaCost;
         _cardType.text = cardData.CardType;
-        Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
+        SetArt(cardData.ArtPath);
+        SetCardFrame(cardData.Colors);
+    }
 
-        //If failed look up the name of the card
-        if (art == null)
-        {
-            art = Resources.Load<Sprite>(cardData.Name);
-        }
-
+    private void SetArt(string artPath)
+    {
+        Sprite art = Resources.Load<Sprite>(artPath);
         _cardArt.sprite = art;
 
         if (art == null)
@@ -124,8 +123,6 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
         {
             _cardArt.color = Color.white;
         }
-
-        SetCardFrame(cardData.Colors);
     }
 
     /// <summary>
@@ -136,8 +133,47 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
     /// <param name="action"></param>
     public void SetFromAction(CardGameAction action)
     {
-        SetCardData(action.SourceCard);
-        _cardRulesText.text = action.ToUIString();
+        //SetCardData(action.SourceCard);
+        if (action.CardToPlay != null)
+        {
+            //TODO - need a way to clone the card?
+            var cardForAction = action.CardToPlay.ShallowClone();
+            cardForAction.Abilities = cardForAction.Abilities.Where(
+                ab =>
+                {
+                    var actAb = ab as ActivatedAbility;
+                    if (actAb != null)
+                    {
+                        if (actAb.ActivationZone == cardForAction.GetZone().ZoneType)
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .ToList();
+            //This will not work for multiple cast modifiers.
+            if (action.CastModifiers.IsNullOrEmpty())
+            {
+                cardForAction.Abilities = cardForAction.Abilities.Where(ab => !(ab is ICastModifier)).ToList();
+            }
+
+            SetCardData(cardForAction);
+            //TODO - we need to hide all cast zone related activated abilities 
+            // i.e. cycling should not show on the card if its being cast normally
+            
+            //TODO - hide all CastModifier related abilities.
+        }
+        else //A non casting action, i.e. activated ability or something else.
+        {
+            //Hide all unrelated objects
+            _cardType.gameObject.SetActive(false);
+            _cardCombatStats.gameObject.SetActive(false);
+            _cardName.gameObject.SetActive(false);
+
+            SetArt(action.SourceCard.ArtPath);
+            _cardRulesText.text = action.ToUIString();
+        }
     }
 
     public void SetCardData(CardInstance cardInstance)
