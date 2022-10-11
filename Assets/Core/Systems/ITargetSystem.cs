@@ -76,7 +76,14 @@ public class DefaultTargetSystem : ITargetSystem
             case TargetType.RandomOpponentOrUnits:
                 var opponent = cardGame.Players.Where(p => p.EntityId != player.EntityId).First();
                 var things = new List<CardGameEntity> { opponent };
-                return things.Union(opponent.GetUnitsInPlay()).ToList();
+
+                var everything = things.Union(opponent.GetUnitsInPlay());
+
+                if (everything.Count() == 0)
+                {
+                    return new List<CardGameEntity> { };
+                }
+                return new List<CardGameEntity> { everything.Randomize().First() };
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {effect.TargetType}");
         }
