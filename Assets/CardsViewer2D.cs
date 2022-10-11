@@ -178,7 +178,6 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
                 var cardAsMonoBehaviour = alreadyMadeUICards[i] as MonoBehaviour;
                 alreadyMadeUICards[i].SetActive(true);
                 alreadyMadeUICards[i].SetCardData(card);
-                cardAsMonoBehaviour.GetComponent<UIGameEntity>().EntityId = cardAsCardInstance.EntityId;
                 
                 var rect = ((MonoBehaviour)(alreadyMadeUICards[i])).GetComponent<RectTransform>();
                 rect.localScale = scalingVector;

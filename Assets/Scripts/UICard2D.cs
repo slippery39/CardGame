@@ -243,19 +243,17 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
         _cardManaCost.text = cardInstance.ManaCost;
         _cardType.text = cardData.CardType;
 
-        Sprite art = Resources.Load<Sprite>(cardData.ArtPath);
-        _cardArt.sprite = art;
-
-        if (art == null)
-        {
-            _cardArt.color = Color.black;
-        }
-        else
-        {
-            _cardArt.color = Color.white;
-        }
-
+        SetArt(cardInstance.ArtPath);
         SetCardFrame(cardInstance.Colors);
+
+        //Set the EntityId if available
+
+        var entityComponent = GetComponent<UIGameEntity>();
+        if (entityComponent != null)
+        {
+            entityComponent.EntityId= cardInstance.EntityId;
+        }
+
     }
 
     private void SetCardFrame(List<CardColor> colors)
