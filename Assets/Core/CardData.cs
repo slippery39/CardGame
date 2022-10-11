@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class TokenHelper
 {
-    private static string ArtPath = "CardArt/";
+    public static string ArtPath = $"MTGCardArt/";
     public static UnitCardData GoblinToken()
     {
         return new UnitCardData()
@@ -14,7 +14,7 @@ public static class TokenHelper
             ManaCost = "0",
             Power = 1,
             Toughness = 1,
-            ArtPath = $"{ArtPath}Goblin Token",
+            ArtPath = $"{ArtPath}GoblinToken",
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red }
         };
@@ -959,7 +959,7 @@ public class CardDatabase : ICardDatabase
                                 ManaCost = "0",
                                 Power = 1,
                                 Toughness =1,
-                                ArtPath = $"{ArtPath}Goblin Token",
+                                ArtPath = $"{ArtPath}GoblinToken",
                                 CreatureType = "Goblin",
                                 Colors = new List<CardColor>{CardColor.Red }
                             })
@@ -1302,6 +1302,7 @@ public class CardDatabase : ICardDatabase
                             {
                                 Name = "Goblin Burrows",
                                 Subtype = "Artifact",
+                                ArtPath = $"{ArtPath}GoblinBurrows",
                                 Abilities = new List<CardAbility>
                                 {
                                     new ActivatedAbility()
@@ -1903,6 +1904,7 @@ public class CardDatabase : ICardDatabase
                                 Power = 1,
                                 Toughness = 1,
                                 Subtype = "Artifact",
+                                ArtPath = $"{ArtPath}BlinkmothNexus",
                                 Abilities = new List<CardAbility>
                                 {
                                     new FlyingAbility()
@@ -1935,6 +1937,7 @@ public class CardDatabase : ICardDatabase
                             {
                                 Name = "Great Furnace",
                                 Subtype = "Artifact",
+                                ArtPath = $"{ArtPath}GreatFurnace",
                                 Abilities = new List<CardAbility>
                                 {
                                     new ActivatedAbility()
@@ -1978,6 +1981,7 @@ public class CardDatabase : ICardDatabase
                             {
                                 Name = "Seat of the Synod",
                                 Subtype = "Artifact",
+                                ArtPath = $"{ArtPath}SeatOfTheSynod",
                                 Abilities = new List<CardAbility>
                                 {
                                     new ActivatedAbility()
@@ -2021,6 +2025,7 @@ public class CardDatabase : ICardDatabase
                             {
                                 Name = "Vault of Whispers",
                                 Subtype = "Artifact",
+                                ArtPath = $"{ArtPath}VaultOfWhispers",
                                 Abilities = new List<CardAbility>
                                 {
                                     new ActivatedAbility()
@@ -2131,6 +2136,7 @@ public class CardDatabase : ICardDatabase
                                 CreatureType = "Angel",
                                 Power = 4,
                                 Toughness = 4,
+                                ArtPath = $"{ArtPath}AngelToken",
                                 Abilities = new List<CardAbility>
                                 {
                                     new FlyingAbility(),
@@ -2411,6 +2417,7 @@ public class CardDatabase : ICardDatabase
                     TokenData = new UnitCardData
                     {
                         Name = "Soldier",
+                        ArtPath = $"{ArtPath}SoldierToken",
                         Power = 2,
                         Toughness = 2,
                         Colors = new List<CardColor> {CardColor.White}
@@ -2480,6 +2487,7 @@ public class CardDatabase : ICardDatabase
                             {
                                 Name = "Moorland Haunt",
                                 Subtype = "Artifact",
+                                ArtPath = $"{ArtPath}MoorlandHaunt",
                                 Abilities = new List<CardAbility>
                                 {
                                     new ActivatedAbility()
@@ -2495,6 +2503,7 @@ public class CardDatabase : ICardDatabase
                                                 TokenData = new UnitCardData
                                                 {
                                                     Name = "Spirit",
+                                                    ArtPath = $"{ArtPath}SpiritToken",
                                                     Power = 1,
                                                     Toughness = 1,
                                                     Abilities = new List<CardAbility>
@@ -2606,6 +2615,7 @@ public class CardDatabase : ICardDatabase
                             TokenData = new ItemCardData
                             {
                                 Name = "Valakut Item",
+                                ArtPath = $"{ArtPath}ValakutTheMoltenPinnacle",
                                 Abilities = new List<CardAbility>
                                 {
                                        new TriggeredAbility
