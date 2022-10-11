@@ -98,9 +98,14 @@ public class DefaultBattleSystem : IBattleSystem
         var attackingUnit = attackingLane.UnitInLane;
         var defendingUnit = defendingLane.UnitInLane;
 
-        cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
-        //Both lanes have units, they will attack eachother.
-        cardGame.DamageSystem.DealCombatDamageToUnits(attackingUnit, defendingUnit);
+        //Need to add a check to see if the defending lane still has a unit (could have been removed from play due to triggered ability or something)
+
+        if (defendingUnit != null) { 
+            cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
+            //Both lanes have units, they will attack eachother.
+            cardGame.DamageSystem.DealCombatDamageToUnits(attackingUnit, defendingUnit);
+        }
+        //TODO If there is no defending unit at this point, do we deal damage to the player instead?? what should happen?
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 
