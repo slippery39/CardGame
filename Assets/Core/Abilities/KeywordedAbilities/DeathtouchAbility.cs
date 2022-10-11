@@ -17,7 +17,7 @@
         //hack - setting toughness to 0.
         //later on we will probably have some sort of DestroyingSystem and we would call that instead.
         cardGame.Log($"{damagedUnit.Name} died from {damagingUnit.Name}'s deathtouch!");
-        damagedUnit.BaseToughness = 0;
+        cardGame.DestroySystem.DestroyUnit(damagingUnit, damagedUnit);
     }
 }
 

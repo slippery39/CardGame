@@ -50,6 +50,7 @@ public class DefaultZoneChangeSystem : IZoneChangeSystem
         //Apply Death Triggers
         if ((currentZone.ZoneType == ZoneType.InPlay) && zoneTo is DiscardPile)
         {
+            card.DamageTaken = 0;
             OnDeathTriggers(card);
         }
     }
