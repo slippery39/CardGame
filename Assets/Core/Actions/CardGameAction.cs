@@ -11,7 +11,7 @@ public abstract class CardGameAction
     public CardInstance SourceCard { get; set; }
     public CardInstance CardToPlay { get; set; }
     public Player Player { get; set; }
-    public List<ICastModifier> CastModifiers { get; set; }
+    public List<ICastModifier> CastModifiers { get; set; } = new List<ICastModifier>();
     private bool HasModifiers => CastModifiers != null && CastModifiers.Count > 0;
     public virtual List<CardGameEntity> Targets { get; set; }
     public List<CardGameEntity> AdditionalChoices { get; set; }
