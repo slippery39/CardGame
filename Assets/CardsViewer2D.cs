@@ -55,7 +55,6 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
         SetCards(cards, name, setReverse, hiddenInfo);
     }
 
-    [Obsolete] //use Show instead.
     public void SetCards(IEnumerable<ICard> cards, string name, bool setReverse = false, bool hiddenInfo = false)
     {
         _cards = cards;
