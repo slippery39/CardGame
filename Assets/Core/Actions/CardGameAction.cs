@@ -228,5 +228,19 @@ public class ResolveChoiceAction : CardGameAction
     }
 }
 
+public class NextTurnAction : CardGameAction
+{
+    public override void DoAction(CardGame cardGame)
+    {
+        cardGame.NextTurn();
+    }
+
+    public override bool IsValidAction(CardGame cardGame)
+    {
+        //We should not be able to do next turn if we are waiting for a choice to be made, only an action.
+        return cardGame.CurrentGameState == GameState.WaitingForAction;
+    }
+}
+
 
 

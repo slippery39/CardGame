@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIGameController : MonoBehaviour
 {
@@ -27,6 +28,9 @@ public class UIGameController : MonoBehaviour
 
     [SerializeField]
     private UIChooseActionPopup _chooseActionChoicePopup;
+
+    [SerializeField]
+    private Button _nextTurnButton;
 
 
     //private ZoneViewer _zonePopupWindow;
@@ -63,11 +67,17 @@ public class UIGameController : MonoBehaviour
 
     void Start()
     {
+        InitEventHandlers();
         LogCardStats();
         //Check to see if any cards exist that don't have images.
         CheckForCardsWithoutImages();
         CheckForCardsWithoutManaCosts();
         _stateMachine = GetComponent<GameUIStateMachine>();
+    }
+
+    private void InitEventHandlers()
+    {
+        _nextTurnButton.onClick.AddListener(()=>HandleNextTurnButtonClick());
     }
 
     private void LogCardStats()
@@ -109,13 +119,6 @@ public class UIGameController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
                 _cardGame.ProcessAction(CreateFightAction(4));
-            }
-
-            //Test Hotkey for testing our Battle System.
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                _cardGame.NextTurn();
-                _stateMachine.ToIdle();
             }
             //Testing card drawing
             if (Input.GetKeyDown(KeyCode.D))
@@ -209,6 +212,13 @@ public class UIGameController : MonoBehaviour
     {
         _zonePopupWindow.GetComponent<ICardsViewer>().Show(player.DiscardPile.Cards, $"{player.Name}'s Discard");
         _zonePopupWindow.GetComponent<ICardsViewer>().ShowExitButton = true;
+    }
+
+    public void HandleNextTurnButtonClick()
+    {
+        var nextTurnAction = new NextTurnAction();
+        _cardGame.ProcessAction(nextTurnAction);
+        _stateMachine.ToIdle();
     }
 
     #region Private Methods
