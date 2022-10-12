@@ -12,9 +12,6 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
     [SerializeField]
     private bool _revealedToOwner;
 
-    [Header("Random")]
-    private bool _showAsUnknown = false;
-
     [SerializeField]
     private GameObject _highlight;
 
@@ -68,12 +65,17 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
     private Sprite multicolorCardFrame;
 
     public void SetAsUnknownCard()
-    {
-        _showAsUnknown = true;        
+    {     
         //TODO - How are we going to set this?
         // EntityId = -1;
         _frontOfCard.gameObject.SetActive(false);
         _backOfCard.gameObject.SetActive(true);
+
+        var uiGameEntity = GetComponent<UIGameEntity>();
+        if (uiGameEntity != null)
+        {
+            uiGameEntity.EntityId =-1;
+        }
     }
 
     private void SetCardDataInternal(ICard cardData)
@@ -201,12 +203,10 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
         //Cards that are revealed to owner
         if (!shouldSeeCard)
         {
-            _showAsUnknown = true;
             SetAsUnknownCard();
             return;
         }
 
-        _showAsUnknown = false;
         _backOfCard.gameObject.SetActive(false);
         _frontOfCard.gameObject.SetActive(true);
 
