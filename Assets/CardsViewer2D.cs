@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,14 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
 
     public bool ShowExitButton { get => _showExitButton; set => _showExitButton = value; }
 
+    public void Show(IEnumerable<ICard> cards, string name, bool setReverse = false, bool hiddenInfo = false)
+    {
+        gameObject.SetActive(true);
+        _scrollbar.value = 0; //reset the scrollbar to the start.
+        SetCards(cards, name, setReverse, hiddenInfo);
+    }
+
+    [Obsolete] //use Show instead.
     public void SetCards(IEnumerable<ICard> cards, string name, bool setReverse = false, bool hiddenInfo = false)
     {
         _cards = cards;
@@ -72,8 +81,7 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
         
         SetContainerSize();
         HideScrollbar();
-        SetCardSizes();
-        
+        SetCardSizes();        
 #endif
     }
 
@@ -112,6 +120,7 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
 
         if (_cardsViewRect.rect.width <= widthOfCanvas)
         {
+            _scrollbar.value = 0; //reset to default just in case.
             _scrollbar.gameObject.SetActive(false);
             return;
         }
@@ -172,10 +181,6 @@ public class CardsViewer2D : MonoBehaviour, ICardsViewer
             }
             else
             {
-                //TODO - this code is very dirty... find a way to replace it
-                //Basically we want a way to have CardViewers not be directly tied to needing to handle Entity Id's
-                var cardAsCardInstance = card as CardInstance;
-                var cardAsMonoBehaviour = alreadyMadeUICards[i] as MonoBehaviour;
                 alreadyMadeUICards[i].SetActive(true);
                 alreadyMadeUICards[i].SetCardData(card);
                 

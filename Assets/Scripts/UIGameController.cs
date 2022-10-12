@@ -207,8 +207,7 @@ public class UIGameController : MonoBehaviour
 
     public void HandleViewGraveyardClick(Player player)
     {
-        _zonePopupWindow.SetActive(true);
-        _zonePopupWindow.GetComponent<ICardsViewer>().SetCards(player.DiscardPile.Cards, $"{player.Name}'s Discard");
+        _zonePopupWindow.GetComponent<ICardsViewer>().Show(player.DiscardPile.Cards, $"{player.Name}'s Discard");
         _zonePopupWindow.GetComponent<ICardsViewer>().ShowExitButton = true;
     }
 
