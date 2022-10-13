@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-public class AffinityAbility : CardAbility
+public class AffinityAbility : CardAbility, IModifyManaCost
 {
     public override string RulesText => $"Affinity for artifacts"; //only for artifacts right now.
 
@@ -21,6 +21,7 @@ public class AffinityAbility : CardAbility
 
     public AffinityAbility()
     {
+
         this.Components.Add(new ModifyManaCostComponent(ChangeManaCost));
     }
 }

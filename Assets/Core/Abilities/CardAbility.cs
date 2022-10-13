@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -178,9 +179,9 @@ public interface IModifyManaCost
     string ModifyManaCost(CardGame cardGame, CardInstance card, string originalManaCost);
 }
 
+
 public class ModifyManaCostComponent : AbilityComponent, IModifyManaCost
 {
-
     private Func<CardGame, CardInstance, string, string> _modManaCostFunc;
 
     public ModifyManaCostComponent(Func<CardGame, CardInstance, string, string> modManaCostFunc)
@@ -189,6 +190,7 @@ public class ModifyManaCostComponent : AbilityComponent, IModifyManaCost
     }
     public string ModifyManaCost(CardGame cardGame, CardInstance card, string originalManaCost)
     {
+        //Serialize TODO - This does not get set again?
         return _modManaCostFunc(cardGame, card, originalManaCost);
     }
 }

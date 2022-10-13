@@ -1,7 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+
+using Newtonsoft.Json;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 public static class TokenHelper
 {
@@ -32,6 +37,7 @@ public interface ICard
 }
 
 
+[Serializable]
 public abstract class BaseCardData : ICard
 {
     public string Name { get; set; }
@@ -3237,7 +3243,33 @@ public class CardDatabase : ICardDatabase
             {
                 card.ArtPath = $"{ArtPath}{card.Name.Replace(" ", "").Replace(",", "").Replace("'", "")}";
             }
+
+
+            //Attempt to serialize cards
+
+            
         }
+
+
+        string json = JsonConvert.SerializeObject(_cards,Formatting.Indented, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+
+        });
+
+        File.WriteAllText(@"./tempCardsJson", json);
+
+        //Testing deserializing our cards
+        _cards = (List<BaseCardData>)JsonConvert.DeserializeObject(json, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+        });
+
+
+
+
 
         /*
         _cards.Add(new UnitCardData()
