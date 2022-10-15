@@ -3230,17 +3230,7 @@
             "ThisTurnOnly": false,
             "Components": {
               "$type": "System.Collections.Generic.List`1[[AbilityComponent, Assembly-CSharp]], mscorlib",
-              "$values": [
-                {
-                  "$type": "ModifyManaCostComponent, Assembly-CSharp"
-                },
-                {
-                  "$type": "ModifyCastZonesComponent, Assembly-CSharp"
-                },
-                {
-                  "$type": "ModifyAdditionalCostComponent, Assembly-CSharp"
-                }
-              ]
+              "$values": []
             },
             "Effects": {
               "$type": "System.Collections.Generic.List`1[[Effect, Assembly-CSharp]], mscorlib",
@@ -3727,11 +3717,7 @@
             "ThisTurnOnly": false,
             "Components": {
               "$type": "System.Collections.Generic.List`1[[AbilityComponent, Assembly-CSharp]], mscorlib",
-              "$values": [
-                {
-                  "$type": "ModifyManaCostComponent, Assembly-CSharp"
-                }
-              ]
+              "$values": []
             },
             "Effects": {
               "$type": "System.Collections.Generic.List`1[[Effect, Assembly-CSharp]], mscorlib",
@@ -3769,11 +3755,7 @@
             "ThisTurnOnly": false,
             "Components": {
               "$type": "System.Collections.Generic.List`1[[AbilityComponent, Assembly-CSharp]], mscorlib",
-              "$values": [
-                {
-                  "$type": "ModifyManaCostComponent, Assembly-CSharp"
-                }
-              ]
+              "$values": []
             },
             "Effects": {
               "$type": "System.Collections.Generic.List`1[[Effect, Assembly-CSharp]], mscorlib",
@@ -3811,11 +3793,7 @@
             "ThisTurnOnly": false,
             "Components": {
               "$type": "System.Collections.Generic.List`1[[AbilityComponent, Assembly-CSharp]], mscorlib",
-              "$values": [
-                {
-                  "$type": "ModifyManaCostComponent, Assembly-CSharp"
-                }
-              ]
+              "$values": []
             },
             "Effects": {
               "$type": "System.Collections.Generic.List`1[[Effect, Assembly-CSharp]], mscorlib",
@@ -4062,11 +4040,7 @@
             "ThisTurnOnly": false,
             "Components": {
               "$type": "System.Collections.Generic.List`1[[AbilityComponent, Assembly-CSharp]], mscorlib",
-              "$values": [
-                {
-                  "$type": "ModifyManaCostComponent, Assembly-CSharp"
-                }
-              ]
+              "$values": []
             },
             "Effects": {
               "$type": "System.Collections.Generic.List`1[[Effect, Assembly-CSharp]], mscorlib",

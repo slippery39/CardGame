@@ -4,7 +4,7 @@ public class AffinityAbility : CardAbility, IModifyManaCost
 {
     public override string RulesText => $"Affinity for artifacts"; //only for artifacts right now.
 
-    private string ChangeManaCost(CardGame cardGame, CardInstance cardInstance, string originalManaCost)
+    public string ModifyManaCost(CardGame cardGame, CardInstance cardInstance, string originalManaCost)
     {
         //We need to count the amount of artifacts in play for the controller.
         var cardOwner = cardGame.GetOwnerOfCard(cardInstance);
@@ -21,8 +21,6 @@ public class AffinityAbility : CardAbility, IModifyManaCost
 
     public AffinityAbility()
     {
-
-        this.Components.Add(new ModifyManaCostComponent(ChangeManaCost));
     }
 }
 
