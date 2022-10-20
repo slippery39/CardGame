@@ -10,7 +10,7 @@ using System.Linq;
  */
 public class GameUIChooseCostsState : IGameUIState
 {
-    private CardGame _cardGame;
+    private CardGame _cardGame => _stateMachine.CardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private AdditionalCost _additionalCost;
@@ -20,7 +20,6 @@ public class GameUIChooseCostsState : IGameUIState
 
     public GameUIChooseCostsState(GameUIStateMachine stateMachine, GameUIActionState parentState, CardGameEntity sourceEntity, AdditionalCost additionalCost)
     {
-        _cardGame = stateMachine.CardGame;
         _stateMachine = stateMachine;
         _additionalCost = additionalCost;
         _parentState = parentState;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,14 @@ public class Player : CardGameEntity
 
     private string _name;
     #endregion
+
+    //Used for Deserializing.
+    [JsonConstructor]
+    public Player()
+    {
+
+    }
+
 
     public Player(int numberOfLanes)
     {
@@ -58,7 +67,7 @@ public class Player : CardGameEntity
         }
     }
 
-    public ManaPool ManaPool { get => _manaPool; }
+    public ManaPool ManaPool { get => _manaPool; set { _manaPool = value; } }
     public override string Name { get => $@"Player {PlayerId}"; set { _name = value; } }
 
     public IZone Items { get => _items; set => _items = value; }

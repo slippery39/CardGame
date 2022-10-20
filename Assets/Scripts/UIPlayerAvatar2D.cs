@@ -22,7 +22,6 @@ public class UIPlayerAvatar2D : UIGameEntity
         var colorlessMana = manaPool.CurrentColorlessMana;
         var colorsCount = manaPool.CurrentColoredMana;
 
-
         string text = "";
 
         if (manaPool.TotalColorlessMana > 0) text += $@"Colorless : {colorlessMana} / {manaPool.TotalColorlessMana}";

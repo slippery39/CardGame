@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 //Targeting State for Effects
 internal class GameUISelectTargetState : IGameUIState
 {
-    private CardGame _cardGame;
+    private CardGame _cardGame => _stateMachine.CardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private List<Effect> _effects;
@@ -16,7 +16,6 @@ internal class GameUISelectTargetState : IGameUIState
 
     public GameUISelectTargetState(GameUIStateMachine stateMachine, GameUIActionState parentState, List<Effect> effects)
     {
-        _cardGame = stateMachine.CardGame;
         _stateMachine = stateMachine;
         _effects = effects;
         _parentState = parentState;

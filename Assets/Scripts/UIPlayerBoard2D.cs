@@ -126,6 +126,10 @@ public class UIPlayerBoard2D : UIPlayerBoard
             var uiGameEntity = uiLanes[i].GetComponent<UIGameEntity>();
             if (uiGameEntity != null)
             {
+                if (player.Lanes == null || player.Lanes[i] == null)
+                {
+                    var j = 0; //test breakpoint;
+                }
                 uiGameEntity.EntityId = player.Lanes[i].EntityId;
             }
         }

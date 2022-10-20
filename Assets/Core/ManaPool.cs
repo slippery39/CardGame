@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -194,12 +195,14 @@ public class ManaPool
     /// <summary>
     /// The total converted mana in the pool.
     /// </summary>
+    [JsonIgnore]
     public int TotalColorlessMana
     {
         get { return _totalMana.ColorlessMana; }
         set { _totalMana.ColorlessMana = value; }
 
     }
+    [JsonIgnore]
     public int CurrentColorlessMana
     {
         get { return _currentMana.ColorlessMana; }
@@ -208,6 +211,7 @@ public class ManaPool
     /// <summary>
     /// Returns the total available mana NOT accounting for any spent.
     /// </summary>
+    [JsonIgnore]
     public Dictionary<ManaType, int> TotalColoredMana
     {
         get { return _totalMana.ColoredMana; }
@@ -216,6 +220,8 @@ public class ManaPool
     /// <summary>
     /// Returns the available mana we have accounting for any spent.
     /// </summary>
+    
+    [JsonIgnore]
     public Dictionary<ManaType, int> CurrentColoredMana
     {
         get { return _currentMana.ColoredMana; }

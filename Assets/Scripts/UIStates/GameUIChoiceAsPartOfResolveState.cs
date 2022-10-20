@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GameUIChoiceAsPartOfResolveState : IGameUIState
 {
-    private CardGame _cardGame;
+    private CardGame _cardGame => _stateMachine.CardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private IEffectWithChoice  _sourceEffect;
@@ -16,7 +16,6 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
 
     public GameUIChoiceAsPartOfResolveState(GameUIStateMachine stateMachine, IEffectWithChoice sourceEffect)
     {
-        _cardGame = stateMachine.CardGame;
         _stateMachine = stateMachine;
         _sourceEffect = sourceEffect;
         _cardsChosen = new List<CardInstance>();

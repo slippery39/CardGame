@@ -152,6 +152,13 @@ public class DefaultManaSystem : IManaSystem
         }
 
         //Trigger any mana enters play effects
+
+
+        UnityEngine.Debug.Log("Handling Mana Card?");
+        UnityEngine.Debug.Log(cardGame);
+        UnityEngine.Debug.Log(player);
+        
+
         cardGame.HandleTriggeredAbilities(player.GetCardsInPlay(), TriggerType.SelfManaPlayed);
 
         cardGame.ZoneChangeSystem.MoveToZone(card, player.Exile);

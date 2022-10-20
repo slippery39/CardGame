@@ -5,7 +5,7 @@ using UnityEngine;
 //Now used in our GameUIChoiseAsPartOfResolveState class.
 public class GameUIMultiChoiceState : IGameUIState
 {
-    private CardGame _cardGame;
+    private CardGame _cardGame => _stateMachine.CardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private IMultiChoiceEffect  _sourceEffect;
@@ -13,7 +13,6 @@ public class GameUIMultiChoiceState : IGameUIState
     public List<CardInstance> _cardsChosen;
     public GameUIMultiChoiceState(GameUIStateMachine stateMachine, IMultiChoiceEffect sourceEffect)
     {
-        _cardGame = stateMachine.CardGame;
         _stateMachine = stateMachine;
         _sourceEffect = sourceEffect;
         _cardsChosen = new List<CardInstance>();

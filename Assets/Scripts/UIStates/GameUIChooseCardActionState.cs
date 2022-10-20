@@ -10,7 +10,7 @@ using UnityEngine;
 /// </summary>
 public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastChoice
 {
-    private CardGame _cardGame;
+    private CardGame _cardGame => _stateMachine.CardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _cardWithMultipleActions;
@@ -18,7 +18,6 @@ public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastC
     public GameUIChooseCardActionState(GameUIStateMachine stateMachine, CardInstance cardWithMultipleActions)
     {
         _stateMachine = stateMachine;
-        _cardGame = stateMachine.CardGame;
         _cardWithMultipleActions = cardWithMultipleActions;
     }
 

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Runtime.Serialization;
+using UnityEngine;
 
 public class CardGame
 {
@@ -42,15 +44,20 @@ public class CardGame
 
 
     #region Public Properties
+    [JsonIgnore]
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
+    [JsonIgnore]
     public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
     public List<Player> Players { get => _players; set => _players = value; }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
+    [JsonIgnore]
     public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
+    [JsonIgnore]
     public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
 
     public int SpellsCastThisTurn { get; set; } = 0;
     public ICardGameLogger Logger { get => _cardGameLogger; }
+    public List<CardGameEntity> RegisteredEntities { get => _registeredEntities; set => _registeredEntities = value; }
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
@@ -89,6 +96,19 @@ public class CardGame
     #endregion
 
     public CardGame()
+    {
+        InitGame();
+        Log("Default Constructor has been called in CardGame!");
+    }
+
+    [OnDeserialized]
+    public void OnDeserialized(StreamingContext context)
+    {
+        Debug.Log("OnDeserialized has fired!");
+    }
+
+
+    private void InitGame()
     {
         _battleSystem = new DefaultBattleSystem(this);
         _damageSystem = new DefaultDamageSystem(this);
@@ -620,6 +640,12 @@ public class CardGame
     //For general console logging purposes.
     public void Log(string message)
     {
+        if (Logger == null)
+        {
+            //default to unity if null;
+            Debug.Log(message);
+            return;
+        }
         Logger.Log(message);
     }
     private void AddRandomUnitsToLane(Player player)
@@ -627,14 +653,13 @@ public class CardGame
         CardDatabase db = new CardDatabase();
         var unitsOnly = db.GetAll().Where(c => c.GetType() == typeof(UnitCardData)).ToList();
 
-        var rng = new Random();
+        var rng = new System.Random();
 
         foreach (Lane lane in player.Lanes)
         {
             var randomIndex = rng.Next(0, unitsOnly.Count());
             AddCardToGame(player, unitsOnly[randomIndex], lane);
         }
-
     }
 
     private void AddRandomCardsToHand(Player player)
@@ -642,7 +667,7 @@ public class CardGame
         CardDatabase db = new CardDatabase();
         var cards = db.GetAll().Where(c => c.Name == "City of Brass").ToList();
 
-        var rng = new Random();
+        var rng = new System.Random();
 
         for (int i = 0; i < _startingHandSize; i++)
         {

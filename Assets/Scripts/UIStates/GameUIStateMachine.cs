@@ -3,17 +3,15 @@
 [RequireComponent(typeof(UIGameController))]
 public class GameUIStateMachine : MonoBehaviour
 {
-    private CardGame _cardGame;
     //State history?
     public IGameUIState CurrentState;
     private UIGameController _gameController;
     public UIGameController GameController { get => _gameController; set => _gameController = value; }
-    public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
+    public CardGame CardGame { get => _gameController.CardGame; }
 
     private void Start()
     {
         _gameController = GetComponent<UIGameController>();
-        _cardGame = _gameController.CardGame;
         ToIdle();
     }
 
@@ -45,11 +43,11 @@ public class GameUIStateMachine : MonoBehaviour
                 }
             case PlayManaAction playManaAction:
                 {
-                    if (!playManaAction.IsValidAction(_cardGame))
+                    if (!playManaAction.IsValidAction(CardGame))
                     {
                         return;
                     }
-                    _cardGame.ProcessAction(playManaAction);
+                    CardGame.ProcessAction(playManaAction);
                     ToIdle();
                     break;
                 }

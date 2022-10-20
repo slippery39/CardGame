@@ -3,6 +3,12 @@ using System.Linq;
 
 public class Deck : Zone
 {
+    public Deck(IEnumerable<CardInstance> cards)
+    {
+        _cards = cards.ToList();
+        _name = "Deck";
+        _zoneType = ZoneType.Deck;
+    }
     public Deck()
     {
         _name = "Deck";

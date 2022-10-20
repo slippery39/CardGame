@@ -2,8 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.Serialization;
+
 
 //Thoughts here,
 //Our Zone Transition System will need the Add and Remove methods as it will need to be able to move cards between zones without
@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 //Playing a Creature from Hand
 //ZoneTransitionSystem.ChangeZones(CardInstance card, IZone zone1, IZone zone2);
 
-//orrr
+//
 
 //Move to Lane
 
@@ -44,9 +44,8 @@ public enum ZoneType
 
 //A generic zone that can be used if no extra functionality is needed.
 //Hand and Discard both are sort of non unique zones.
-public class Zone : IZone, IEnumerable<CardInstance>
+public class Zone : IZone, IEnumerable<CardInstance>, ISerializable
 {
-
     protected ZoneType _zoneType;
     protected string _name;
     protected List<CardInstance> _cards;
@@ -59,6 +58,12 @@ public class Zone : IZone, IEnumerable<CardInstance>
     public Zone()
     {
         _cards = new List<CardInstance>();
+    }
+
+    //Checking if this makes JSONnet Serialization work
+    public Zone(IEnumerable<CardInstance> cards)
+    {
+        _cards = cards.ToList();
     }
 
     public Zone(ZoneType zoneType, string name)
@@ -86,6 +91,11 @@ public class Zone : IZone, IEnumerable<CardInstance>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return ((IEnumerable)_cards).GetEnumerator();
+    }
+
+    public void GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        throw new NotImplementedException();
     }
 }
 

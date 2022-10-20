@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
+
 public class CardInstance : CardGameEntity, ICard
 {
     private BaseCardData _originalCardData;
@@ -43,7 +45,12 @@ public class CardInstance : CardGameEntity, ICard
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
-    public List<Effect> Effects { get => ((SpellCardData)_currentCardData).Effects; }
+    //Effects was being added to every time we serialize / deserialize it.
+    [JsonIgnore]
+    public List<Effect> Effects
+    {
+        get { if (_currentCardData is SpellCardData) { return ((SpellCardData)_currentCardData).Effects; } else { return new List<Effect>(); } }
+    }
 
     public string RulesText
     {
@@ -80,6 +87,7 @@ public class CardInstance : CardGameEntity, ICard
 
 
     //NOTE - we do not have a rules text property here... seems weird why we don't.
+    [JsonIgnore]
     public List<CardColor> Colors { get => _currentCardData.Colors; }
     public string CreatureType
     {
@@ -104,6 +112,7 @@ public class CardInstance : CardGameEntity, ICard
 
     }
 
+    [JsonIgnore]
     public string ManaCost
     {
         get
@@ -188,7 +197,8 @@ public class CardInstance : CardGameEntity, ICard
         }
         else
         {
-            throw new Exception("Card Instance is not a creature, cannot access the power property");
+            return 0;
+            //throw new Exception("Card Instance is not a creature, cannot access the power property");
         }
     }
 
@@ -249,7 +259,8 @@ public class CardInstance : CardGameEntity, ICard
             }
             else
             {
-                throw new Exception("Card Instance is not a creature, cannot access the power property");
+                return 0;
+                //throw new Exception("Card Instance is not a creature, cannot access the toughness property");
             }
         }
     }
@@ -273,6 +284,12 @@ public class CardInstance : CardGameEntity, ICard
     public CardInstance FrontCard { get; set; }
 
     #endregion
+
+    //For Serialization Purposes
+    public CardInstance()
+    {
+
+    }
 
     public CardInstance(CardGame cardGame, BaseCardData cardData)
     {

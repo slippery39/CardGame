@@ -5,17 +5,18 @@ using UnityEngine;
 
 public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
 {
-    private CardGame _cardGame;
-    private Player _actingPlayer => _cardGame.ActivePlayer;
+    //private CardGame _cardGame;
+    private Player _actingPlayer => CardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _cardWithAbility;
+    private CardGame CardGame => _stateMachine.CardGame;
 
     public GameUIActivatedAbilityState(GameUIStateMachine stateMachine, CardInstance cardWithAbility)
     {
         SelectedTargets = new List<CardGameEntity>();
 
         _stateMachine = stateMachine;
-        _cardGame = stateMachine.CardGame;
+        //_cardGame = stateMachine.CardGame;
         _cardWithAbility = cardWithAbility;
 
         //Determine whether the ability has targets
@@ -64,7 +65,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
         //Need to check by zone.
         return _cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().First(ab =>
         {
-            return ab.ActivationZone == _cardGame.GetZoneOfCard(_cardWithAbility).ZoneType;
+            return ab.ActivationZone == CardGame.GetZoneOfCard(_cardWithAbility).ZoneType;
         });
     }
 
@@ -99,13 +100,13 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
             AdditionalCostChoices = SelectedChoices
         };
 
-        if (!abilityAction.IsValidAction(_cardGame))
+        if (!abilityAction.IsValidAction(CardGame))
         {
             Debug.Log($"Could not activate ability");
             return;
         }
 
-        _cardGame.ProcessAction(abilityAction);
+        CardGame.ProcessAction(abilityAction);
         _stateMachine.ToIdle();
     }
 

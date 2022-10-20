@@ -180,6 +180,7 @@ public interface IModifyManaCost
 }
 
 
+/*
 public class ModifyManaCostComponent : AbilityComponent, IModifyManaCost
 {
     private Func<CardGame, CardInstance, string, string> _modManaCostFunc;
@@ -194,6 +195,7 @@ public class ModifyManaCostComponent : AbilityComponent, IModifyManaCost
         return _modManaCostFunc(cardGame, card, originalManaCost);
     }
 }
+*/
 
 public interface IModifyCastZones
 {
@@ -201,6 +203,7 @@ public interface IModifyCastZones
 
 }
 
+/*
 public class ModifyCastZonesComponent : AbilityComponent, IModifyCastZones
 {
     private Func<CardGame, CardInstance, List<ZoneType>, List<ZoneType>> _modCastZoneFunc;
@@ -215,12 +218,14 @@ public class ModifyCastZonesComponent : AbilityComponent, IModifyCastZones
         return _modCastZoneFunc(cardGame, card, originalCastZones);
     }
 }
+*/
 
 public interface IModifyAdditionalCost
 {
     AdditionalCost ModifyAdditionalCost(CardGame cardGame, CardInstance sourceCard, AdditionalCost originalAdditionalCost);
 }
 
+/*
 public class ModifyAdditionalCostComponent : AbilityComponent, IModifyAdditionalCost
 {
     private Func<CardGame, CardInstance, AdditionalCost, AdditionalCost> _modAdditionalCostFunc;
@@ -235,6 +240,7 @@ public class ModifyAdditionalCostComponent : AbilityComponent, IModifyAdditional
         return _modAdditionalCostFunc(cardGame, card, originalAdditionalCost);
     }
 }
+*/
 
 public interface IOnSummon
 {

@@ -1,6 +1,8 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -47,10 +49,38 @@ public class UIGameController : MonoBehaviour
     public static UIGameController Instance;
 
 
+    [Header("Debug Information")]
+    [SerializeField]
+    public List<int> RegisteredEntities;
+
     private void Awake()
     {
         Instance = this;
         _cardGame = new CardGame();
+    }
+
+    public void SerializeTest()
+    {
+        string json = JsonConvert.SerializeObject(_cardGame, Formatting.Indented, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+        });
+
+        File.WriteAllText(@"./tempGameState", json);
+
+        //Testing deserializing our cards
+        _cardGame = (CardGame)JsonConvert.DeserializeObject(json, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            ObjectCreationHandling = ObjectCreationHandling.Replace
+        });
+
+        _player1Board.SetPlayer(_cardGame.Player1);
+        _player2Board.SetPlayer(_cardGame.Player2);
     }
 
     internal void ShowActionChoicePopup(List<CardGameAction> actions)
@@ -73,6 +103,7 @@ public class UIGameController : MonoBehaviour
         CheckForCardsWithoutImages();
         CheckForCardsWithoutManaCosts();
         _stateMachine = GetComponent<GameUIStateMachine>();
+
     }
 
     private void InitEventHandlers()
@@ -97,6 +128,13 @@ public class UIGameController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            Debug.Log("Serializing...");
+            SerializeTest();
+            Debug.Log("Deserializing");
+            RegisteredEntities = _cardGame.RegisteredEntities.Select(e=>e.EntityId).ToList();
+        }
 
         if (_cardGame.CurrentGameState == GameState.WaitingForAction)
         {
@@ -154,8 +192,10 @@ public class UIGameController : MonoBehaviour
     {
         _cardGame.SetupDecks(player1Deck, player2Deck);
         _cardGame.StartGame();
+        //TODO - These are not being updated when we serialize / deserialize an object
         _player1Board.SetPlayer(_cardGame.Player1);
         _player2Board.SetPlayer(_cardGame.Player2);
+        RegisteredEntities = _cardGame.RegisteredEntities.Select(e => e.EntityId).ToList();
         UpdateUI();
     }
 
@@ -216,8 +256,10 @@ public class UIGameController : MonoBehaviour
 
     public void HandleNextTurnButtonClick()
     {
+        Debug.Log("processing next turn");
         var nextTurnAction = new NextTurnAction();
         _cardGame.ProcessAction(nextTurnAction);
+        Debug.Log("done processing next turn");
         _stateMachine.ToIdle();
     }
 
