@@ -4,10 +4,8 @@
 }
 
 
-public class DefaultDestroySystem : IDestroySystem
+public class DefaultDestroySystem : CardGameSystem, IDestroySystem
 {
-    private CardGame cardGame;
-
     public DefaultDestroySystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

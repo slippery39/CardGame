@@ -11,9 +11,8 @@ public interface IStateBasedEffectSystem
 }
 
 
-public class DefaultStateBasedEffectSystem : IStateBasedEffectSystem
+public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSystem
 {
-    private CardGame cardGame;
 
     public DefaultStateBasedEffectSystem(CardGame cardGame)
     {

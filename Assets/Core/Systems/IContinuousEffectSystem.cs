@@ -8,9 +8,9 @@ public interface IContinuousEffectSystem
     public void RemoveStaticEffects();
 }
 
-public class DefaultContinousEffectSystem : IContinuousEffectSystem
+public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSystem
 {
-    private CardGame cardGame;
+
     public DefaultContinousEffectSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

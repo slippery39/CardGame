@@ -1,7 +1,5 @@
-﻿public class DefaultHealingSystem : IHealingSystem
+﻿public class DefaultHealingSystem : CardGameSystem, IHealingSystem
 {
-    private CardGame cardGame;
-
     public DefaultHealingSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

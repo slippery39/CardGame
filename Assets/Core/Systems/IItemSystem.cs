@@ -5,9 +5,8 @@ public interface IItemSystem
     void PlayItem(Player player, CardInstance card, List<CardGameEntity> targets, ResolvingCardInstanceActionInfo resolvingCardInstance);
 }
 
-public class DefaultItemSystem : IItemSystem
+public class DefaultItemSystem : CardGameSystem, IItemSystem
 {
-    private CardGame cardGame;
     public DefaultItemSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

@@ -4,10 +4,8 @@
 }
 
 
-public class DefaultSacrificeSystem : ISacrificeSystem
+public class DefaultSacrificeSystem : CardGameSystem, ISacrificeSystem
 {
-    private CardGame cardGame;
-
     public DefaultSacrificeSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

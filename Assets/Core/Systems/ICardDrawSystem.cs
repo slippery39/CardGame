@@ -12,11 +12,8 @@ public interface ICardDrawSystem
 }
 
 
-public class DefaultCardDrawSystem : ICardDrawSystem
+public class DefaultCardDrawSystem : CardGameSystem, ICardDrawSystem
 {
-
-    private CardGame cardGame;
-
     public DefaultCardDrawSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

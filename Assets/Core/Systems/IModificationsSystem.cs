@@ -3,9 +3,8 @@
     public void AddModification(CardInstance cardToGetModification, Modification mod);
 }
 
-public class DefaultModificationSystem : IModificationsSystem
+public class DefaultModificationSystem : CardGameSystem, IModificationsSystem
 {
-    private CardGame cardGame;
     public DefaultModificationSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

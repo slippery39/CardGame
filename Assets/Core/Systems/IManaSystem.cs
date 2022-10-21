@@ -32,10 +32,8 @@ public interface IManaSystem
 
 }
 
-public class DefaultManaSystem : IManaSystem
+public class DefaultManaSystem : CardGameSystem,IManaSystem
 {
-    private CardGame cardGame;
-
     public DefaultManaSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

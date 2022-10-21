@@ -47,10 +47,8 @@ public class ResolvingStack : IZone
     }
 }
 
-public class DefaultResolvingSystem : IResolvingSystem
+public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
 {
-    private CardGame cardGame;
-
     //Can hold card instances and abilities
     private List<ResolvingActionInfo> _internalStack = new List<ResolvingActionInfo>();
     //Can only hold card instances.

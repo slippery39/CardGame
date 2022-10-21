@@ -3,10 +3,8 @@
     void PumpUnit(CardInstance unit, PumpUnitEffect pumpAbility);
 }
 
-public class DefaultUnitPumpSystem: IUnitPumpSystem
+public class DefaultUnitPumpSystem: CardGameSystem, IUnitPumpSystem
 {
-    private CardGame cardGame;
-
     public DefaultUnitPumpSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

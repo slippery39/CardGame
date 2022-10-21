@@ -6,11 +6,8 @@
 
 }
 
-
-public class DefaultAdditionalCostSystem : IAdditionalCostSystem
+public class DefaultAdditionalCostSystem : CardGameSystem, IAdditionalCostSystem
 {
-    CardGame cardGame;
-
     public DefaultAdditionalCostSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

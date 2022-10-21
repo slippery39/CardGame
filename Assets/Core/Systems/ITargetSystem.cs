@@ -27,11 +27,10 @@ public static class TargetHelper
 }
 
 
-public class DefaultTargetSystem : ITargetSystem
+public class DefaultTargetSystem : CardGameSystem, ITargetSystem
 {
 
     private List<TargetType> typesThatDontNeedTargets = TargetHelper.TypesThatDontNeedTargets;
-    private CardGame cardGame;
 
     public DefaultTargetSystem(CardGame cardGame)
     {

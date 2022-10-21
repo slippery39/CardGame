@@ -7,10 +7,8 @@ public interface IUnitSummoningSystem
     void SummonUnit(Player player, CardInstance unitCard, int laneId);
 }
 
-public class DefaultUnitSummoningSystem : IUnitSummoningSystem
+public class DefaultUnitSummoningSystem : CardGameSystem, IUnitSummoningSystem
 {
-    private CardGame cardGame;
-
     public DefaultUnitSummoningSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

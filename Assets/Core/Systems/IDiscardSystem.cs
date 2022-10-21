@@ -7,10 +7,8 @@ public interface IDiscardSystem
     void Discard(Player player, List<CardInstance> cards);
 }
 
-public class DefaultDiscardSystem : IDiscardSystem
+public class DefaultDiscardSystem : CardGameSystem, IDiscardSystem
 {
-    private CardGame cardGame;
-
     public DefaultDiscardSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

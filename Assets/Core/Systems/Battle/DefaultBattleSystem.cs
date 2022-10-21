@@ -2,10 +2,8 @@
 using System.Linq;
 using UnityEngine;
 
-public class DefaultBattleSystem : IBattleSystem
+public class DefaultBattleSystem : CardGameSystem, IBattleSystem
 {
-    private CardGame cardGame;
-
     public DefaultBattleSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

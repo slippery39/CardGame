@@ -10,10 +10,8 @@ public interface IActivatedAbilitySystem
     public void ActivateAbililty(Player player, CardInstance card, ActivateAbilityInfo activateAbilityInfo);
 }
 
-public class DefaultActivatedAbilitySystem : IActivatedAbilitySystem
+public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySystem
 {
-    //Temporary method, testing stuff out to get this working better
-    private CardGame cardGame;
 
     public DefaultActivatedAbilitySystem(CardGame cardGames)
     {

@@ -4,9 +4,8 @@
 }
 
 
-public class DefaultCountersSystem : ICountersSystem
+public class DefaultCountersSystem : CardGameSystem, ICountersSystem
 {
-    private CardGame cardGame;
     public DefaultCountersSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

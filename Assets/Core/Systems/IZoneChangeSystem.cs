@@ -11,10 +11,8 @@ public interface IZoneChangeSystem
 }
 
 
-public class DefaultZoneChangeSystem : IZoneChangeSystem
+public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
 {
-    private CardGame cardGame;
-
     public DefaultZoneChangeSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

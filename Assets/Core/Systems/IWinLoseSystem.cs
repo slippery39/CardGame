@@ -5,9 +5,8 @@
 }
 
 
-public class DefaultWinLoseSystem : IWinLoseSystem
+public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
 {
-    CardGame cardGame;
     public DefaultWinLoseSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

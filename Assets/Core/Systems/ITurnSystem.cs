@@ -17,11 +17,9 @@ public enum TurnPhase
     EndOfTurn
 }
 
-public class DefaultTurnSystem : ITurnSystem
+public class DefaultTurnSystem : CardGameSystem, ITurnSystem
 {
     public int TurnId { get; set; }
-
-    private CardGame cardGame;
 
     public DefaultTurnSystem(CardGame cardGame)
     {

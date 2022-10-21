@@ -5,10 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class DefaultDamageSystem : IDamageSystem
+public class DefaultDamageSystem : CardGameSystem, IDamageSystem
 {
-    private CardGame cardGame;
-
     public DefaultDamageSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;

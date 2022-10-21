@@ -12,10 +12,8 @@ public interface IEffectsProcessor
 }
 
 
-public class DefaultEffectsProcessor : IEffectsProcessor
+public class DefaultEffectsProcessor : CardGameSystem, IEffectsProcessor
 {
-    private CardGame cardGame;
-
     public DefaultEffectsProcessor(CardGame cardGame)
     {
         this.cardGame = cardGame;
