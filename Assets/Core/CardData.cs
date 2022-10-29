@@ -3107,6 +3107,31 @@ public class CardDatabase : ICardDatabase
         });
 
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Kavu Predator",
+            ManaCost = "1G",
+            Colors = new List<CardColor> { CardColor.Green },
+            Power = 2,
+            Toughness = 2,
+            Abilities = new List<CardAbility>
+            {
+                new TriggeredAbility
+                {
+                    TriggerType = TriggerType.AtTurnStart,
+                    Effects = new List<Effect>
+                    {
+                        new AddPlusOnePlusOneCounterEffect()
+                        {
+                            Amount = 1,
+                            TargetType = TargetType.UnitSelf                            
+                        }
+                    }
+                }
+            }
+        });
+
+
 
 
 

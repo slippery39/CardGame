@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class AddPlusOnePlusOneCounterEffect : Effect
 {
-    public int Amount { get; set; }
+    public int Amount { get; set; } = 1;
 
     public override string RulesText => "Add a +1/+1 counter";
 

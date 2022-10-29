@@ -232,7 +232,7 @@ public class FamousDecks : DecklistDB
                     4 Tarmogoyf
                     4 Mogg War Marshal
                     4 Thornweald Archer
-                    4 Kavn bbu Predator
+                    4 Kavu Predator
                     4 Uktabi Drake
                     4 Gaea's Anthem
                     4 Summoner's Pact

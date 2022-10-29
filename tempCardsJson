@@ -7247,6 +7247,64 @@
     {
       "$type": "UnitCardData, Assembly-CSharp",
       "Power": 2,
+      "Toughness": 2,
+      "CardType": "Unit",
+      "CreatureType": "",
+      "Name": "Kavu Predator",
+      "RulesText": "At the start of your turn Add a +1/+1 counter",
+      "ManaCost": "1G",
+      "Subtype": "",
+      "Colors": {
+        "$type": "System.Collections.Generic.List`1[[CardColor, Assembly-CSharp]], mscorlib",
+        "$values": [
+          4
+        ]
+      },
+      "BackCard": null,
+      "ArtPath": "MTGCardArt/KavuPredator",
+      "Abilities": {
+        "$type": "System.Collections.Generic.List`1[[CardAbility, Assembly-CSharp]], mscorlib",
+        "$values": [
+          {
+            "$type": "TriggeredAbility, Assembly-CSharp",
+            "Type": null,
+            "RulesText": "At the start of your turn Add a +1/+1 counter",
+            "TriggerType": 4,
+            "Filter": {
+              "$type": "CardFilter, Assembly-CSharp",
+              "CreatureType": null,
+              "Subtype": null,
+              "CardType": null,
+              "CardColor": null,
+              "ManaCheck": null,
+              "Not": false
+            },
+            "Priority": 0,
+            "ThisTurnOnly": false,
+            "Components": {
+              "$type": "System.Collections.Generic.List`1[[AbilityComponent, Assembly-CSharp]], mscorlib",
+              "$values": []
+            },
+            "Effects": {
+              "$type": "System.Collections.Generic.List`1[[Effect, Assembly-CSharp]], mscorlib",
+              "$values": [
+                {
+                  "$type": "AddPlusOnePlusOneCounterEffect, Assembly-CSharp",
+                  "Amount": 1,
+                  "RulesText": "Add a +1/+1 counter",
+                  "TargetType": 8,
+                  "Filter": null
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "AdditionalCost": null
+    },
+    {
+      "$type": "UnitCardData, Assembly-CSharp",
+      "Power": 2,
       "Toughness": 1,
       "CardType": "Unit",
       "CreatureType": "",
