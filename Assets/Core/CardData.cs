@@ -3124,10 +3124,24 @@ public class CardDatabase : ICardDatabase
                         new AddPlusOnePlusOneCounterEffect()
                         {
                             Amount = 1,
-                            TargetType = TargetType.UnitSelf                            
+                            TargetType = TargetType.UnitSelf
                         }
                     }
                 }
+            }
+        });
+
+        _cards.Add(new UnitCardData
+        {
+            Name = "Tarmogoyf",
+            ManaCost = "1G",
+            Colors = new List<CardColor> { CardColor.Green },
+            Power = 0,
+            Toughness = 1,
+
+            Abilities = new List<CardAbility>
+            {
+                new TarmogoyfAbility()
             }
         });
 
@@ -3272,11 +3286,11 @@ public class CardDatabase : ICardDatabase
 
             //Attempt to serialize cards
 
-            
+
         }
 
 
-        string json = JsonConvert.SerializeObject(_cards,Formatting.Indented, new JsonSerializerSettings
+        string json = JsonConvert.SerializeObject(_cards, Formatting.Indented, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore

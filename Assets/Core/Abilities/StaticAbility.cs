@@ -41,7 +41,7 @@ public class EntitiesAffectedInfo
 
 public class StaticAbility : CardAbility
 {
-   
+
     public override string RulesText
     {
         get
@@ -81,7 +81,7 @@ public class StaticAbility : CardAbility
 
                  if (eff.Filter != null)
                  {
-                     defaultCardType = eff.Filter.RulesTextString() + "s";                      
+                     defaultCardType = eff.Filter.RulesTextString() + "s";
                  }
                  rulesText = rulesText.Replace("#cardType#", defaultCardType);
 
@@ -99,6 +99,25 @@ public class StaticAbility : CardAbility
     //private EntityType EntitiesAffected => EntitiesAffectedInfo.EntitiesAffected;
     //private CardFilter Filter => EntitiesAffectedInfo.Filter;
 }
+
+
+public class TarmogoyfAbility : CardAbility, IModifyPower, IModifyToughness
+{
+    public override string RulesText => "Tarmogoyf gets +X/+X where X is twice the number of unique card types in your graveyard";
+
+    public int ModifyPower(CardGame cardGame, CardInstance card, int originalPower)
+    {
+        var uniqueCardsInGraveyard = card.GetOwner().DiscardPile.Select(c => c.CardType).Distinct().Count();
+        return originalPower + (uniqueCardsInGraveyard * 2);
+    }
+
+    public int ModifyToughness(CardGame cardGame, CardInstance card, int originalToughness)
+    {
+        var uniqueCardsInGraveyard = card.GetOwner().DiscardPile.Select(c => c.CardType).Distinct().Count();
+        return originalToughness + (uniqueCardsInGraveyard * 2);
+    }
+}
+
 
 public enum StaticAbilityEntitiesAffected
 {
@@ -145,6 +164,8 @@ public class StaticPumpEffect : Effect
         }
     }
 }
+
+
 
 //TODO - replace with with a mana effect with a static info
 public class StaticManaReductionEffect : Effect
