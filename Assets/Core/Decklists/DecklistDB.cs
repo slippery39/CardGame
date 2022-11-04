@@ -213,6 +213,25 @@ public class FamousDecks : DecklistDB
          * 
          * TODO - Tarmogoyf, Llanowar Reborn, Grove of the Burnwillows? Kher Keep, Horizon Canopy
          */
+
+        /*
+         * 
+         * TODO 
+         * 
+         * Tarmogoyf?
+         * 
+         * cards removed
+         * 
+         * Llanowar Reborn
+         * Kher Keep
+         * Horizon Canopy
+         * Terramorphic Expanse
+         * 
+         * Add in the Pathway, Copperline Gorge for some of the dual lands
+         * 
+         * 
+         * 
+         */
         return new Decklist
         {
             Name = "GR Haze of Rage",
@@ -220,14 +239,12 @@ public class FamousDecks : DecklistDB
             Cards = $@"
                     Lands(25)
                     6 Mountain
-                    4 Forest
-                    1 Pendelhaven
-                    2 Terramorphic Expanse
-                    4 Grove of the Burnwillows
-                    4 Llanowar Reborn
-                    2 Kher Keep
-                    2 Horizon Canopy
-
+                    5 Forest
+                    4 Stomping Ground
+                    4 Cragcrown Pathway
+                    4 Copperline Gorge
+                    4 Rootbound Crag
+                    
                     Spells(35)
                     4 Tarmogoyf
                     4 Mogg War Marshal
