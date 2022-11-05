@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,6 +27,13 @@ public static class Extensions
     public static bool IsNullOrEmpty<T>(this IEnumerable<T> source)
     {
         return source == null || !source.Any();
+    }
+
+    //Quick Clone Method, only works if the object can be properly serialized.
+    public static T Clone<T>(this T source)
+    {
+        var json = JsonConvert.SerializeObject(source);
+        return JsonConvert.DeserializeObject<T>(json);
     }
 
     /// <summary>

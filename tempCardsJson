@@ -7309,7 +7309,7 @@
       "CardType": "Unit",
       "CreatureType": "",
       "Name": "Tarmogoyf",
-      "RulesText": "Tarmogoyf gets +X/+X where X is the number of unique card types in your graveyard",
+      "RulesText": "Tarmogoyf gets +X/+X where X is twice the number of unique card types in your graveyard",
       "ManaCost": "1G",
       "Subtype": "",
       "Colors": {
@@ -7326,7 +7326,7 @@
           {
             "$type": "TarmogoyfAbility, Assembly-CSharp",
             "Type": null,
-            "RulesText": "Tarmogoyf gets +X/+X where X is the number of unique card types in your graveyard",
+            "RulesText": "Tarmogoyf gets +X/+X where X is twice the number of unique card types in your graveyard",
             "Priority": 0,
             "ThisTurnOnly": false,
             "Components": {

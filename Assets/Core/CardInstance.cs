@@ -372,8 +372,46 @@ public class CardInstance : CardGameEntity, ICard
     }
 
     /// <summary>
+    /// Gets all available actions that can be done including any additional costs and targets
+    /// that could be selected.
+    /// </summary>
+    /// <returns></returns>
+    public List<CardGameAction> GetAvailableActionsWithTargets()
+    {
+        var actions = GetAvailableActions();
+        List<CardGameAction> actionList = new List<CardGameAction>();
+
+        foreach (var action in actions)
+        {
+            var targets = action.GetValidTargets(CardGame);
+            if (targets.Count == 0)
+            {
+                actionList.Add(action);
+            }
+            else
+            {
+                //Copy the current action and add the target to it
+                List<CardGameAction> actionsWithTargets = targets.Select(t =>
+                {
+                    var newAction = action.Clone();
+                    newAction.Targets.Add(t);
+                    return newAction;
+                }).ToList();
+
+                actionList.AddRange(actionsWithTargets);
+            }
+
+            //TODO - add additional costs.
+            //action.GetValidAdditionalCostChoices();
+        }
+
+        return actionList;
+    }
+
+    /// <summary>
     /// Gets all available things that can be done with the card
     /// For example, is it castable, can we activate an ability on it?
+    /// Note, this does not include any target or additional cost information.
     /// </summary>
     /// <returns></returns>
     public List<CardGameAction> GetAvailableActions()
@@ -436,9 +474,8 @@ public class CardInstance : CardGameEntity, ICard
         //Filter them by if its doable
         //Can we pay the mana cost
         //Can we pay the additional cost
-
+ 
         return GetAvailableActions().Count() > 1;
-
     }
 
     public bool HasActivatedAbility()

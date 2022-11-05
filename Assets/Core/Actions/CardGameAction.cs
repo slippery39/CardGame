@@ -14,6 +14,18 @@ public abstract class CardGameAction
     public List<ICastModifier> CastModifiers { get; set; } = new List<ICastModifier>();
     private bool HasModifiers => CastModifiers != null && CastModifiers.Count > 0;
     public virtual List<CardGameEntity> Targets { get; set; }
+
+    /// <summary>
+    /// Gets all the potential valid targets for a given action.
+    /// Mainly used for AI so that they can easily loop through each target to see
+    /// which one is the best choice for them.
+    /// 
+    /// </summary>
+    /// <param name="cardGame"></param>
+    /// <returns></returns>
+    public virtual List<CardGameEntity> GetValidTargets(CardGame cardGame) => new List<CardGameEntity>();
+
+
     public List<CardGameEntity> AdditionalChoices { get; set; }
     public abstract void DoAction(CardGame cardGame);
     public abstract bool IsValidAction(CardGame cardGame);
@@ -95,17 +107,30 @@ public abstract class CardGameAction
 
         throw new Exception($"Card type not properly programmed in for {cardToPlay.Name}");
     }
+
 }
 
 public class PlayUnitAction : CardGameAction
 {
     public Lane Lane { get; set; }
-    public override List<CardGameEntity> Targets { get { return new List<CardGameEntity>{ Lane }; } set{ } }
+    public override List<CardGameEntity> Targets { get { return new List<CardGameEntity>{ Lane }; } 
+        set{         
+            if (value[0] is Lane)
+            {
+                Lane = (Lane)value[0];
+            }        
+        } }
     public override bool IsValidAction(CardGame cardGame)
     {
         return Lane != null && cardGame.CanPlayCard(CardToPlay) && Lane.IsEmpty();
     }
 
+    public override List<CardGameEntity> GetValidTargets(CardGame cardGame)
+    {
+        return Player.GetEmptyLanes().Cast<CardGameEntity>().ToList();
+    }
+
+    
     public override void DoAction(CardGame cardGame)
     {
         cardGame.PlayCard(Player, this); //before, i think we need to pass in the Lane.EntityId somehow --(Player, CardToPlay, Lane.EntityId, null);
