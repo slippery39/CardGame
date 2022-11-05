@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,11 +30,12 @@ public static class Extensions
         return source == null || !source.Any();
     }
 
-    //Quick Clone Method, only works if the object can be properly serialized.
-    public static T Clone<T>(this T source)
+    //Quick Clone Method using memberwise clone
+    public static T Clone<T>(this T obj)
     {
-        var json = JsonConvert.SerializeObject(source);
-        return JsonConvert.DeserializeObject<T>(json);
+        var inst = obj.GetType().GetMethod("MemberwiseClone", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+
+        return (T)inst?.Invoke(obj, null);
     }
 
     /// <summary>
