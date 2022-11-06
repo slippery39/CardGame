@@ -394,7 +394,7 @@ public class CardInstance : CardGameEntity, ICard
                 List<CardGameAction> actionsWithTargets = targets.Select(t =>
                 {
                     var newAction = action.Clone();
-                    newAction.Targets.Add(t);
+                    newAction.Targets = new List<CardGameEntity> { t };
                     return newAction;
                 }).ToList();
 

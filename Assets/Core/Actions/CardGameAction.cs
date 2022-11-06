@@ -84,7 +84,8 @@ public abstract class CardGameAction
         else if (cardToPlay.IsOfType<SpellCardData>())
         {
             var castModifiers = new List<ICastModifier>() { modifier };
-            if (modifier == null){
+            if (modifier == null)
+            {
                 castModifiers = new List<ICastModifier>();
             }
             return new PlaySpellAction
@@ -113,13 +114,8 @@ public abstract class CardGameAction
 public class PlayUnitAction : CardGameAction
 {
     public Lane Lane { get; set; }
-    public override List<CardGameEntity> Targets { get { return new List<CardGameEntity>{ Lane }; } 
-        set{         
-            if (value[0] is Lane)
-            {
-                Lane = (Lane)value[0];
-            }        
-        } }
+    public override List<CardGameEntity> Targets { get { return new List<CardGameEntity> { Lane }; } set { if (value[0] is Lane) { Lane = (Lane)value[0]; } } }
+
     public override bool IsValidAction(CardGame cardGame)
     {
         return Lane != null && cardGame.CanPlayCard(CardToPlay) && Lane.IsEmpty();
@@ -130,7 +126,7 @@ public class PlayUnitAction : CardGameAction
         return Player.GetEmptyLanes().Cast<CardGameEntity>().ToList();
     }
 
-    
+
     public override void DoAction(CardGame cardGame)
     {
         cardGame.PlayCard(Player, this); //before, i think we need to pass in the Lane.EntityId somehow --(Player, CardToPlay, Lane.EntityId, null);
@@ -157,7 +153,7 @@ public class PlayManaAction : CardGameAction
 {
     public override void DoAction(CardGame cardGame)
     {
-        cardGame.PlayCard(Player,this);
+        cardGame.PlayCard(Player, this);
     }
 
     public override bool IsValidAction(CardGame cardGame)
@@ -175,7 +171,7 @@ public class PlaySpellAction : CardGameAction
 {
     public override string ToUIString()
     {
-        return String.Join("\r\n",CardToPlay.Effects.Select(m => m.RulesText));   
+        return String.Join("\r\n", CardToPlay.Effects.Select(m => m.RulesText));
     }
     public override void DoAction(CardGame cardGame)
     {
@@ -186,12 +182,12 @@ public class PlaySpellAction : CardGameAction
         }
 
 
-       cardGame.PlayCard(Player, this);
+        cardGame.PlayCard(Player, this);
     }
 
     public override bool IsValidAction(CardGame cardGame)
     {
-       return cardGame.CanPlayCard(CardToPlay,true,CastModifiers);
+        return cardGame.CanPlayCard(CardToPlay, true, CastModifiers);
     }
 }
 
