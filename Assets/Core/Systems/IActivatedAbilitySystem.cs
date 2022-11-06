@@ -147,13 +147,11 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
 
 public class ActivateAbilityInfo
 {
-    public List<CardGameEntity> Targets { get; set; }
-    public List<CardGameEntity> Choices { get; set; }
+    public List<CardGameEntity> Targets { get; set; } = new List<CardGameEntity>();
+    public List<CardGameEntity> Choices { get; set; } = new List<CardGameEntity>();
 
     public ActivateAbilityInfo()
     {
-        Targets = new List<CardGameEntity>();
-        Choices = new List<CardGameEntity>();
     }
 
 }

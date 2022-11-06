@@ -64,6 +64,33 @@ public interface DecklistDB
 
 public class FamousDecks : DecklistDB
 {
+    //Testing a basic version of affinity without any special abilities.
+    public static Decklist AffinityTempTest()
+    {
+        var decklist = new Decklist
+        {
+            Name = "Affinity AI TEST - 2004",
+            Format = "Standard",
+            Cards = $@"
+            4 Ornithopter
+            8 Arcbound Ravager
+            4 Arcbound Worker
+            4 Disciple of the Vault
+            2 Somber Hoverguard
+            4 Frogmite
+            4 Thoughtcast
+            4 Shrapnel Blast
+            4 Welding Jar
+            4 Cranial Plating
+            4 Seat of the Synod
+            4 Vault of Whispers
+            4 Great Furnace
+            3 Blinkmoth Nexus
+            3 City of Brass
+            "
+        };
+        return decklist;
+    }
     public static Decklist Affinity2004()
     {
         var decklist = new Decklist
@@ -301,7 +328,7 @@ public class FamousDecks : DecklistDB
     {
         return new List<Decklist>
         {
-            
+            AffinityTempTest(),
             UWDelver2012(),
             RGValakut2011(),
             Affinity2004(),

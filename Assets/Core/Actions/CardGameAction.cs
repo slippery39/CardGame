@@ -13,7 +13,7 @@ public abstract class CardGameAction
     public Player Player { get; set; }
     public List<ICastModifier> CastModifiers { get; set; } = new List<ICastModifier>();
     private bool HasModifiers => CastModifiers != null && CastModifiers.Count > 0;
-    public virtual List<CardGameEntity> Targets { get; set; }
+    public virtual List<CardGameEntity> Targets { get; set; } = new List<CardGameEntity>();
 
     /// <summary>
     /// Gets all the potential valid targets for a given action.
@@ -24,9 +24,10 @@ public abstract class CardGameAction
     /// <param name="cardGame"></param>
     /// <returns></returns>
     public virtual List<CardGameEntity> GetValidTargets(CardGame cardGame) => new List<CardGameEntity>();
+    public virtual List<CardGameEntity> GetValidAdditionalCosts(CardGame cardGame) => new List<CardGameEntity> { };
 
 
-    public List<CardGameEntity> AdditionalChoices { get; set; }
+    public List<CardGameEntity> AdditionalChoices { get; set; } = new List<CardGameEntity>();
     public abstract void DoAction(CardGame cardGame);
     public abstract bool IsValidAction(CardGame cardGame);
 
@@ -195,13 +196,12 @@ public class ActivateAbilityAction : CardGameAction
 {
     public CardInstance CardWithAbility { get; set; }
     public ActivatedAbility Ability { get; set; }
-    public List<CardGameEntity> AdditionalCostChoices { get; set; }
     public override void DoAction(CardGame cardGame)
     {
         cardGame.ActivatedAbilitySystem.ActivateAbililty(Player, CardWithAbility, new ActivateAbilityInfo
         {
             Targets = Targets,
-            Choices = AdditionalCostChoices
+            Choices = AdditionalChoices
         });
     }
 
@@ -214,6 +214,16 @@ public class ActivateAbilityAction : CardGameAction
     {
         //TODO - Check the additional costs selected and targets and other things.
         return cardGame.ActivatedAbilitySystem.CanActivateAbility(Player, CardWithAbility);
+    }
+
+    public override List<CardGameEntity> GetValidAdditionalCosts(CardGame cardGame)
+    {
+        if (Ability.AdditionalCost == null)
+        {
+            return new List<CardGameEntity>();
+        }
+
+        return Ability.AdditionalCost.GetValidChoices(cardGame,this.Player,this.CardWithAbility);
     }
 }
 

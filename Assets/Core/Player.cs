@@ -89,10 +89,10 @@ public class Player : CardGameEntity
     }
 
     public List<CardGameAction> GetAvailableActions()
-    {
+    { 
         var handActions = Hand.Cards.SelectMany(c => c.GetAvailableActionsWithTargets());
         //TODO - should grab all actions with targets
-        var inPlayActions = GetCardsInPlay().SelectMany(c=> c.GetAvailableActions());
+        var inPlayActions = GetCardsInPlay().SelectMany(c=> c.GetAvailableActionsWithTargets()).ToList();
 
         return handActions.Concat(inPlayActions).ToList();
     }

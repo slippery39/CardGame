@@ -97,7 +97,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
             Player = _actingPlayer,
             Targets = SelectedTargets,
             CardWithAbility = _cardWithAbility,
-            AdditionalCostChoices = SelectedChoices
+            AdditionalChoices = SelectedChoices
         };
 
         if (!abilityAction.IsValidAction(CardGame))

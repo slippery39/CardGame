@@ -384,13 +384,15 @@ public class CardInstance : CardGameEntity, ICard
         foreach (var action in actions)
         {
             var targets = action.GetValidTargets(CardGame);
-            if (targets.Count == 0)
+
+            var additionalCosts = action.GetValidAdditionalCosts(CardGame);
+
+            if (targets.Count == 0 && additionalCosts.Count == 0)
             {
                 actionList.Add(action);
             }
-            else
+            else if (targets.Count > 0 && additionalCosts.Count == 0)
             {
-                //Copy the current action and add the target to it
                 List<CardGameAction> actionsWithTargets = targets.Select(t =>
                 {
                     var newAction = action.Clone();
@@ -400,9 +402,44 @@ public class CardInstance : CardGameEntity, ICard
 
                 actionList.AddRange(actionsWithTargets);
             }
+            else if (targets.Count == 0 && additionalCosts.Count > 0)
+            {
+                List<CardGameAction> actionsWithAdditionalCosts = additionalCosts.Select(ac =>
+                {
+                    var newAction = action.Clone();
+                    newAction.AdditionalChoices = new List<CardGameEntity> { ac };
+                    return newAction;
+                }).ToList();
 
-            //TODO - add additional costs.
-            //action.GetValidAdditionalCostChoices();
+                actionList.AddRange(actionsWithAdditionalCosts);
+            }
+            else if (targets.Count > 0 && additionalCosts.Count > 0)
+            {
+                //Make a permutation of each list.
+                //For each valid target
+                //create an action for each valid additional cost available
+                List<(CardGameEntity target, CardGameEntity additionalCost)> targetCostPerms;
+
+                targetCostPerms = targets.SelectMany(t =>
+               {
+                   return additionalCosts.Select(ac =>
+                   {
+                       return (target: t, additionalCost: ac);
+                   });
+
+               }).ToList();
+
+                var newActions = targetCostPerms.Select(tcp =>
+                {
+                    var newAction = action.Clone();
+                    newAction.Targets = new List<CardGameEntity> { tcp.target };
+                    newAction.AdditionalChoices = new List<CardGameEntity> { tcp.additionalCost };
+
+                    return newAction;
+                });
+
+                actionList.AddRange(newActions);
+            }
         }
 
         return actionList;
@@ -474,7 +511,7 @@ public class CardInstance : CardGameEntity, ICard
         //Filter them by if its doable
         //Can we pay the mana cost
         //Can we pay the additional cost
- 
+
         return GetAvailableActions().Count() > 1;
     }
 
