@@ -186,6 +186,21 @@ public class PlaySpellAction : CardGameAction
         cardGame.PlayCard(Player, this);
     }
 
+    public override List<CardGameEntity> GetValidTargets(CardGame cardGame)
+    {
+        return cardGame.TargetSystem.GetValidTargets(Player, SourceCard);
+    }
+
+    public override List<CardGameEntity> GetValidAdditionalCosts(CardGame cardGame)
+    {
+        if (SourceCard.AdditionalCost == null)
+        {
+            return new List<CardGameEntity> { };
+        }
+
+        return SourceCard.AdditionalCost.GetValidChoices(cardGame, Player, SourceCard);
+    }
+
     public override bool IsValidAction(CardGame cardGame)
     {
         return cardGame.CanPlayCard(CardToPlay, true, CastModifiers);
@@ -203,6 +218,11 @@ public class ActivateAbilityAction : CardGameAction
             Targets = Targets,
             Choices = AdditionalChoices
         });
+    }
+
+    public override List<CardGameEntity> GetValidTargets(CardGame cardGame)
+    {
+        return cardGame.TargetSystem.GetValidAbilityTargets(Player, SourceCard);
     }
 
     public override string ToUIString()
@@ -223,7 +243,7 @@ public class ActivateAbilityAction : CardGameAction
             return new List<CardGameEntity>();
         }
 
-        return Ability.AdditionalCost.GetValidChoices(cardGame,this.Player,this.CardWithAbility);
+        return Ability.AdditionalCost.GetValidChoices(cardGame, this.Player, this.CardWithAbility);
     }
 }
 
