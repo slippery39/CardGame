@@ -138,6 +138,11 @@ public class UIGameController : MonoBehaviour
 
         if (_cardGame.CurrentGameState == GameState.WaitingForAction)
         {
+            if (_stateMachine.CurrentState is GameUIChoiceAsPartOfResolveState)
+            {
+                _stateMachine.ToIdle();
+            }
+
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 _cardGame.ProcessAction(CreateFightAction(0));

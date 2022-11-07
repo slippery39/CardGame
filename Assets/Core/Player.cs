@@ -88,13 +88,23 @@ public class Player : CardGameEntity
         return cardsInPlay;
     }
 
-    public List<CardGameAction> GetAvailableActions()
-    { 
+    public List<CardGameAction> GetAvailableActions(CardGame cardGame)
+    {
         var handActions = Hand.Cards.SelectMany(c => c.GetAvailableActionsWithTargets());
         //TODO - should grab all actions with targets
-        var inPlayActions = GetCardsInPlay().SelectMany(c=> c.GetAvailableActionsWithTargets()).ToList();
+        var inPlayActions = GetCardsInPlay().SelectMany(c => c.GetAvailableActionsWithTargets()).ToList();
 
-        return handActions.Concat(inPlayActions).ToList();
+        var fightActions = Lanes.Where(l => cardGame.BattleSystem.CanBattle(l.LaneIndex)).Select(l =>
+        {
+            return new FightAction
+            {
+                Player = this,
+                LaneIndex = l.LaneIndex
+            };
+        });
+
+
+        return handActions.Concat(inPlayActions).Concat(fightActions).ToList();
     }
 
     #endregion
@@ -106,7 +116,8 @@ public class Player : CardGameEntity
         {
             Lanes.Add(new Lane()
             {
-                LaneId = (i + 1)
+                LaneId = (i + 1),
+                LaneIndex = i
             });
         }
     }

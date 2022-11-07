@@ -3885,7 +3885,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebdad529afa253143b614ea4aaae8fae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerId: 2
+  playerId: 0
   previousDebugMessage: 
 --- !u!1 &651540595
 GameObject:

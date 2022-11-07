@@ -9,6 +9,7 @@ public class Lane : CardGameEntity, IZone
     #region Public Properties
     public CardInstance UnitInLane { get { return _unitInLane; } set { _unitInLane = value; } }
     public int LaneId { get; set; }
+    public int LaneIndex { get; set; }
 
     public List<CardInstance> Cards
     {

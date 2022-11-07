@@ -61,7 +61,7 @@ public class ComputerAI : MonoBehaviour
 
     private void ChooseAction(CardGame cardGame)
     {
-        var availableActions = cardGame.ActivePlayer.GetAvailableActions();
+        var availableActions = cardGame.ActivePlayer.GetAvailableActions(cardGame);
 
         var validActions = availableActions.Where(a => a.IsValidAction(cardGame));
 
