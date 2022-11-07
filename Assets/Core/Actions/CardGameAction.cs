@@ -271,6 +271,12 @@ public class ResolveChoiceAction : CardGameAction
         cardGame.MakeChoice(Choices);
     }
 
+
+    public List<CardInstance> GetValidChoices(CardGame cardGame)
+    {
+        return cardGame.ChoiceInfoNeeded.GetValidChoices(cardGame,Player);
+    }
+
     public override bool IsValidAction(CardGame cardGame)
     {
         //All choices must exist in the GetValidChoices method.

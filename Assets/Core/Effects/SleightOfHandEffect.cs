@@ -10,6 +10,7 @@ public interface IEffectWithChoice
     void ChoiceSetup(CardGame cardGame, Player player, CardInstance source);
     void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices);
     string ChoiceMessage { get; }
+
 }
 
 public interface IMultiChoiceEffect : IEffectWithChoice

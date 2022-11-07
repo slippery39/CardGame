@@ -288,7 +288,7 @@ public class CardGame
             return;
         }
 
-        var effectChoice = ChoiceInfoNeeded as IEffectWithChoice;
+        var effectChoice = ChoiceInfoNeeded;
 
         effectChoice.OnChoicesSelected(this, ActivePlayer, entitiesSelected.Cast<CardGameEntity>().ToList());
 
