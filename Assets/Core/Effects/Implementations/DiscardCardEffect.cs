@@ -22,6 +22,10 @@ public class DiscardCardEffect : Effect, IEffectWithChoice
 
     public string ChoiceMessage => $"Discard {Amount} cards";
 
+    public int NumberOfChoices { get => Amount; set => Amount = value; }
+
+    public List<CardInstance> Choices => new List<CardInstance>();
+
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         //DISCARDING BY CHOICE IS HANDLED SOMEWHERE ELSE RIGHT NOW

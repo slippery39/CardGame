@@ -8,7 +8,7 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
     private CardGame _cardGame => _stateMachine.CardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
-    private IEffectWithChoice  _sourceEffect;
+    private IEffectWithChoice _sourceEffect;
 
     public List<CardInstance> _cardsChosen;
 
@@ -34,7 +34,7 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
     {
         if (_internalState != null)
         {
-            return _internalState.GetMessage();           
+            return _internalState.GetMessage();
         }
         return _sourceEffect.ChoiceMessage;
     }
@@ -44,22 +44,25 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
         //TODO
         //We will want to open a ZoneViewer with the top two cards of the players deck.
 
-        switch (_sourceEffect) {
+        switch (_sourceEffect)
+        {
             case DiscardCardEffect dce:
                 {
                     _internalState = new GameUIDiscardAsPartOfSpellState(_stateMachine, dce);
                     _internalState.OnApply();
                     break;
                 }
-            case IMultiChoiceEffect mce:
-                {
-                    _internalState = new GameUIMultiChoiceState(_stateMachine, mce);
-                    _internalState.OnApply();
-                    break;
-                }
             default:
                 {
-                    _stateMachine.GameController.ViewChoiceWindow(_sourceEffect.GetValidChoices(_cardGame, _actingPlayer), GetMessage());
+                    if (_sourceEffect.NumberOfChoices > 1)
+                    {
+                        _internalState = new GameUIMultiChoiceState(_stateMachine, _sourceEffect);
+                        _internalState.OnApply();
+                    }
+                    else
+                    {
+                        _stateMachine.GameController.ViewChoiceWindow(_sourceEffect.GetValidChoices(_cardGame, _actingPlayer), GetMessage());
+                    }
                     break;
                 }
         }

@@ -339,6 +339,9 @@ public class FamousDecks : DecklistDB
             {
                 Name = "Test Deck",
                 Cards = $@"
+                    60 Thoughtseize
+                    60 Telling Time
+                    60 Island
                     60 Deep Analysis
                     30 Cragcrown Pathway
                     30 Lotus Bloom

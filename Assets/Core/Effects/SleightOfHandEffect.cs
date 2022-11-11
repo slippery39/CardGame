@@ -10,34 +10,31 @@ public interface IEffectWithChoice
     void ChoiceSetup(CardGame cardGame, Player player, CardInstance source);
     void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices);
     string ChoiceMessage { get; }
-
-}
-
-public interface IMultiChoiceEffect : IEffectWithChoice
-{
-    void MakeChoice(CardGame cardGame, Player player, CardGameEntity choice);
     int NumberOfChoices { get; set; }
-
+    /// <summary>
+    /// Can be used to temporarily store choices in case there is choice specific logic needed.
+    /// For example, in Telling Time, the Choice message would change depend on the choices selected.
+    /// </summary>
     List<CardInstance> Choices { get; }
 }
 
-public class TellingTimeEffect : Effect, IMultiChoiceEffect
+public class TellingTimeEffect : Effect, IEffectWithChoice
 {
 
-    private List<CardInstance> _chosenCards = new List<CardInstance>();
+    //private List<CardInstance> _chosenCards = new List<CardInstance>();
     public string ChoiceMessage
     {
         get
         {
-            if (_chosenCards.Count() == 0)
+            if (Choices.Count() == 0)
             {
                 return "Choose a card to put in your hand.";
             }
-            if (_chosenCards.Count() == 1)
+            if (Choices.Count() == 1)
             {
                 return "Choose a card to put on top of your deck";
             }
-            if (_chosenCards.Count() == 2)
+            if (Choices.Count() == 2)
             {
                 return "Choose a card to put on the bottom of your deck";
             }
@@ -46,46 +43,46 @@ public class TellingTimeEffect : Effect, IMultiChoiceEffect
     }
 
     public int NumberOfChoices { get; set; } = 3;
-    public List<CardInstance> Choices => _chosenCards;
+    public List<CardInstance> Choices { get; set; } = new List<CardInstance>();
 
     public override string RulesText => "Look at the top 3 cards of your deck. Put one into your hand, one on top of your deck, and the other on the bottom of your deck.";
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
         var cards = player.Deck.TakeLast(3).ToList();
-        cards = cards.Where(c => !_chosenCards.Contains(c)).ToList();
+        cards = cards.Where(c => !Choices.Contains(c)).ToList();
         return cards;
     }
     public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
-        _chosenCards = new List<CardInstance>();
+        Choices = new List<CardInstance>();
         GetValidChoices(cardGame, player).ForEach(c => c.RevealedToOwner = true);
-    }
-
-    public void MakeChoice(CardGame cardGame, Player player, CardGameEntity choice)
-    {
-        if (_chosenCards.Contains(choice))
-        {
-            return;
-        }
-        else
-        {
-            _chosenCards.Add(choice as CardInstance);
-        }
     }
 
     public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
     {
+        //Quick bug fix, we have a problem with different parts of the code using this in different ways.
+        //This helps sync it up, but we should 
+        if (Choices.Count() == 0)
+        {
+            Choices = choices.Cast<CardInstance>().ToList();
+        }
+
+        
         //First choice gets put into your hand,
         //Second choice gets put on the top of your deck.
         //Last choice gets put on the bottom of the deck.
 
-        var cardToPutIntoHand = _chosenCards[0];
-        var cardToPutOnTop = _chosenCards[1];
-        var cardToPutOnBottom = _chosenCards[2];
+        //Note we are using the local method variable 'choices' instead of 'Choices' 
+        //since 'Choices' is only for the front end ui.
 
-        cardGame.CardDrawSystem.PutIntoHand(player, cardToPutIntoHand);
-        player.Deck.MoveToBottom(cardToPutOnBottom);
+        //TODO - choices vs Choices?
+        var cardToPutIntoHand = Choices[0];
+        var cardToPutOnTop = Choices[1];
+        var cardToPutOnBottom = Choices[2];
+
+        cardGame.CardDrawSystem.PutIntoHand(player, (CardInstance)cardToPutIntoHand);
+        player.Deck.MoveToBottom((CardInstance)cardToPutOnBottom);
         //the remaining card will stay on top by default.        
     }
 
@@ -102,6 +99,9 @@ public class RampantGrowthChoiceEffect : Effect, IEffectWithChoice
     public override string RulesText => "Put a mana from your deck into play";
 
     public string ChoiceMessage { get => "Choose a mana to card to put into play from your deck"; }
+    public int NumberOfChoices { get; set; } = 1;
+
+    public List<CardInstance> Choices => new List<CardInstance>();
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
@@ -155,6 +155,11 @@ public class ThoughtseizeEffect : Effect, IEffectWithChoice
 
     public string ChoiceMessage => "Choose a card to discard.";
 
+    public int NumberOfChoices { get; set; } = 1;
+
+
+    public List<CardInstance> Choices => new List<CardInstance>();
+
     private List<CardInstance> _cardsSeen = new List<CardInstance>();
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
@@ -195,6 +200,10 @@ public class SleightOfHandEffect : Effect, IEffectWithChoice
     public override string RulesText => "Look at the top two cards of your deck. Put one of them into your hand and the other on the bottom of your library";
 
     public string ChoiceMessage => "Choose a card to put into your hand.";
+
+    public int NumberOfChoices { get; set; } = 1;
+
+    public List<CardInstance> Choices => new List<CardInstance>();
 
     private List<CardInstance> _cardsSeen = new List<CardInstance>();
 

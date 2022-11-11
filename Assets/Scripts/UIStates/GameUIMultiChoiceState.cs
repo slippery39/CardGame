@@ -8,10 +8,10 @@ public class GameUIMultiChoiceState : IGameUIState
     private CardGame _cardGame => _stateMachine.CardGame;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
-    private IMultiChoiceEffect  _sourceEffect;
+    private IEffectWithChoice _sourceEffect;
 
     public List<CardInstance> _cardsChosen;
-    public GameUIMultiChoiceState(GameUIStateMachine stateMachine, IMultiChoiceEffect sourceEffect)
+    public GameUIMultiChoiceState(GameUIStateMachine stateMachine, IEffectWithChoice sourceEffect)
     {
         _stateMachine = stateMachine;
         _sourceEffect = sourceEffect;
@@ -31,7 +31,7 @@ public class GameUIMultiChoiceState : IGameUIState
     public void OnApply()
     {
         //Slightly differs from our usual highlight, we are highlighting the cards we have chosen to discard in red.
-        var validChoices = _sourceEffect.GetValidChoices(_cardGame,_actingPlayer);
+        var validChoices = _sourceEffect.GetValidChoices(_cardGame, _actingPlayer);
 
         if (validChoices.Count() == 0)
         {
@@ -91,8 +91,16 @@ public class GameUIMultiChoiceState : IGameUIState
             return;
         }
 
+        //This used to be in the MultiEffect.MakeChoice method.
+        if (_sourceEffect.Choices.Contains(entitySelected))
+        {
+            return;
+        }
+        else
+        {
+            _sourceEffect.Choices.Add(entitySelected);
+        }
 
-        _sourceEffect.MakeChoice(_cardGame,_actingPlayer,entitySelected);
 
         if (_sourceEffect.Choices.Count >= _sourceEffect.NumberOfChoices)
         {

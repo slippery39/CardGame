@@ -84,6 +84,10 @@ public class ChooseFromTopOfDeckEffect : Effect, IEffectWithChoice
 
     public string ChoiceMessage => RulesText;
 
+    public int NumberOfChoices { get => Amount; set { Amount = value; } }
+
+    public List<CardInstance> Choices => new List<CardInstance>();
+
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         return;
@@ -91,7 +95,7 @@ public class ChooseFromTopOfDeckEffect : Effect, IEffectWithChoice
 
     public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
-        GetValidChoices(cardGame,player).ForEach(c => c.RevealedToOwner = true);
+        GetValidChoices(cardGame, player).ForEach(c => c.RevealedToOwner = true);
     }
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
@@ -110,7 +114,7 @@ public class ChooseFromTopOfDeckEffect : Effect, IEffectWithChoice
             }
         }
 
-        cardGame.CardDrawSystem.PutIntoHand(player,choices[0] as CardInstance);
+        cardGame.CardDrawSystem.PutIntoHand(player, choices[0] as CardInstance);
     }
 }
 

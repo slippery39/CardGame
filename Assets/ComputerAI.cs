@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -35,19 +34,18 @@ public class ComputerAI : MonoBehaviour
             else if (cardGame.CurrentGameState == GameState.WaitingForChoice)
             {
                 var choiceInfo = cardGame.ChoiceInfoNeeded;
-                var choices = choiceInfo.GetValidChoices(cardGame,cardGame.ActivePlayer);
-
+                var validChoices = choiceInfo.GetValidChoices(cardGame,cardGame.ActivePlayer);
 
                 //I think careful study should also be in here as well.
                 //If its a single choice vs a multi choice.
-                if (choiceInfo is IMultiChoiceEffect)
+                if (choiceInfo.NumberOfChoices>1)
                 {
-                    Debug.Log("TODO - Multi Choice Effect (Telling time at the moment)");
-                    
+                    var choices = validChoices.Randomize().Take(choiceInfo.NumberOfChoices);
+                    cardGame.MakeChoice(choices.ToList());                   
                 }
-                else if (choiceInfo is IEffectWithChoice)
+                else if (choiceInfo.NumberOfChoices == 1)
                 {
-                    var choice = choices.Randomize().ToList()[0];
+                    var choice = validChoices.Randomize().ToList()[0];
                     cardGame.MakeChoice(new List<CardInstance> { choice });
                 }               
             }

@@ -138,7 +138,7 @@ public class UIGameController : MonoBehaviour
 
         if (_cardGame.CurrentGameState == GameState.WaitingForAction)
         {
-            if (_stateMachine.CurrentState is GameUIChoiceAsPartOfResolveState)
+            if (_stateMachine?.CurrentState is GameUIChoiceAsPartOfResolveState)
             {
                 _stateMachine.ToIdle();
             }
@@ -178,7 +178,7 @@ public class UIGameController : MonoBehaviour
                 _cardGame.TestFillGraveyard();
             }
 
-            _stateMachine.CurrentState.HandleInput();
+            _stateMachine?.CurrentState.HandleInput();
 
         }
         else if (_cardGame.CurrentGameState == GameState.WaitingForChoice)

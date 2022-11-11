@@ -6,6 +6,9 @@ public class ChooseCardFromDeckIntoHandEffect : Effect, IEffectWithChoice
     public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
     public override string RulesText => "Put a #cardType# from your deck into your hand".Replace("#cardType#", Filter.RulesTextString(false).ToLower());
     public string ChoiceMessage { get => "Choose a card to put into your hand"; }
+    public int NumberOfChoices { get; set; } = 1;
+
+    public List<CardInstance> Choices => new List<CardInstance>();
 
     public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {

@@ -271,7 +271,6 @@ public class ResolveChoiceAction : CardGameAction
         cardGame.MakeChoice(Choices);
     }
 
-
     public List<CardInstance> GetValidChoices(CardGame cardGame)
     {
         return cardGame.ChoiceInfoNeeded.GetValidChoices(cardGame,Player);
