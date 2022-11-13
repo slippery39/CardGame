@@ -13,6 +13,8 @@ public class CardGame
     private int _numberOfLanes = 5;
     private int _startingPlayerHealth = 100;
     private int _startingHandSize = 5;
+    //need to make sure this is serialized or else we wont be able to properly id tokens.
+    [JsonProperty]
     private int _nextEntityId = 1;
     private int _nextPlayerId = 1;
 

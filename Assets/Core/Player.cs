@@ -23,7 +23,7 @@ public class Player : CardGameEntity
     #endregion
 
     //Used for Deserializing.
-    [JsonConstructor]
+    //[JsonConstructor]
     public Player()
     {
 

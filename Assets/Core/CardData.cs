@@ -3293,18 +3293,16 @@ public class CardDatabase : ICardDatabase
         string json = JsonConvert.SerializeObject(_cards, Formatting.Indented, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
+        });        
 
+        _cards = JsonConvert.DeserializeObject<List<BaseCardData>>(json, new JsonSerializerSettings
+        {
+            TypeNameHandling  = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
         });
 
         File.WriteAllText(@"./tempCardsJson", json);
-
-        //Testing deserializing our cards
-        _cards = (List<BaseCardData>)JsonConvert.DeserializeObject(json, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-        });
 
 
 
