@@ -26,7 +26,7 @@ public class UILane2D : UIGameEntity, IPointerClickHandler, IHighlightable
             _uiCard.gameObject.SetActive(true);
         }
         _uiCard.SetCardData(cardInstance);
-        _uiCard.GetComponent<UIGameEntity>().EntityId = cardInstance.EntityId;
+       _uiCard.GetComponent<UIGameEntity>().EntityId = cardInstance.EntityId;
     }
 
     public void SetEmpty()

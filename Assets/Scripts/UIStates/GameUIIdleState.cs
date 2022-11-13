@@ -91,6 +91,7 @@ public class GameUIIdleState : IGameUIState
 
         if (card.GetAvailableActions().IsNullOrEmpty())
         {
+            _cardGame.Log("No available actions for that card");
             return;
         }
 

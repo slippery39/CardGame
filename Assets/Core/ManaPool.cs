@@ -178,8 +178,9 @@ public class Mana
 
 public class ManaPool
 {
-
+    [JsonProperty]
     private Mana _totalMana;
+    [JsonProperty]
     private Mana _currentMana;
 
     //TODO - need to be able to differentiate between spent mana and saved mana.
@@ -189,7 +190,9 @@ public class ManaPool
     //To Reset we just set CurrentManaByType to the same values as ManaByType.
     //If we want temp mana we can just add to the CurrentManaByType without addinf to the ManaByType.
 
+    [JsonIgnore]
     public Mana CurrentMana => _currentMana;
+    [JsonIgnore]
     public Mana TotalMana => _totalMana;
 
     /// <summary>

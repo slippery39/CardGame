@@ -85,14 +85,14 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
         //Changing to take into account exhaustion.        
         if (activatedAbility.ExhaustOnUse && card.IsExhausted)
         {
-            cardGame.Log("Cannot use ability because the card is exhausted");
+            //cardGame.Log("Cannot use ability because the card is exhausted");
             return false;
         }
 
         //For abilities that can only be used once per turn, but do not exhaust the card (i.e. Basking Rootwalla's Pump Ability)
         if (activatedAbility.GetComponent<AbilityCooldown>() != null)
         {
-            cardGame.Log("Cannot use ability because its on cooldown");
+            //cardGame.Log("Cannot use ability because its on cooldown");
             return false;
         }
 

@@ -203,6 +203,10 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
         //Cards that are revealed to owner
         if (!shouldSeeCard)
         {
+            if (cardInstance.GetZone().ZoneType == ZoneType.InPlay)
+            {
+                var debug = 0;
+            }
             SetAsUnknownCard();
             return;
         }

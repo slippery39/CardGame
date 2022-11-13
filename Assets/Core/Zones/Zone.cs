@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,16 +45,18 @@ public enum ZoneType
 
 //A generic zone that can be used if no extra functionality is needed.
 //Hand and Discard both are sort of non unique zones.
-public class Zone : IZone, IEnumerable<CardInstance>, ISerializable
+
+[JsonObject]
+public class Zone : IZone, IEnumerable<CardInstance> //, /*ISerializable*/
 {
     protected ZoneType _zoneType;
     protected string _name;
     protected List<CardInstance> _cards;
 
-    public ZoneType ZoneType { get { return _zoneType; } }
+    public ZoneType ZoneType { get { return _zoneType; } set { _zoneType = value; } }
 
     public string Name { get { return _name; } }
-    public List<CardInstance> Cards { get { return _cards; } }
+    public List<CardInstance> Cards { get { return _cards; } set { _cards = value; } }
 
     public Zone()
     {
@@ -93,10 +96,12 @@ public class Zone : IZone, IEnumerable<CardInstance>, ISerializable
         return ((IEnumerable)_cards).GetEnumerator();
     }
 
+    /*
     public void GetObjectData(SerializationInfo info, StreamingContext context)
     {
         throw new NotImplementedException();
     }
+    */
 }
 
 

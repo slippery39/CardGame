@@ -64,20 +64,26 @@ public class UIGameController : MonoBehaviour
         string json = JsonConvert.SerializeObject(_cardGame, Formatting.Indented, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects
+            PreserveReferencesHandling = PreserveReferencesHandling.All
         });
-
-        File.WriteAllText(@"./tempGameState", json);
-
-        //Testing deserializing our cards
-        _cardGame = (CardGame)JsonConvert.DeserializeObject(json, new JsonSerializerSettings
+        _cardGame = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,      
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
             ObjectCreationHandling = ObjectCreationHandling.Replace
         });
+
+        //ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        //PreserveReferencesHandling = PreserveReferencesHandling.Objects
+
+        // ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        //PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+        //ObjectCreationHandling = ObjectCreationHandling.Replace
+        File.WriteAllText(@"./tempGameState", json);
 
         _player1Board.SetPlayer(_cardGame.Player1);
         _player2Board.SetPlayer(_cardGame.Player2);
