@@ -47,7 +47,7 @@ public enum ZoneType
 //Hand and Discard both are sort of non unique zones.
 
 [JsonObject]
-public class Zone : IZone, IEnumerable<CardInstance> //, /*ISerializable*/
+public class Zone : IZone, IEnumerable<CardInstance>
 {
     protected ZoneType _zoneType;
     protected string _name;
