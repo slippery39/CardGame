@@ -42,6 +42,8 @@ public class CardGame
     private IActivatedAbilitySystem _activatedAbilitySystem;
     private IModificationsSystem _modificationsSystem;
     private IAdditionalCostSystem _additionalCostSystem;
+
+    private EventLogSystem _eventLogSystem;
     #endregion
 
 
@@ -93,6 +95,7 @@ public class CardGame
     public IPlayerModificationSystem PlayerAbilitySystem { get; set; }
 
     public IWinLoseSystem WinLoseSystem { get; set; }
+    public EventLogSystem EventLogSystem { get => _eventLogSystem; set => _eventLogSystem = value; }
 
     #endregion
     #endregion
@@ -139,6 +142,8 @@ public class CardGame
         PlayerAbilitySystem = new PlayerModificationSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
+
+        _eventLogSystem = new EventLogSystem();
 
         _registeredEntities = new List<CardGameEntity>();
         _players = new List<Player>();
@@ -375,7 +380,7 @@ public class CardGame
             {
                 if (card.AdditionalCost.CanPay(this, owner, card) == false)
                 {
-                    Log($"Cannot pay the additional cost for ${card.Name}");
+                    //Log($"Cannot pay the additional cost for ${card.Name}");
                     return false;
                 }
             }
@@ -388,7 +393,7 @@ public class CardGame
             {
                 if (card.AdditionalCost.CanPay(this, owner, card) == false)
                 {
-                    Log($"Cannot pay the additional cost for ${card.Name}");
+                    //Log($"Cannot pay the additional cost for ${card.Name}");
                     return false;
                 }
             }
@@ -541,6 +546,9 @@ public class CardGame
             ResolvingSystem.Add(action, cardToPlay);
             _stateBasedEffectSystem.CheckStateBasedEffects();
         }
+
+        //Add the event that the player has played a card.
+        _eventLogSystem.AddEvent($"{player.Name} has played {cardToPlay.Name}.");
     }
 
 

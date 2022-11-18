@@ -43,6 +43,9 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private GameObject _zonePopupWindow;
 
+    [SerializeField]
+    private UIEventLog _gameLog;
+
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
 
     //Singleton Pattern, should only be one game controller per unity scene.
@@ -71,7 +74,7 @@ public class UIGameController : MonoBehaviour
         _cardGame = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,      
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.All,
             ObjectCreationHandling = ObjectCreationHandling.Replace
@@ -101,6 +104,9 @@ public class UIGameController : MonoBehaviour
         _chooseActionChoicePopup.gameObject.SetActive(false);
     }
 
+
+
+
     void Start()
     {
         InitEventHandlers();
@@ -114,7 +120,7 @@ public class UIGameController : MonoBehaviour
 
     private void InitEventHandlers()
     {
-        _nextTurnButton.onClick.AddListener(()=>HandleNextTurnButtonClick());
+        _nextTurnButton.onClick.AddListener(() => HandleNextTurnButtonClick());
     }
 
     private void LogCardStats()
@@ -139,7 +145,7 @@ public class UIGameController : MonoBehaviour
             Debug.Log("Serializing...");
             SerializeTest();
             Debug.Log("Deserializing");
-            RegisteredEntities = _cardGame.RegisteredEntities.Select(e=>e.EntityId).ToList();
+            RegisteredEntities = _cardGame.RegisteredEntities.Select(e => e.EntityId).ToList();
         }
 
         if (_cardGame.CurrentGameState == GameState.WaitingForAction)
@@ -283,6 +289,8 @@ public class UIGameController : MonoBehaviour
         {
             _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
         }
+
+        _gameLog.SetLog(_cardGame.EventLogSystem.Events.Select(ev => ev.Log));
 
         _player1Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player1;
         _player2Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player2;

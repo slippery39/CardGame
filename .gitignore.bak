@@ -72,5 +72,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 #Testing Files
-tempCardsJson
-tempGameState
+/tempCardsJson
+/tempGameState
