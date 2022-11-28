@@ -143,7 +143,7 @@ public class CardGame
 
         _cardGameLogger = new UnityCardGameLogger();
 
-        _eventLogSystem = new EventLogSystem();
+        _eventLogSystem = new EventLogSystem(this);
 
         _registeredEntities = new List<CardGameEntity>();
         _players = new List<Player>();
