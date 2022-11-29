@@ -50,6 +50,7 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
 
         //Check to see if any player has lost
         cardGame.WinLoseSystem.CheckLosers();
+        cardGame.OnGameStateChanged.OnNext(cardGame);
     }
 
     //Returns true if something died, which means we have to apply/remove any static effects and check again.

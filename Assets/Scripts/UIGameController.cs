@@ -51,7 +51,12 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private GameService _gameService;
 
+ 
+    
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
+    public GameService GameService { get => _gameService; set => _gameService = value; }
+
+
 
     //Singleton Pattern, should only be one game controller per unity scene.
     public static UIGameController Instance;
@@ -295,11 +300,13 @@ public class UIGameController : MonoBehaviour
 
     private void UpdateUI()
     {
+        //State Machine UI
         _actionStateIndicator.text = _stateMachine.GetMessage();
         if (_turnIndicator != null)
         {
             _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
         }
+        //Game Board.
         _player1Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player1;
         _player2Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player2;
     }

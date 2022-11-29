@@ -86,7 +86,7 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
 
     private void DirectAttack(Lane attackingLane, Lane defendingLane)
     {
-        cardGame.Log($"{attackingLane.UnitInLane.Name} is attacking directly!");
+        cardGame.EventLogSystem.AddEvent($"{attackingLane.UnitInLane.Name} attacked {cardGame.InactivePlayer.Name}");
         //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
         cardGame.DamageSystem.DealCombatDamageToPlayer(attackingLane.UnitInLane, cardGame.InactivePlayer);
     }
@@ -98,8 +98,9 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
 
         //Need to add a check to see if the defending lane still has a unit (could have been removed from play due to triggered ability or something)
 
-        if (defendingUnit != null) { 
-            cardGame.Log($"{attackingUnit.Name} is fighting {defendingUnit.Name}");
+        if (defendingUnit != null)
+        {
+            cardGame.EventLogSystem.AddEvent($"{attackingUnit.Name} attacked {defendingUnit.Name}");
             //Both lanes have units, they will attack eachother.
             cardGame.DamageSystem.DealCombatDamageToUnits(attackingUnit, defendingUnit);
         }

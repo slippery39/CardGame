@@ -10,4 +10,9 @@ public class GameService : MonoBehaviour
     {
         return UIGameController.Instance.CardGame.EventLogSystem.GetGameEventLogsAsObservable();
     }
+
+    public IObservable<CardGame> GetOnGameStateUpdatedObservable()
+    {
+        return UIGameController.Instance.CardGame.GameStateChangedObservable;
+    }
 }
