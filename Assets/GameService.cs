@@ -13,6 +13,8 @@ public class GameService : MonoBehaviour
 
     public IObservable<CardGame> GetOnGameStateUpdatedObservable()
     {
-        return UIGameController.Instance.CardGame.GameStateChangedObservable;
+
+        var gameStateObs = UIGameController.Instance.CardGame.GameStateChangedObservable;
+        return gameStateObs;
     }
 }

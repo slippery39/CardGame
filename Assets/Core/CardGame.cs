@@ -203,7 +203,26 @@ public class CardGame
         _cardDrawSystem.DrawOpeningHand(Player1);
         _cardDrawSystem.DrawOpeningHand(Player2);
 
-        OnGameStateChanged.OnNext(this);
+        OnGameStateChanged.OnNext(Copy());
+    }
+
+    public CardGame Copy()
+    {
+        string json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All
+        });
+        return JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+            ObjectCreationHandling = ObjectCreationHandling.Replace
+        });
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)

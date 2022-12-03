@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UniRx;
 using UnityEngine;
 
 public class ComputerAI : MonoBehaviour
@@ -10,16 +12,14 @@ public class ComputerAI : MonoBehaviour
     [SerializeField]
     private string previousDebugMessage = "";
 
-
-
     // Start is called before the first frame update
     void Start()
     {
-
+        //The AI will attempt to select his action every 1 second.
+        Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => TryChooseAction());
     }
 
-    // Update is called once per frame
-    void Update()
+    private void TryChooseAction()
     {
         var gameController = UIGameController.Instance;
         var cardGame = gameController.CardGame;
@@ -34,27 +34,25 @@ public class ComputerAI : MonoBehaviour
             else if (cardGame.CurrentGameState == GameState.WaitingForChoice)
             {
                 var choiceInfo = cardGame.ChoiceInfoNeeded;
-                var validChoices = choiceInfo.GetValidChoices(cardGame,cardGame.ActivePlayer);
+                var validChoices = choiceInfo.GetValidChoices(cardGame, cardGame.ActivePlayer);
 
                 //I think careful study should also be in here as well.
                 //If its a single choice vs a multi choice.
-                if (choiceInfo.NumberOfChoices>1)
+                if (choiceInfo.NumberOfChoices > 1)
                 {
                     var choices = validChoices.Randomize().Take(choiceInfo.NumberOfChoices);
-                    cardGame.MakeChoice(choices.ToList());                   
+                    cardGame.MakeChoice(choices.ToList());
                 }
                 else if (choiceInfo.NumberOfChoices == 1)
                 {
                     var choice = validChoices.Randomize().ToList()[0];
                     cardGame.MakeChoice(new List<CardInstance> { choice });
-                }               
+                }
             }
 
             //Choose an action here.
             //var availableActions = gameController.CardGame.Get
         }
-        //Poll the game to check if its our turn to act
-
     }
 
     private void ChooseAction(CardGame cardGame)
