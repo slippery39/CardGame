@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3854,6 +3854,7 @@ GameObject:
   - component: {fileID: 643160884}
   - component: {fileID: 643160885}
   - component: {fileID: 643160886}
+  - component: {fileID: 643160888}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3898,6 +3899,7 @@ MonoBehaviour:
   _cardPopup: {fileID: 1940518801}
   _zonePopupWindow: {fileID: 1113561586}
   _gameLog: {fileID: 1063934113}
+  _gameService: {fileID: 643160888}
   RegisteredEntities: 
 --- !u!114 &643160885
 MonoBehaviour:
@@ -3925,6 +3927,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerId: 0
   previousDebugMessage: 
+--- !u!114 &643160888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643160882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 175bd436bf85e394dbd6ee730c973aac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &651540595
 GameObject:
   m_ObjectHideFlags: 0
@@ -8362,7 +8376,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1673784833}
   m_HandleRect: {fileID: 1673784832}
   m_Direction: 2
@@ -10982,115 +10996,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '
-
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-
-    Nunc
-    luctus ipsum non elit vulputate pharetra.
-
-    Morbi vitae lorem in lectus consequat
-    semper.
-
-    Integer vulputate mi sed purus sollicitudin, quis vestibulum sapien
-    fringilla.
-
-    Vivamus faucibus magna sit amet facilisis pulvinar.
-
-    Etiam
-    gravida diam non lectus aliquam, id laoreet arcu volutpat.
-
-    Phasellus blandit
-    nulla vitae mollis tempus.
-
-    Sed interdum urna et arcu pulvinar convallis.
-
-    Morbi
-    nec erat tincidunt, dignissim risus non, gravida magna.
-
-    Ut ac ex at enim
-    porta tincidunt vel sit amet ligula.
-
-    Maecenas ac nibh placerat, accumsan
-    arcu in, tincidunt odio.
-
-    Suspendisse eu est et mi scelerisque ullamcorper.
-
-    Praesent
-    pretium felis ut orci sagittis condimentum.
-
-    Suspendisse accumsan metus
-    ut consectetur euismod.
-
-    Phasellus rutrum nibh a quam rutrum feugiat.
-
-    Curabitur
-    faucibus mi scelerisque sem consequat porta.
-
-    Nam in nisl quis elit dapibus
-    dignissim sed vitae neque.
-
-    Phasellus vitae leo aliquam lectus convallis
-    porttitor.
-
-    Suspendisse vitae urna eu purus volutpat laoreet.
-
-    Quisque
-    convallis lacus vel felis maximus blandit.
-
-    Nam in mauris sodales, ultrices
-    metus non, viverra enim.
-
-    Ut sollicitudin nunc nec elit rhoncus ornare.
-
-    In
-    sit amet quam at felis congue sagittis.
-
-    Fusce ac arcu pretium, congue diam
-    ac, ornare mauris.
-
-    Cras a arcu ac nibh aliquet semper.
-
-    Duis ut erat
-    lobortis, porttitor sapien in, sodales est.
-
-    Curabitur euismod neque quis
-    cursus sagittis.
-
-    Aenean interdum elit eu pulvinar sollicitudin.
-
-    Ut
-    condimentum est sed tortor vehicula commodo.
-
-    Integer faucibus diam vitae
-    molestie laoreet.
-
-    Etiam tincidunt leo eu nulla tincidunt, sed dictum quam
-    aliquam.
-
-    Morbi convallis nunc mollis ex finibus volutpat.
-
-    Quisque
-    non odio et libero blandit dapibus.
-
-    In luctus risus malesuada urna rhoncus
-    hendrerit.
-
-    Nulla non metus eget dolor suscipit interdum.
-
-    Nam tincidunt
-    risus sit amet massa luctus, in gravida lacus egestas.
-
-    Aliquam ut dolor
-    id est pretium maximus.
-
-    Ut quis leo vitae metus dapibus sodales.
-
-    Etiam
-    et mauris ut ante accumsan congue sit amet ac augue.
-
-    Vestibulum feugiat
-    enim vel nibh sagittis, et bibendum erat aliquam.'
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13670,7 +13576,7 @@ MonoBehaviour:
   m_Content: {fileID: 1458774100}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 0
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 0
   m_DecelerationRate: 0.135

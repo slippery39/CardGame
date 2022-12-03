@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using UniRx;
 using UnityEngine;
 
 public class CardGame
@@ -100,6 +101,17 @@ public class CardGame
     #endregion
     #endregion
 
+    #region Observables
+
+    /// <summary>
+    /// Game state should change after resolving any effect on the stack.
+    /// Note, do not subscribe to this one, this should really only be used by core classes.
+    /// </summary>
+
+    public ReplaySubject<CardGame> OnGameStateChanged;
+    public IObservable<CardGame> GameStateChangedObservable => OnGameStateChanged.AsObservable();
+    #endregion
+
     public CardGame()
     {
         InitGame();
@@ -143,7 +155,7 @@ public class CardGame
 
         _cardGameLogger = new UnityCardGameLogger();
 
-        _eventLogSystem = new EventLogSystem();
+        _eventLogSystem = new EventLogSystem(this);
 
         _registeredEntities = new List<CardGameEntity>();
         _players = new List<Player>();
@@ -164,6 +176,9 @@ public class CardGame
             PlayerId = 2,
             Health = _startingPlayerHealth
         });
+
+        OnGameStateChanged = new ReplaySubject<CardGame>(1);
+
     }
 
 
@@ -187,6 +202,27 @@ public class CardGame
         Player2.Deck.Shuffle();
         _cardDrawSystem.DrawOpeningHand(Player1);
         _cardDrawSystem.DrawOpeningHand(Player2);
+
+        OnGameStateChanged.OnNext(Copy());
+    }
+
+    public CardGame Copy()
+    {
+        string json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All
+        });
+        return JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+            ObjectCreationHandling = ObjectCreationHandling.Replace
+        });
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)

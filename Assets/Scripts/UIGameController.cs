@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TMPro;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,7 +47,16 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private UIEventLog _gameLog;
 
+
+    [SerializeField]
+    private GameService _gameService;
+
+ 
+    
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
+    public GameService GameService { get => _gameService; set => _gameService = value; }
+
+
 
     //Singleton Pattern, should only be one game controller per unity scene.
     public static UIGameController Instance;
@@ -115,6 +125,12 @@ public class UIGameController : MonoBehaviour
         CheckForCardsWithoutImages();
         CheckForCardsWithoutManaCosts();
         _stateMachine = GetComponent<GameUIStateMachine>();
+
+        _gameService.GetGameEventLogsObservable().Subscribe(ev =>
+        {
+            //TODO - Append Log?            
+            _gameLog.SetLog(_cardGame.EventLogSystem.Events.Select(ev => ev.Log));
+        });
 
     }
 
@@ -284,14 +300,13 @@ public class UIGameController : MonoBehaviour
 
     private void UpdateUI()
     {
+        //State Machine UI
         _actionStateIndicator.text = _stateMachine.GetMessage();
         if (_turnIndicator != null)
         {
             _turnIndicator.text = $"Player {_cardGame.ActivePlayerId}'s Turn ({_cardGame.TurnSystem.TurnId})";
         }
-
-        _gameLog.SetLog(_cardGame.EventLogSystem.Events.Select(ev => ev.Log));
-
+        //Game Board.
         _player1Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player1;
         _player2Board.HideHiddenInfo = _cardGame.ActivePlayer != _cardGame.Player2;
     }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UniRx;
 
 [ExecuteInEditMode]
 public class UIPlayerBoard2D : UIPlayerBoard
@@ -36,6 +37,12 @@ public class UIPlayerBoard2D : UIPlayerBoard
             Debug.Log("Is the graveyard being handled correctly?");
             UIGameController.Instance.HandleViewGraveyardClick(_player);
         });
+
+        UIGameController.Instance.GameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
+        {
+            var player = cardGame.Players.Where(p => p.PlayerId == _player.PlayerId).FirstOrDefault();
+            SetBoard(player);
+        });
     }
 
     public override List<UIGameEntity> GetUIEntities()
@@ -55,9 +62,9 @@ public class UIPlayerBoard2D : UIPlayerBoard
     void Update()
     {
         if (_player == null) return;
-        SetBoard(_player);
+        //This should not automatically update. Should update via 
+        //SetBoard(_player);
     }
-
     private void SetBoard(Player player)
     {
         if (player == null) return;
