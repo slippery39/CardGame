@@ -234,6 +234,7 @@ public class CardInstance : CardGameEntity, ICard
     //While I figure out how I actually want to do this properly in a more type safe way.
     //I was casting CardInstance.CurrentCardData all over my code base anyways,
     //at least this keeps it in one place.
+    [JsonIgnore]
     public int Power
     {
         get
@@ -242,13 +243,16 @@ public class CardInstance : CardGameEntity, ICard
         }
         set
         {
+            /*
             if (_currentCardData is UnitCardData)
             {
                 _powerWithoutMods = value;
             }
+            */
         }
     }
 
+    [JsonIgnore]
     public int Toughness
     {
         get

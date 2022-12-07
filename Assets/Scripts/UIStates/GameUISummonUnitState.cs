@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameUISummonUnitState : IGameUIState
 {
     private CardGame _cardGame => _stateMachine.CardGame;
+    private GameService _gameService => _stateMachine.GameService;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _unitToSummon;
@@ -53,7 +54,6 @@ public class GameUISummonUnitState : IGameUIState
     }
     public void HandleSelection(int entityId)
     {
-
         var summonUnitAction = new PlayUnitAction
         {
             Player = _actingPlayer,
@@ -67,27 +67,8 @@ public class GameUISummonUnitState : IGameUIState
             return;
         }
 
-        _cardGame.ProcessAction(summonUnitAction);
+        _gameService.ProcessAction(summonUnitAction);
         _stateMachine.ToIdle();
-
-        /*
-        //Might want to move this into the action itself.
-        var validLaneTargets = _cardGame.TargetSystem.GetValidTargets(_actingPlayer, _unitToSummon).Select(ent => ent.EntityId);
-
-        if (!validLaneTargets.Contains(entityId))
-        {
-            return;
-        }
-
-        var summonUnitAction = new PlayUnitAction
-        {
-            Card = _unitToSummon,
-            Lane = _cardGame.GetEntities<Lane>().Where(l => l.EntityId == entityId).FirstOrDefault()
-        };
-
-        _cardGame.PlayCard(_cardGame.ActivePlayer, _unitToSummon, entityId, new List<CardGameEntity>());
-        _stateMachine.ToIdle();
-        */
     }
 }
 

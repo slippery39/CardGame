@@ -451,11 +451,21 @@ public class CardGame
         return CanPlayCard(card);
     }
 
-    //WIP - Starting to use Actions instead of calling methods directly.
     public void ProcessAction(CardGameAction action)
     {
+        //Action may come from anywhere, we need to make sure all the references match up to what we have in our card game before going any further.
+
+        //Which Things would need to be updated?
+        action.Player = Players.Where(e => e.EntityId == action.Player?.EntityId).FirstOrDefault();
+        action.SourceCard = GetEntities<CardInstance>().Where(e => e.EntityId == action.SourceCard?.EntityId).FirstOrDefault();
+        action.Targets = action.Targets?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+        action.CardToPlay = GetEntities<CardInstance>().Where(e => e.EntityId == action.CardToPlay?.EntityId).FirstOrDefault();
+        action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+
+        Debug.Log("Processing Action...");
         if (action.IsValidAction(this))
         {
+            Debug.Log("Action is Valid...");
             action.DoAction(this);
         }
         else

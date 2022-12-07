@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameUIMultiChoiceState : IGameUIState
 {
     private CardGame _cardGame => _stateMachine.CardGame;
+    private GameService _gameService => _stateMachine.GameService;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private IEffectWithChoice _sourceEffect;
@@ -117,7 +118,7 @@ public class GameUIMultiChoiceState : IGameUIState
                 return;
             }
 
-            _cardGame.ProcessAction(makeChoiceAction);
+            _gameService.ProcessAction(makeChoiceAction);
             _stateMachine.ToIdle();
         }
     }

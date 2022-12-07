@@ -7,9 +7,11 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
 {
     //private CardGame _cardGame;
     private Player _actingPlayer => CardGame.ActivePlayer;
+
     private GameUIStateMachine _stateMachine;
     private CardInstance _cardWithAbility;
     private CardGame CardGame => _stateMachine.CardGame;
+    private GameService _gameService => _stateMachine.GameService;
 
     public GameUIActivatedAbilityState(GameUIStateMachine stateMachine, CardInstance cardWithAbility)
     {
@@ -61,7 +63,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
 
 
     private ActivatedAbility GetActivatedAbility()
-    {        
+    {
         //Need to check by zone.
         return _cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().First(ab =>
         {
@@ -106,7 +108,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
             return;
         }
 
-        CardGame.ProcessAction(abilityAction);
+        _gameService.ProcessAction(abilityAction);
         _stateMachine.ToIdle();
     }
 

@@ -32,6 +32,11 @@ public class GameService : MonoBehaviour
         _hasGameStarted = true;
     }
 
+    public void ProcessAction(CardGameAction action)
+    {
+        _cardGame.ProcessAction(action);
+    }
+
     public IObservable<GameEventLog> GetGameEventLogsObservable()
     {
         return _cardGame.EventLogSystem.GetGameEventLogsAsObservable();
@@ -42,6 +47,10 @@ public class GameService : MonoBehaviour
         var gameStateObs = _cardGame.GameStateChangedObservable;
         gameStateObs.Subscribe(gameState =>
         {
+            if (gameState?.Player1?.Lanes?[0].UnitInLane?.Name == "Arcbound Worker")
+            {
+                var i = 0;
+            }
             Debug.Log("Game State Changed has triggered in the Game Service");
         });
         return gameStateObs;

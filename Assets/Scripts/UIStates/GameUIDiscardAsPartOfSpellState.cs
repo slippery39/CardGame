@@ -5,7 +5,8 @@ using UnityEngine;
 //Now used in our GameUIChoiseAsPartOfResolveState class.
 public class GameUIDiscardAsPartOfSpellState : IGameUIState
 {
-    private CardGame _cardGame;
+    private CardGame _cardGame => _stateMachine.CardGame;
+    private GameService _gameService => _stateMachine.GameService;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private DiscardCardEffect _sourceEffect;
@@ -13,7 +14,6 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
     public List<CardInstance> _cardsChosen;
     public GameUIDiscardAsPartOfSpellState(GameUIStateMachine stateMachine, DiscardCardEffect sourceEffect)
     {
-        _cardGame = stateMachine.CardGame;
         _stateMachine = stateMachine;
         _sourceEffect = sourceEffect;
         _cardsChosen = new List<CardInstance>();
@@ -51,7 +51,7 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
             {
                 entity.Highlight(Color.red);
             }
-            else 
+            else
             {
                 //Highlight with a red color if it is an already chosen card?
                 entity.Highlight();
@@ -104,7 +104,7 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
                 return;
             }
 
-            _cardGame.ProcessAction(makeChoiceAction);
+            _gameService.ProcessAction(makeChoiceAction);
             _stateMachine.ToIdle();
         }
     }

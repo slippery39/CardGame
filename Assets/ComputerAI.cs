@@ -57,8 +57,10 @@ public class ComputerAI : MonoBehaviour
 
     private void ChooseAction(CardGame cardGame)
     {
-        var availableActions = cardGame.ActivePlayer.GetAvailableActions(cardGame);
+        var gameController = UIGameController.Instance;
+        var gameService = gameController.GameService;
 
+        var availableActions = cardGame.ActivePlayer.GetAvailableActions(cardGame);
         var validActions = availableActions.Where(a => a.IsValidAction(cardGame));
 
         var newDebugMsg = $"Number of valid actions {validActions.Count()}";
@@ -72,7 +74,7 @@ public class ComputerAI : MonoBehaviour
         if (validActions.Any())
         {
             var actionToChoose = validActions.Randomize().First();
-            cardGame.ProcessAction(actionToChoose);
+            gameService.ProcessAction(actionToChoose);
         }
     }
 }

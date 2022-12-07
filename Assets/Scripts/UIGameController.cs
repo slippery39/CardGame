@@ -126,28 +126,29 @@ public class UIGameController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                _cardGame.ProcessAction(CreateFightAction(0));
+                _gameService.ProcessAction(CreateFightAction(0));
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                _cardGame.ProcessAction(CreateFightAction(1));
+                _gameService.ProcessAction(CreateFightAction(1));
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                _cardGame.ProcessAction(CreateFightAction(2));
+                _gameService.ProcessAction(CreateFightAction(2));
             }
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                _cardGame.ProcessAction(CreateFightAction(3));
+                _gameService.ProcessAction(CreateFightAction(3));
             }
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                _cardGame.ProcessAction(CreateFightAction(4));
+                _gameService.ProcessAction(CreateFightAction(4));
             }
-            //Testing card drawing
+            //TODO - Allow cheats locally.
+            /*
             if (Input.GetKeyDown(KeyCode.D))
             {
-                _cardGame.CardDrawSystem.DrawCard(_cardGame.ActivePlayer);
+                _gameService.CardDrawSystem.DrawCard(_cardGame.ActivePlayer);
             }
             if (Input.GetKeyDown(KeyCode.M))
             {
@@ -158,6 +159,7 @@ public class UIGameController : MonoBehaviour
             {
                 _cardGame.TestFillGraveyard();
             }
+            */
 
             _stateMachine?.CurrentState.HandleInput();
 
@@ -257,7 +259,7 @@ public class UIGameController : MonoBehaviour
     {
         Debug.Log("processing next turn");
         var nextTurnAction = new NextTurnAction();
-        _cardGame.ProcessAction(nextTurnAction);
+        _gameService.ProcessAction(nextTurnAction);
         Debug.Log("done processing next turn");
         _stateMachine.ToIdle();
     }
