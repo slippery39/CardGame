@@ -241,15 +241,6 @@ public class CardInstance : CardGameEntity, ICard
         {
             return CalculatePower(true);
         }
-        set
-        {
-            /*
-            if (_currentCardData is UnitCardData)
-            {
-                _powerWithoutMods = value;
-            }
-            */
-        }
     }
 
     [JsonIgnore]
