@@ -7,10 +7,9 @@ using UnityEngine;
 
 public abstract class UIPlayerBoard : MonoBehaviour, IUIPlayerBoard
 {
-    [SerializeField]  
+    [SerializeField]
     private bool _hideHiddenInfo;
     public bool HideHiddenInfo { get; set; }
-    public abstract void SetPlayer(Player player);
     public abstract void SetBoard(Player player);
     public abstract List<UIGameEntity> GetUIEntities();
 }

@@ -98,7 +98,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
         {
             Player = _actingPlayer,
             Targets = SelectedTargets,
-            CardWithAbility = _cardWithAbility,
+            SourceCard = _cardWithAbility,
             AdditionalChoices = SelectedChoices
         };
 

@@ -46,15 +46,11 @@ public class UIPlayerBoard2D : UIPlayerBoard
         return entities;
     }
 
-    public override void SetPlayer(Player player)
-    {
-        _player = player;
-        InitUIEntityIds(_player);
-    }
-
     public override void SetBoard(Player player)
     {
         if (player == null) return;
+
+        _player = player;
 
         InitUIEntityIds(player);
         UpdateLanes(player);

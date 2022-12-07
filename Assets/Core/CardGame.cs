@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using UniRx;
@@ -215,6 +216,11 @@ public class CardGame
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.All
         });
+
+        var arcboundRavagerCounters = this.GetEntities<CardInstance>().Where(c => c.GetZone().ZoneType == ZoneType.InPlay).FirstOrDefault()?.Counters.Count;
+
+        File.WriteAllText("tempCardGameState", json);
+
         return JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
@@ -223,6 +229,8 @@ public class CardGame
             PreserveReferencesHandling = PreserveReferencesHandling.All,
             ObjectCreationHandling = ObjectCreationHandling.Replace
         });
+
+
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)
