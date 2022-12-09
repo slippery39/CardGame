@@ -186,7 +186,7 @@ public class UIGameController : MonoBehaviour
         _gameService.GetGameEventLogsObservable().Subscribe(ev =>
         {
             Debug.Log("Game Events has been updated");
-            _gameLog.SetLog(_cardGame.EventLogSystem.Events.Select(ev => ev.Log));
+            _gameLog.AppendLog(ev.Log);
         });
 
         _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
@@ -257,10 +257,8 @@ public class UIGameController : MonoBehaviour
 
     public void HandleNextTurnButtonClick()
     {
-        Debug.Log("processing next turn");
         var nextTurnAction = new NextTurnAction();
         _gameService.ProcessAction(nextTurnAction);
-        Debug.Log("done processing next turn");
         _stateMachine.ToIdle();
     }
 

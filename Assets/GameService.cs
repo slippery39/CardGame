@@ -52,10 +52,6 @@ public class GameService : MonoBehaviour
         var gameStateObs = _cardGame.GameStateChangedObservable;
         gameStateObs.Subscribe(gameState =>
         {
-            if (gameState?.Player1?.Lanes?[0].UnitInLane?.Name == "Arcbound Ravager")
-            {
-                var i = 0;
-            }
             Debug.Log("Game State Changed has triggered in the Game Service");
         });
         return gameStateObs;

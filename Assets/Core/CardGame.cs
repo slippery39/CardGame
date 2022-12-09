@@ -116,13 +116,13 @@ public class CardGame
     public CardGame()
     {
         InitGame();
-        Log("Default Constructor has been called in CardGame!");
+        //Log("Default Constructor has been called in CardGame!");
     }
 
     [OnDeserialized]
     public void OnDeserialized(StreamingContext context)
     {
-        Debug.Log("OnDeserialized has fired!");
+        //Debug.Log("OnDeserialized has fired!");
     }
 
 
@@ -178,7 +178,7 @@ public class CardGame
             Health = _startingPlayerHealth
         });
 
-        OnGameStateChanged = new ReplaySubject<CardGame>(1);
+        OnGameStateChanged = new ReplaySubject<CardGame>(10);
 
     }
 

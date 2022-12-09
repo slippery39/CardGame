@@ -94,6 +94,11 @@ public class ComputerAI : MonoBehaviour
             previousDebugMessage = newDebugMsg;
         }
 
+        if (validActions.Count()  == 0)
+        {
+            return;
+        }
+
 
         var gameState = cardGame.Copy(true);
 
@@ -126,6 +131,7 @@ public class ComputerAI : MonoBehaviour
         {
             var actionToChoose = actionScoresAsList.First().Action;
             //MiniMax Algorithm
+            Debug.Log("Trying to process action");
             gameService.ProcessAction(actionToChoose);
         }
     }
