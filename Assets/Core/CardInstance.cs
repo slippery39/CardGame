@@ -450,11 +450,6 @@ public class CardInstance : CardGameEntity, ICard
     {
         var actions = new List<CardGameAction>();
 
-        if (this.GetZone().ZoneType==ZoneType.InPlay && this.Name == "Welding Jar")
-        {
-            var debug = 0;
-        }
-
         if (CardGame.CanPlayCard(this))
         {
             //Need to check the type of card it is and create an associated action

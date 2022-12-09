@@ -16,7 +16,7 @@ public class ComputerAI : MonoBehaviour
     void Start()
     {
         //The AI will attempt to select his action every 1 second.
-        Observable.Interval(TimeSpan.FromSeconds(1)).Subscribe((_) => TryChooseAction());
+        Observable.Interval(TimeSpan.FromSeconds(0.5)).Subscribe((_) => TryChooseAction());
     }
 
     private void TryChooseAction()
@@ -55,6 +55,28 @@ public class ComputerAI : MonoBehaviour
         }
     }
 
+    private int EvaluateBoard(Player player, CardGame board)
+    {
+        /*
+         * Things to check
+         * 
+         * Life Totals
+         * 
+         * Units in play -|
+         * Items in play -|- Total Remaining Resources?
+         * Cards in hand -|
+         * Total Mana
+         * 
+         */
+
+        var myLifeTotal = board.Players.Where(p => p.EntityId == player.EntityId).FirstOrDefault().Health;
+        var oppLifeTotal = board.Players.Where(p => p.EntityId != player.EntityId).FirstOrDefault().Health;
+
+        return (myLifeTotal * 15) + (oppLifeTotal * 20);
+    }
+
+
+
     private void ChooseAction(CardGame cardGame)
     {
         var gameController = UIGameController.Instance;
@@ -71,10 +93,51 @@ public class ComputerAI : MonoBehaviour
             previousDebugMessage = newDebugMsg;
         }
 
+
+        var gameState = cardGame.Copy(true);
+
+        var actionScores = validActions.Select(act =>
+        {
+            var gameStateCopy = gameState.Copy(true);
+            gameStateCopy.ProcessAction(act);
+            var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);
+
+            return new StateActionNode
+            {
+                Action = act,
+                Score = score,
+                OriginalState = gameState,
+                ResultingState = gameStateCopy,
+                Depth = 1
+            };
+
+            //TODO - Recursively or Iteratively Add Depth.
+        });
+
+        var actionScoresAsList = actionScores.Randomize().ToList();
+        actionScoresAsList.Sort((a, b) =>
+        {
+            return b.Score - a.Score;
+        });
+
+
         if (validActions.Any())
         {
-            var actionToChoose = validActions.Randomize().First();
+            var actionToChoose = actionScoresAsList.First().Action;
+            //MiniMax Algorithm
             gameService.ProcessAction(actionToChoose);
         }
     }
+}
+
+
+public class StateActionNode
+{
+    public CardGameAction Action { get; set; }
+    public CardGame OriginalState { get; set; }
+    public CardGame ResultingState { get; set; }
+    public int Score { get; set; }
+    public int Depth { get; set; }
+    public StateActionNode Children { get; set; }
+    public StateActionNode Parent { get; set; }
 }

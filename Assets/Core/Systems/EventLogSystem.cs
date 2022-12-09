@@ -11,7 +11,35 @@ public class GameEventLog
     public string Log { get; set; }
 }
 
-public class EventLogSystem : CardGameSystem
+
+public interface IEventLogSystem
+{
+    IObservable<GameEventLog> GetGameEventLogsAsObservable();
+    public List<GameEventLog> Events { get; set; }
+    public int NextEventId { get; set; }
+    public void AddEvent(string log);
+}
+
+public class EmptyEventLogSystem : CardGameSystem, IEventLogSystem
+{
+    public List<GameEventLog> Events { get; set; }
+    public int NextEventId { get; set; }
+
+    public void AddEvent(string log)
+    {
+        
+    }
+
+    public IObservable<GameEventLog> GetGameEventLogsAsObservable()
+    {
+        return Observable.Create<GameEventLog>(observer =>
+        {
+            return Disposable.Empty;
+        });
+    }
+}
+
+public class EventLogSystem : CardGameSystem, IEventLogSystem
 {
     public int NextEventId { get; set; } = 1;
     public List<GameEventLog> Events { get; set; } = new List<GameEventLog>();

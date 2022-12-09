@@ -45,7 +45,7 @@ public class CardGame
     private IModificationsSystem _modificationsSystem;
     private IAdditionalCostSystem _additionalCostSystem;
 
-    private EventLogSystem _eventLogSystem;
+    private IEventLogSystem _eventLogSystem;
     #endregion
 
 
@@ -97,7 +97,7 @@ public class CardGame
     public IPlayerModificationSystem PlayerAbilitySystem { get; set; }
 
     public IWinLoseSystem WinLoseSystem { get; set; }
-    public EventLogSystem EventLogSystem { get => _eventLogSystem; set => _eventLogSystem = value; }
+    public IEventLogSystem EventLogSystem { get => _eventLogSystem; set => _eventLogSystem = value; }
 
     #endregion
     #endregion
@@ -207,7 +207,7 @@ public class CardGame
         OnGameStateChanged.OnNext(Copy());
     }
 
-    public CardGame Copy()
+    public CardGame Copy(bool noEventsOrLogs = false)
     {
         string json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
         {
@@ -221,7 +221,7 @@ public class CardGame
 
         File.WriteAllText("tempCardGameState", json);
 
-        return JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
+        var copy = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
             TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
@@ -229,6 +229,14 @@ public class CardGame
             PreserveReferencesHandling = PreserveReferencesHandling.All,
             ObjectCreationHandling = ObjectCreationHandling.Replace
         });
+
+        if (noEventsOrLogs)
+        {
+            copy.EventLogSystem = new EmptyEventLogSystem();
+            copy._cardGameLogger = new EmptyLogger();
+        }
+
+        return copy;
 
 
     }

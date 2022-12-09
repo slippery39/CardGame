@@ -9,4 +9,3 @@ public interface IUIPlayerBoard
     List<UIGameEntity> GetUIEntities();
     public bool HideHiddenInfo { get; set; }
 }
-
