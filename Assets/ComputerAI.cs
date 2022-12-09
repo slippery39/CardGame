@@ -84,7 +84,7 @@ public class ComputerAI : MonoBehaviour
         var gameService = gameController.GameService;
 
         var availableActions = cardGame.ActivePlayer.GetAvailableActions(cardGame);
-        var validActions = availableActions.Where(a => a.IsValidAction(cardGame));
+        var validActions = availableActions.Where(a => a.IsValidAction(cardGame)).ToList();
 
         var newDebugMsg = $"Number of valid actions {validActions.Count()}";
 
@@ -94,7 +94,7 @@ public class ComputerAI : MonoBehaviour
             previousDebugMessage = newDebugMsg;
         }
 
-        if (validActions.Count()  == 0)
+        if (validActions.Count() == 0)
         {
             return;
         }
@@ -126,8 +126,9 @@ public class ComputerAI : MonoBehaviour
             return b.Score - a.Score;
         });
 
+        var hasValidActions = validActions.Any();
 
-        if (validActions.Any())
+        if (hasValidActions)
         {
             var actionToChoose = actionScoresAsList.First().Action;
             //MiniMax Algorithm
