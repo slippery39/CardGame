@@ -217,8 +217,6 @@ public class CardGame
             PreserveReferencesHandling = PreserveReferencesHandling.All
         });
 
-        var arcboundRavagerCounters = this.GetEntities<CardInstance>().Where(c => c.GetZone().ZoneType == ZoneType.InPlay).FirstOrDefault()?.Counters.Count;
-
         File.WriteAllText("tempCardGameState", json);
 
         var copy = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
@@ -478,10 +476,10 @@ public class CardGame
         action.CardToPlay = GetEntities<CardInstance>().Where(e => e.EntityId == action.CardToPlay?.EntityId).FirstOrDefault();
         action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
 
-        Debug.Log("Processing Action...");
+        Log("Processing Action...");
         if (action.IsValidAction(this))
         {
-            Debug.Log("Action is Valid...");
+            Log("Action is Valid...");
             action.DoAction(this);
         }
         else

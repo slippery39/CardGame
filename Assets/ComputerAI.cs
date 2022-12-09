@@ -22,6 +22,7 @@ public class ComputerAI : MonoBehaviour
     private void TryChooseAction()
     {
         var gameController = UIGameController.Instance;
+        var gameService = UIGameController.Instance.GameService;
         var cardGame = gameController.CardGame;
 
         if (cardGame.ActivePlayer.PlayerId == playerId)
@@ -41,12 +42,12 @@ public class ComputerAI : MonoBehaviour
                 if (choiceInfo.NumberOfChoices > 1)
                 {
                     var choices = validChoices.Randomize().Take(choiceInfo.NumberOfChoices);
-                    cardGame.MakeChoice(choices.ToList());
+                    gameService.MakeChoice(choices.ToList());
                 }
                 else if (choiceInfo.NumberOfChoices == 1)
                 {
                     var choice = validChoices.Randomize().ToList()[0];
-                    cardGame.MakeChoice(new List<CardInstance> { choice });
+                    gameService.MakeChoice(new List<CardInstance> { choice });
                 }
             }
 

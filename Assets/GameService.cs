@@ -37,6 +37,11 @@ public class GameService : MonoBehaviour
         _cardGame.ProcessAction(action);
     }
 
+    public void MakeChoice(List<CardInstance> choices)
+    {
+        _cardGame.MakeChoice(choices);
+    }
+
     public IObservable<GameEventLog> GetGameEventLogsObservable()
     {
         return _cardGame.EventLogSystem.GetGameEventLogsAsObservable();
