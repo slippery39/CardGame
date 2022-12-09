@@ -339,13 +339,9 @@ public class FamousDecks : DecklistDB
             {
                 Name = "Test Deck",
                 Cards = $@"
-                    60 Thoughtseize
-                    60 Telling Time
-                    60 Island
-                    60 Deep Analysis
-                    30 Cragcrown Pathway
-                    30 Lotus Bloom
-                    30 Gempalm Incinerator
+                    100 Welding Jar
+                    100 Island
+                    100 Forest
                 "
             }
         };

@@ -77,11 +77,20 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
             return false;
         }
 
-        //Activated Abilities can only be activated during the active players turn.
-        if (cardGame.GetOwnerOfCard(card)!= cardGame.ActivePlayer)
+        var owner = cardGame.GetOwnerOfCard(card);
+
+        if (activatedAbility.HasTargets() && cardGame.TargetSystem.GetValidAbilityTargets(owner, card).Count() == 0)
         {
             return false;
         }
+
+        //Activated Abilities can only be activated during the active players turn.
+        if (cardGame.GetOwnerOfCard(card) != cardGame.ActivePlayer)
+        {
+            return false;
+        }
+
+        //
         //Changing to take into account exhaustion.        
         if (activatedAbility.ExhaustOnUse && card.IsExhausted)
         {
