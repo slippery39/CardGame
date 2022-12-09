@@ -89,6 +89,7 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
         cardGame.EventLogSystem.AddEvent($"{attackingLane.UnitInLane.Name} attacked {cardGame.InactivePlayer.Name}");
         //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
         cardGame.DamageSystem.DealCombatDamageToPlayer(attackingLane.UnitInLane, cardGame.InactivePlayer);
+        cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
 
     private void FightUnits(Lane attackingLane, Lane defendingLane)

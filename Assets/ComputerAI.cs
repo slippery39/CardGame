@@ -27,33 +27,23 @@ public class ComputerAI : MonoBehaviour
 
         if (cardGame.ActivePlayer.PlayerId == playerId)
         {
-
             if (cardGame.CurrentGameState == GameState.WaitingForAction)
             {
                 ChooseAction(cardGame);
             }
             else if (cardGame.CurrentGameState == GameState.WaitingForChoice)
             {
-                var choiceInfo = cardGame.ChoiceInfoNeeded;
-                var validChoices = choiceInfo.GetValidChoices(cardGame, cardGame.ActivePlayer);
-
-                //I think careful study should also be in here as well.
-                //If its a single choice vs a multi choice.
-                if (choiceInfo.NumberOfChoices > 1)
-                {
-                    var choices = validChoices.Randomize().Take(choiceInfo.NumberOfChoices);
-                    gameService.MakeChoice(choices.ToList());
-                }
-                else if (choiceInfo.NumberOfChoices == 1)
-                {
-                    var choice = validChoices.Randomize().ToList()[0];
-                    gameService.MakeChoice(new List<CardInstance> { choice });
-                }
+                MakeChoice(gameService, cardGame);
             }
-
-            //Choose an action here.
-            //var availableActions = gameController.CardGame.Get
         }
+    }
+
+    private void MakeChoice(GameService gameService, CardGame cardGame)
+    {
+        var choiceInfo = cardGame.ChoiceInfoNeeded;
+        var validChoices = choiceInfo.GetValidChoices(cardGame, cardGame.ActivePlayer);
+        var choices = validChoices.Randomize().Take(choiceInfo.NumberOfChoices);
+        gameService.MakeChoice(choices.ToList());
     }
 
     private int EvaluateBoard(Player player, CardGame board)
