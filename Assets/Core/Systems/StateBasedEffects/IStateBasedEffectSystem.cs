@@ -21,6 +21,7 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
 
     public void CheckStateBasedEffects()
     {
+        cardGame.EventLogSystem.AddEvent("Starting to Check State Based Effects");
         cardGame.ContinuousEffectSystem.ApplyStaticEffects();
         cardGame.ContinuousEffectSystem.RemoveStaticEffects();
 
@@ -50,6 +51,23 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
 
         //Check to see if any player has lost
         cardGame.WinLoseSystem.CheckLosers();
+
+        //Sanity Check for any cards which do not have a zone.
+        if (cardGame.RegisteredEntities.GetOfType<CardInstance>().Where(e => e.GetZone() == null).Any())
+        {
+            var cards = cardGame.RegisteredEntities.GetOfType<CardInstance>().Where(e => e.GetZone() == null).ToList();
+
+            cards.ForEach(c =>
+            {
+                cardGame.EventLogSystem.AddEvent($"{c.Name} does not have a zone attached to it? Where does it exist?");
+            });
+
+            var i = 0;
+        }
+
+
+        cardGame.EventLogSystem.AddEvent("End of checking state based effects");
+
         cardGame.OnGameStateChanged.OnNext(cardGame.Copy());
     }
 

@@ -46,6 +46,9 @@ public class CardGame
     private IAdditionalCostSystem _additionalCostSystem;
 
     private IEventLogSystem _eventLogSystem;
+
+    //Debug purposes only
+    private bool _isCopy = false;
     #endregion
 
 
@@ -234,6 +237,8 @@ public class CardGame
             copy._cardGameLogger = new EmptyLogger();
         }
 
+        copy._isCopy = true;
+
         return copy;
 
 
@@ -402,8 +407,6 @@ public class CardGame
         {
             castZones = modCastZoneComponent.ModifyCastZones(this, card, castZones);
         }
-
-        //TODO - check if the card is in one of the cast zones
 
         var castZoneOfCard = GetZoneOfCard(card).ZoneType;
 
