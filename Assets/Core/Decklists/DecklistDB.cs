@@ -339,9 +339,8 @@ public class FamousDecks : DecklistDB
             {
                 Name = "Test Deck",
                 Cards = $@"
-                    100 Welding Jar
-                    100 Island
-                    100 Forest
+                    40 Cranial Plating
+                    20 Island
                 "
             }
         };

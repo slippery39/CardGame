@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class ComputerAI : MonoBehaviour
 {
@@ -21,9 +22,17 @@ public class ComputerAI : MonoBehaviour
 
     private void TryChooseAction()
     {
+
+        Profiler.BeginSample("AI.ChoosingAction");
+        
         var gameController = UIGameController.Instance;
         var gameService = UIGameController.Instance.GameService;
         var cardGame = gameController.CardGame;
+
+        if (!gameService.HasGameStarted)
+        {
+            return;
+        }
 
         if (cardGame.ActivePlayer.PlayerId == playerId)
         {
@@ -36,6 +45,7 @@ public class ComputerAI : MonoBehaviour
                 MakeChoice(gameService, cardGame);
             }
         }
+        Profiler.EndSample();
     }
 
     private void MakeChoice(GameService gameService, CardGame cardGame)

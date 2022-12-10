@@ -43,6 +43,8 @@ public class CardInstance : CardGameEntity, ICard
     }
 
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
+
+    [JsonIgnore]
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
     //Effects was being added to every time we serialize / deserialize it.
@@ -52,6 +54,7 @@ public class CardInstance : CardGameEntity, ICard
         get { if (_currentCardData is SpellCardData) { return ((SpellCardData)_currentCardData).Effects; } else { return new List<Effect>(); } }
     }
 
+    [JsonIgnore]
     public string RulesText
     {
         get
@@ -89,6 +92,9 @@ public class CardInstance : CardGameEntity, ICard
     //NOTE - we do not have a rules text property here... seems weird why we don't.
     [JsonIgnore]
     public List<CardColor> Colors { get => _currentCardData.Colors; }
+
+
+    [JsonIgnore]
     public string CreatureType
     {
         get
@@ -129,6 +135,7 @@ public class CardInstance : CardGameEntity, ICard
         }
     }
 
+    [JsonIgnore]
     public AdditionalCost AdditionalCost
     {
         get
@@ -144,8 +151,10 @@ public class CardInstance : CardGameEntity, ICard
         }
     }
 
+    [JsonIgnore]
     public string Subtype => _currentCardData.Subtype;
 
+    [JsonIgnore]
     public string CardType { get => _currentCardData.CardType; }
 
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
@@ -266,6 +275,8 @@ public class CardInstance : CardGameEntity, ICard
         get { return _toughnessWithoutMods; }
         set { _toughnessWithoutMods = value; }
     }
+
+    [JsonIgnore]
 
     public string ArtPath => _currentCardData.ArtPath;
 

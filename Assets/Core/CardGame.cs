@@ -1,12 +1,15 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UniRx;
 using UnityEngine;
 
+[Serializable]
 public class CardGame
 {
     #region Private Fields
@@ -53,6 +56,9 @@ public class CardGame
 
 
     #region Public Properties
+    //This should be at the top to make sure the json serializer serialized all entities here first
+    public List<CardGameEntity> RegisteredEntities { get => _registeredEntities; set => _registeredEntities = value; }
+
     [JsonIgnore]
     public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
     [JsonIgnore]
@@ -66,7 +72,7 @@ public class CardGame
 
     public int SpellsCastThisTurn { get; set; } = 0;
     public ICardGameLogger Logger { get => _cardGameLogger; }
-    public List<CardGameEntity> RegisteredEntities { get => _registeredEntities; set => _registeredEntities = value; }
+   
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
@@ -212,25 +218,30 @@ public class CardGame
 
     public CardGame Copy(bool noEventsOrLogs = false)
     {
-        string json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+        var timer = new Stopwatch();
+        timer.Start();
+     
+        string json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.All
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+            NullValueHandling = NullValueHandling.Ignore
         });
 
-        File.WriteAllText("tempCardGameState", json);
+        //File.WriteAllText("tempCardGameState", json);
 
         var copy = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.All,
-            ObjectCreationHandling = ObjectCreationHandling.Replace
+            ObjectCreationHandling = ObjectCreationHandling.Replace,
+            NullValueHandling = NullValueHandling.Ignore
         });
-
+    
         if (noEventsOrLogs)
         {
             copy.EventLogSystem = new EmptyEventLogSystem();
@@ -238,6 +249,10 @@ public class CardGame
         }
 
         copy._isCopy = true;
+
+        timer.Stop();
+
+        Log($"Copy Method took :  {timer.ElapsedMilliseconds} ms");
 
         return copy;
 
@@ -300,6 +315,8 @@ public class CardGame
         var cardInstance = new CardInstance(this, data);
         cardInstance.OwnerId = player.PlayerId;
         RegisterEntity(cardInstance);
+
+        //TODO - Cache CardData here.
 
         if (cardInstance.BackCard != null)
         {
@@ -713,12 +730,6 @@ public class CardGame
     //For general console logging purposes.
     public void Log(string message)
     {
-        if (Logger == null)
-        {
-            //default to unity if null;
-            Debug.Log(message);
-            return;
-        }
         Logger.Log(message);
     }
     private void AddRandomUnitsToLane(Player player)
