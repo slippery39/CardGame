@@ -19,7 +19,7 @@ public class GameService : MonoBehaviour
     public void SetupGame(Decklist player1Deck, Decklist player2Deck)
     {
         _cardGame = new CardGame();
-        _cardGame.SetupDecks(player1Deck, player2Deck);
+        _cardGame.SetupPlayers(player1Deck, player2Deck);
     }
     public void StartGame()
     {

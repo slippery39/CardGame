@@ -168,12 +168,18 @@ public class CardGame
         _eventLogSystem = new EventLogSystem(this);
 
         _registeredEntities = new List<CardGameEntity>();
-        _players = new List<Player>();
-
-
         //TODO - GameState Stuff:
         CurrentGameState = GameState.WaitingForAction;
 
+        //TODO - Should not be called by the constructor
+
+        OnGameStateChanged = new ReplaySubject<CardGame>(10);
+
+    }
+
+
+    public void SetupPlayers(Decklist player1Decklist, Decklist player2Decklist)
+    {
 
         AddPlayerToGame(new Player(_numberOfLanes)
         {
@@ -187,13 +193,6 @@ public class CardGame
             Health = _startingPlayerHealth
         });
 
-        OnGameStateChanged = new ReplaySubject<CardGame>(10);
-
-    }
-
-
-    public void SetupDecks(Decklist player1Decklist, Decklist player2Decklist)
-    {
         player1Decklist.ToDeck().ForEach(card =>
         {
             AddCardToGame(Player1, card, Player1.Deck);
@@ -230,7 +229,7 @@ public class CardGame
             NullValueHandling = NullValueHandling.Ignore
         });
 
-        //File.WriteAllText("tempCardGameState", json);
+        File.WriteAllText("tempCardGameState", json);
 
         var copy = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
         {
@@ -328,7 +327,11 @@ public class CardGame
 
     public void AddPlayerToGame(Player player)
     {
-        _players.Add(player);
+        if (Players == null)
+        {
+            Players = new List<Player>();
+        }
+        Players.Add(player);
         RegisterEntity(player);
         player.Lanes.ForEach(lane =>
         {
