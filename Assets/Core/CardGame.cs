@@ -13,7 +13,7 @@ using UnityEngine;
 public class CardGame
 {
     #region Private Fields
-    private List<Player> _players;
+    //private List<Player> Players;
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
     private int _startingPlayerHealth = 100;
@@ -60,15 +60,16 @@ public class CardGame
     public List<CardGameEntity> RegisteredEntities { get => _registeredEntities; set => _registeredEntities = value; }
 
     [JsonIgnore]
-    public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
+    public Player Player1 { get => Players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
     [JsonIgnore]
-    public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
-    public List<Player> Players { get => _players; set => _players = value; }
+    public Player Player2 { get => Players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
+    [JsonIgnore]
+    public List<Player> Players { get => RegisteredEntities.GetOfType<Player>(); }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     [JsonIgnore]
-    public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
+    public Player ActivePlayer { get => Players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     [JsonIgnore]
-    public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
+    public Player InactivePlayer { get => Players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
 
     public int SpellsCastThisTurn { get; set; } = 0;
     public ICardGameLogger Logger { get => _cardGameLogger; }
@@ -260,12 +261,12 @@ public class CardGame
 
     public Player GetOwnerOfCard(CardInstance unitInstance)
     {
-        var owner = _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
+        var owner = Players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
 
         //Might be a double sided card. Check the front card for the owner
         if (owner == null)
         {
-            owner = _players.Where(p => p.PlayerId == unitInstance.FrontCard.OwnerId).FirstOrDefault();
+            owner = Players.Where(p => p.PlayerId == unitInstance.FrontCard.OwnerId).FirstOrDefault();
         }
 
         if (owner == null)
@@ -327,10 +328,6 @@ public class CardGame
 
     public void AddPlayerToGame(Player player)
     {
-        if (Players == null)
-        {
-            Players = new List<Player>();
-        }
         Players.Add(player);
         RegisterEntity(player);
         player.Lanes.ForEach(lane =>
