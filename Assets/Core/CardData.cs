@@ -42,7 +42,7 @@ public interface IGameCloneable<T>
 
 
 [Serializable]
-public abstract class BaseCardData : ICard
+public abstract class BaseCardData : ICard, IGameCloneable<BaseCardData>
 {
     public string Name { get; set; }
 
@@ -78,7 +78,7 @@ public abstract class BaseCardData : ICard
 }
 
 
-public class UnitCardData : BaseCardData
+public class UnitCardData : BaseCardData, IGameCloneable<UnitCardData>
 {
     public int Power { get; set; }
     public int Toughness { get; set; }
@@ -100,11 +100,16 @@ public class UnitCardData : BaseCardData
             Power = Power,
             Toughness = Toughness,
             Colors = Colors,
-            Abilities = Abilities.ToList(), //todo - potential deep clone.
+            Abilities = Abilities.Clone(), //todo - potential deep clone.
             CreatureType = CreatureType,
             Subtype = Subtype,
             BackCard = BackCard
         };
+    }
+
+    UnitCardData IGameCloneable<UnitCardData>.Clone()
+    {
+        return (UnitCardData)this.Clone();
     }
 }
 

@@ -76,6 +76,19 @@ public class Player : CardGameEntity
     #endregion
 
     #region Public Methods
+
+    public new Player Clone()
+    {
+        var player = new Player();
+        Hand = Hand.Clone();
+        Lanes = Lanes.Clone();
+        DiscardPile = DiscardPile.Clone();
+        Deck = Deck.Clone();
+        Exile = Exile.Clone();
+        Items = Items.Clone();
+
+        return player;
+    }
     public List<CardInstance> GetUnitsInPlay()
     {
         return Lanes.Where(l => l.IsEmpty() == false).Select(l => l.UnitInLane).ToList();

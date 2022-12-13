@@ -53,7 +53,7 @@ public static class Extensions
     /// <returns></returns>
     public static bool IsNumeric(this char character) => Int32.TryParse(character.ToString(), out _);
 
-    public static List<T> Clone<T>(this List<T> list) where T : IGameCloneable<T>
+    public static IEnumerable<T> Clone<T>(this IEnumerable<T> list) where T : IGameCloneable<T>
     {
         return list.Select(x => x.Clone()).ToList();
     }

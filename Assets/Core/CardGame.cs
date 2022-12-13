@@ -13,7 +13,8 @@ using UnityEngine;
 public class CardGame
 {
     #region Private Fields
-    //private List<Player> Players;
+
+    private List<Player> _players = new List<Player>();
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
     private int _startingPlayerHealth = 100;
@@ -23,7 +24,8 @@ public class CardGame
     private int _nextEntityId = 1;
     private int _nextPlayerId = 1;
 
-    private List<CardGameEntity> _registeredEntities;
+    [JsonProperty]
+    private List<CardGameEntity> _registeredEntities = new List<CardGameEntity>();
 
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
@@ -59,15 +61,14 @@ public class CardGame
 
     //This should be at the top to make sure the json serializer serialized all entities here first
     public Dictionary<string, BaseCardData> RegisteredCardData { get; set; }
-    public List<CardGameEntity> RegisteredEntities { get => _registeredEntities; set => _registeredEntities = value; }
     
 
     [JsonIgnore]
     public Player Player1 { get => Players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
     [JsonIgnore]
     public Player Player2 { get => Players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
-    [JsonIgnore]
-    public List<Player> Players { get => RegisteredEntities.GetOfType<Player>(); }
+
+    public List<Player> Players { get => _players; set => _players = value; }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     [JsonIgnore]
     public Player ActivePlayer { get => Players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
@@ -171,7 +172,6 @@ public class CardGame
 
         _eventLogSystem = new EventLogSystem(this);
 
-        _registeredEntities = new List<CardGameEntity>();
         //TODO - GameState Stuff:
         CurrentGameState = GameState.WaitingForAction;
 
@@ -217,6 +217,44 @@ public class CardGame
         _cardDrawSystem.DrawOpeningHand(Player2);
 
         OnGameStateChanged.OnNext(Copy());
+    }
+
+
+    public CardGame Copy2(bool noEventsOrLogs = false)
+    {
+        var timer = new Stopwatch();
+        timer.Start();
+
+        var newCardData = RegisteredCardData.Clone();
+
+        //Look for any cloneable systems
+        var clone = new CardGame();
+
+        //Clone the player data.
+        clone.ResolvingSystem = this.ResolvingSystem.Clone();
+        clone.RegisteredCardData = newCardData;
+        clone.Players.Add(Player1.Clone());
+        clone.Players.Add(Player2.Clone());
+
+        //What else to clone? Turn Data, other stuff?
+
+        if (noEventsOrLogs)
+        {
+            clone.EventLogSystem = new EmptyEventLogSystem();
+            clone._cardGameLogger = new EmptyLogger();
+        }
+
+        clone._isCopy = true;
+
+        //Need to update our registered entities
+
+        clone._registeredEntities.Add(clone.Player1);
+        clone._registeredEntities.Add(clone.Player2);
+
+        timer.Stop();
+        Log($"Clone Method took :  {timer.ElapsedMilliseconds} ms");
+
+        return clone;
     }
 
     public CardGame Copy(bool noEventsOrLogs = false)
@@ -362,7 +400,6 @@ public class CardGame
     private void RegisterEntity(CardGameEntity entity)
     {
         entity.EntityId = GetNextEntityId();
-
         _registeredEntities.Add(entity);
     }
 

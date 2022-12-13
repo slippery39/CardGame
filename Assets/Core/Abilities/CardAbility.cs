@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class CardAbility
+public abstract class CardAbility:  IGameCloneable<CardAbility>
 {
     public string Type;
     public int Priority { get; set; }
@@ -28,9 +28,12 @@ public abstract class CardAbility
     }
 }
 
-public abstract class AbilityComponent
+public abstract class AbilityComponent : IGameCloneable<AbilityComponent>
 {
-
+    public AbilityComponent Clone()
+    {
+        return (AbilityComponent)MemberwiseClone();
+    }
 }
 
 public class AbilityCooldown : AbilityComponent

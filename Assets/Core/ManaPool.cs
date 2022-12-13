@@ -237,6 +237,8 @@ public class ManaPool
         _currentMana = new Mana();
     }
 
+   
+
     //How do we do this?
     public void SpendColorlessMana(int amount)
     {
