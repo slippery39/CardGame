@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
 
-public class CardInstance : CardGameEntity, ICard
+public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 {
     private BaseCardData _currentCardData;
     private int _ownerId;
@@ -534,6 +534,31 @@ public class CardInstance : CardGameEntity, ICard
     public void AddModification(Modification mod)
     {
         Modifications.Add(mod);
+    }
+
+    public CardInstance DeepClone(CardGame cardGame)
+    {
+        //CardGame should be set by the caller of this DeepClone().
+       var clone = (CardInstance)MemberwiseClone();
+
+       //Potential Issues with cloning abilities here?
+        clone.Abilities = Abilities.Select(a => a.Clone()).ToList();
+        clone.ContinuousEffects = ContinuousEffects.Clone();
+        clone.Modifications = Modifications.Clone();
+        clone.EntityId = EntityId;
+        clone.Name = Name;
+        clone.CardGame = cardGame;
+
+        if (_currentCardData.BackCard != null)
+        {
+            clone.BackCard = new CardInstance(cardGame, _currentCardData.BackCard);
+            clone.BackCard.FrontCard = clone;
+        }
+
+        //Back Card and Front Card (references or not?)
+
+        return clone;
+
     }
     #endregion
 }

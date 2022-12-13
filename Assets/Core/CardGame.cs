@@ -229,12 +229,16 @@ public class CardGame
 
         //Look for any cloneable systems
         var clone = new CardGame();
+        clone._isCopy = true;
+
+        clone.ActivePlayerId = ActivePlayerId;
 
         //Clone the player data.
-        clone.ResolvingSystem = this.ResolvingSystem.Clone();
+        clone.ResolvingSystem = this.ResolvingSystem.DeepClone(clone);
+
         clone.RegisteredCardData = newCardData;
-        clone.Players.Add(Player1.DeepClone<Player>());
-        clone.Players.Add(Player2.DeepClone<Player>());
+        clone.Players.Add(Player1.DeepClone(clone));
+        clone.Players.Add(Player2.DeepClone(clone));
 
         //What else to clone? Turn Data, other stuff?
 
@@ -244,12 +248,16 @@ public class CardGame
             clone._cardGameLogger = new EmptyLogger();
         }
 
-        clone._isCopy = true;
+        
 
         //Need to update our registered entities
 
         clone._registeredEntities.Add(clone.Player1);
         clone._registeredEntities.Add(clone.Player2);
+
+        clone._registeredEntities.AddRange(clone.Player1.GetAllEntities());
+        clone._registeredEntities.AddRange(clone.Player2.GetAllEntities());
+
 
         timer.Stop();
         Log($"Clone Method took :  {timer.ElapsedMilliseconds} ms");

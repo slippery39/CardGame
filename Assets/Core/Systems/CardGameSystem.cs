@@ -4,5 +4,5 @@
 public abstract class CardGameSystem
 {
     [JsonProperty]
-    protected CardGame cardGame;
+    public CardGame cardGame;
 }

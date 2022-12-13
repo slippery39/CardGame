@@ -19,6 +19,9 @@ public interface IResolvingSystem
     public void Continue();
 
     public void ResolveNext();
+
+    //TODO - figure out if its possible to use IResolvingSystem instead
+    public DefaultResolvingSystem DeepClone(CardGame cardGame);
 }
 
 
@@ -48,7 +51,7 @@ public class ResolvingStack : IZone
     }
 }
 
-public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
+public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepCloneable<DefaultResolvingSystem>
 {
     //Can hold card instances and abilities
     [JsonProperty]
@@ -331,5 +334,26 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
         }
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
+
+    public DefaultResolvingSystem DeepClone(CardGame cardGame)
+    {
+        var clone = (DefaultResolvingSystem)this.MemberwiseClone();
+        clone.cardGame = cardGame;
+        clone._internalStack = _internalStack.Select(x => x.Clone()).ToList();
+
+        return clone;
+        
+
+    //Can only hold card instances.
+    /*
+        private IZone stackZone = new ResolvingStack();
+        public IZone Stack { get { return stackZone; } private set { stackZone = value; } }
+
+        public bool IsResolvingEffect => _effectsToResolve != null && _effectsToResolve.Any();
+
+        [JsonProperty]
+        private Queue<Effect> _effectsToResolve;
+    */
+}
 }
 

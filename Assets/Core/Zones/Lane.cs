@@ -3,7 +3,7 @@ using UnityEngine;
 
 //NOTE - Unity does not support null in serialization. If we want things to be serialized, we should use the null object pattern instead.
 //Don't use System.Serializable unless we are 100% sure nothing will be set to null.
-public class Lane : CardGameEntity, IZone
+public class Lane : CardGameEntity, IZone, IDeepCloneable<Lane>
 {
     private CardInstance _unitInLane;
     #region Public Properties
@@ -36,6 +36,24 @@ public class Lane : CardGameEntity, IZone
     }
 
     #region Public Methods
+
+    public Lane DeepClone(CardGame cardGame)
+    {
+        Lane clone = new Lane();
+        clone.EntityId = EntityId;
+        clone.ContinuousEffects = ContinuousEffects.Clone();
+        clone.Modifications = Modifications.Clone();
+        clone.EntityId = EntityId;
+        clone.Name = Name;
+
+        if (_unitInLane != null)
+        {
+            clone.UnitInLane = _unitInLane.DeepClone(cardGame);
+        }
+
+        return clone;
+
+    }
 
     public bool IsEmpty()
     {

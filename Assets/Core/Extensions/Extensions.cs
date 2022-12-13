@@ -5,6 +5,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/// <summary>
+/// <a href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern">CRTP</a>-based
+/// interface to implement for objects that can create deep clones of themselves,
+/// but can be abused if TSelf is not specified as the same type as the
+/// implementing class.
+/// </summary>
+/// <typeparam name="TSelf"></typeparam>
+public interface IDeepCloneable<TSelf> where TSelf : IDeepCloneable<TSelf>
+{
+    public TSelf DeepClone(CardGame cardGame);
+}
+
+public static class DeepCloneExtensions
+{
+    /// <summary>
+    /// Produces another list with the same objects deeply cloned using
+    /// their implementation of <see cref="IDeepCloneable{TSelf}"/>.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="collection"></param>
+    /// <returns></returns>
+    public static IEnumerable<T> DeepClone<T>(this IEnumerable<T> collection, CardGame cardGame)
+            where T : IDeepCloneable<T>
+    {
+        return collection.Select(item => item.DeepClone(cardGame)).ToList();
+    }
+}
 
 public static class Extensions
 {

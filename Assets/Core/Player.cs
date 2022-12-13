@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-public class Player : CardGameEntity
+public class Player : CardGameEntity, IDeepCloneable<Player>
 {
     #region Private Fields
     private int _playerId;
@@ -77,25 +77,44 @@ public class Player : CardGameEntity
 
     #region Public Methods
 
-    public override Player DeepClone<Player>()
+    public Player DeepClone(CardGame cardGame)
     {
-        var entity = base.DeepClone<Player>();
-        Hand = Hand.Clone();
-        Lanes = Lanes.Clone();
-        DiscardPile = DiscardPile.Clone();
-        Deck = Deck.Clone();
-        Exile = Exile.Clone();
-        Items = Items.Clone();
+        var clone = (Player)MemberwiseClone();
+
+        clone.ContinuousEffects = ContinuousEffects.Clone();
+        clone.Modifications = Modifications.Clone();
+        clone.EntityId = EntityId;
+        clone.Name = Name;
+        
+        clone.Lanes = Lanes.DeepClone(cardGame).ToList();
+
+        clone.Hand = Hand.Clone();
+        clone.Hand.Cards = Hand.Cards.DeepClone(cardGame).ToList();
+
+        clone.DiscardPile = DiscardPile.Clone();
+        clone.DiscardPile.Cards = DiscardPile.Cards.DeepClone(cardGame).ToList();
+             
+        clone.Deck = Deck.Clone();
+        clone.Deck.Cards = Deck.Cards.DeepClone(cardGame).ToList();
+
+        clone.Exile = Exile.Clone();
+        clone.Exile.Cards = Exile.Cards.DeepClone(cardGame).ToList();
+
+
+        clone.Items = new Zone(ZoneType.InPlay, "Items");
+        clone.Items.Cards.AddRange(Items.Cards.DeepClone(cardGame).ToList());
+
+        //TODO - do an actual clone here.
         ManaPool = ManaPool.Clone();
         //Need to clone the mana pool
         //Need to clone all the cards inside.
 
-        return entity;
+        return clone;
     }
 
     public List<CardGameEntity> GetAllEntities()
     {
-        return GetCardsInPlay().Union(Hand).Union(DiscardPile).Union(Deck).Union(Exile).Cast<CardGameEntity>().ToList();
+        return Lanes.Cast<CardGameEntity>().Union(GetCardsInPlay()).Union(Hand).Union(DiscardPile).Union(Deck).Union(Exile).Cast<CardGameEntity>().ToList();
     }
 
     public List<CardInstance> GetUnitsInPlay()

@@ -16,16 +16,6 @@ public abstract class CardGameEntity
     public List<ContinuousEffect> ContinuousEffects { get; set; } = new List<ContinuousEffect>();
     public List<Modification> Modifications { get; set; } = new List<Modification>();
 
-    public virtual T DeepClone<T>() where T: CardGameEntity
-    {
-        var clone = (T)this.MemberwiseClone();
-        clone.ContinuousEffects = ContinuousEffects.Clone();
-        clone.Modifications = Modifications.Clone();
-        clone.EntityId = EntityId;
-        clone.Name = Name;
-
-        return clone;
-    }
 
     public void RemoveModification(Modification modToRemove)
     {
