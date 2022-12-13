@@ -77,18 +77,27 @@ public class Player : CardGameEntity
 
     #region Public Methods
 
-    public new Player Clone()
+    public override Player DeepClone<Player>()
     {
-        var player = new Player();
+        var entity = base.DeepClone<Player>();
         Hand = Hand.Clone();
         Lanes = Lanes.Clone();
         DiscardPile = DiscardPile.Clone();
         Deck = Deck.Clone();
         Exile = Exile.Clone();
         Items = Items.Clone();
+        ManaPool = ManaPool.Clone();
+        //Need to clone the mana pool
+        //Need to clone all the cards inside.
 
-        return player;
+        return entity;
     }
+
+    public List<CardGameEntity> GetAllEntities()
+    {
+        return GetCardsInPlay().Union(Hand).Union(DiscardPile).Union(Deck).Union(Exile).Cast<CardGameEntity>().ToList();
+    }
+
     public List<CardInstance> GetUnitsInPlay()
     {
         return Lanes.Where(l => l.IsEmpty() == false).Select(l => l.UnitInLane).ToList();

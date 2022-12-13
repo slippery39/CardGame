@@ -53,11 +53,6 @@ public static class Extensions
     /// <returns></returns>
     public static bool IsNumeric(this char character) => Int32.TryParse(character.ToString(), out _);
 
-    public static IEnumerable<T> Clone<T>(this IEnumerable<T> list) where T : IGameCloneable<T>
-    {
-        return list.Select(x => x.Clone()).ToList();
-    }
-
     public static string ToManaString(this List<CardColor> colors)
     {
         var manaString = "";

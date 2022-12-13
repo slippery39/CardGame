@@ -220,7 +220,7 @@ public class CardGame
     }
 
 
-    public CardGame Copy2(bool noEventsOrLogs = false)
+    public CardGame Copy(bool noEventsOrLogs = false)
     {
         var timer = new Stopwatch();
         timer.Start();
@@ -233,8 +233,8 @@ public class CardGame
         //Clone the player data.
         clone.ResolvingSystem = this.ResolvingSystem.Clone();
         clone.RegisteredCardData = newCardData;
-        clone.Players.Add(Player1.Clone());
-        clone.Players.Add(Player2.Clone());
+        clone.Players.Add(Player1.DeepClone<Player>());
+        clone.Players.Add(Player2.DeepClone<Player>());
 
         //What else to clone? Turn Data, other stuff?
 
@@ -257,7 +257,7 @@ public class CardGame
         return clone;
     }
 
-    public CardGame Copy(bool noEventsOrLogs = false)
+    public CardGame Copy2(bool noEventsOrLogs = false)
     {
         var timer = new Stopwatch();
         timer.Start();

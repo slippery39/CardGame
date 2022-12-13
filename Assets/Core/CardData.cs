@@ -36,13 +36,9 @@ public interface ICard
     string ArtPath { get; }
 }
 
-public interface IGameCloneable<T>
-{    T Clone();
-}
-
 
 [Serializable]
-public abstract class BaseCardData : ICard, IGameCloneable<BaseCardData>
+public abstract class BaseCardData : ICard
 {
     public string Name { get; set; }
 
@@ -78,7 +74,7 @@ public abstract class BaseCardData : ICard, IGameCloneable<BaseCardData>
 }
 
 
-public class UnitCardData : BaseCardData, IGameCloneable<UnitCardData>
+public class UnitCardData : BaseCardData
 {
     public int Power { get; set; }
     public int Toughness { get; set; }
@@ -107,10 +103,6 @@ public class UnitCardData : BaseCardData, IGameCloneable<UnitCardData>
         };
     }
 
-    UnitCardData IGameCloneable<UnitCardData>.Clone()
-    {
-        return (UnitCardData)this.Clone();
-    }
 }
 
 
