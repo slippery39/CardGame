@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 public class CardInstance : CardGameEntity, ICard
 {
-    private BaseCardData _originalCardData;
     private BaseCardData _currentCardData;
     private int _ownerId;
     private bool _isSummoningSick = true;
@@ -43,9 +42,9 @@ public class CardInstance : CardGameEntity, ICard
     }
 
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
-
+    
     [JsonIgnore]
-    public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
+    public override string Name { get=>_currentCardData.Name; set=>_currentCardData.Name = value; }
 
     //Effects was being added to every time we serialize / deserialize it.
     [JsonIgnore]
@@ -292,6 +291,7 @@ public class CardInstance : CardGameEntity, ICard
     #endregion
 
     //For Serialization Purposes
+    [JsonConstructor]
     public CardInstance()
     {
 
@@ -301,9 +301,9 @@ public class CardInstance : CardGameEntity, ICard
     {
         _cardGame = cardGame;
         ContinuousEffects = new List<ContinuousEffect>();
-        _originalCardData = cardData;
-        _currentCardData = cardData.Clone();
-        Abilities = _currentCardData.Abilities.ToList();
+        _currentCardData = cardData;
+
+        Abilities = _currentCardData.Abilities.Select(ab => ab.Clone()).ToList();
 
         //WIP - not finalized yet
         //We may need to treat split cards and double faced cards as instanced cards for them to properly work with the other systems.
@@ -326,9 +326,12 @@ public class CardInstance : CardGameEntity, ICard
     {
         //We reset any continuous effects and abilities?
         ContinuousEffects = new List<ContinuousEffect>();
-        Abilities = _currentCardData.Abilities.ToList();
+
+        //Deep Clone this
+        Abilities = cardData.Abilities.Select(ab => ab.Clone()).ToList();
 
         _currentCardData = cardData;
+
 
         //reset the back card if necessary.
         _currentCardData.BackCard = null;
@@ -346,7 +349,9 @@ public class CardInstance : CardGameEntity, ICard
     public void SetCardData(BaseCardData cardData)
     {
         _currentCardData = cardData.Clone();
-        Abilities = _currentCardData.Abilities.ToList();
+        Abilities = cardData.Abilities.ToList();
+
+
         if (_currentCardData is UnitCardData)
         {
             var unitCardData = (UnitCardData)_currentCardData;

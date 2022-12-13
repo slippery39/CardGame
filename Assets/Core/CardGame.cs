@@ -56,8 +56,11 @@ public class CardGame
 
 
     #region Public Properties
+
     //This should be at the top to make sure the json serializer serialized all entities here first
+    public Dictionary<string, BaseCardData> RegisteredCardData { get; set; }
     public List<CardGameEntity> RegisteredEntities { get => _registeredEntities; set => _registeredEntities = value; }
+    
 
     [JsonIgnore]
     public Player Player1 { get => Players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
@@ -227,10 +230,10 @@ public class CardGame
             TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.All,
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,            
         });
 
-        File.WriteAllText("tempCardGameState", json);
+        //File.WriteAllText("tempCardGameState", json);
 
         var copy = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
         {
@@ -312,6 +315,16 @@ public class CardGame
 
     public void AddCardToGame(Player player, BaseCardData data, IZone zone)
     {
+        //TODO - this might not work with backside cards or tokens?
+        if (RegisteredCardData == null)
+        {
+            RegisteredCardData = new Dictionary<string, BaseCardData>();
+        }
+        if (!RegisteredCardData.ContainsKey(data.Name))
+        {
+            RegisteredCardData.Add(data.Name, data);
+        }
+
         var cardInstance = new CardInstance(this, data);
         cardInstance.OwnerId = player.PlayerId;
         RegisterEntity(cardInstance);

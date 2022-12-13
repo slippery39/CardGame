@@ -50,7 +50,7 @@ public class DefaultCardDrawSystem : CardGameSystem, ICardDrawSystem
             cardGame.ZoneChangeSystem.MoveToZone(manaCards.ToList()[i], player.Hand);
         }
 
-
+        //TODO - fix Bug here where if there are not enough non mana cards we fail out.
         for (int i = 0; i < cardsToDraw; i++)
         {
             cardGame.ZoneChangeSystem.MoveToZone(nonManaCards.ToList()[i], player.Hand);
