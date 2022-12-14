@@ -61,7 +61,7 @@ public class CardGame
 
     //This should be at the top to make sure the json serializer serialized all entities here first
     public Dictionary<string, BaseCardData> RegisteredCardData { get; set; }
-    
+
 
     [JsonIgnore]
     public Player Player1 { get => Players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
@@ -77,7 +77,7 @@ public class CardGame
 
     public int SpellsCastThisTurn { get; set; } = 0;
     public ICardGameLogger Logger { get => _cardGameLogger; }
-   
+
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
@@ -231,11 +231,16 @@ public class CardGame
         var clone = new CardGame();
         clone._isCopy = true;
 
+        clone.CurrentGameState = CurrentGameState;
         clone.ActivePlayerId = ActivePlayerId;
+        clone._nextEntityId = _nextEntityId;
+        clone._nextPlayerId = _nextPlayerId;
 
-        //Clone the player data.
+        clone.ChoiceInfoNeeded = ChoiceInfoNeeded?.Clone();
+
         clone.ResolvingSystem = this.ResolvingSystem.DeepClone(clone);
 
+        //Clone the player data.
         clone.RegisteredCardData = newCardData;
         clone.Players.Add(Player1.DeepClone(clone));
         clone.Players.Add(Player2.DeepClone(clone));
@@ -248,7 +253,7 @@ public class CardGame
             clone._cardGameLogger = new EmptyLogger();
         }
 
-        
+
 
         //Need to update our registered entities
 
@@ -269,14 +274,14 @@ public class CardGame
     {
         var timer = new Stopwatch();
         timer.Start();
-     
+
         string json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
             TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.All,
-            NullValueHandling = NullValueHandling.Ignore,            
+            NullValueHandling = NullValueHandling.Ignore,
         });
 
         //File.WriteAllText("tempCardGameState", json);
@@ -290,7 +295,7 @@ public class CardGame
             ObjectCreationHandling = ObjectCreationHandling.Replace,
             NullValueHandling = NullValueHandling.Ignore
         });
-    
+
         if (noEventsOrLogs)
         {
             copy.EventLogSystem = new EmptyEventLogSystem();
@@ -427,12 +432,18 @@ public class CardGame
 
         var effectChoice = ChoiceInfoNeeded;
 
-        effectChoice.OnChoicesSelected(this, ActivePlayer, entitiesSelected.Cast<CardGameEntity>().ToList());
+        //Note the entitiesSelected references may not be from this actual game.
+        var updatedEntityRefs = entitiesSelected
+            .Select(entity => this._registeredEntities
+                            .First(e => e.EntityId == entity.EntityId))
+            .Cast<CardGameEntity>().ToList();
+
+        effectChoice.OnChoicesSelected(this, ActivePlayer,updatedEntityRefs);
 
         //This is mainly to get chrome mox working.
         GetCardsInPlay().ForEach(card =>
         {
-            if (entitiesSelected.Any())
+            if (updatedEntityRefs.Any())
             {
                 card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ForEach(component =>
                     component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded)

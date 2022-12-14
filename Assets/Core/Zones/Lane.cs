@@ -39,7 +39,7 @@ public class Lane : CardGameEntity, IZone, IDeepCloneable<Lane>
 
     public Lane DeepClone(CardGame cardGame)
     {
-        Lane clone = new Lane();
+        Lane clone = this.Clone();
         clone.EntityId = EntityId;
         clone.ContinuousEffects = ContinuousEffects.Clone();
         clone.Modifications = Modifications.Clone();
