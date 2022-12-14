@@ -85,7 +85,7 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         clone.Modifications = Modifications.Clone();
         clone.EntityId = EntityId;
         clone.Name = Name;
-        
+
         clone.Lanes = Lanes.DeepClone(cardGame).ToList();
 
         clone.Hand = Hand.Clone();
@@ -93,7 +93,7 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
 
         clone.DiscardPile = DiscardPile.Clone();
         clone.DiscardPile.Cards = DiscardPile.Cards.DeepClone(cardGame).ToList();
-             
+
         clone.Deck = Deck.Clone();
         clone.Deck.Cards = Deck.Cards.DeepClone(cardGame).ToList();
 
@@ -105,7 +105,7 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         clone.Items.Cards.AddRange(Items.Cards.DeepClone(cardGame).ToList());
 
         //TODO - do an actual clone here.
-        ManaPool = ManaPool.Clone();
+        ManaPool = ManaPool.DeepClone();
         //Need to clone the mana pool
         //Need to clone all the cards inside.
 

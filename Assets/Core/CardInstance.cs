@@ -42,9 +42,9 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     }
 
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
-    
+
     [JsonIgnore]
-    public override string Name { get=>_currentCardData.Name; set=>_currentCardData.Name = value; }
+    public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
     //Effects was being added to every time we serialize / deserialize it.
     [JsonIgnore]
@@ -539,12 +539,13 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     public CardInstance DeepClone(CardGame cardGame)
     {
         //CardGame should be set by the caller of this DeepClone().
-       var clone = (CardInstance)MemberwiseClone();
+        var clone = (CardInstance)MemberwiseClone();
 
-       //Potential Issues with cloning abilities here?
+        //Potential Issues with cloning abilities here?
         clone.Abilities = Abilities.Select(a => a.Clone()).ToList();
         clone.ContinuousEffects = ContinuousEffects.Clone();
         clone.Modifications = Modifications.Clone();
+        clone.Counters = Counters.Clone();
         clone.EntityId = EntityId;
         clone.Name = Name;
         clone.CardGame = cardGame;

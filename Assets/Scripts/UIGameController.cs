@@ -85,6 +85,7 @@ public class UIGameController : MonoBehaviour
         //Check to see if any cards exist that don't have images.
         CheckForCardsWithoutImages();
         CheckForCardsWithoutManaCosts();
+        Tests.Test_CloningReferencesAreCorrect();
         _stateMachine = GetComponent<GameUIStateMachine>();
     }
 

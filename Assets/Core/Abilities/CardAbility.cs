@@ -26,6 +26,8 @@ public abstract class CardAbility
     {
         return Components.Where(c => c is T).Cast<T>().FirstOrDefault();
     }
+
+    //Components and effects also need to be deep cloned.
 }
 
 public abstract class AbilityComponent
