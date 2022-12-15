@@ -1,4 +1,6 @@
-﻿public class ContinuousEffect
+﻿using System.Linq;
+
+public class ContinuousEffect
 {
     public CardInstance SourceCard { get; set; }
     public StaticAbility SourceAbility { get; set; }

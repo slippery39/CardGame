@@ -543,8 +543,16 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
         //Potential Issues with cloning abilities here?
         clone.Abilities = Abilities.Select(a => a.Clone()).ToList();
-        clone.ContinuousEffects = ContinuousEffects.Clone();
+
+        //Note that we are not cloning continous effects on purpose, since they apply automatically from the ContinuousEffect system.
+        //We just need to make sure the continous effect system gets called as part of the cloning process.
+        clone.ContinuousEffects = new List<ContinuousEffect>();
         clone.Modifications = Modifications.Clone();
+        clone.Modifications = clone.Modifications.Where(a => a.StaticInfo == null).ToList(); //we cannot keep any static modifications, that will be 
+
+        //Remove any continous ability components, these will be reapplied as part of static effects.          
+        clone.Abilities =  clone.Abilities.Where(a => !(a.Components.GetOfType<ContinuousAblityComponent>().Any())).ToList();
+
         clone.Counters = Counters.Clone();
         clone.EntityId = EntityId;
         clone.Name = Name;

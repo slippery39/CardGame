@@ -24,7 +24,7 @@ public class ComputerAI : MonoBehaviour
     {
 
         Profiler.BeginSample("AI.ChoosingAction");
-        
+
         var gameController = UIGameController.Instance;
         var gameService = UIGameController.Instance.GameService;
         var cardGame = gameController.CardGame;
@@ -73,7 +73,28 @@ public class ComputerAI : MonoBehaviour
         var myLifeTotal = board.Players.Where(p => p.EntityId == player.EntityId).FirstOrDefault().Health;
         var oppLifeTotal = board.Players.Where(p => p.EntityId != player.EntityId).FirstOrDefault().Health;
 
-        return (myLifeTotal * 15) + (oppLifeTotal * 20);
+        var score = 0;
+
+        score += myLifeTotal * 20;
+        score -= oppLifeTotal * 20;
+
+        //Power of units in play
+        if (board.Player1.GetUnitsInPlay().Any())
+        {
+            var totalPower = board.Player1.GetUnitsInPlay().Select(c => c.Power).Aggregate((p1, p2) => p1 + p2);
+            score += totalPower * 30;
+        }
+
+        //Power of opponent units in play
+        if (board.Player2.GetUnitsInPlay().Any())
+        {
+            var totalPowerOpp = board.Player2.GetUnitsInPlay().Select(c => c.Power).Aggregate((p1, p2) => p1 + p2);
+            score -= totalPowerOpp * 30;
+        }
+
+        //Total number of resources available.
+
+        return score;
     }
 
 
@@ -130,6 +151,7 @@ public class ComputerAI : MonoBehaviour
 
         if (hasValidActions)
         {
+            //TODO - check if the action will have a negative impact on the current board state.---
             var actionToChoose = actionScoresAsList.First().Action;
             //MiniMax Algorithm
             Debug.Log("Trying to process action");

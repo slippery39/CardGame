@@ -263,6 +263,15 @@ public class CardGame
         clone._registeredEntities.AddRange(clone.Player1.GetAllEntities());
         clone._registeredEntities.AddRange(clone.Player2.GetAllEntities());
 
+        //A little bit of a hack, but apply any continous effects in play
+        //We don't necessarily need to clone these because they should apply automatically
+        //This does mean we have to make sure we don't clone them in the card instance
+        
+        clone.ContinuousEffectSystem.ApplyStaticEffects();
+
+           
+
+
 
         timer.Stop();
         Log($"Clone Method took :  {timer.ElapsedMilliseconds} ms");
