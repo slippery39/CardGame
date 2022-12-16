@@ -70,8 +70,11 @@ public class ComputerAI : MonoBehaviour
          * 
          */
 
-        var myLifeTotal = board.Players.Where(p => p.EntityId == player.EntityId).FirstOrDefault().Health;
-        var oppLifeTotal = board.Players.Where(p => p.EntityId != player.EntityId).FirstOrDefault().Health;
+        var me = board.Players.Where(p => p.EntityId == player.EntityId).FirstOrDefault();
+        var opp = board.Players.Where(p => p.EntityId != player.EntityId).FirstOrDefault();
+
+        var myLifeTotal = me.Health;
+        var oppLifeTotal = opp.Health;
 
         var score = 0;
 
@@ -79,20 +82,42 @@ public class ComputerAI : MonoBehaviour
         score -= oppLifeTotal * 20;
 
         //Power of units in play
-        if (board.Player1.GetUnitsInPlay().Any())
+        if (me.GetUnitsInPlay().Any())
         {
-            var totalPower = board.Player1.GetUnitsInPlay().Select(c => c.Power).Aggregate((p1, p2) => p1 + p2);
-            score += totalPower * 30;
+            var totalPower = me.GetUnitsInPlay().Select(c => c.Power).Aggregate((p1, p2) => p1 + p2);
+            score += totalPower * 50;
         }
 
         //Power of opponent units in play
-        if (board.Player2.GetUnitsInPlay().Any())
+        if (opp.GetUnitsInPlay().Any())
         {
-            var totalPowerOpp = board.Player2.GetUnitsInPlay().Select(c => c.Power).Aggregate((p1, p2) => p1 + p2);
-            score -= totalPowerOpp * 30;
+            var totalPowerOpp = opp.GetUnitsInPlay().Select(c => c.Power).Aggregate((p1, p2) => p1 + p2);
+            score -= totalPowerOpp * 50;
         }
 
         //Total number of resources available.
+        var totalNumberOfResources = me.GetCardsInPlay().Count() + me.Hand.Count();
+        score += totalNumberOfResources * 40;
+
+        var totalNumberOfOppResources = opp.GetCardsInPlay().Count() + opp.Hand.Count();
+        score -= totalNumberOfOppResources * 40;
+
+        //Permanent Mana should be considered a resource, but be sure not to count temporary mana.
+        var totalMana = me.ManaPool.TotalMana.TotalSumOfColoredMana * 20;
+        score += totalMana;
+
+        var anyMana = me.ManaPool.TotalMana.TotalSumOfColoredMana * 50;
+        score += anyMana;
+
+
+        //Temporary Power is what we should calculate (ie haze of rage
+
+
+        //Other things to check
+
+        //Favorable matchup in a lane.
+
+        //If they are winning the game.
 
         return score;
     }
@@ -120,8 +145,10 @@ public class ComputerAI : MonoBehaviour
             return;
         }
 
+        //TODO - this is the recursive method.
+        var gameState = cardGame;
+        var originalScore = EvaluateBoard(cardGame.ActivePlayer, gameState);
 
-        var gameState = cardGame.Copy(true);
 
         var actionScores = validActions.Select(act =>
         {
@@ -132,7 +159,7 @@ public class ComputerAI : MonoBehaviour
             return new StateActionNode
             {
                 Action = act,
-                Score = score,
+                Score = score - originalScore,
                 OriginalState = gameState,
                 ResultingState = gameStateCopy,
                 Depth = 1
@@ -147,15 +174,19 @@ public class ComputerAI : MonoBehaviour
             return b.Score - a.Score;
         });
 
-        var hasValidActions = validActions.Any();
+        var positiveActions = actionScoresAsList.Where(a => a.Score >= -4).ToList();
 
-        if (hasValidActions)
+        if (positiveActions.Any())
         {
             //TODO - check if the action will have a negative impact on the current board state.---
-            var actionToChoose = actionScoresAsList.First().Action;
+            var actionToChoose = positiveActions.First().Action;
             //MiniMax Algorithm
             Debug.Log("Trying to process action");
             gameService.ProcessAction(actionToChoose);
+        }
+        else
+        {
+            //end turn.
         }
     }
 }
