@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 [Serializable]
 public class CardGame
@@ -222,8 +223,7 @@ public class CardGame
 
     public CardGame Copy(bool noEventsOrLogs = false)
     {
-        var timer = new Stopwatch();
-        timer.Start();
+        Profiler.BeginSample("Card Game Copy");
 
         var newCardData = RegisteredCardData.Clone();
 
@@ -266,15 +266,10 @@ public class CardGame
         //A little bit of a hack, but apply any continous effects in play
         //We don't necessarily need to clone these because they should apply automatically
         //This does mean we have to make sure we don't clone them in the card instance
-        
+
         clone.ContinuousEffectSystem.ApplyStaticEffects();
 
-           
-
-
-
-        timer.Stop();
-        Log($"Clone Method took :  {timer.ElapsedMilliseconds} ms");
+        Profiler.EndSample();
 
         return clone;
     }
@@ -447,7 +442,7 @@ public class CardGame
                             .First(e => e.EntityId == entity.EntityId))
             .Cast<CardGameEntity>().ToList();
 
-        effectChoice.OnChoicesSelected(this, ActivePlayer,updatedEntityRefs);
+        effectChoice.OnChoicesSelected(this, ActivePlayer, updatedEntityRefs);
 
         //This is mainly to get chrome mox working.
         GetCardsInPlay().ForEach(card =>
@@ -476,6 +471,7 @@ public class CardGame
 
     public bool CanPlayCard(CardInstance card, bool checkIfActivePlayer = true, List<ICastModifier> modifiers = null)
     {
+        Profiler.BeginSample("CardGame.CanPlayCard");
         if (card == null)
         {
             return false;
@@ -546,7 +542,7 @@ public class CardGame
                 }
             }
         }
-
+        Profiler.EndSample();
 
         return true; //if it gets to this point it has passed all the checks, and it is ok to be played.
     }

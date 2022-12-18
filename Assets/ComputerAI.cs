@@ -13,6 +13,11 @@ public class ComputerAI : MonoBehaviour
     [SerializeField]
     private string previousDebugMessage = "";
 
+    [SerializeField]
+    private int _calculations;
+    [SerializeField]
+    private bool _disabled;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,14 +41,7 @@ public class ComputerAI : MonoBehaviour
 
         if (cardGame.ActivePlayer.PlayerId == playerId)
         {
-            if (cardGame.CurrentGameState == GameState.WaitingForAction)
-            {
-                ChooseAction(cardGame);
-            }
-            else if (cardGame.CurrentGameState == GameState.WaitingForChoice)
-            {
-                MakeChoice(gameService, cardGame);
-            }
+            ChooseActionBase(cardGame);
         }
         Profiler.EndSample();
     }
@@ -103,10 +101,10 @@ public class ComputerAI : MonoBehaviour
         score -= totalNumberOfOppResources * 40;
 
         //Permanent Mana should be considered a resource, but be sure not to count temporary mana.
-        var totalMana = me.ManaPool.TotalMana.TotalSumOfColoredMana * 20;
+        var totalMana = me.ManaPool.TotalMana.TotalSumOfColoredMana * 40;
         score += totalMana;
 
-        var anyMana = me.ManaPool.TotalMana.TotalSumOfColoredMana * 50;
+        var anyMana = me.ManaPool.TotalMana.TotalSumOfColoredMana * 40;
         score += anyMana;
 
 
@@ -122,16 +120,111 @@ public class ComputerAI : MonoBehaviour
         return score;
     }
 
-
-
-    private void ChooseAction(CardGame cardGame)
+    private List<StateActionNode> CalculateStateActionScoresForState(CardGame cardGame, StateActionNode parent, int currentDepth)
     {
+        _calculations++;
+        int maxDepth = 3;
+
+        if (currentDepth > maxDepth)
+        {
+            return null; //end this branch;
+        }
+
+        List<CardGameAction> validActions = new List<CardGameAction>();
+
+        if (cardGame.CurrentGameState == GameState.WaitingForAction)
+        {
+            var availableActions = cardGame.ActivePlayer.GetAvailableActions(cardGame);
+            validActions = availableActions.Where(a => a.IsValidAction(cardGame)).ToList();
+        }
+        else if (cardGame.CurrentGameState == GameState.WaitingForChoice)
+        {
+            var resolveChoiceAction = new ResolveChoiceAction();
+            resolveChoiceAction.Choices = resolveChoiceAction.GetValidChoices(cardGame).Take(cardGame.ChoiceInfoNeeded.NumberOfChoices).ToList();
+            validActions = new List<CardGameAction>
+            {
+                resolveChoiceAction
+            };
+        }
+
+        if (validActions.IsNullOrEmpty())
+        {
+            return null;
+        }
+
+        //TODO - this is the recursive method.
+        var gameState = cardGame;
+        var originalScore = EvaluateBoard(cardGame.ActivePlayer, gameState);
+
+        var actionScores = validActions.Select(act =>
+        {
+            var gameStateCopy = gameState.Copy(true);
+            gameStateCopy.ProcessAction(act);
+            var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);
+
+ 
+
+            return new StateActionNode
+            {
+                Action = act,
+                Score = score,
+                BestScoreIncludingChildren = 0, //calculated later on,
+                OriginalScore = originalScore,
+                ResultingState = gameStateCopy,
+                Depth = currentDepth,
+                Parent = parent
+            };
+            //TODO - Recursively or Iteratively Add Depth.
+        });
+
+        //Some optimzation needed here, if an action results in a really large increase in score, then automatically use that action, and do not go any further.
+        //If an action results in a really low decrease in score, then do not go any furhter.
+        foreach (var node in actionScores)
+        {
+            node.Children = CalculateStateActionScoresForState(node.ResultingState, node, currentDepth + 1);
+        }
+
+        return actionScores.Where(a=>a!=null).ToList();
+    }
+
+
+    private int FindBestScoreForNode(StateActionNode node, int currentBest)
+    {
+        if (node == null)
+        {
+            return -999999;
+        }
+
+        var bestScore = Math.Max(currentBest, node.Score);
+
+        if (node.Children != null)
+        {
+            foreach (var child in node.Children)
+            {
+                var childScore = FindBestScoreForNode(child, bestScore);
+                bestScore = Math.Max(bestScore, childScore);
+            }
+        }
+
+        return bestScore;
+    }
+
+
+    private void ChooseActionBase(CardGame cardGame)
+    {
+
+        if (_disabled)
+        {
+            return;
+        }
         var gameController = UIGameController.Instance;
         var gameService = gameController.GameService;
 
-        var availableActions = cardGame.ActivePlayer.GetAvailableActions(cardGame);
-        var validActions = availableActions.Where(a => a.IsValidAction(cardGame)).ToList();
 
+
+        //We need an edge case for choices.
+
+        /*
         var newDebugMsg = $"Number of valid actions {validActions.Count()}";
 
         if (newDebugMsg != previousDebugMessage)
@@ -142,39 +235,32 @@ public class ComputerAI : MonoBehaviour
 
         if (validActions.Count() == 0)
         {
-            return;
+             return;
         }
+        */
 
-        //TODO - this is the recursive method.
-        var gameState = cardGame;
-        var originalScore = EvaluateBoard(cardGame.ActivePlayer, gameState);
+        Profiler.BeginSample("AI Calculating Scores");
+        var actionScores = CalculateStateActionScoresForState(cardGame, null, 1);
+        Profiler.EndSample();
 
+        //Now we need to sort them based on the best score achieved.
 
-        var actionScores = validActions.Select(act =>
+        Profiler.BeginSample("AI sorting scores");
+        if (actionScores == null)
         {
-            var gameStateCopy = gameState.Copy(true);
-            gameStateCopy.ProcessAction(act);
-            var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);
-
-            return new StateActionNode
-            {
-                Action = act,
-                Score = score - originalScore,
-                OriginalState = gameState,
-                ResultingState = gameStateCopy,
-                Depth = 1
-            };
-
-            //TODO - Recursively or Iteratively Add Depth.
-        });
-
-        var actionScoresAsList = actionScores.Randomize().ToList();
-        actionScoresAsList.Sort((a, b) =>
+            actionScores = new List<StateActionNode>();
+        }
+        actionScores.Sort((a, b) =>
         {
-            return b.Score - a.Score;
+            a.BestScoreIncludingChildren = FindBestScoreForNode(a, -999999);
+            b.BestScoreIncludingChildren = FindBestScoreForNode(b, -999999);
+            return b.BestScoreIncludingChildren - a.BestScoreIncludingChildren;
         });
+        Profiler.EndSample();
 
-        var positiveActions = actionScoresAsList.Where(a => a.Score >= -4).ToList();
+
+        var originalScore = EvaluateBoard(cardGame.ActivePlayer, cardGame);
+        var positiveActions = actionScores.Where(a => a.Score >= originalScore).ToList();
 
         if (positiveActions.Any())
         {
@@ -186,6 +272,9 @@ public class ComputerAI : MonoBehaviour
         }
         else
         {
+            Debug.Log("No positive actions found, ending turn");
+            _disabled = true;
+            //gameService.ProcessAction(new NextTurnAction());
             //end turn.
         }
     }
@@ -197,8 +286,11 @@ public class StateActionNode
     public CardGameAction Action { get; set; }
     public CardGame OriginalState { get; set; }
     public CardGame ResultingState { get; set; }
+    public int BestScoreIncludingChildren { get; set; }
     public int Score { get; set; }
+    public int OriginalScore { get; set; }
     public int Depth { get; set; }
-    public StateActionNode Children { get; set; }
+
+    public List<StateActionNode> Children { get; set; }
     public StateActionNode Parent { get; set; }
 }
