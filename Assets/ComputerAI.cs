@@ -180,8 +180,18 @@ public class ComputerAI : MonoBehaviour
 
         //Some optimzation needed here, if an action results in a really large increase in score, then automatically use that action, and do not go any further.
         //If an action results in a really low decrease in score, then do not go any furhter.
+
+
+
+
         foreach (var node in actionScores)
         {
+            //Neutral Actions or only slightly beneficial actions can be pruned for performance reasons
+            if (node.Score - node.OriginalScore <= 10)
+            {
+                continue;
+            }
+
             node.Children = CalculateStateActionScoresForState(node.ResultingState, node, currentDepth + 1);
         }
 
