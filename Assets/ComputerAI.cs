@@ -223,15 +223,13 @@ public class ComputerAI : MonoBehaviour
 
     private void ChooseActionBase(CardGame cardGame)
     {
-
         if (_disabled)
         {
             return;
         }
+
         var gameController = UIGameController.Instance;
         var gameService = gameController.GameService;
-
-
 
         //We need an edge case for choices.
 

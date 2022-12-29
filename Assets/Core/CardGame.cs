@@ -104,7 +104,19 @@ public class CardGame
     public IDiscardSystem DiscardSystem { get => _discardSystem; set => _discardSystem = value; }
 
     public IModificationsSystem ModificationsSystem { get => _modificationsSystem; set => _modificationsSystem = value; }
-    public GameState CurrentGameState { get; set; }
+
+    private GameState _currentGameState { get; set; }
+    public GameState CurrentGameState
+    {
+        get { return _currentGameState; }
+        set
+        {
+            if (_currentGameState != GameState.GameOver)
+            {
+                _currentGameState = value;
+            }
+        }
+    }
     public IEffectWithChoice ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
     internal IAdditionalCostSystem AdditionalCostSystem { get => _additionalCostSystem; set => _additionalCostSystem = value; }
 
@@ -561,6 +573,11 @@ public class CardGame
 
     public void ProcessAction(CardGameAction action)
     {
+        if (CurrentGameState == GameState.GameOver)
+        {
+            Log("Game is over, cannot process action");
+            return;
+        }
         //Action may come from anywhere, we need to make sure all the references match up to what we have in our card game before going any further.
 
         //Which Things would need to be updated?

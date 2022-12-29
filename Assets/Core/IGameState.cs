@@ -1,5 +1,6 @@
 ﻿public enum GameState
 {
     WaitingForAction,
-    WaitingForChoice
+    WaitingForChoice,
+    GameOver
 }
