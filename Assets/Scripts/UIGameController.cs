@@ -186,13 +186,11 @@ public class UIGameController : MonoBehaviour
 
         _gameService.GetGameEventLogsObservable().Subscribe(ev =>
         {
-            Debug.Log("Game Events has been updated");
             _gameLog.AppendLog(ev.Log);
         });
 
         _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
         {
-            Debug.Log("Game State has been updated");
             _cardGame = cardGame;
             _player1Board.SetBoard(cardGame.Player1);
             _player2Board.SetBoard(cardGame.Player2);

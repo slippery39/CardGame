@@ -46,14 +46,6 @@ public class ComputerAI : MonoBehaviour
         Profiler.EndSample();
     }
 
-    private void MakeChoice(GameService gameService, CardGame cardGame)
-    {
-        var choiceInfo = cardGame.ChoiceInfoNeeded;
-        var validChoices = choiceInfo.GetValidChoices(cardGame, cardGame.ActivePlayer);
-        var choices = validChoices.Randomize().Take(choiceInfo.NumberOfChoices);
-        gameService.MakeChoice(choices.ToList());
-    }
-
     private int EvaluateBoard(Player player, CardGame board)
     {
         /*
@@ -121,8 +113,7 @@ public class ComputerAI : MonoBehaviour
     }
 
     private List<StateActionNode> CalculateStateActionScoresForState(CardGame cardGame, StateActionNode parent, int currentDepth)
-    {
-        _calculations++;
+    {        
         int maxDepth = 3;
 
         if (currentDepth > maxDepth)
@@ -136,6 +127,13 @@ public class ComputerAI : MonoBehaviour
         {
             var availableActions = cardGame.ActivePlayer.GetAvailableActions(cardGame);
             validActions = availableActions.Where(a => a.IsValidAction(cardGame)).ToList();
+
+            //Always only consider playing the lands first
+            if (validActions.Where(a=>a is PlayManaAction).Any())
+            {
+                validActions = validActions.Where(a => a is PlayManaAction).ToList();
+            }
+
         }
         else if (cardGame.CurrentGameState == GameState.WaitingForChoice)
         {
@@ -152,6 +150,9 @@ public class ComputerAI : MonoBehaviour
             return null;
         }
 
+        //Only add to the calculations on number of valid choices.
+        _calculations++;
+
         //TODO - this is the recursive method.
         var gameState = cardGame;
         var originalScore = EvaluateBoard(cardGame.ActivePlayer, gameState);
@@ -162,7 +163,7 @@ public class ComputerAI : MonoBehaviour
             gameStateCopy.ProcessAction(act);
             var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);
 
- 
+
 
             return new StateActionNode
             {
@@ -184,7 +185,7 @@ public class ComputerAI : MonoBehaviour
             node.Children = CalculateStateActionScoresForState(node.ResultingState, node, currentDepth + 1);
         }
 
-        return actionScores.Where(a=>a!=null).ToList();
+        return actionScores.Where(a => a != null).ToList();
     }
 
 

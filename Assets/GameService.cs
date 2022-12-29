@@ -50,10 +50,6 @@ public class GameService : MonoBehaviour
     public IObservable<CardGame> GetOnGameStateUpdatedObservable()
     {
         var gameStateObs = _cardGame.GameStateChangedObservable;
-        gameStateObs.Subscribe(gameState =>
-        {
-            Debug.Log("Game State Changed has triggered in the Game Service");
-        });
         return gameStateObs;
     }
     #endregion
