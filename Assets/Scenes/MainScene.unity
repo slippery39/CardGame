@@ -3853,8 +3853,9 @@ GameObject:
   - component: {fileID: 643160883}
   - component: {fileID: 643160884}
   - component: {fileID: 643160885}
-  - component: {fileID: 643160886}
   - component: {fileID: 643160888}
+  - component: {fileID: 643160890}
+  - component: {fileID: 643160889}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3900,7 +3901,6 @@ MonoBehaviour:
   _zonePopupWindow: {fileID: 1113561586}
   _gameLog: {fileID: 1063934113}
   _gameService: {fileID: 643160888}
-  RegisteredEntities: 
 --- !u!114 &643160885
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3913,20 +3913,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b72155dfae94994a976b43d83fe6da6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &643160886
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 643160882}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebdad529afa253143b614ea4aaae8fae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerId: 0
-  previousDebugMessage: 
 --- !u!114 &643160888
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3939,6 +3925,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175bd436bf85e394dbd6ee730c973aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &643160889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643160882}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebdad529afa253143b614ea4aaae8fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerId: 2
+  previousDebugMessage: 
+--- !u!114 &643160890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643160882}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebdad529afa253143b614ea4aaae8fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerId: 1
+  previousDebugMessage: 
 --- !u!1 &651540595
 GameObject:
   m_ObjectHideFlags: 0

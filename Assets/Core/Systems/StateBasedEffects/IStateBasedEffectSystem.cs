@@ -21,6 +21,7 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
 
     public void CheckStateBasedEffects()
     {
+        cardGame.EventLogSystem.AddEvent("Starting to Check State Based Effects");
         cardGame.ContinuousEffectSystem.ApplyStaticEffects();
         cardGame.ContinuousEffectSystem.RemoveStaticEffects();
 
@@ -50,6 +51,10 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
 
         //Check to see if any player has lost
         cardGame.WinLoseSystem.CheckLosers();
+
+
+        cardGame.EventLogSystem.AddEvent("End of checking state based effects");
+
         cardGame.OnGameStateChanged.OnNext(cardGame.Copy());
     }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +19,9 @@ public interface IResolvingSystem
     public void Continue();
 
     public void ResolveNext();
+
+    //TODO - figure out if its possible to use IResolvingSystem instead
+    public DefaultResolvingSystem DeepClone(CardGame cardGame);
 }
 
 
@@ -47,31 +51,26 @@ public class ResolvingStack : IZone
     }
 }
 
-public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
+public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepCloneable<DefaultResolvingSystem>
 {
     //Can hold card instances and abilities
+    [JsonProperty]
     private List<ResolvingActionInfo> _internalStack = new List<ResolvingActionInfo>();
     //Can only hold card instances.
     private IZone stackZone = new ResolvingStack();
-    public IZone Stack { get { return stackZone; } }
+    public IZone Stack { get { return stackZone; } private set { stackZone = value; } }
 
     public bool IsResolvingEffect => _effectsToResolve != null && _effectsToResolve.Any();
+
+    [JsonProperty]
     private Queue<Effect> _effectsToResolve;
 
+    [JsonProperty]
     private ResolvingActionInfo _currentResolvingAction;
 
     public DefaultResolvingSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;
-    }
-
-    public void Add<T>(T action) where T : CardGameAction
-    {
-        var resolvingCardInstanceAction = new ResolvingCardInstanceActionInfo<T>
-        {
-            Action = action,
-            SourceZone = cardGame.GetZoneOfCard(action.SourceCard)
-        };
     }
 
     //TODO - Refactor to use Actions instead.
@@ -92,6 +91,8 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
         cardGame.ZoneChangeSystem.MoveToZone(cardInstance, stackZone);
 
         _internalStack.Add(resolvingCardInstance);
+
+        cardGame.EventLogSystem.AddEvent($"{cardInstance.Name} has been added to the stack");
 
         //Search each players hands for RespondToCastAbilities
         //And resolve those abilities if necessary.
@@ -192,6 +193,7 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
                     m => 
                     zoneTo = m.ModifyZoneOnResolve(cardGame, zoneTo, spell));
 
+                cardGame.EventLogSystem.AddEvent($"{spell.Name} is moving to ${zoneTo.Name}");
                 cardGame.ZoneChangeSystem.MoveToZone(spell, zoneTo);
             }
         }
@@ -321,6 +323,7 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
             else if (resolvingCardInstance.Source.CurrentCardData is SpellCardData)
             {
                 ResolveEffects(resolvingCardInstance, resolvingCardInstance.Source.Effects);
+                cardGame.EventLogSystem.AddEvent($"{resolvingCardInstance.Source.Name} has resolved!");
             }
             else if (resolvingCardInstance.CardInstance.CurrentCardData is ItemCardData)
             {
@@ -331,5 +334,26 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem
         }
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
     }
+
+    public DefaultResolvingSystem DeepClone(CardGame cardGame)
+    {
+        var clone = (DefaultResolvingSystem)this.MemberwiseClone();
+        clone.cardGame = cardGame;
+        clone._internalStack = _internalStack.Select(x => x.Clone()).ToList();
+
+        return clone;
+        
+
+    //Can only hold card instances.
+    /*
+        private IZone stackZone = new ResolvingStack();
+        public IZone Stack { get { return stackZone; } private set { stackZone = value; } }
+
+        public bool IsResolvingEffect => _effectsToResolve != null && _effectsToResolve.Any();
+
+        [JsonProperty]
+        private Queue<Effect> _effectsToResolve;
+    */
+}
 }
 

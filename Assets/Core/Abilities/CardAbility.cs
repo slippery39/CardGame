@@ -8,6 +8,8 @@ public abstract class CardAbility
 {
     public string Type;
     public int Priority { get; set; }
+
+    [JsonIgnore]
     public abstract string RulesText { get; }
     public bool ThisTurnOnly { get; set; } = false;
     public List<AbilityComponent> Components { get; set; } = new List<AbilityComponent>();
@@ -16,7 +18,7 @@ public abstract class CardAbility
     public CardAbility Clone()
     {
         CardAbility clone = (CardAbility)MemberwiseClone();
-        clone.Components = Components.ToList();
+        clone.Components = Components.Clone();
         return clone;
     }
 
@@ -24,11 +26,12 @@ public abstract class CardAbility
     {
         return Components.Where(c => c is T).Cast<T>().FirstOrDefault();
     }
+
+    //Components and effects also need to be deep cloned.
 }
 
 public abstract class AbilityComponent
-{
-
+{ 
 }
 
 public class AbilityCooldown : AbilityComponent

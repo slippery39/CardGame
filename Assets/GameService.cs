@@ -6,15 +6,51 @@ using UnityEngine;
 
 public class GameService : MonoBehaviour
 {
+    #region Fields
+    private CardGame _cardGame;
+    private bool _hasGameStarted = false;
+    #endregion
+
+    #region Properties
+    public bool HasGameStarted { get => _hasGameStarted; set => _hasGameStarted = value; }
+    #endregion
+
+    #region Public Methods
+    public void SetupGame(Decklist player1Deck, Decklist player2Deck)
+    {
+        _cardGame = new CardGame();
+        _cardGame.SetupPlayers(player1Deck, player2Deck);
+    }
+    public void StartGame()
+    {
+        if (_cardGame == null)
+        {
+            throw new Exception("StartGame() has failed. Game is null. Perhaps you forgot to Setup the game first?");
+        }
+
+        _cardGame.StartGame();
+        _hasGameStarted = true;
+    }
+
+    public void ProcessAction(CardGameAction action)
+    {
+        _cardGame.ProcessAction(action);
+    }
+
+    public void MakeChoice(List<CardInstance> choices)
+    {
+        _cardGame.MakeChoice(choices);
+    }
+
     public IObservable<GameEventLog> GetGameEventLogsObservable()
     {
-        return UIGameController.Instance.CardGame.EventLogSystem.GetGameEventLogsAsObservable();
+        return _cardGame.EventLogSystem.GetGameEventLogsAsObservable();
     }
 
     public IObservable<CardGame> GetOnGameStateUpdatedObservable()
     {
-
-        var gameStateObs = UIGameController.Instance.CardGame.GameStateChangedObservable;
+        var gameStateObs = _cardGame.GameStateChangedObservable;
         return gameStateObs;
     }
+    #endregion
 }

@@ -77,11 +77,20 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
             return false;
         }
 
-        //Activated Abilities can only be activated during the active players turn.
-        if (cardGame.GetOwnerOfCard(card)!= cardGame.ActivePlayer)
+        var owner = cardGame.GetOwnerOfCard(card);
+
+        if (activatedAbility.HasTargets() && cardGame.TargetSystem.GetValidAbilityTargets(owner, card).Count() == 0)
         {
             return false;
         }
+
+        //Activated Abilities can only be activated during the active players turn.
+        if (cardGame.GetOwnerOfCard(card) != cardGame.ActivePlayer)
+        {
+            return false;
+        }
+
+        //
         //Changing to take into account exhaustion.        
         if (activatedAbility.ExhaustOnUse && card.IsExhausted)
         {
@@ -127,7 +136,7 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
         //For abilities that can only be used once per turn, but do not exhaust the card (i.e. Basking Rootwalla's Pump Ability)
         if (activatedAbility.GetComponent<AbilityCooldown>() != null)
         {
-            cardGame.Log("Cannot use ability because its on cooldown");
+            cardGame.Log($"Cannot use ability because its on cooldown. ${activatedAbility.RulesText}");
             return false;
         }
 

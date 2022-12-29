@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameUICastingSpellState : GameUIActionState, IGameUIState
 {
     private CardGame _cardGame => _stateMachine.CardGame;
+    private GameService _gameService => _stateMachine.GameService;
     private Player _actingPlayer => _cardGame.ActivePlayer;
     private GameUIStateMachine _stateMachine;
     private CardInstance _spellToCast;
@@ -91,7 +92,7 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
 
     public override void ChangeToCostChoosingState()
     {
-        ChangeState(new GameUIChooseCostsState(_stateMachine, this, _spellToCast,_spellToCast.AdditionalCost));
+        ChangeState(new GameUIChooseCostsState(_stateMachine, this, _spellToCast, _spellToCast.AdditionalCost));
     }
 
     public override void HandleSelection(int entityId)
@@ -116,7 +117,7 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
             return;
         }
 
-        _cardGame.ProcessAction(spellAction);
+        _gameService.ProcessAction(spellAction);
         _stateMachine.ToIdle();
     }
 }

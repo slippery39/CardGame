@@ -50,58 +50,19 @@ public class UIGameController : MonoBehaviour
 
     [SerializeField]
     private GameService _gameService;
-
- 
-    
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
     public GameService GameService { get => _gameService; set => _gameService = value; }
-
-
 
     //Singleton Pattern, should only be one game controller per unity scene.
     public static UIGameController Instance;
 
-
-    [Header("Debug Information")]
-    [SerializeField]
-    public List<int> RegisteredEntities;
-
     private void Awake()
     {
         Instance = this;
-        _cardGame = new CardGame();
+
+        //TODO - Game Service Update - This should be made through the GameService and updated via an Observable.
+        //_cardGame = new CardGame();
     }
-
-    public void SerializeTest()
-    {
-        string json = JsonConvert.SerializeObject(_cardGame, Formatting.Indented, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.All
-        });
-        _cardGame = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.All,
-            ObjectCreationHandling = ObjectCreationHandling.Replace
-        });
-
-        //ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        //PreserveReferencesHandling = PreserveReferencesHandling.Objects
-
-        // ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-        //PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-        //ObjectCreationHandling = ObjectCreationHandling.Replace
-        File.WriteAllText(@"./tempGameState", json);
-
-        _player1Board.SetPlayer(_cardGame.Player1);
-        _player2Board.SetPlayer(_cardGame.Player2);
-    }
-
     internal void ShowActionChoicePopup(List<CardGameAction> actions)
     {
         //TODO - have a list of actions 
@@ -124,14 +85,8 @@ public class UIGameController : MonoBehaviour
         //Check to see if any cards exist that don't have images.
         CheckForCardsWithoutImages();
         CheckForCardsWithoutManaCosts();
+        Tests.Test_CloningReferencesAreCorrect();
         _stateMachine = GetComponent<GameUIStateMachine>();
-
-        _gameService.GetGameEventLogsObservable().Subscribe(ev =>
-        {
-            //TODO - Append Log?            
-            _gameLog.SetLog(_cardGame.EventLogSystem.Events.Select(ev => ev.Log));
-        });
-
     }
 
     private void InitEventHandlers()
@@ -154,14 +109,13 @@ public class UIGameController : MonoBehaviour
         };
     }
 
+
+    //TODO - Game Service Update - Actions should be sent through the Service instead of being directly sent to the card game.
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (!_gameService.HasGameStarted || _cardGame == null)
         {
-            Debug.Log("Serializing...");
-            SerializeTest();
-            Debug.Log("Deserializing");
-            RegisteredEntities = _cardGame.RegisteredEntities.Select(e => e.EntityId).ToList();
+            return;
         }
 
         if (_cardGame.CurrentGameState == GameState.WaitingForAction)
@@ -173,28 +127,29 @@ public class UIGameController : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                _cardGame.ProcessAction(CreateFightAction(0));
+                _gameService.ProcessAction(CreateFightAction(0));
             }
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                _cardGame.ProcessAction(CreateFightAction(1));
+                _gameService.ProcessAction(CreateFightAction(1));
             }
             if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                _cardGame.ProcessAction(CreateFightAction(2));
+                _gameService.ProcessAction(CreateFightAction(2));
             }
             if (Input.GetKeyDown(KeyCode.Alpha4))
             {
-                _cardGame.ProcessAction(CreateFightAction(3));
+                _gameService.ProcessAction(CreateFightAction(3));
             }
             if (Input.GetKeyDown(KeyCode.Alpha5))
             {
-                _cardGame.ProcessAction(CreateFightAction(4));
+                _gameService.ProcessAction(CreateFightAction(4));
             }
-            //Testing card drawing
+            //TODO - Allow cheats locally.
+            /*
             if (Input.GetKeyDown(KeyCode.D))
             {
-                _cardGame.CardDrawSystem.DrawCard(_cardGame.ActivePlayer);
+                _gameService.CardDrawSystem.DrawCard(_cardGame.ActivePlayer);
             }
             if (Input.GetKeyDown(KeyCode.M))
             {
@@ -205,6 +160,7 @@ public class UIGameController : MonoBehaviour
             {
                 _cardGame.TestFillGraveyard();
             }
+            */
 
             _stateMachine?.CurrentState.HandleInput();
 
@@ -223,12 +179,23 @@ public class UIGameController : MonoBehaviour
 
     public void StartGame(Decklist player1Deck, Decklist player2Deck)
     {
-        _cardGame.SetupDecks(player1Deck, player2Deck);
-        _cardGame.StartGame();
-        //TODO - These are not being updated when we serialize / deserialize an object
-        _player1Board.SetPlayer(_cardGame.Player1);
-        _player2Board.SetPlayer(_cardGame.Player2);
-        RegisteredEntities = _cardGame.RegisteredEntities.Select(e => e.EntityId).ToList();
+        //TODO - This should go through the service
+
+        _gameService.SetupGame(player1Deck, player2Deck);
+        _gameService.StartGame();
+
+        _gameService.GetGameEventLogsObservable().Subscribe(ev =>
+        {
+            _gameLog.AppendLog(ev.Log);
+        });
+
+        _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
+        {
+            _cardGame = cardGame;
+            _player1Board.SetBoard(cardGame.Player1);
+            _player2Board.SetBoard(cardGame.Player2);
+        });
+
         UpdateUI();
     }
 
@@ -289,10 +256,8 @@ public class UIGameController : MonoBehaviour
 
     public void HandleNextTurnButtonClick()
     {
-        Debug.Log("processing next turn");
         var nextTurnAction = new NextTurnAction();
-        _cardGame.ProcessAction(nextTurnAction);
-        Debug.Log("done processing next turn");
+        _gameService.ProcessAction(nextTurnAction);
         _stateMachine.ToIdle();
     }
 

@@ -32,7 +32,7 @@ public interface IManaSystem
 
 }
 
-public class DefaultManaSystem : CardGameSystem,IManaSystem
+public class DefaultManaSystem : CardGameSystem, IManaSystem
 {
     public DefaultManaSystem(CardGame cardGame)
     {
@@ -95,7 +95,7 @@ public class DefaultManaSystem : CardGameSystem,IManaSystem
         {
             return CanPlayCard(player, card);
         }
-        
+
         if (card.ManaCost == "")
         {
             return false;
@@ -103,7 +103,7 @@ public class DefaultManaSystem : CardGameSystem,IManaSystem
 
         var mana = new Mana(card.ManaCost);
 
-        foreach(var mod in castModifiers)
+        foreach (var mod in castModifiers)
         {
             mana.AddFromString(mod.GetCost(card));
         }
@@ -149,16 +149,8 @@ public class DefaultManaSystem : CardGameSystem,IManaSystem
             cardGame.EffectsProcessor.ApplyEffects(player, card, ab.Effects, new List<CardGameEntity>());
         }
 
-        //Trigger any mana enters play effects
-
-
-        UnityEngine.Debug.Log("Handling Mana Card?");
-        UnityEngine.Debug.Log(cardGame);
-        UnityEngine.Debug.Log(player);
-        
-
+        //Trigger any mana enters play effects      
         cardGame.HandleTriggeredAbilities(player.GetCardsInPlay(), TriggerType.SelfManaPlayed);
-
         cardGame.ZoneChangeSystem.MoveToZone(card, player.Exile);
     }
 

@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
 
-public class CardInstance : CardGameEntity, ICard
+public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 {
-    private BaseCardData _originalCardData;
     private BaseCardData _currentCardData;
     private int _ownerId;
     private bool _isSummoningSick = true;
@@ -43,6 +42,8 @@ public class CardInstance : CardGameEntity, ICard
     }
 
     public int OwnerId { get => _ownerId; set => _ownerId = value; }
+
+    [JsonIgnore]
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
     //Effects was being added to every time we serialize / deserialize it.
@@ -52,6 +53,7 @@ public class CardInstance : CardGameEntity, ICard
         get { if (_currentCardData is SpellCardData) { return ((SpellCardData)_currentCardData).Effects; } else { return new List<Effect>(); } }
     }
 
+    [JsonIgnore]
     public string RulesText
     {
         get
@@ -89,6 +91,9 @@ public class CardInstance : CardGameEntity, ICard
     //NOTE - we do not have a rules text property here... seems weird why we don't.
     [JsonIgnore]
     public List<CardColor> Colors { get => _currentCardData.Colors; }
+
+
+    [JsonIgnore]
     public string CreatureType
     {
         get
@@ -129,6 +134,7 @@ public class CardInstance : CardGameEntity, ICard
         }
     }
 
+    [JsonIgnore]
     public AdditionalCost AdditionalCost
     {
         get
@@ -144,8 +150,10 @@ public class CardInstance : CardGameEntity, ICard
         }
     }
 
+    [JsonIgnore]
     public string Subtype => _currentCardData.Subtype;
 
+    [JsonIgnore]
     public string CardType { get => _currentCardData.CardType; }
 
     public bool IsSummoningSick { get => _isSummoningSick; set => _isSummoningSick = value; }
@@ -234,21 +242,16 @@ public class CardInstance : CardGameEntity, ICard
     //While I figure out how I actually want to do this properly in a more type safe way.
     //I was casting CardInstance.CurrentCardData all over my code base anyways,
     //at least this keeps it in one place.
+    [JsonIgnore]
     public int Power
     {
         get
         {
             return CalculatePower(true);
         }
-        set
-        {
-            if (_currentCardData is UnitCardData)
-            {
-                _powerWithoutMods = value;
-            }
-        }
     }
 
+    [JsonIgnore]
     public int Toughness
     {
         get
@@ -272,6 +275,8 @@ public class CardInstance : CardGameEntity, ICard
         set { _toughnessWithoutMods = value; }
     }
 
+    [JsonIgnore]
+
     public string ArtPath => _currentCardData.ArtPath;
 
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
@@ -286,6 +291,7 @@ public class CardInstance : CardGameEntity, ICard
     #endregion
 
     //For Serialization Purposes
+    [JsonConstructor]
     public CardInstance()
     {
 
@@ -295,9 +301,9 @@ public class CardInstance : CardGameEntity, ICard
     {
         _cardGame = cardGame;
         ContinuousEffects = new List<ContinuousEffect>();
-        _originalCardData = cardData;
-        _currentCardData = cardData.Clone();
-        Abilities = _currentCardData.Abilities.ToList();
+        _currentCardData = cardData;
+
+        Abilities = _currentCardData.Abilities.Select(ab => ab.Clone()).ToList();
 
         //WIP - not finalized yet
         //We may need to treat split cards and double faced cards as instanced cards for them to properly work with the other systems.
@@ -320,9 +326,12 @@ public class CardInstance : CardGameEntity, ICard
     {
         //We reset any continuous effects and abilities?
         ContinuousEffects = new List<ContinuousEffect>();
-        Abilities = _currentCardData.Abilities.ToList();
+
+        //Deep Clone this
+        Abilities = cardData.Abilities.Select(ab => ab.Clone()).ToList();
 
         _currentCardData = cardData;
+
 
         //reset the back card if necessary.
         _currentCardData.BackCard = null;
@@ -340,7 +349,9 @@ public class CardInstance : CardGameEntity, ICard
     public void SetCardData(BaseCardData cardData)
     {
         _currentCardData = cardData.Clone();
-        Abilities = _currentCardData.Abilities.ToList();
+        Abilities = cardData.Abilities.ToList();
+
+
         if (_currentCardData is UnitCardData)
         {
             var unitCardData = (UnitCardData)_currentCardData;
@@ -455,11 +466,6 @@ public class CardInstance : CardGameEntity, ICard
     {
         var actions = new List<CardGameAction>();
 
-        if (this.GetZone().ZoneType==ZoneType.InPlay && this.Name == "Welding Jar")
-        {
-            var debug = 0;
-        }
-
         if (CardGame.CanPlayCard(this))
         {
             //Need to check the type of card it is and create an associated action
@@ -528,6 +534,40 @@ public class CardInstance : CardGameEntity, ICard
     public void AddModification(Modification mod)
     {
         Modifications.Add(mod);
+    }
+
+    public CardInstance DeepClone(CardGame cardGame)
+    {
+        //CardGame should be set by the caller of this DeepClone().
+        var clone = (CardInstance)MemberwiseClone();
+
+        //Potential Issues with cloning abilities here?
+        clone.Abilities = Abilities.Select(a => a.Clone()).ToList();
+
+        //Note that we are not cloning continous effects on purpose, since they apply automatically from the ContinuousEffect system.
+        //We just need to make sure the continous effect system gets called as part of the cloning process.
+        clone.ContinuousEffects = new List<ContinuousEffect>();
+        clone.Modifications = Modifications.Clone();
+        clone.Modifications = clone.Modifications.Where(a => a.StaticInfo == null).ToList(); //we cannot keep any static modifications, that will be 
+
+        //Remove any continous ability components, these will be reapplied as part of static effects.          
+        clone.Abilities =  clone.Abilities.Where(a => !(a.Components.GetOfType<ContinuousAblityComponent>().Any())).ToList();
+
+        clone.Counters = Counters.Clone();
+        clone.EntityId = EntityId;
+        clone.Name = Name;
+        clone.CardGame = cardGame;
+
+        if (_currentCardData.BackCard != null)
+        {
+            clone.BackCard = new CardInstance(cardGame, _currentCardData.BackCard);
+            clone.BackCard.FrontCard = clone;
+        }
+
+        //Back Card and Front Card (references or not?)
+
+        return clone;
+
     }
     #endregion
 }

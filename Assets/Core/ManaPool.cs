@@ -67,6 +67,16 @@ public class Mana
             ColorlessMana = Convert.ToInt32(currentNumber);
         }
     }
+
+    public Mana DeepClone()
+    {
+        var clone = new Mana();
+
+        clone.ColoredMana = new Dictionary<ManaType, int>(ColoredMana);
+        clone.ColorlessMana = ColorlessMana;
+
+        return clone;
+    }
     public int TotalSumOfColoredMana => ColoredMana.Values.Sum();
     public bool IsEnoughToPayCost(Mana cost)
     {
@@ -223,7 +233,7 @@ public class ManaPool
     /// <summary>
     /// Returns the available mana we have accounting for any spent.
     /// </summary>
-    
+
     [JsonIgnore]
     public Dictionary<ManaType, int> CurrentColoredMana
     {
@@ -236,6 +246,18 @@ public class ManaPool
         _totalMana = new Mana();
         _currentMana = new Mana();
     }
+
+
+    public ManaPool DeepClone()
+    {
+        var pool = new ManaPool();
+        pool._totalMana = _totalMana.DeepClone();
+        pool._currentMana = _currentMana.DeepClone();
+
+        return pool;
+    }
+
+
 
     //How do we do this?
     public void SpendColorlessMana(int amount)

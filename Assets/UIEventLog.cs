@@ -11,8 +11,13 @@ public class UIEventLog : MonoBehaviour
     public void SetLog(IEnumerable<string> messages)
     {
         Debug.Log(string.Join("\n", messages));
-        text.text = string.Join("\n", messages);
+        text.SetText(string.Join("\n", messages));
         scrollRect.verticalNormalizedPosition = 0;
         scrollRect.verticalScrollbar.value = 0;
+    }
+
+    public void AppendLog(string message)
+    {
+        text.SetText(text.text+ message + "\n");
     }
 }

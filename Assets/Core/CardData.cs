@@ -41,6 +41,8 @@ public interface ICard
 public abstract class BaseCardData : ICard
 {
     public string Name { get; set; }
+
+    [JsonIgnore]
     public virtual string RulesText { get { return string.Join("\r\n", Abilities.Select(ab => ab.RulesText)).Replace("#this#", Name); } }
     public string ManaCost { get; set; }
     public abstract string CardType { get; }
@@ -62,6 +64,7 @@ public abstract class BaseCardData : ICard
         return foundAbilities;
     }
     public abstract BaseCardData Clone();
+
 
     public BaseCardData()
     {
@@ -93,12 +96,13 @@ public class UnitCardData : BaseCardData
             Power = Power,
             Toughness = Toughness,
             Colors = Colors,
-            Abilities = Abilities.ToList(), //todo - potential deep clone.
+            Abilities = Abilities.Clone(), //todo - potential deep clone.
             CreatureType = CreatureType,
             Subtype = Subtype,
             BackCard = BackCard
         };
     }
+
 }
 
 
@@ -107,6 +111,8 @@ public class SpellCardData : BaseCardData
     public override string CardType => "Spell";
 
     public List<Effect> Effects = new List<Effect>();
+
+    [JsonIgnore]
     public override string RulesText
     {
         get
@@ -167,6 +173,8 @@ public class ManaCardData : BaseCardData
     public override string CardType => "Mana";
     //TODO - We need to revamp this somehow
     public string ManaAdded { get; set; } = "*";
+
+    [JsonIgnore]
     public override string RulesText => $"Add {ManaAdded} to your mana";
     public bool ReadyImmediately { get; set; } = true;
     public IManaReadyCondition ReadyCondition { get; set; } = null;

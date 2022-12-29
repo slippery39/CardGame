@@ -37,12 +37,6 @@ public class UIPlayerBoard2D : UIPlayerBoard
             Debug.Log("Is the graveyard being handled correctly?");
             UIGameController.Instance.HandleViewGraveyardClick(_player);
         });
-
-        UIGameController.Instance.GameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
-        {
-            var player = cardGame.Players.Where(p => p.PlayerId == _player.PlayerId).FirstOrDefault();
-            SetBoard(player);
-        });
     }
 
     public override List<UIGameEntity> GetUIEntities()
@@ -52,22 +46,11 @@ public class UIPlayerBoard2D : UIPlayerBoard
         return entities;
     }
 
-    public override void SetPlayer(Player player)
-    {
-        _player = player;
-        InitUIEntityIds(_player);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (_player == null) return;
-        //This should not automatically update. Should update via 
-        //SetBoard(_player);
-    }
-    private void SetBoard(Player player)
+    public override void SetBoard(Player player)
     {
         if (player == null) return;
+
+        _player = player;
 
         InitUIEntityIds(player);
         UpdateLanes(player);

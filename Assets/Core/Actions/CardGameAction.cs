@@ -38,7 +38,6 @@ public abstract class CardGameAction
         return new ActivateAbilityAction
         {
             SourceCard = card,
-            CardWithAbility = card,
             Player = card.GetOwner(),
             Ability = ability
         };
@@ -209,11 +208,10 @@ public class PlaySpellAction : CardGameAction
 
 public class ActivateAbilityAction : CardGameAction
 {
-    public CardInstance CardWithAbility { get; set; }
     public ActivatedAbility Ability { get; set; }
     public override void DoAction(CardGame cardGame)
     {
-        cardGame.ActivatedAbilitySystem.ActivateAbililty(Player, CardWithAbility, new ActivateAbilityInfo
+        cardGame.ActivatedAbilitySystem.ActivateAbililty(Player, SourceCard, new ActivateAbilityInfo
         {
             Targets = Targets,
             Choices = AdditionalChoices
@@ -233,7 +231,7 @@ public class ActivateAbilityAction : CardGameAction
     public override bool IsValidAction(CardGame cardGame)
     {
         //TODO - Check the additional costs selected and targets and other things.
-        return cardGame.ActivatedAbilitySystem.CanActivateAbility(Player, CardWithAbility);
+        return cardGame.ActivatedAbilitySystem.CanActivateAbility(Player, SourceCard);
     }
 
     public override List<CardGameEntity> GetValidAdditionalCosts(CardGame cardGame)
@@ -243,7 +241,7 @@ public class ActivateAbilityAction : CardGameAction
             return new List<CardGameEntity>();
         }
 
-        return Ability.AdditionalCost.GetValidChoices(cardGame, this.Player, this.CardWithAbility);
+        return Ability.AdditionalCost.GetValidChoices(cardGame, this.Player, SourceCard);
     }
 }
 
@@ -273,7 +271,7 @@ public class ResolveChoiceAction : CardGameAction
 
     public List<CardInstance> GetValidChoices(CardGame cardGame)
     {
-        return cardGame.ChoiceInfoNeeded.GetValidChoices(cardGame,Player);
+        return cardGame.ChoiceInfoNeeded.GetValidChoices(cardGame, Player);
     }
 
     public override bool IsValidAction(CardGame cardGame)
@@ -297,6 +295,8 @@ public class NextTurnAction : CardGameAction
         return cardGame.CurrentGameState == GameState.WaitingForAction;
     }
 }
+
+
 
 
 

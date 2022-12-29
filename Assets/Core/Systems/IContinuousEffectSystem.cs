@@ -98,7 +98,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
 
     private void ApplyTo(ContinuousEffect effect, CardGameEntity entity)
     {
-        entity.ContinuousEffects.Add(effect);
+        //entity.ContinuousEffects.Add(effect);
         //Note this makes it so that static abilities with multiple effects will not work.
         var sourceEffect = effect.SourceAbility.Effects.First();
 

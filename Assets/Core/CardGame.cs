@@ -1,15 +1,21 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Profiling;
 
+[Serializable]
 public class CardGame
 {
     #region Private Fields
-    private List<Player> _players;
+
+    private List<Player> _players = new List<Player>();
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
     private int _startingPlayerHealth = 100;
@@ -19,7 +25,8 @@ public class CardGame
     private int _nextEntityId = 1;
     private int _nextPlayerId = 1;
 
-    private List<CardGameEntity> _registeredEntities;
+    [JsonProperty]
+    private List<CardGameEntity> _registeredEntities = new List<CardGameEntity>();
 
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
@@ -44,25 +51,34 @@ public class CardGame
     private IModificationsSystem _modificationsSystem;
     private IAdditionalCostSystem _additionalCostSystem;
 
-    private EventLogSystem _eventLogSystem;
+    private IEventLogSystem _eventLogSystem;
+
+    //Debug purposes only
+    private bool _isCopy = false;
     #endregion
 
 
     #region Public Properties
+
+    //This should be at the top to make sure the json serializer serialized all entities here first
+    public Dictionary<string, BaseCardData> RegisteredCardData { get; set; }
+
+
     [JsonIgnore]
-    public Player Player1 { get => _players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
+    public Player Player1 { get => Players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
     [JsonIgnore]
-    public Player Player2 { get => _players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
+    public Player Player2 { get => Players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
+
     public List<Player> Players { get => _players; set => _players = value; }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     [JsonIgnore]
-    public Player ActivePlayer { get => _players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
+    public Player ActivePlayer { get => Players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
     [JsonIgnore]
-    public Player InactivePlayer { get => _players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
+    public Player InactivePlayer { get => Players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
 
     public int SpellsCastThisTurn { get; set; } = 0;
     public ICardGameLogger Logger { get => _cardGameLogger; }
-    public List<CardGameEntity> RegisteredEntities { get => _registeredEntities; set => _registeredEntities = value; }
+
     #region Systems
     public IBattleSystem BattleSystem { get => _battleSystem; set => _battleSystem = value; }
     public IDamageSystem DamageSystem { get => _damageSystem; set => _damageSystem = value; }
@@ -96,7 +112,7 @@ public class CardGame
     public IPlayerModificationSystem PlayerAbilitySystem { get; set; }
 
     public IWinLoseSystem WinLoseSystem { get; set; }
-    public EventLogSystem EventLogSystem { get => _eventLogSystem; set => _eventLogSystem = value; }
+    public IEventLogSystem EventLogSystem { get => _eventLogSystem; set => _eventLogSystem = value; }
 
     #endregion
     #endregion
@@ -115,13 +131,13 @@ public class CardGame
     public CardGame()
     {
         InitGame();
-        Log("Default Constructor has been called in CardGame!");
+        //Log("Default Constructor has been called in CardGame!");
     }
 
     [OnDeserialized]
     public void OnDeserialized(StreamingContext context)
     {
-        Debug.Log("OnDeserialized has fired!");
+        //Debug.Log("OnDeserialized has fired!");
     }
 
 
@@ -157,13 +173,18 @@ public class CardGame
 
         _eventLogSystem = new EventLogSystem(this);
 
-        _registeredEntities = new List<CardGameEntity>();
-        _players = new List<Player>();
-
-
         //TODO - GameState Stuff:
         CurrentGameState = GameState.WaitingForAction;
 
+        //TODO - Should not be called by the constructor
+
+        OnGameStateChanged = new ReplaySubject<CardGame>(10);
+
+    }
+
+
+    public void SetupPlayers(Decklist player1Decklist, Decklist player2Decklist)
+    {
 
         AddPlayerToGame(new Player(_numberOfLanes)
         {
@@ -177,13 +198,6 @@ public class CardGame
             Health = _startingPlayerHealth
         });
 
-        OnGameStateChanged = new ReplaySubject<CardGame>(1);
-
-    }
-
-
-    public void SetupDecks(Decklist player1Decklist, Decklist player2Decklist)
-    {
         player1Decklist.ToDeck().ForEach(card =>
         {
             AddCardToGame(Player1, card, Player1.Deck);
@@ -206,33 +220,111 @@ public class CardGame
         OnGameStateChanged.OnNext(Copy());
     }
 
-    public CardGame Copy()
+
+    public CardGame Copy(bool noEventsOrLogs = false)
     {
-        string json = JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings
+        Profiler.BeginSample("Card Game Copy");
+
+        var newCardData = RegisteredCardData.Clone();
+
+        //Look for any cloneable systems
+        var clone = new CardGame();
+        clone._isCopy = true;
+
+        clone.CurrentGameState = CurrentGameState;
+        clone.ActivePlayerId = ActivePlayerId;
+        clone._nextEntityId = _nextEntityId;
+        clone._nextPlayerId = _nextPlayerId;
+
+        clone.ChoiceInfoNeeded = ChoiceInfoNeeded?.Clone();
+
+        clone.ResolvingSystem = this.ResolvingSystem.DeepClone(clone);
+
+        //Clone the player data.
+        clone.RegisteredCardData = newCardData;
+        clone.Players.Add(Player1.DeepClone(clone));
+        clone.Players.Add(Player2.DeepClone(clone));
+
+        //What else to clone? Turn Data, other stuff?
+
+        if (noEventsOrLogs)
+        {
+            clone.EventLogSystem = new EmptyEventLogSystem();
+            clone._cardGameLogger = new EmptyLogger();
+        }
+
+
+
+        //Need to update our registered entities
+
+        clone._registeredEntities.Add(clone.Player1);
+        clone._registeredEntities.Add(clone.Player2);
+
+        clone._registeredEntities.AddRange(clone.Player1.GetAllEntities());
+        clone._registeredEntities.AddRange(clone.Player2.GetAllEntities());
+
+        //A little bit of a hack, but apply any continous effects in play
+        //We don't necessarily need to clone these because they should apply automatically
+        //This does mean we have to make sure we don't clone them in the card instance
+
+        clone.ContinuousEffectSystem.ApplyStaticEffects();
+
+        Profiler.EndSample();
+
+        return clone;
+    }
+
+    public CardGame Copy2(bool noEventsOrLogs = false)
+    {
+        var timer = new Stopwatch();
+        timer.Start();
+
+        string json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.All
-        });
-        return JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Full,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
             PreserveReferencesHandling = PreserveReferencesHandling.All,
-            ObjectCreationHandling = ObjectCreationHandling.Replace
+            NullValueHandling = NullValueHandling.Ignore,
         });
+
+        //File.WriteAllText("tempCardGameState", json);
+
+        var copy = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
+        {
+            TypeNameHandling = TypeNameHandling.All,
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+            PreserveReferencesHandling = PreserveReferencesHandling.All,
+            ObjectCreationHandling = ObjectCreationHandling.Replace,
+            NullValueHandling = NullValueHandling.Ignore
+        });
+
+        if (noEventsOrLogs)
+        {
+            copy.EventLogSystem = new EmptyEventLogSystem();
+            copy._cardGameLogger = new EmptyLogger();
+        }
+
+        copy._isCopy = true;
+
+        timer.Stop();
+
+        Log($"Copy Method took :  {timer.ElapsedMilliseconds} ms");
+
+        return copy;
+
+
     }
 
     public Player GetOwnerOfCard(CardInstance unitInstance)
     {
-        var owner = _players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
+        var owner = Players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
 
         //Might be a double sided card. Check the front card for the owner
         if (owner == null)
         {
-            owner = _players.Where(p => p.PlayerId == unitInstance.FrontCard.OwnerId).FirstOrDefault();
+            owner = Players.Where(p => p.PlayerId == unitInstance.FrontCard.OwnerId).FirstOrDefault();
         }
 
         if (owner == null)
@@ -278,9 +370,21 @@ public class CardGame
 
     public void AddCardToGame(Player player, BaseCardData data, IZone zone)
     {
+        //TODO - this might not work with backside cards or tokens?
+        if (RegisteredCardData == null)
+        {
+            RegisteredCardData = new Dictionary<string, BaseCardData>();
+        }
+        if (!RegisteredCardData.ContainsKey(data.Name))
+        {
+            RegisteredCardData.Add(data.Name, data);
+        }
+
         var cardInstance = new CardInstance(this, data);
         cardInstance.OwnerId = player.PlayerId;
         RegisterEntity(cardInstance);
+
+        //TODO - Cache CardData here.
 
         if (cardInstance.BackCard != null)
         {
@@ -292,7 +396,7 @@ public class CardGame
 
     public void AddPlayerToGame(Player player)
     {
-        _players.Add(player);
+        Players.Add(player);
         RegisterEntity(player);
         player.Lanes.ForEach(lane =>
         {
@@ -313,7 +417,6 @@ public class CardGame
     private void RegisterEntity(CardGameEntity entity)
     {
         entity.EntityId = GetNextEntityId();
-
         _registeredEntities.Add(entity);
     }
 
@@ -333,12 +436,18 @@ public class CardGame
 
         var effectChoice = ChoiceInfoNeeded;
 
-        effectChoice.OnChoicesSelected(this, ActivePlayer, entitiesSelected.Cast<CardGameEntity>().ToList());
+        //Note the entitiesSelected references may not be from this actual game.
+        var updatedEntityRefs = entitiesSelected
+            .Select(entity => this._registeredEntities
+                            .First(e => e.EntityId == entity.EntityId))
+            .Cast<CardGameEntity>().ToList();
+
+        effectChoice.OnChoicesSelected(this, ActivePlayer, updatedEntityRefs);
 
         //This is mainly to get chrome mox working.
         GetCardsInPlay().ForEach(card =>
         {
-            if (entitiesSelected.Any())
+            if (updatedEntityRefs.Any())
             {
                 card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ForEach(component =>
                     component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded)
@@ -362,6 +471,7 @@ public class CardGame
 
     public bool CanPlayCard(CardInstance card, bool checkIfActivePlayer = true, List<ICastModifier> modifiers = null)
     {
+        Profiler.BeginSample("CardGame.CanPlayCard");
         if (card == null)
         {
             return false;
@@ -388,8 +498,6 @@ public class CardGame
         {
             castZones = modCastZoneComponent.ModifyCastZones(this, card, castZones);
         }
-
-        //TODO - check if the card is in one of the cast zones
 
         var castZoneOfCard = GetZoneOfCard(card).ZoneType;
 
@@ -434,7 +542,7 @@ public class CardGame
                 }
             }
         }
-
+        Profiler.EndSample();
 
         return true; //if it gets to this point it has passed all the checks, and it is ok to be played.
     }
@@ -451,11 +559,21 @@ public class CardGame
         return CanPlayCard(card);
     }
 
-    //WIP - Starting to use Actions instead of calling methods directly.
     public void ProcessAction(CardGameAction action)
     {
+        //Action may come from anywhere, we need to make sure all the references match up to what we have in our card game before going any further.
+
+        //Which Things would need to be updated?
+        action.Player = Players.Where(e => e.EntityId == action.Player?.EntityId).FirstOrDefault();
+        action.SourceCard = GetEntities<CardInstance>().Where(e => e.EntityId == action.SourceCard?.EntityId).FirstOrDefault();
+        action.Targets = action.Targets?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+        action.CardToPlay = GetEntities<CardInstance>().Where(e => e.EntityId == action.CardToPlay?.EntityId).FirstOrDefault();
+        action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+
+        Log("Processing Action...");
         if (action.IsValidAction(this))
         {
+            Log("Action is Valid...");
             action.DoAction(this);
         }
         else
@@ -686,12 +804,6 @@ public class CardGame
     //For general console logging purposes.
     public void Log(string message)
     {
-        if (Logger == null)
-        {
-            //default to unity if null;
-            Debug.Log(message);
-            return;
-        }
         Logger.Log(message);
     }
     private void AddRandomUnitsToLane(Player player)

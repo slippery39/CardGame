@@ -8,6 +8,7 @@ public class GameUIStateMachine : MonoBehaviour
     private UIGameController _gameController;
     public UIGameController GameController { get => _gameController; set => _gameController = value; }
     public CardGame CardGame { get => _gameController.CardGame; }
+    public GameService GameService { get => _gameController.GameService; }
 
     private void Start()
     {
@@ -47,13 +48,13 @@ public class GameUIStateMachine : MonoBehaviour
                     {
                         return;
                     }
-                    CardGame.ProcessAction(playManaAction);
+                    GameService.ProcessAction(playManaAction);
                     ToIdle();
                     break;
                 }
             case PlaySpellAction spellAction:
                 {
-                    ChangeState(new GameUICastingSpellState(this, spellAction.SourceCard,spellAction.CastModifiers));
+                    ChangeState(new GameUICastingSpellState(this, spellAction.SourceCard, spellAction.CastModifiers));
                     break;
                 }
             //TODO - still need to make it so cards might have more than 1 ability.
