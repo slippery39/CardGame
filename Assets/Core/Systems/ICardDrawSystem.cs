@@ -29,7 +29,11 @@ public class DefaultCardDrawSystem : CardGameSystem, ICardDrawSystem
             cardGame.ZoneChangeSystem.MoveToZone(card, player.Hand);
             return card;
         }
-        return null;
+        else
+        {
+            player.DrawnCardWithNoDeck = true;
+            return null;
+        }        
     }
 
     public void DrawOpeningHand(Player player)

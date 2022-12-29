@@ -49,12 +49,30 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
             mod.OnAfterStateBasedEffects(cardGame, cardGame.Player2);
         });
 
+
+        //Win Loss Checks
+        if (cardGame.Player1.Health <= 0)
+        {
+            cardGame.WinLoseSystem.LoseGame(cardGame.Player1);
+        }
+
+        if (cardGame.Player2.Health <= 0)
+        {
+            cardGame.WinLoseSystem.LoseGame(cardGame.Player2);
+        }
+
+        if (cardGame.Player1.DrawnCardWithNoDeck)
+        {
+            cardGame.WinLoseSystem.LoseGame(cardGame.Player1);
+        }
+
+        if (cardGame.Player2.DrawnCardWithNoDeck)
+        {
+            cardGame.WinLoseSystem.LoseGame(cardGame.Player1);
+        }
+
         //Check to see if any player has lost
         cardGame.WinLoseSystem.CheckLosers();
-
-
-        cardGame.EventLogSystem.AddEvent("End of checking state based effects");
-
         cardGame.OnGameStateChanged.OnNext(cardGame.Copy());
     }
 

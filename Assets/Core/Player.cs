@@ -72,6 +72,7 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
 
     public IZone Items { get => _items; set => _items = value; }
     public bool IsLoser { get; set; } = false;
+    public bool DrawnCardWithNoDeck { get; internal set; } = false;
 
     #endregion
 
