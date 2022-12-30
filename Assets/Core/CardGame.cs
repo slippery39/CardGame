@@ -18,8 +18,7 @@ public class CardGame
     private List<Player> _players = new List<Player>();
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
-    private int _startingPlayerHealth = 100;
-    private int _startingHandSize = 5;
+    private int _startingPlayerHealth = 20;
     //need to make sure this is serialized or else we wont be able to properly id tokens.
     [JsonProperty]
     private int _nextEntityId = 1;
@@ -834,19 +833,6 @@ public class CardGame
         {
             var randomIndex = rng.Next(0, unitsOnly.Count());
             AddCardToGame(player, unitsOnly[randomIndex], lane);
-        }
-    }
-
-    private void AddRandomCardsToHand(Player player)
-    {
-        CardDatabase db = new CardDatabase();
-        var cards = db.GetAll().Where(c => c.Name == "City of Brass").ToList();
-
-        var rng = new System.Random();
-
-        for (int i = 0; i < _startingHandSize; i++)
-        {
-            AddCardToGame(player, cards.Randomize().ToList()[0], player.Hand);
         }
     }
 

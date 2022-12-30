@@ -172,6 +172,13 @@ public class UIGameController : MonoBehaviour
                 _stateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(_stateMachine, _cardGame.ChoiceInfoNeeded));
             }
         }
+        else if (_cardGame.CurrentGameState == GameState.GameOver)
+        {
+            if (!(_stateMachine.CurrentState is GameUIGameOverState))
+            {
+                _stateMachine.ChangeState(new GameUIGameOverState(_stateMachine));
+            }
+        }
 
         UpdateUI();
         _stateMachine.CurrentState.OnUpdate();
