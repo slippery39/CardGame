@@ -25,7 +25,8 @@ public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
             if (p.IsLoser)
             {
                 //We would have some sort of lose game event ideally.
-                cardGame.Log($"Player {p.Name} has lost the game!");
+                cardGame.CurrentGameState = GameState.GameOver;
+                cardGame.EventLogSystem.AddEvent($"Player {p.Name} has lost the game!");
             }
         });
     }
