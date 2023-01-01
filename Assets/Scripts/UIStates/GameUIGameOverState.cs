@@ -31,6 +31,7 @@ public class GameUIGameOverState : IGameUIState
     public void OnApply()
     {
         Debug.Log("Game Over State has been applied");
+        _stateMachine.GameController.ShowGameOverScreen();
     }
 
     public void OnDestroy()

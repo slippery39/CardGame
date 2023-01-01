@@ -12,6 +12,12 @@ using UnityEngine.UI;
 public class UIGameController : MonoBehaviour
 {
     [SerializeField]
+    private DeckSelectionScreen _deckSelectionScreen;
+
+    [SerializeField]
+    private GameObject _gameRoom;
+
+    [SerializeField]
     private CardGame _cardGame;
 
     [SerializeField]
@@ -35,6 +41,8 @@ public class UIGameController : MonoBehaviour
     [SerializeField]
     private Button _nextTurnButton;
 
+    [SerializeField]
+    private GameObject _gameOverScreen;
 
     //private ZoneViewer _zonePopupWindow;
 
@@ -75,8 +83,11 @@ public class UIGameController : MonoBehaviour
         _chooseActionChoicePopup.gameObject.SetActive(false);
     }
 
-
-
+    public void GoToMainMenu()
+    {
+        _deckSelectionScreen.gameObject.SetActive(true);
+        _gameRoom.SetActive(false);        
+    }
 
     void Start()
     {
@@ -186,6 +197,8 @@ public class UIGameController : MonoBehaviour
 
     public void StartGame(Decklist player1Deck, Decklist player2Deck)
     {
+        _deckSelectionScreen.gameObject.SetActive(false);
+        _gameRoom.SetActive(true);
         //TODO - This should go through the service
 
         _gameService.SetupGame(player1Deck, player2Deck);
@@ -222,6 +235,11 @@ public class UIGameController : MonoBehaviour
         _zonePopupWindow.SetActive(true);
         _zonePopupWindow.GetComponent<CardsViewer2D>().SetCards(cardsToView, title);
         _zonePopupWindow.GetComponent<CardsViewer2D>().ShowExitButton = false;
+    }
+
+    public void ShowGameOverScreen()
+    {
+        _gameOverScreen.SetActive(true);
     }
 
     public void CloseChoiceWindow()

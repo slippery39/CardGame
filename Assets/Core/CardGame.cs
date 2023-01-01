@@ -18,7 +18,7 @@ public class CardGame
     private List<Player> _players = new List<Player>();
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
-    private int _startingPlayerHealth = 20;
+    private int _startingPlayerHealth = 5;
     //need to make sure this is serialized or else we wont be able to properly id tokens.
     [JsonProperty]
     private int _nextEntityId = 1;

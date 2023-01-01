@@ -18,10 +18,6 @@ public class DeckSelectionScreen : MonoBehaviour
     [SerializeField]
     private Button _button;
 
-    [SerializeField]
-    private GameObject _gameRoom;
-
-
     private void Awake()
     {
         _decklists.AddRange(new FamousDecks().GetAll());
@@ -37,8 +33,6 @@ public class DeckSelectionScreen : MonoBehaviour
 
     private void StartGame()
     {
-        gameObject.SetActive(false);
-        _gameRoom.SetActive(true);
         Debug.Log("Game is starting...");
 
         var deckDB = new FamousDecks();
