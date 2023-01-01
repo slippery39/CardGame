@@ -13,6 +13,7 @@ public class GameService : MonoBehaviour
 
     #region Properties
     public bool HasGameStarted { get => _hasGameStarted; set => _hasGameStarted = value; }
+    public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
     #endregion
 
     #region Public Methods

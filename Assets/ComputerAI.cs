@@ -5,6 +5,7 @@ using UniRx;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+[RequireComponent(typeof(GameService))]
 public class ComputerAI : MonoBehaviour
 {
     [SerializeField]
@@ -18,10 +19,14 @@ public class ComputerAI : MonoBehaviour
     [SerializeField]
     private bool _disabled;
 
+    [SerializeField]
+    private GameService _gameService;
+
     // Start is called before the first frame update
     void Start()
     {
-        //The AI will attempt to select his action every 1 second.
+        _gameService = this.GetComponent<GameService>();
+        //The AI will attempt to select his action every 0.5 seconds.
         Observable.Interval(TimeSpan.FromSeconds(0.5)).Subscribe((_) => TryChooseAction());
     }
 
@@ -29,12 +34,9 @@ public class ComputerAI : MonoBehaviour
     {
 
         Profiler.BeginSample("AI.ChoosingAction");
+        var cardGame = _gameService.CardGame;
 
-        var gameController = UIGameController.Instance;
-        var gameService = UIGameController.Instance.GameService;
-        var cardGame = gameController.CardGame;
-
-        if (!gameService.HasGameStarted)
+        if (!_gameService.HasGameStarted)
         {
             return;
         }
