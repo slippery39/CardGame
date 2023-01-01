@@ -139,6 +139,11 @@ public class CardGame
     public IObservable<CardGame> GameStateChangedObservable => OnGameStateChanged.AsObservable();
     #endregion
 
+    #region Events
+    [JsonIgnore]
+    public Action<CardGame> OnGameOver;
+    #endregion
+
     public CardGame()
     {
         InitGame();

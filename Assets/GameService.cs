@@ -10,6 +10,7 @@ public class GameService : MonoBehaviour
     private CardGame _cardGame;
     [SerializeField]
     private bool _hasGameStarted = false;
+
     #endregion
 
     #region Properties
@@ -33,6 +34,8 @@ public class GameService : MonoBehaviour
         _cardGame.StartGame();
         _hasGameStarted = true;
     }
+
+
 
     public void ProcessAction(CardGameAction action)
     {
