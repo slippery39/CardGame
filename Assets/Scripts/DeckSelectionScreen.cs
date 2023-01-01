@@ -18,6 +18,9 @@ public class DeckSelectionScreen : MonoBehaviour
     [SerializeField]
     private Button _button;
 
+    [SerializeField]
+    private SimGameController _simGameControler;
+
     private void Awake()
     {
         _decklists.AddRange(new FamousDecks().GetAll());
@@ -48,10 +51,20 @@ public class DeckSelectionScreen : MonoBehaviour
         UIGameController.Instance.StartGame(player1Deck, player2Deck);
     }
 
-    void Start()
-    {
 
+    public void SimulateGame()
+    {
+        Debug.Log("Game is simulating...");
+
+        var deckDB = new FamousDecks();
+        var player1Deck = deckDB.GetByName(_player1DeckSelect.options[_player1DeckSelect.value].text);
+        var player2Deck = deckDB.GetByName(_player2DeckSelect.options[_player2DeckSelect.value].text);
+
+        _simGameControler.StartSimulateGame(player1Deck, player2Deck);
+
+        //TODO - We need an event for when the game ends.
     }
+    
 
     // Update is called once per frame
     void Update()

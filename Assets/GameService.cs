@@ -8,12 +8,14 @@ public class GameService : MonoBehaviour
 {
     #region Fields
     private CardGame _cardGame;
+    [SerializeField]
     private bool _hasGameStarted = false;
     #endregion
 
     #region Properties
     public bool HasGameStarted { get => _hasGameStarted; set => _hasGameStarted = value; }
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
+    public bool GameOver { get => _cardGame.CurrentGameState == GameState.GameOver; }
     #endregion
 
     #region Public Methods
@@ -28,13 +30,17 @@ public class GameService : MonoBehaviour
         {
             throw new Exception("StartGame() has failed. Game is null. Perhaps you forgot to Setup the game first?");
         }
-
         _cardGame.StartGame();
         _hasGameStarted = true;
     }
 
     public void ProcessAction(CardGameAction action)
     {
+        if (_cardGame == null)
+        {
+            throw new Exception("ProcessAction() has failed. Game is null. Perhaps you forgot to Setup the game first?");
+        }
+
         _cardGame.ProcessAction(action);
     }
 

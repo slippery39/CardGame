@@ -32,14 +32,18 @@ public class ComputerAI : MonoBehaviour
 
     private void TryChooseAction()
     {
-
-        Profiler.BeginSample("AI.ChoosingAction");
-        var cardGame = _gameService.CardGame;
-
         if (!_gameService.HasGameStarted)
         {
             return;
         }
+
+        if (_gameService.GameOver)
+        {
+            return;
+        }
+
+        Profiler.BeginSample("AI.ChoosingAction");
+        var cardGame = _gameService.CardGame;
 
         if (cardGame.ActivePlayer.PlayerId == playerId)
         {
@@ -121,6 +125,12 @@ public class ComputerAI : MonoBehaviour
         if (currentDepth > maxDepth)
         {
             return null; //end this branch;
+        }
+
+        if (cardGame.CurrentGameState == GameState.GameOver)
+        {
+            //game is already over, no need to continue;
+            return null;
         }
 
         List<CardGameAction> validActions = new List<CardGameAction>();
@@ -230,8 +240,8 @@ public class ComputerAI : MonoBehaviour
             return;
         }
 
-        var gameController = UIGameController.Instance;
-        var gameService = gameController.GameService;
+
+        var gameService = _gameService;
 
         //We need an edge case for choices.
 
@@ -284,8 +294,7 @@ public class ComputerAI : MonoBehaviour
         else
         {
             Debug.Log("No positive actions found, ending turn");
-            _disabled = true;
-            //gameService.ProcessAction(new NextTurnAction());
+            gameService.ProcessAction(new NextTurnAction());
             //end turn.
         }
     }
