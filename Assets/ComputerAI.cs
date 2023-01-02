@@ -153,7 +153,10 @@ public class ComputerAI : MonoBehaviour
         }
         else if (cardGame.CurrentGameState == GameState.WaitingForChoice)
         {
-            var resolveChoiceAction = new ResolveChoiceAction();
+            var resolveChoiceAction = new ResolveChoiceAction()
+            {
+                Player = cardGame.ActivePlayer
+            };
             resolveChoiceAction.Choices = resolveChoiceAction.GetValidChoices(cardGame).Take(cardGame.ChoiceInfoNeeded.NumberOfChoices).ToList();
             validActions = new List<CardGameAction>
             {
