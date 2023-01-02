@@ -22,6 +22,11 @@ public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
 
     public void CheckLosers()
     {
+        if (cardGame.CurrentGameState == GameState.GameOver)
+        {
+            return;
+        }
+
         cardGame.Players.ForEach(p =>
         {
             if (p.IsLoser)

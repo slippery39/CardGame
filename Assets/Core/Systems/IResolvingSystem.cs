@@ -107,8 +107,6 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
                 });
             });
 
-
-
         //Our abilities auto resolve.
         this.ResolveNext();
     }
@@ -190,7 +188,7 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
                 }
 
                 action.CastModifiers.GetOfType<IModifyZoneOnResolve>().ForEach(
-                    m => 
+                    m =>
                     zoneTo = m.ModifyZoneOnResolve(cardGame, zoneTo, spell));
 
                 cardGame.EventLogSystem.AddEvent($"{spell.Name} is moving to ${zoneTo.Name}");
@@ -278,6 +276,11 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
             return;
         }
 
+        if (cardGame.CurrentGameState == GameState.GameOver)
+        {
+            return;
+        }
+
         //We will need the ability to partially resolve spells (i.e. spells with choice effects like Careful study)
         //but not fully resolve it until the choices have been chosen
         var nextIndex = _internalStack.Count - 1;
@@ -342,18 +345,6 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
         clone._internalStack = _internalStack.Select(x => x.Clone()).ToList();
 
         return clone;
-        
-
-    //Can only hold card instances.
-    /*
-        private IZone stackZone = new ResolvingStack();
-        public IZone Stack { get { return stackZone; } private set { stackZone = value; } }
-
-        public bool IsResolvingEffect => _effectsToResolve != null && _effectsToResolve.Any();
-
-        [JsonProperty]
-        private Queue<Effect> _effectsToResolve;
-    */
-}
+    }
 }
 
