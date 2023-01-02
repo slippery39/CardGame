@@ -2,6 +2,8 @@
 {
     public void LoseGame(Player player);
     public void CheckLosers();
+
+    public GameOverInfo GetGameOverInfo();
 }
 
 
@@ -31,4 +33,39 @@ public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
             }
         });
     }
+
+    public GameOverInfo GetGameOverInfo()
+    {
+        if (cardGame.Player1.IsLoser && cardGame.Player2.IsLoser)
+        {
+            return new GameOverInfo
+            {
+                IsDraw = true
+            };
+        }
+        else if (cardGame.Player1.IsLoser)
+        {
+            return new GameOverInfo
+            {
+                Winner = cardGame.Player2,
+                Loser = cardGame.Player1
+            };
+        }
+        else
+        {
+            return new GameOverInfo
+            {
+                Winner = cardGame.Player1,
+                Loser = cardGame.Player2
+            };
+        }
+    }
+}
+
+
+public class GameOverInfo
+{
+    public Player Winner { get; set; }
+    public Player Loser { get; set; }
+    public bool IsDraw { get; set; }
 }
