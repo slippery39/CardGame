@@ -8,7 +8,6 @@ using static TMPro.TMP_Dropdown;
 
 public class DeckSelectionScreen : MonoBehaviour
 {
-    private List<Decklist> _decklists = new List<Decklist>();
     // Start is called before the first frame update
     [SerializeField]
     private TMP_Dropdown _player1DeckSelect;
@@ -23,14 +22,7 @@ public class DeckSelectionScreen : MonoBehaviour
 
     private void Awake()
     {
-        _decklists.AddRange(new FamousDecks().GetAll());
         _button.onClick.AddListener(StartGame);
-
-        List<OptionData> deckOptions = _decklists.Select(d => new OptionData { text = d.Name }).ToList();
-
-        Debug.Log(deckOptions.Count);
-        _player1DeckSelect.AddOptions(deckOptions);
-        _player2DeckSelect.AddOptions(deckOptions);
     }
 
 

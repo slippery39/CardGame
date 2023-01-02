@@ -2325,6 +2325,7 @@ GameObject:
   - component: {fileID: 336639940}
   - component: {fileID: 336639939}
   - component: {fileID: 336639938}
+  - component: {fileID: 336639941}
   m_Layer: 5
   m_Name: Player1DeckDropdown
   m_TagString: Untagged
@@ -2447,6 +2448,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 336639936}
   m_CullTransparentMesh: 1
+--- !u!114 &336639941
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336639936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970cf36a57b061f4babf40ecda72bf3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &344307962
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4332,8 +4345,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e420235710d01a14e976b9fd51f5e47f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deckSelectionScreen: {fileID: 0}
-  _gameRoom: {fileID: 0}
+  _deckSelectionScreen: {fileID: 1086147324}
+  _gameRoom: {fileID: 1397792428}
   _turnIndicator: {fileID: 0}
   _actionStateIndicator: {fileID: 619435143}
   _stateMachine: {fileID: 0}
@@ -4341,7 +4354,7 @@ MonoBehaviour:
   _player2Board: {fileID: 1189359227}
   _chooseActionChoicePopup: {fileID: 102691395}
   _nextTurnButton: {fileID: 1530756625}
-  _gameOverScreen: {fileID: 0}
+  _gameOverScreen: {fileID: 1604271832}
   _cardPopup: {fileID: 1940518801}
   _zonePopupWindow: {fileID: 1113561586}
   _gameLog: {fileID: 1063934113}
@@ -4778,6 +4791,7 @@ GameObject:
   - component: {fileID: 706613921}
   - component: {fileID: 706613920}
   - component: {fileID: 706613919}
+  - component: {fileID: 706613922}
   m_Layer: 5
   m_Name: Player2DeckDropdown
   m_TagString: Untagged
@@ -4900,6 +4914,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 706613917}
   m_CullTransparentMesh: 1
+--- !u!114 &706613922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706613917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970cf36a57b061f4babf40ecda72bf3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &721345190
 GameObject:
   m_ObjectHideFlags: 0
