@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571328, b: 0.3069217, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4159,8 +4159,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e420235710d01a14e976b9fd51f5e47f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _deckSelectionScreen: {fileID: 753458971}
-  _gameRoom: {fileID: 1397792428}
+  _deckSelectionScreen: {fileID: 0}
+  _gameRoom: {fileID: 0}
   _turnIndicator: {fileID: 0}
   _actionStateIndicator: {fileID: 619435143}
   _stateMachine: {fileID: 0}
@@ -4168,7 +4168,7 @@ MonoBehaviour:
   _player2Board: {fileID: 1189359227}
   _chooseActionChoicePopup: {fileID: 102691395}
   _nextTurnButton: {fileID: 1530756625}
-  _gameOverScreen: {fileID: 1604271832}
+  _gameOverScreen: {fileID: 0}
   _cardPopup: {fileID: 1940518801}
   _zonePopupWindow: {fileID: 1113561586}
   _gameLog: {fileID: 1063934113}
@@ -4197,6 +4197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175bd436bf85e394dbd6ee730c973aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hasGameStarted: 0
 --- !u!114 &643160889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8327,6 +8328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 175bd436bf85e394dbd6ee730c973aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _hasGameStarted: 0
 --- !u!1001 &1210203243
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12990,7 +12992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6e52930b8e05a74192e9f878a5a1b9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainMenuButton: {fileID: 531558613}
+  mainMenuButton: {fileID: 0}
 --- !u!1 &1604925040
 GameObject:
   m_ObjectHideFlags: 0

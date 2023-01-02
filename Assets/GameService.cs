@@ -17,6 +17,8 @@ public class GameService : MonoBehaviour
     public bool HasGameStarted { get => _hasGameStarted; set => _hasGameStarted = value; }
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
     public bool GameOver { get => _cardGame.CurrentGameState == GameState.GameOver; }
+    public Action<CardGame> OnGameOver { get => _cardGame.OnGameOver; set => _cardGame.OnGameOver += value; }
+
     #endregion
 
     #region Public Methods
@@ -34,8 +36,6 @@ public class GameService : MonoBehaviour
         _cardGame.StartGame();
         _hasGameStarted = true;
     }
-
-
 
     public void ProcessAction(CardGameAction action)
     {

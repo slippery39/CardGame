@@ -23,6 +23,8 @@ public class SimGameController : MonoBehaviour
     public void StartSimulateGame(Decklist player1Deck, Decklist player2Deck)
     {
         _gameService.SetupGame(player1Deck, player2Deck);
+        _gameService.OnGameOver += (CardGame game) => Debug.Log("Game is over!");
         _gameService.StartGame();
+
     }
 }
