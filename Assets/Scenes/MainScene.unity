@@ -7700,6 +7700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player1DeckSelect: {fileID: 1087804521}
   _player2DeckSelect: {fileID: 406689806}
+  _numberOfGames: {fileID: 172470764}
   _simGameControler: {fileID: 1206622303}
 --- !u!1 &768715233
 GameObject:

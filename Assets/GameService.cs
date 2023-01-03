@@ -11,13 +11,15 @@ public class GameService : MonoBehaviour
     [SerializeField]
     private bool _hasGameStarted = false;
 
+    private ISubject<CardGame> _onGameOver = new Subject<CardGame>();
     #endregion
 
     #region Properties
     public bool HasGameStarted { get => _hasGameStarted; set => _hasGameStarted = value; }
     public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
     public bool GameOver { get => _cardGame.CurrentGameState == GameState.GameOver; }
-    public Action<CardGame> OnGameOver { get => _cardGame.OnGameOver; set => _cardGame.OnGameOver += value; }
+    public IObservable<CardGame> OnGameOverObservable { get => _onGameOver.AsObservable(); }
+
 
     #endregion
 
@@ -26,6 +28,10 @@ public class GameService : MonoBehaviour
     {
         _cardGame = new CardGame();
         _cardGame.SetupPlayers(player1Deck, player2Deck);
+        _cardGame.OnGameOver += (c) =>
+        {
+            _onGameOver.OnNext(c);
+        };
     }
     public void StartGame()
     {
