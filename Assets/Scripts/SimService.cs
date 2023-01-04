@@ -16,7 +16,7 @@ public class SimService
 
         while (cardGame.CurrentGameState != GameState.GameOver)
         {           
-            new DefaultBrain().GetNextAction(cardGame);
+           cardGame.ProcessAction(new DefaultBrain().GetNextAction(cardGame));
         }
 
         return cardGame;

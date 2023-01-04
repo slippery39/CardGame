@@ -198,7 +198,7 @@ public class CardGame
         //TODO - Should not be called by the constructor
 
         OnGameStateChanged = new ReplaySubject<CardGame>(10);
-
+        OnGameOver = new ReplaySubject<CardGame>(1);
     }
 
 

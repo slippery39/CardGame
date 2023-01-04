@@ -9,29 +9,34 @@ using System.Threading.Tasks;
 public class SimGameController : MonoBehaviour
 {    
     [SerializeField] SimService _simService;
+
+    private void Awake()
+    {
+        _simService = new SimService();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         //_simService = GetComponent<GameService>();
     }
 
-    public void StartSimulateGame(Decklist player1Deck, Decklist player2Deck)
+    public async void SimulateGame(Decklist player1Deck, Decklist player2Deck)
     {
-        /*
-        _simService.SetupGame(player1Deck, player2Deck);
-        _simService.OnGameOverObservable.Subscribe(c =>
+        Debug.Log("Game has started simulation");
+        await Task.Run(() =>
         {
-            Debug.Log($"Game has ended. {c.WinLoseSystem.GetGameOverInfo().Winner.Name} is the winner");
+            _simService.SimulateGame(player1Deck, player2Deck);
         });
-
-        _simService.StartGame();
-        */
+        Debug.Log("Game has ended simulation");
     }
 
+    /*
     public void SimulateNGames(Decklist player1Deck, Decklist player2Deck, int numberOfGames)
     {
         int gameId = 1;
         Debug.Log($"Simulation has started for game {gameId}");
         StartSimulateGame(player1Deck, player2Deck);
     }
+    */
 }
