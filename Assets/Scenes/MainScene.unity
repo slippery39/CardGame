@@ -11178,9 +11178,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1206622304}
   - component: {fileID: 1206622303}
-  - component: {fileID: 1206622307}
-  - component: {fileID: 1206622306}
-  - component: {fileID: 1206622305}
   m_Layer: 0
   m_Name: SimGameController
   m_TagString: Untagged
@@ -11200,7 +11197,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d9af00011c8f10240841a5e986fd13aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameService: {fileID: 0}
 --- !u!4 &1206622304
 Transform:
   m_ObjectHideFlags: 0
@@ -11216,53 +11212,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1206622305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206622302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebdad529afa253143b614ea4aaae8fae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerId: 2
-  previousDebugMessage: 
-  _calculations: 0
-  _disabled: 0
-  _gameService: {fileID: 0}
---- !u!114 &1206622306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206622302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ebdad529afa253143b614ea4aaae8fae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerId: 1
-  previousDebugMessage: 
-  _calculations: 0
-  _disabled: 0
-  _gameService: {fileID: 0}
---- !u!114 &1206622307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206622302}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 175bd436bf85e394dbd6ee730c973aac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _hasGameStarted: 0
 --- !u!1001 &1210203243
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15110,6 +15059,7 @@ GameObject:
   - component: {fileID: 1469189958}
   - component: {fileID: 1469189957}
   - component: {fileID: 1469189956}
+  - component: {fileID: 1469189959}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -15202,6 +15152,18 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1469189959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1469189954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a3c2d25135001e48b86279d4032c1b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1471625246
 PrefabInstance:
   m_ObjectHideFlags: 0

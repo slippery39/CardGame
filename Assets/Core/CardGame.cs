@@ -135,14 +135,17 @@ public class CardGame
     /// Note, do not subscribe to this one, this should really only be used by core classes.
     /// </summary>
 
+    [JsonIgnore]
     public ReplaySubject<CardGame> OnGameStateChanged;
+    [JsonIgnore]
     public IObservable<CardGame> GameStateChangedObservable => OnGameStateChanged.AsObservable();
+
+    [JsonIgnore]
+    public ReplaySubject<CardGame> OnGameOver;
+    [JsonIgnore]
+    public IObservable<CardGame> OnGameOverObservable => OnGameOver.AsObservable();
     #endregion
 
-    #region Events
-    [JsonIgnore]
-    public Action<CardGame> OnGameOver;
-    #endregion
 
     public CardGame()
     {

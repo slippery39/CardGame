@@ -5,27 +5,27 @@ using UniRx;
 using System;
 using System.Threading.Tasks;
 
-[RequireComponent(typeof(GameService))]
-public class SimGameController : MonoBehaviour
-{
-    [SerializeField]
-    private GameService _gameService;
 
+public class SimGameController : MonoBehaviour
+{    
+    [SerializeField] SimService _simService;
     // Start is called before the first frame update
     void Start()
     {
-        _gameService = GetComponent<GameService>();
+        //_simService = GetComponent<GameService>();
     }
 
     public void StartSimulateGame(Decklist player1Deck, Decklist player2Deck)
     {
-        _gameService.SetupGame(player1Deck, player2Deck);
-        _gameService.OnGameOverObservable.Subscribe(c =>
+        /*
+        _simService.SetupGame(player1Deck, player2Deck);
+        _simService.OnGameOverObservable.Subscribe(c =>
         {
             Debug.Log($"Game has ended. {c.WinLoseSystem.GetGameOverInfo().Winner.Name} is the winner");
         });
 
-        _gameService.StartGame();
+        _simService.StartGame();
+        */
     }
 
     public void SimulateNGames(Decklist player1Deck, Decklist player2Deck, int numberOfGames)
