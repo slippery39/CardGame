@@ -22,11 +22,25 @@ public class SimService
         return cardGame;
     }
 
-    public void SimulateNGames(Decklist player1Deck, Decklist player2Deck, int numberOfGames)
+    public List<GameOverInfo> SimulateNGames(Decklist player1Deck, Decklist player2Deck, int numberOfGames)
     {
+        var results = new List<GameOverInfo>();
+        for (var i=0; i < numberOfGames; i++)
+        {
+            int gameId = (i + 1);
+            Debug.Log($"Simulation has started for game {gameId}");
+            var result = SimulateGame(player1Deck, player2Deck);
+            results.Add(result.WinLoseSystem.GetGameOverInfo());
+            Debug.Log($"Simulation has ended for game {gameId}");
+        }
 
-        int gameId = 1;
-        Debug.Log($"Simulation has started for game {gameId}");
-        SimulateGame(player1Deck, player2Deck);
+        Debug.Log("Final Results of Sim!");
+        Debug.Log("------");
+        foreach (var result in results)
+        {
+            Debug.Log($"Winning Player : {result.Winner.Name}");
+        }
+
+        return results;
     }
 }

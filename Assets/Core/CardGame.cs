@@ -594,10 +594,8 @@ public class CardGame
         action.CardToPlay = GetEntities<CardInstance>().Where(e => e.EntityId == action.CardToPlay?.EntityId).FirstOrDefault();
         action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
 
-        Log("Processing Action...");
         if (action.IsValidAction(this))
         {
-            Log("Action is Valid...");
             action.DoAction(this);
         }
         else
