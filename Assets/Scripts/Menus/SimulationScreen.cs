@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SimulationScreen : MonoBehaviour
 {
@@ -13,6 +14,9 @@ public class SimulationScreen : MonoBehaviour
     private TMP_Dropdown _player2DeckSelect;
     [SerializeField]
     private TMP_InputField _numberOfGames;
+
+    [SerializeField]
+    private Button _simulateButton;
 
     private SimService _simService;
 
@@ -44,10 +48,18 @@ public class SimulationScreen : MonoBehaviour
         var player2Deck = deckDB.GetByName(_player2DeckSelect.options[_player2DeckSelect.value].text);
 
         _isSimulating = true;
+        _simulateButton.interactable = false;
+        _player1DeckSelect.interactable = false;
+        _player2DeckSelect.interactable = false;
+        _numberOfGames.interactable = false;
         Task.Run(() =>
         {
             _simService.SimulateNGames(player1Deck, player2Deck, numberOfGames);
             _isSimulating = false;
+            _simulateButton.interactable = false;
+            _player1DeckSelect.interactable = true;
+            _player2DeckSelect.interactable = true;
+            _numberOfGames.interactable = true;
         });
     }
 }
