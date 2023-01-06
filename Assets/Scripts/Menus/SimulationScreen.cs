@@ -27,7 +27,7 @@ public class SimulationScreen : MonoBehaviour
         _simService = new SimService();
     }
 
-    public void SimulateGame()
+    public async void SimulateGame()
     {
         Debug.Log("Game is simulating...");
 
@@ -48,18 +48,21 @@ public class SimulationScreen : MonoBehaviour
         var player2Deck = deckDB.GetByName(_player2DeckSelect.options[_player2DeckSelect.value].text);
 
         _isSimulating = true;
+        Debug.Log("setting things uninteractable");
         _simulateButton.interactable = false;
         _player1DeckSelect.interactable = false;
         _player2DeckSelect.interactable = false;
         _numberOfGames.interactable = false;
-        Task.Run(() =>
+        await Task.Run(() =>
         {
             _simService.SimulateNGames(player1Deck, player2Deck, numberOfGames);
             _isSimulating = false;
-            _simulateButton.interactable = false;
-            _player1DeckSelect.interactable = true;
-            _player2DeckSelect.interactable = true;
-            _numberOfGames.interactable = true;
+            Debug.Log("Task is finished");
         });
+        Debug.Log("Setting interactable things");
+        _simulateButton.interactable = true;
+        _player1DeckSelect.interactable = true;
+        _player2DeckSelect.interactable = true;
+        _numberOfGames.interactable = true;
     }
 }
