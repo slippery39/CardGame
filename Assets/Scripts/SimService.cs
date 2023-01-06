@@ -14,9 +14,17 @@ public class SimService
         cardGame.OnGameOverObservable.Subscribe((c) => Debug.Log($"Game has ended. {c.WinLoseSystem.GetGameOverInfo().Winner.Name} is the winner"));
         cardGame.StartGame();
 
+
+        int numActions = 0;
         while (cardGame.CurrentGameState != GameState.GameOver)
-        {           
-           cardGame.ProcessAction(new DefaultBrain().GetNextAction(cardGame));
+        {
+            var nextAction = new DefaultBrain().GetNextAction(cardGame);
+           cardGame.ProcessAction(nextAction);
+           numActions++;
+           if (numActions > 1000)
+           {
+                var i = 0;
+           }
         }
 
         return cardGame;

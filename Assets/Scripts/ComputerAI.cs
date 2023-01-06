@@ -34,7 +34,7 @@ public class ComputerAI : MonoBehaviour
     {
         _gameService = this.GetComponent<GameService>();
         //The AI will attempt to select his action every 0.5 seconds.
-        Observable.Interval(TimeSpan.FromSeconds(0.25)).Subscribe((_) =>
+        Observable.Interval(TimeSpan.FromSeconds(0.4)).Subscribe((_) =>
         {
                 TryChooseAction();
         });

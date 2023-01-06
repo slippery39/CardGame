@@ -394,15 +394,19 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
         foreach (var action in actions)
         {
+            var needsTargets = _cardGame.TargetSystem.CardNeedsTargets(this.GetOwner(), this);
             var targets = action.GetValidTargets(CardGame);
 
             var additionalCosts = action.GetValidAdditionalCosts(CardGame);
 
-            if (targets.Count == 0 && additionalCosts.Count == 0)
+            
+
+            //TODO : This check will fail, we need to check if the action is one that actually needs targets, not only if there are no valid targets found.
+            if ( (!needsTargets && targets.Count == 0) && additionalCosts.Count == 0)
             {
                 actionList.Add(action);
             }
-            else if (targets.Count > 0 && additionalCosts.Count == 0)
+            else if ( (needsTargets && targets.Count > 0) && additionalCosts.Count == 0)
             {
                 List<CardGameAction> actionsWithTargets = targets.Select(t =>
                 {
@@ -413,7 +417,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
                 actionList.AddRange(actionsWithTargets);
             }
-            else if (targets.Count == 0 && additionalCosts.Count > 0)
+            else if ( (!needsTargets && targets.Count == 0) && additionalCosts.Count > 0)
             {
                 List<CardGameAction> actionsWithAdditionalCosts = additionalCosts.Select(ac =>
                 {
@@ -424,7 +428,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
                 actionList.AddRange(actionsWithAdditionalCosts);
             }
-            else if (targets.Count > 0 && additionalCosts.Count > 0)
+            else if ( (needsTargets && targets.Count > 0) && additionalCosts.Count > 0)
             {
                 //Make a permutation of each list.
                 //For each valid target
