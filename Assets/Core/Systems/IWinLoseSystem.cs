@@ -45,7 +45,7 @@ public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
         {
             return new GameOverInfo
             {
-                IsDraw = true
+                IsDraw = true,
             };
         }
         else if (cardGame.Player1.IsLoser)
@@ -53,7 +53,7 @@ public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
             return new GameOverInfo
             {
                 Winner = cardGame.Player2,
-                Loser = cardGame.Player1
+                Loser = cardGame.Player1,
             };
         }
         else
@@ -61,7 +61,7 @@ public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
             return new GameOverInfo
             {
                 Winner = cardGame.Player1,
-                Loser = cardGame.Player2
+                Loser = cardGame.Player2,
             };
         }
     }

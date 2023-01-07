@@ -282,7 +282,10 @@ public class RevealTopCardModification : Modification, IOnAfterStateBasedEffects
 {
     public void OnAfterStateBasedEffects(CardGame cardGame, Player player)
     {
-        player.Deck.GetTopCard().RevealedToOwner = true;
+        if (player.Deck.GetTopCard() != null)
+        {
+            player.Deck.GetTopCard().RevealedToOwner = true;
+        }
     }
 }
 

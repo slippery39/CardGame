@@ -23,6 +23,12 @@ public class Deck : Zone
     public CardInstance GetTopCard()
     {
         //The top of our deck will be the last card added to the list.
+
+        if (_cards.Count == 0)
+        {
+            return null;
+        }
+        
         var card = _cards[_cards.Count - 1];
         return card;
     }

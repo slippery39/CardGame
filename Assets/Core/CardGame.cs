@@ -244,7 +244,8 @@ public class CardGame
     {
         Profiler.BeginSample("Card Game Copy");
 
-        var newCardData = RegisteredCardData.Clone();
+        var newCardData = RegisteredCardData.ToDictionary(entry => entry.Key,
+                                               entry => entry.Value.Clone());
 
         //Look for any cloneable systems
         var clone = new CardGame();

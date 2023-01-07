@@ -32,7 +32,10 @@ public class DelverTransformEffect : Effect
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
-
+        if (player.Deck.GetTopCard() == null)
+        {
+            return;
+        }
         if (!player.Deck.GetTopCard().IsOfType<SpellCardData>())
         {
             return;

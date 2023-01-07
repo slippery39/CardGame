@@ -22,7 +22,10 @@ public class MillEffect : Effect
 
             for (var i = 0; i < Amount; i++)
             {
-                cardGame.ZoneChangeSystem.MoveToZone(playerEntity.Deck.GetTopCard(), playerEntity.DiscardPile);
+                if (playerEntity.Deck.Count() > 0)
+                {
+                    cardGame.ZoneChangeSystem.MoveToZone(playerEntity.Deck.GetTopCard(), playerEntity.DiscardPile);
+                }
             }
         }
     }
