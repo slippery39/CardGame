@@ -22,12 +22,6 @@ public class SimService
         while (cardGame.CurrentGameState != GameState.GameOver)
         {
             var nextAction = new DefaultBrain().GetNextAction(cardGame);
-
-            if (nextAction.CardToPlay == null)
-            {
-                var i = 0;
-            }
-
             cardGame.ProcessAction(nextAction);
             numActions++;
             if (numActions > 1000)

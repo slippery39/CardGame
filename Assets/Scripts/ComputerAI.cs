@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -22,6 +23,9 @@ public class ComputerAI : MonoBehaviour
     [SerializeField]
     private GameService _gameService;
 
+    [SerializeField]
+    private bool _isChoosing = false;
+
     private IBrain _brain;
 
     private void Awake()
@@ -36,11 +40,14 @@ public class ComputerAI : MonoBehaviour
         //The AI will attempt to select his action every 0.5 seconds.
         Observable.Interval(TimeSpan.FromSeconds(0.4)).Subscribe((_) =>
         {
+            if (!_isChoosing)
+            {
                 TryChooseAction();
+            }
         });
     }
 
-    private void TryChooseAction()
+    private async void TryChooseAction()
     {
         if (!_gameService.HasGameStarted)
         {
@@ -56,7 +63,10 @@ public class ComputerAI : MonoBehaviour
 
         if (cardGame.ActivePlayer.PlayerId == playerId)
         {
-            _gameService.ProcessAction(_brain.GetNextAction(cardGame));
+            _isChoosing = true;
+            var action = await Task.Run(() => _brain.GetNextAction(cardGame));
+            _gameService.ProcessAction(action);
+            _isChoosing = false;
         }
     }
 }

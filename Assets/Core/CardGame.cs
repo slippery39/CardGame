@@ -389,7 +389,7 @@ public class CardGame
         {
             var abilities = unit.GetAbilitiesAndComponents<TriggeredAbility>().Where(ab => ab.TriggerType == triggerType);
 
-            foreach (var ab in abilities)
+            foreach (var ab in abilities.ToList())
             {
                 ResolvingSystem.Add(ab, unit);
             }

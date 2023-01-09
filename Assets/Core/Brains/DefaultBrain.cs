@@ -31,7 +31,7 @@ public class DefaultBrain : IBrain
         _calculations = 0;
         return ChooseActionBase(cardGame);
     }
-    private int FindBestScoreForNode(StateActionNode node, int currentBest) 
+    private int FindBestScoreForNode(StateActionNode node, int currentBest)
     {
         if (node == null)
         {
@@ -90,20 +90,12 @@ public class DefaultBrain : IBrain
         //return the chosen action.
         if (positiveActions.Any())
         {
-            //TODO - check if the action will have a negative impact on the current board state.---
             var actionToChoose = positiveActions.First().Action;
-
-            if (actionToChoose.CardToPlay == null)
-            {
-                var debug = 0;
-            }
-            //MiniMax Algorithm
             return actionToChoose;
         }
         else
         {
             return new NextTurnAction();
-            //end turn.
         }
     }
     private List<StateActionNode> CalculateStateActionScoresForState(CardGame cardGame, StateActionNode parent, int currentDepth)
@@ -160,20 +152,8 @@ public class DefaultBrain : IBrain
         var gameState = cardGame;
         var originalScore = EvaluateBoard(cardGame.ActivePlayer, gameState);
 
-        if (validActions.Where(act =>
-        {
-            return (act is PlaySpellAction || act is PlayUnitAction) && act.CardToPlay == null; 
-        }).ToList().Count>0)
-        {
-            var debug = 0;
-        }
-
         var actionScores = validActions.Select(act =>
         {
-        if  ((act is PlaySpellAction || act is PlayUnitAction) && act.CardToPlay == null )
-            {
-                var debug = 1;
-            }
             var gameStateCopy = gameState.Copy(true);
             gameStateCopy.ProcessAction(act);
             var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);
@@ -229,8 +209,25 @@ public class DefaultBrain : IBrain
 
         var score = 0;
 
-        score += myLifeTotal * 20;
-        score -= oppLifeTotal * 20;
+        if (myLifeTotal <=0 && oppLifeTotal <= 0)
+        {
+            return 55555;
+        }
+
+        if (myLifeTotal <= 0)
+        {
+            return -999999;
+        }
+        if (oppLifeTotal <= 0)
+        {
+            return 999999;
+        }
+
+
+        //We need to make life total more valuable the more it goes down (for ourselves)
+
+        score += Convert.ToInt32(Math.Log(myLifeTotal))* 20;
+        score -= Convert.ToInt32(Math.Log(oppLifeTotal)) * 20;
 
         //Power of units in play
         if (me.GetUnitsInPlay().Any())
@@ -239,11 +236,24 @@ public class DefaultBrain : IBrain
             score += totalPower * 50;
         }
 
+        //Toughness of units in play
+        if (me.GetUnitsInPlay().Any())
+        {
+            var totalToughness = me.GetUnitsInPlay().Select(c => c.Toughness).Aggregate((p1, p2) => p1 + p2);
+            score += totalToughness * 30;
+        }
+
         //Power of opponent units in play
         if (opp.GetUnitsInPlay().Any())
         {
             var totalPowerOpp = opp.GetUnitsInPlay().Select(c => c.Power).Aggregate((p1, p2) => p1 + p2);
             score -= totalPowerOpp * 50;
+        }
+        //Toughness of opponent units in play
+        if (opp.GetUnitsInPlay().Any())
+        {
+            var totalToughnessOpp= opp.GetUnitsInPlay().Select(c => c.Toughness).Aggregate((p1, p2) => p1 + p2);
+            score -= totalToughnessOpp * 30;
         }
 
         //Total number of resources available.
