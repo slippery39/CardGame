@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
 
 //NOTE - Unity does not support null in serialization. If we want things to be serialized, we should use the null object pattern instead.
 //Don't use System.Serializable unless we are 100% sure nothing will be set to null.
@@ -76,7 +75,7 @@ public class Lane : CardGameEntity, IZone, IDeepCloneable<Lane>
     {
         if (_unitInLane != card)
         {
-            Debug.LogError("Trying to remove a card that does not exist in lane");
+            //Debug.LogError("Trying to remove a card that does not exist in lane");
         }
         else
         {

@@ -39,6 +39,8 @@ public interface IEventLogSystem
     public int NextEventId { get; set; }
     public void AddEvent(string log);
     public void AddGameOverEvent();
+
+    public void FireGameStateChanged();
 }
 
 public class EmptyEventLogSystem : CardGameSystem, IEventLogSystem
@@ -48,11 +50,18 @@ public class EmptyEventLogSystem : CardGameSystem, IEventLogSystem
 
     public void AddEvent(string log)
     {
+        //do nothing
     }
+
 
     public void AddGameOverEvent()
     {
+        //do nothing
+    }   
 
+    public void FireGameStateChanged()
+    {
+        //do nothing;
     }
 
     public IObservable<GameEventLog> GetGameEventLogsAsObservable()
@@ -89,6 +98,11 @@ public class EventLogSystem : CardGameSystem, IEventLogSystem
         Events.Add(eventLog);
 
         eventsAsSubject.OnNext(eventLog);
+    }
+
+    public void FireGameStateChanged()
+    {
+        this.cardGame.OnGameStateChanged.OnNext(this.cardGame.Copy());
     }
 
     public void AddGameOverEvent()

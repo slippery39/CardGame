@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 public interface IZoneChangeSystem
 {
@@ -20,7 +19,7 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
 
     public void MoveToZone(CardInstance card, IZone zoneTo)
     {
-        var currentZone = cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();
+        var currentZone = card.CurrentZone;//cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();
 
         if (currentZone == null)
         {
@@ -34,10 +33,11 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         card.ContinuousEffects = new List<ContinuousEffect>();
 
         //remove any continuous effects in play that are from the associated card
-        var unitsInPlay = cardGame.GetUnitsInPlay();
+        //var unitsInPlay = cardGame.GetUnitsInPlay();
 
         currentZone.Remove(card);
         zoneTo.Add(card);
+        card.CurrentZone = zoneTo;
 
         //Apply any ETB Triggers
         if (currentZone.ZoneType != ZoneType.InPlay && zoneTo.ZoneType == ZoneType.InPlay)

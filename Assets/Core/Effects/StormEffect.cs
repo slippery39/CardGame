@@ -10,8 +10,6 @@ public class StormEffect : Effect
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         var amount = cardGame.SpellsCastThisTurn;
-        cardGame.Log($"Storming {amount} times");
-
         for(var i= 0;i < amount; i++) 
         {
             //Potential issue here with the entities to apply

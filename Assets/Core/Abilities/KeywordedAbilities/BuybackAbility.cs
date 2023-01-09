@@ -33,7 +33,6 @@ public class BuybackAbility : CardAbility, ICastModifier, IModifyZoneOnResolve
     {
         //Return it to hand instead of putting it into the graveyard.
         //This needs to use a replacement effect.
-        cardGame.Log("Buyback Ability has resolved");
     }
 
     public IZone ModifyZoneOnResolve(CardGame cardGame, IZone zoneTo, CardInstance spell)

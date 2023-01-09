@@ -15,9 +15,13 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     private bool _isSummoningSick = true;
     private bool _isExhausted = false; //exhausted will be our term for tapped
     private CardGame _cardGame;
+
+    //Cached zone;
+    public IZone CurrentZone { get; set; }
+
     public IZone GetZone()
     {
-        return _cardGame.GetZoneOfCard(this);
+        return CurrentZone;
     }
 
     public Player GetOwner()
@@ -360,16 +364,15 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         }
     }
 
-    public List<T> GetAbilitiesAndComponents<T>()
+    public IEnumerable<T> GetAbilitiesAndComponents<T>()
     {
 
-        var abilities = Abilities.Where(a => a is T).Cast<T>().ToList();
-
+        var abilities = Abilities.Where(a => a is T).Cast<T>();
         //also look for ability components
 
-        var abilityComponents = Abilities.SelectMany(a => a.Components).Where(c => c is T).Cast<T>().ToList();
+        var abilityComponents = Abilities.SelectMany(a => a.Components).Where(c => c is T).Cast<T>();
 
-        return abilities.Union(abilityComponents).ToList();
+        return abilities.Concat(abilityComponents);
     }
     /// <summary>
     /// Returns anything on the card instance which could modify a property of the card.
@@ -379,7 +382,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     /// <returns></returns>
     public List<T> GetMods<T>()
     {
-        return GetAbilitiesAndComponents<T>().Union(Modifications.GetOfType<T>()).Union(Counters.GetOfType<T>()).ToList();
+        return GetAbilitiesAndComponents<T>().Concat(Modifications.GetOfType<T>()).Concat(Counters.GetOfType<T>()).ToList();
     }
 
     /// <summary>
@@ -394,12 +397,15 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
         foreach (var action in actions)
         {
-            var needsTargets = _cardGame.TargetSystem.CardNeedsTargets(this.GetOwner(), this);
+            var needsTargets = this.CurrentCardData is UnitCardData || _cardGame.TargetSystem.CardNeedsTargets(this.GetOwner(), this);
             var targets = action.GetValidTargets(CardGame);
 
-            var additionalCosts = action.GetValidAdditionalCosts(CardGame);
+            var additionalCosts = action.GetValidAdditionalCosts(CardGame);            
 
-            
+            if (needsTargets && action is PlaySpellAction)
+            {
+                var debug = 0;
+            }
 
             //TODO : This check will fail, we need to check if the action is one that actually needs targets, not only if there are no valid targets found.
             if ( (!needsTargets && targets.Count == 0) && additionalCosts.Count == 0)
@@ -507,6 +513,14 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
             }
         }
 
+        if (actions.Where(act =>
+        {
+            return (act is PlaySpellAction || act is PlayUnitAction) && act.CardToPlay == null;
+        }).Count() > 0)
+        {
+            var debug = 0;
+        }
+
         return actions;
     }
 
@@ -515,7 +529,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         return (CardInstance)this.MemberwiseClone();
     }
 
-    public List<ActivatedAbility> GetActivatedAbilities()
+    public IEnumerable<ActivatedAbility> GetActivatedAbilities()
     {
         return Abilities.GetOfType<ActivatedAbility>();
     }
@@ -545,6 +559,8 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         //CardGame should be set by the caller of this DeepClone().
         var clone = (CardInstance)MemberwiseClone();
 
+        clone.Abilities = Abilities.Where(a => !(a.Components.GetOfType<ContinuousAblityComponent>().Any())).Select(a => a.Clone()).ToList();
+
         //Potential Issues with cloning abilities here?
         clone.Abilities = Abilities.Select(a => a.Clone()).ToList();
 
@@ -553,19 +569,16 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         clone.ContinuousEffects = new List<ContinuousEffect>();
         clone.Modifications = Modifications.Clone();
         clone.Modifications = clone.Modifications.Where(a => a.StaticInfo == null).ToList(); //we cannot keep any static modifications, that will be 
-
-        //Remove any continous ability components, these will be reapplied as part of static effects.          
-        clone.Abilities =  clone.Abilities.Where(a => !(a.Components.GetOfType<ContinuousAblityComponent>().Any())).ToList();
-
-        clone.Counters = Counters.Clone();
+        clone.Counters = Counters.Select(c => c.Clone()).ToList();
         clone.EntityId = EntityId;
         clone.Name = Name;
         clone.CardGame = cardGame;
 
         if (_currentCardData.BackCard != null)
-        {
+        {         
             clone.BackCard = new CardInstance(cardGame, _currentCardData.BackCard);
             clone.BackCard.FrontCard = clone;
+            clone.BackCard.EntityId = BackCard.EntityId;
         }
 
         //Back Card and Front Card (references or not?)

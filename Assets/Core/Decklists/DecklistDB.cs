@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
-
 
 public class Decklist
 {
@@ -30,7 +28,7 @@ public class Decklist
             }
             catch
             {
-                Debug.Log($"Invalid amount when trying to create deck list for line {trimLine}");
+                //Debug.Log($"Invalid amount when trying to create deck list for line {trimLine}");
                 continue;
             }
 
@@ -44,7 +42,7 @@ public class Decklist
 
                 if (card == null)
                 {
-                    Debug.Log($"Could not find card {cardName} when trying to create a deck");
+                    //Debug.Log($"Could not find card {cardName} when trying to create a deck");
                     continue;
                 }
                 deck.Add(db.GetCardData(cardName));

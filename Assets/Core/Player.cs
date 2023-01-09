@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
 public class Player : CardGameEntity, IDeepCloneable<Player>
 {
     #region Private Fields
@@ -88,22 +87,34 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         clone.Name = Name;
 
         clone.Lanes = Lanes.DeepClone(cardGame).ToList();
+        clone.Lanes.ForEach(x =>
+        {
+            if (x.UnitInLane != null)
+            {
+                x.UnitInLane.CurrentZone = x;
+            }
+        });
 
         clone.Hand = Hand.Clone();
         clone.Hand.Cards = Hand.Cards.DeepClone(cardGame).ToList();
+        clone.Hand.Cards.ForEach(card => card.CurrentZone = clone.Hand);
 
         clone.DiscardPile = DiscardPile.Clone();
         clone.DiscardPile.Cards = DiscardPile.Cards.DeepClone(cardGame).ToList();
+        clone.DiscardPile.Cards.ForEach(card => card.CurrentZone = clone.DiscardPile);
 
         clone.Deck = Deck.Clone();
         clone.Deck.Cards = Deck.Cards.DeepClone(cardGame).ToList();
+        clone.Deck.Cards.ForEach(card => card.CurrentZone = clone.Deck);
 
         clone.Exile = Exile.Clone();
         clone.Exile.Cards = Exile.Cards.DeepClone(cardGame).ToList();
+        clone.Exile.Cards.ForEach(card => card.CurrentZone = clone.Exile);
 
 
         clone.Items = new Zone(ZoneType.InPlay, "Items");
         clone.Items.Cards.AddRange(Items.Cards.DeepClone(cardGame).ToList());
+        clone.Items.Cards.ForEach(card => card.CurrentZone = clone.Items);
 
         //TODO - do an actual clone here.
         ManaPool = ManaPool.DeepClone();
@@ -115,7 +126,24 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
 
     public List<CardGameEntity> GetAllEntities()
     {
-        return Lanes.Cast<CardGameEntity>().Union(GetCardsInPlay()).Union(Hand).Union(DiscardPile).Union(Deck).Union(Exile).Cast<CardGameEntity>().ToList();
+        var entities = Lanes.Cast<CardGameEntity>()
+              .Concat(GetCardsInPlay())
+              .Concat(Hand)
+              .Concat(DiscardPile)
+              .Concat(Deck)
+              .Concat(Exile)
+              .Cast<CardGameEntity>().ToList();
+
+        //Edge case for back cards
+        foreach (var card in entities.GetOfType<CardInstance>())
+        {
+            if (card.BackCard != null)
+            {
+                entities.Add(card.BackCard);
+            }
+        }
+
+        return entities;
     }
 
     public List<CardInstance> GetUnitsInPlay()
@@ -144,6 +172,16 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
                 LaneIndex = l.LaneIndex
             };
         });
+
+        var actions = handActions.Concat(inPlayActions).Concat(fightActions).ToList();
+
+        foreach (var action in actions)
+        {
+            if ((action is PlayManaAction || action is PlayUnitAction || action is PlaySpellAction) && (action.CardToPlay == null))
+            {
+                //Debug.Log("Found an in valid action!");
+            }
+        }
 
 
         return handActions.Concat(inPlayActions).Concat(fightActions).ToList();

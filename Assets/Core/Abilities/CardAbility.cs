@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 public abstract class CardAbility
 {
@@ -18,7 +17,7 @@ public abstract class CardAbility
     public CardAbility Clone()
     {
         CardAbility clone = (CardAbility)MemberwiseClone();
-        clone.Components = Components.Clone();
+        clone.Components = Components.Select(c => c.Clone()).ToList();
         return clone;
     }
 

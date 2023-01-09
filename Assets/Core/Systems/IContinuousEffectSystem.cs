@@ -11,6 +11,8 @@ public interface IContinuousEffectSystem
 public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSystem
 {
 
+    private List<CardInstance> cardsWithStaticAbilities = null;
+
     public DefaultContinousEffectSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;
@@ -18,20 +20,21 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
 
     public void ApplyStaticEffects()
     {
-        var cardsInPlay = cardGame.GetCardsInPlay();
-        var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard => discard.Cards);
 
-        foreach (var card in cardsInPlay.Concat(cardsInGraveyards))
+        if (cardsWithStaticAbilities == null)
         {
-            var unitStaticAbilities = card.GetAbilitiesAndComponents<StaticAbility>();
-            if (unitStaticAbilities.Count > 0)
+            cardsWithStaticAbilities = cardGame.GetEntities<CardInstance>().Where(c => c.GetAbilitiesAndComponents<StaticAbility>().Any()).ToList();
+        }
+
+        //To Increase Performance - Automatically 
+
+        foreach (var card in cardsWithStaticAbilities)
+        {
+            foreach (var sAbility in card.GetAbilitiesAndComponents<StaticAbility>())
             {
-                foreach (var sAbility in unitStaticAbilities)
+                if (cardGame.IsInZone(card, sAbility.ApplyWhenIn))
                 {
-                    if (cardGame.IsInZone(card, sAbility.ApplyWhenIn))
-                    {
-                        Apply(card, sAbility);
-                    }
+                    Apply(card, sAbility);
                 }
             }
         }
@@ -42,7 +45,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
         var cardsInPlay = cardGame.GetCardsInPlay();
         var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard => discard.Cards);
 
-        foreach (var card in cardGame.GetEntities<CardGameEntity>())
+        foreach (var card in cardGame.GetEntities())
         {
             var continousEffectsOnUnit = card.ContinuousEffects;
 
@@ -116,7 +119,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
     /// <param name="sourceCard"></param>
     private void RemoveContinuousEffects(CardInstance sourceCard)
     {
-        foreach (var card in cardGame.GetEntities<CardGameEntity>())
+        foreach (var card in cardGame.GetEntities())
         {
             //Remove all continuous effects
             card.ContinuousEffects = card.ContinuousEffects.Where(ce => ce.SourceCard != sourceCard).ToList();
@@ -132,6 +135,10 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
             {
                 cardInstance.Abilities = cardInstance.Abilities.Where(ab =>
                 {
+                    if (!ab.Components.Any())
+                    {
+                        return false;
+                    }
                     var components = ab.Components.GetOfType<ContinuousAblityComponent>();
 
                     if (components.Where(comp => comp.SourceCard == sourceCard).Any())

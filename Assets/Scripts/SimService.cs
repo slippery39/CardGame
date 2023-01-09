@@ -11,15 +11,23 @@ public class SimService
     public SimResultData SimulateGame(Decklist player1Deck, Decklist player2Deck)
     {
         var cardGame = new CardGame();
+        //Want to make sure events are not firing;
+        cardGame.EventLogSystem = new EmptyEventLogSystem();
         cardGame.SetupPlayers(player1Deck, player2Deck);
         //On Game Over needs to be an observable
-        cardGame.OnGameOverObservable.Subscribe((c) => Debug.Log($"Game has ended. {c.WinLoseSystem.GetGameOverInfo().Winner.Name} is the winner"));
+        cardGame.OnGameOverObservable.Subscribe((c) => Debug.Log($"Game has ended. {c.WinLoseSystem?.GetGameOverInfo().Winner.Name} is the winner"));
         cardGame.StartGame();
 
         int numActions = 0;
         while (cardGame.CurrentGameState != GameState.GameOver)
         {
             var nextAction = new DefaultBrain().GetNextAction(cardGame);
+
+            if (nextAction.CardToPlay == null)
+            {
+                var i = 0;
+            }
+
             cardGame.ProcessAction(nextAction);
             numActions++;
             if (numActions > 1000)

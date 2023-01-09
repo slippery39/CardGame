@@ -92,6 +92,11 @@ public class DefaultBrain : IBrain
         {
             //TODO - check if the action will have a negative impact on the current board state.---
             var actionToChoose = positiveActions.First().Action;
+
+            if (actionToChoose.CardToPlay == null)
+            {
+                var debug = 0;
+            }
             //MiniMax Algorithm
             return actionToChoose;
         }
@@ -155,13 +160,23 @@ public class DefaultBrain : IBrain
         var gameState = cardGame;
         var originalScore = EvaluateBoard(cardGame.ActivePlayer, gameState);
 
+        if (validActions.Where(act =>
+        {
+            return (act is PlaySpellAction || act is PlayUnitAction) && act.CardToPlay == null; 
+        }).ToList().Count>0)
+        {
+            var debug = 0;
+        }
+
         var actionScores = validActions.Select(act =>
         {
+        if  ((act is PlaySpellAction || act is PlayUnitAction) && act.CardToPlay == null )
+            {
+                var debug = 1;
+            }
             var gameStateCopy = gameState.Copy(true);
             gameStateCopy.ProcessAction(act);
             var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);
-
-
 
             return new StateActionNode
             {

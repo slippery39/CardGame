@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 //Fake Unit Tests
 public static class Tests
@@ -58,7 +57,7 @@ public static class Tests
             var mods = interSections.GetOfType<List<Modification>>();
             var counter = interSections.GetOfType<List<Counter>>();
             var continuousEffects = interSections.GetOfType<List<ContinuousEffect>>();
-            Debug.LogError($" Warning : The CardGame.Copy() method has detected {interSections.Count()} references which were not properly cloned");
+            //Debug.LogError($" Warning : The CardGame.Copy() method has detected {interSections.Count()} references which were not properly cloned");
 
         }
 

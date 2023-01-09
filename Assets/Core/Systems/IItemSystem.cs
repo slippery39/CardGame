@@ -16,9 +16,9 @@ public class DefaultItemSystem : CardGameSystem, IItemSystem
     {
         cardGame.ZoneChangeSystem.MoveToZone(card, player.Items);
 
-        card.GetAbilitiesAndComponents<IOnSummon>().ForEach(ab =>
+        foreach (var ab in card.GetAbilitiesAndComponents<IOnSummon>())
         {
-            ab.OnSummoned(cardGame, card); 
-        });
+            ab.OnSummoned(cardGame, card);
+        }
     }
 }

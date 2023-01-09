@@ -98,13 +98,14 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
         //And resolve those abilities if necessary.
         //TODO - possibly we only need to look for the opponents cards.
         var playersHands = cardGame.Player1.Hand.Union(cardGame.Player2.Hand);
+
         playersHands.Where(card => card.Abilities.GetOfType<IRespondToCast>().Any()).ToList()
         .ForEach(card =>
             {
-                card.GetAbilitiesAndComponents<IRespondToCast>().ForEach(ab =>
+                foreach (var ab in card.GetAbilitiesAndComponents<IRespondToCast>())
                 {
                     ab.BeforeSpellResolve(cardGame, resolvingCardInstance);
-                });
+                }
             });
 
         //Our abilities auto resolve.
@@ -187,7 +188,7 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
                     zoneTo = cardGame.GetOwnerOfCard(spell).Exile;
                 }
 
-                action.CastModifiers.GetOfType<IModifyZoneOnResolve>().ForEach(
+                action.CastModifiers.GetOfType<IModifyZoneOnResolve>().ToList().ForEach(
                     m =>
                     zoneTo = m.ModifyZoneOnResolve(cardGame, zoneTo, spell));
 

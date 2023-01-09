@@ -29,7 +29,20 @@ public static class DeepCloneExtensions
     public static IEnumerable<T> DeepClone<T>(this IEnumerable<T> collection, CardGame cardGame)
             where T : IDeepCloneable<T>
     {
-        return collection.Select(item => item.DeepClone(cardGame)).ToList();
+        /*
+        var newCollection = new List<T>();
+        var collectionAsArray = collection.ToArray();
+
+        for (var i = 0; i < collection.Count(); i++)
+        {
+            var item = collectionAsArray[i];
+            newCollection.Add(item.DeepClone(cardGame));
+        }
+
+        return newCollection;       
+        */
+        return collection.Select(item => item.DeepClone(cardGame));
+        
     }
 }
 
@@ -40,10 +53,10 @@ public static class Extensions
         return (source == null || source.Trim().Length == 0);
     }
 
-    public static List<T> GetOfType<T>(this IEnumerable<object> source)
+    public static IEnumerable<T> GetOfType<T>(this IEnumerable<object> source)
     {
-        return source.Where(o => o is T).Cast<T>().ToList();
-    }
+        return source.Where(o => o is T).Cast<T>();
+    } 
 
     public static IEnumerable<T> Randomize<T>(this IEnumerable<T> source)
     {

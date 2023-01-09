@@ -1,27 +1,29 @@
 ﻿using System;
 using System.Linq;
-public class AffinityAbility : CardAbility, IModifyManaCost
-{
-    public override string RulesText => $"Affinity for artifacts"; //only for artifacts right now.
 
-    public string ModifyManaCost(CardGame cardGame, CardInstance cardInstance, string originalManaCost)
+    public class AffinityAbility : CardAbility, IModifyManaCost
     {
-        //We need to count the amount of artifacts in play for the controller.
-        var cardOwner = cardGame.GetOwnerOfCard(cardInstance);
-        var artifactCounts = cardGame.GetCardsInPlay(cardOwner).Where(c => c.Subtype.ToLower() == "artifact").Count();
+        public override string RulesText => $"Affinity for artifacts"; //only for artifacts right now.
 
-        //Subtract the artifact counts from the colorless mana;
-        var manaCostAsObj = new Mana(originalManaCost);
+        public string ModifyManaCost(CardGame cardGame, CardInstance cardInstance, string originalManaCost)
+        {
+            //We need to count the amount of artifacts in play for the controller.
+            var cardOwner = cardGame.GetOwnerOfCard(cardInstance);
+            var artifactCounts = cardGame.GetCardsInPlay(cardOwner).Where(c => c.Subtype.ToLower() == "artifact").Count();
 
-        manaCostAsObj.ColorlessMana -= artifactCounts;
-        manaCostAsObj.ColorlessMana = Math.Max(0, manaCostAsObj.ColorlessMana);
+            //Subtract the artifact counts from the colorless mana;
+            var manaCostAsObj = new Mana(originalManaCost);
 
-        return manaCostAsObj.ToManaString();
+            manaCostAsObj.ColorlessMana -= artifactCounts;
+            manaCostAsObj.ColorlessMana = Math.Max(0, manaCostAsObj.ColorlessMana);
+
+            return manaCostAsObj.ToManaString();
+        }
+
+        public AffinityAbility()
+        {
+        }
     }
 
-    public AffinityAbility()
-    {
-    }
-}
 
 

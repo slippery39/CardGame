@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 public class DefaultDamageSystem : CardGameSystem, IDamageSystem
 {
@@ -44,7 +43,7 @@ public class DefaultDamageSystem : CardGameSystem, IDamageSystem
 
 
         //IF UNIT HAS TRAMPLE
-        if (attackingUnit.GetAbilitiesAndComponents<TrampleAbility>().Count > 0)
+        if (attackingUnit.GetAbilitiesAndComponents<TrampleAbility>().Count() > 0)
         {
             var damageToUnit = Math.Min(attackingDamage, (defendingUnit.Toughness - defendingUnit.DamageTaken));
             var damageToPlayer = attackingUnit.Power - damageToUnit;

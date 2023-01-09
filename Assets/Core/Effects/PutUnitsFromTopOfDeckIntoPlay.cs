@@ -33,10 +33,13 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
+
         var cardsToCheck = player.Deck.Cards.ToList();
         cardsToCheck.Reverse();
 
-        cardsToCheck = cardsToCheck.Take(CardsToLookAt).ToList();
+        var cardsToLookAt = Math.Min(CardsToLookAt, cardsToCheck.Count);
+
+        cardsToCheck = cardsToCheck.Take(cardsToLookAt).ToList();
 
         cardsToCheck = cardsToCheck.Where(c => c.IsOfType<UnitCardData>()).ToList();
 
@@ -64,8 +67,11 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
 
         for (var i = 0; i < amountToPutIntoPlay; i++)
         {
-            cardGame.UnitSummoningSystem.SummonUnit(player, cardsToCheck.First(), player.GetEmptyLanes().First().EntityId);
-            cardsToCheck.RemoveAt(0);
+            if (player.GetEmptyLanes().Any())
+            {
+                cardGame.UnitSummoningSystem.SummonUnit(player, cardsToCheck.First(), player.GetEmptyLanes().First().EntityId);
+                cardsToCheck.RemoveAt(0);
+            }
         }
         //Should actually put the rest on the bottom.
         cardGame.CardDrawSystem.Shuffle(player);

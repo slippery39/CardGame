@@ -7,8 +7,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UniRx;
-using UnityEngine;
-using UnityEngine.Profiling;
+
 
 [Serializable]
 public class CardGame
@@ -18,7 +17,7 @@ public class CardGame
     private List<Player> _players = new List<Player>();
     private int _activePlayerId = 1;
     private int _numberOfLanes = 5;
-    private int _startingPlayerHealth = 5;
+    private int _startingPlayerHealth = 20;
     //need to make sure this is serialized or else we wont be able to properly id tokens.
     [JsonProperty]
     private int _nextEntityId = 1;
@@ -26,6 +25,8 @@ public class CardGame
 
     [JsonProperty]
     private List<CardGameEntity> _registeredEntities = new List<CardGameEntity>();
+    [JsonProperty]
+    private List<CardInstance> _registeredCardEntities = new List<CardInstance>();
 
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
@@ -142,6 +143,8 @@ public class CardGame
 
     [JsonIgnore]
     public ReplaySubject<CardGame> OnGameOver;
+    private List<IZone> _cachedZones;
+
     [JsonIgnore]
     public IObservable<CardGame> OnGameOverObservable => OnGameOver.AsObservable();
     #endregion
@@ -196,7 +199,6 @@ public class CardGame
         CurrentGameState = GameState.WaitingForAction;
 
         //TODO - Should not be called by the constructor
-
         OnGameStateChanged = new ReplaySubject<CardGame>(10);
         OnGameOver = new ReplaySubject<CardGame>(1);
     }
@@ -236,14 +238,12 @@ public class CardGame
         _cardDrawSystem.DrawOpeningHand(Player1);
         _cardDrawSystem.DrawOpeningHand(Player2);
 
-        OnGameStateChanged.OnNext(Copy());
+        this.EventLogSystem.FireGameStateChanged();
     }
 
 
     public CardGame Copy(bool noEventsOrLogs = false)
     {
-        Profiler.BeginSample("Card Game Copy");
-
         var newCardData = RegisteredCardData.ToDictionary(entry => entry.Key,
                                                entry => entry.Value.Clone());
 
@@ -283,13 +283,19 @@ public class CardGame
         clone._registeredEntities.AddRange(clone.Player1.GetAllEntities());
         clone._registeredEntities.AddRange(clone.Player2.GetAllEntities());
 
+        foreach (var entity in clone._registeredEntities)
+        {
+            if (entity is CardInstance)
+            {
+                clone._registeredCardEntities.Add(entity as CardInstance);
+            }
+        }
+
         //A little bit of a hack, but apply any continous effects in play
         //We don't necessarily need to clone these because they should apply automatically
         //This does mean we have to make sure we don't clone them in the card instance
 
         clone.ContinuousEffectSystem.ApplyStaticEffects();
-
-        Profiler.EndSample();
 
         return clone;
     }
@@ -372,7 +378,9 @@ public class CardGame
             return GetZoneOfCard(card.FrontCard);
         }
 
-        return GetZones().Where(zone => zone.Cards.Select(c => c.EntityId).Contains(card.EntityId)).FirstOrDefault();
+        return card.CurrentZone;
+
+        //return GetZones().Where(zone => zone.Cards.Select(c => c.EntityId).Contains(card.EntityId)).FirstOrDefault();
     }
 
     public void HandleTriggeredAbilities(IEnumerable<CardInstance> units, TriggerType triggerType)
@@ -411,7 +419,8 @@ public class CardGame
             RegisterEntity(cardInstance.BackCard);
         }
 
-        zone.Add(cardInstance);
+        cardInstance.CurrentZone = zone;
+        zone.Add(cardInstance);        
     }
 
     public void AddPlayerToGame(Player player)
@@ -438,6 +447,10 @@ public class CardGame
     {
         entity.EntityId = GetNextEntityId();
         _registeredEntities.Add(entity);
+        if (entity is CardInstance)
+        {
+            _registeredCardEntities.Add(entity as CardInstance);
+        }
     }
 
     internal bool IsInZone(CardInstance unit, ZoneType zoneType)
@@ -469,9 +482,10 @@ public class CardGame
         {
             if (updatedEntityRefs.Any())
             {
-                card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ForEach(component =>
-                    component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded)
-                );
+                foreach (var component in card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ToList())
+                {
+                    component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded);
+                }
             }
         });
         ResolvingSystem.Continue();
@@ -484,14 +498,13 @@ public class CardGame
     /// <returns></returns>
     public CardInstance GetCardById(int entityId)
     {
-        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
+        var card = GetEntities().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
         return card;
     }
 
 
     public bool CanPlayCard(CardInstance card, bool checkIfActivePlayer = true, List<ICastModifier> modifiers = null)
     {
-        Profiler.BeginSample("CardGame.CanPlayCard");
         if (card == null)
         {
             return false;
@@ -562,7 +575,6 @@ public class CardGame
                 }
             }
         }
-        Profiler.EndSample();
 
         return true; //if it gets to this point it has passed all the checks, and it is ok to be played.
     }
@@ -574,7 +586,7 @@ public class CardGame
             return false;
         }
 
-        var card = GetEntities<CardGameEntity>().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
+        var card = GetEntities().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
 
         return CanPlayCard(card);
     }
@@ -586,14 +598,26 @@ public class CardGame
             Log("Game is over, cannot process action");
             return;
         }
+
+        var prevCardToPlay = action.CardToPlay;
         //Action may come from anywhere, we need to make sure all the references match up to what we have in our card game before going any further.
 
         //Which Things would need to be updated?
         action.Player = Players.Where(e => e.EntityId == action.Player?.EntityId).FirstOrDefault();
         action.SourceCard = GetEntities<CardInstance>().Where(e => e.EntityId == action.SourceCard?.EntityId).FirstOrDefault();
-        action.Targets = action.Targets?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
-        action.CardToPlay = GetEntities<CardInstance>().Where(e => e.EntityId == action.CardToPlay?.EntityId).FirstOrDefault();
-        action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities<CardGameEntity>().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+        action.Targets = action.Targets?.Select(t => GetEntities().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+        action.CardToPlay = GetEntities<CardInstance>().Where(e => (e.EntityId == action.CardToPlay?.EntityId)).FirstOrDefault();
+        action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+
+        if (action.CardToPlay == null && prevCardToPlay != null)
+        {
+            var debug = 0;
+        }
+
+        //check double faced cards
+
+
+
 
         if (action.IsValidAction(this))
         {
@@ -675,7 +699,7 @@ public class CardGame
 
                 ManaSystem.SpendMana(player, manaSpent);
                 AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
-                player.Modifications.GetOfType<IOnSpellCast>().ForEach(mod =>
+                player.Modifications.GetOfType<IOnSpellCast>().ToList().ForEach(mod =>
                 {
                     mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay)); //etc...
                 });
@@ -707,7 +731,7 @@ public class CardGame
                     AdditionalCostSystem.PayAdditionalCost(player, cardToPlay, cardToPlay.AdditionalCost, new CostInfo { EntitiesChosen = costChoices });
 
                     //TODO - This should go to the ResolvingSystem.
-                    player.Modifications.GetOfType<IOnSpellCast>().ForEach(mod =>
+                    player.Modifications.GetOfType<IOnSpellCast>().ToList().ForEach(mod =>
                     {
                         mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay));//etc...
                     });
@@ -739,36 +763,51 @@ public class CardGame
     //Grab a master list of all zones in the game.
     public List<IZone> GetZones()
     {
+
+        if (_cachedZones == null)
+        {
+            List<IZone> zones = new List<IZone>();
+
+            zones.Add(Player1.Hand);
+            zones.Add(Player2.Hand);
+
+            zones.AddRange(Player1.Lanes);
+            zones.AddRange(Player2.Lanes);
+
+            zones.Add(Player1.Deck);
+            zones.Add(Player2.Deck);
+
+            zones.Add(Player1.DiscardPile);
+            zones.Add(Player2.DiscardPile);
+
+            zones.Add(ResolvingSystem.Stack);
+
+            zones.Add(Player1.Exile);
+            zones.Add(Player2.Exile);
+
+            zones.Add(Player1.Items);
+            zones.Add(Player2.Items);
+            _cachedZones = zones;
+        }
         //TODO - generalize this?
-
-        List<IZone> zones = new List<IZone>();
-
-        zones.Add(Player1.Hand);
-        zones.Add(Player2.Hand);
-
-        zones.AddRange(Player1.Lanes);
-        zones.AddRange(Player2.Lanes);
-
-        zones.Add(Player1.Deck);
-        zones.Add(Player2.Deck);
-
-        zones.Add(Player1.DiscardPile);
-        zones.Add(Player2.DiscardPile);
-
-        zones.Add(ResolvingSystem.Stack);
-
-        zones.Add(Player1.Exile);
-        zones.Add(Player2.Exile);
-
-        zones.Add(Player1.Items);
-        zones.Add(Player2.Items);
-
-        return zones;
+        return _cachedZones; 
     }
 
-    public List<T> GetEntities<T>() where T : CardGameEntity
+    public List<CardGameEntity> GetEntities()
     {
-        return _registeredEntities.Where(e => e is T).Cast<T>().ToList();
+        return _registeredEntities;
+    }
+
+    public IEnumerable<T> GetEntities<T>() where T : CardGameEntity
+    {       
+        if (typeof(T) is CardInstance)
+        {
+            return this._registeredCardEntities.Cast<T>();
+        }
+        
+        //TODO - Cache CardInsta nces in a seperate list
+        //Whenever a CardInstance is added to the game, it should be added to this list.\
+        return _registeredEntities.Where(e => e is T).Cast<T>();
     }
     public List<CardInstance> GetUnitsInPlay()
     {

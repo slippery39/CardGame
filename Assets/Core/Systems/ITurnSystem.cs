@@ -47,7 +47,7 @@ public class DefaultTurnSystem : CardGameSystem, ITurnSystem
          * interfaces to implement as well. Lets make a method for that 
          */
 
-        foreach (var card in cardGame.ActivePlayer.GetUnitsInPlay().Union(cardGame.ActivePlayer.Items.Cards))
+        foreach (var card in cardGame.ActivePlayer.GetUnitsInPlay().Concat(cardGame.ActivePlayer.Items.Cards))
         {
             var turnStartAbilities = card.Abilities.GetOfType<IOnTurnStart>();
 
@@ -57,7 +57,7 @@ public class DefaultTurnSystem : CardGameSystem, ITurnSystem
             }
         }
 
-        cardGame.ActivePlayer.Modifications.GetOfType<IOnTurnStart>().ForEach(mod =>
+        cardGame.ActivePlayer.Modifications.GetOfType<IOnTurnStart>().ToList().ForEach(mod =>
         {
             //Shouldn't need to put null if its on a player or should we?
             mod.OnTurnStart(cardGame, cardGame.ActivePlayer, null);

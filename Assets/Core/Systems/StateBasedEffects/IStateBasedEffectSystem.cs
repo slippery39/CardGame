@@ -39,12 +39,12 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
             cardGame.Log("Potential infinite loop regarding death checks in our state based effects...");
         }
 
-        cardGame.Player1.Modifications.GetOfType<IOnAfterStateBasedEffects>().ForEach(mod =>
+        cardGame.Player1.Modifications.GetOfType<IOnAfterStateBasedEffects>().ToList().ForEach(mod =>
         {
             mod.OnAfterStateBasedEffects(cardGame, cardGame.Player1);
         });
 
-        cardGame.Player2.Modifications.GetOfType<IOnAfterStateBasedEffects>().ForEach(mod =>
+        cardGame.Player2.Modifications.GetOfType<IOnAfterStateBasedEffects>().ToList().ForEach(mod =>
         {
             mod.OnAfterStateBasedEffects(cardGame, cardGame.Player2);
         });
@@ -73,7 +73,11 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
 
         //Check to see if any player has lost
         cardGame.WinLoseSystem.CheckLosers();
-        cardGame.OnGameStateChanged.OnNext(cardGame.Copy());
+
+        //This taking a lot of cpu usage for not much benefit... we only want to fire this method in situations where it matters (i.e.
+        //we have a subscriber to it, otherwise it is useless, we might want to consider changing this to an event so we can easily check
+        //if it has been subscribed to.
+        cardGame.EventLogSystem.FireGameStateChanged();
     }
 
     //Returns true if something died, which means we have to apply/remove any static effects and check again.
