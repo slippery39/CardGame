@@ -102,6 +102,7 @@ public class EventLogSystem : CardGameSystem, IEventLogSystem
 
     public void FireGameStateChanged()
     {
+        //note - this should be this.cardGame.Copy(), but testing the goblin warchief multiple haste bug
         this.cardGame.OnGameStateChanged.OnNext(this.cardGame.Copy());
     }
 

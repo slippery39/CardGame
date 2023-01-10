@@ -609,6 +609,18 @@ public class CardGame
         action.CardToPlay = GetEntities<CardInstance>().Where(e => (e.EntityId == action.CardToPlay?.EntityId)).FirstOrDefault();
         action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
 
+        //Edge case for ResolveChoiceActions;
+        if (action as ResolveChoiceAction != null)
+        {
+            var choice = action as ResolveChoiceAction;
+            if (choice != null)
+            {
+                var entityIds = choice.Choices.Select(t => t.EntityId);
+                choice.Choices = GetEntities<CardInstance>().Where(t => entityIds.Contains(t.EntityId)).ToList();
+            }
+        }
+        
+
         if (action.CardToPlay == null && prevCardToPlay != null)
         {
             var debug = 0;

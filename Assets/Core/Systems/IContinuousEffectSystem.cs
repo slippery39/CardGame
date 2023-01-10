@@ -26,8 +26,6 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
             cardsWithStaticAbilities = cardGame.GetEntities<CardInstance>().Where(c => c.GetAbilitiesAndComponents<StaticAbility>().Any()).ToList();
         }
 
-        //To Increase Performance - Automatically 
-
         foreach (var card in cardsWithStaticAbilities)
         {
             foreach (var sAbility in card.GetAbilitiesAndComponents<StaticAbility>())

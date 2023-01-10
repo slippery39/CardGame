@@ -337,8 +337,8 @@ public class FamousDecks : DecklistDB
             {
                 Name = "Test Deck",
                 Cards = $@"
-                    100 Seat of the Synod
-                    20 Cranial Plating
+                    40 Gitaxian Probe
+                    20 Island
                 "
             }
         };

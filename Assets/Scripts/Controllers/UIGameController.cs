@@ -197,6 +197,7 @@ public class UIGameController : MonoBehaviour
 
     public void StartGame(Decklist player1Deck, Decklist player2Deck)
     {
+        _gameOverScreen.SetActive(false);
         _deckSelectionScreen.gameObject.SetActive(false);
         _gameRoom.SetActive(true);
         //TODO - This should go through the service
