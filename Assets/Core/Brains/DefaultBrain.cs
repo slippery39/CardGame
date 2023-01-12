@@ -84,7 +84,7 @@ public class DefaultBrain : IBrain
         });
 
         var originalScore = EvaluateBoard(cardGame.ActivePlayer, cardGame);
-        var positiveActions = actionScores.Where(a => a.Score >= originalScore).ToList();
+        var positiveActions = actionScores.Where(a => (a.Score >= originalScore) || a.Action is ResolveChoiceAction).ToList();
 
         //TODO - this needs to change, there should be no reference to a game service in this part of the code. instead we should just
         //return the chosen action.

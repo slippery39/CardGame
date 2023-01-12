@@ -337,8 +337,9 @@ public class FamousDecks : DecklistDB
             {
                 Name = "Test Deck",
                 Cards = $@"
-                    40 Gitaxian Probe
-                    20 Island
+                    40 Sleight of Hand
+                    40 Chrome Mox
+                    40 Island
                 "
             }
         };

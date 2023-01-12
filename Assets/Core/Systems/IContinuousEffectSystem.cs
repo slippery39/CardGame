@@ -156,7 +156,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
             card.ContinuousEffects = card.ContinuousEffects.Where(ce => ce.SourceCard != sourceCard).ToList();
 
             //Remove any modifications that came from the source
-            var modificationsToKeep = card.Modifications.Where(mod => mod.StaticInfo.SourceCard != sourceCard).ToList();
+            var modificationsToKeep = card.Modifications.Where(mod => mod.StaticInfo == null || (mod.StaticInfo.SourceCard.EntityId != sourceCard.EntityId) ).ToList();
             card.Modifications = modificationsToKeep;
 
             //Remove any abilities that come from the source
@@ -166,10 +166,6 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
             {
                 cardInstance.Abilities = cardInstance.Abilities.Where(ab =>
                 {
-                    if (!ab.Components.Any())
-                    {
-                        return false;
-                    }
                     var components = ab.Components.GetOfType<ContinuousAblityComponent>();
 
                     if (components.Where(comp => comp.SourceCard == sourceCard).Any())
