@@ -5,7 +5,13 @@ using System.Linq;
 public interface IContinuousEffectSystem
 {
     public void ApplyStaticEffects();
+    /// <summary>
+    /// Removes static effects where the card applying the effect is no longer
+    /// in the valid zone (ex. if a goblin warchief leaves play, haste should be removed from all goblins)
+    /// </summary>
     public void RemoveStaticEffects();
+    public void RemoveAllStaticEffects();
+
 }
 
 public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSystem
@@ -16,6 +22,28 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
     public DefaultContinousEffectSystem(CardGame cardGame)
     {
         this.cardGame = cardGame;
+    }
+
+    /// <summary>
+    /// Removes all static effects from all game entities.
+    /// </summary>
+    public void RemoveAllStaticEffects() 
+    {
+        foreach (var entity in cardGame.GetEntities())
+        {
+            //Things to remove : 
+            //Remove continuous effects
+            //Remove abilities with a continous ability component on it
+            //Remove modifications with a static info.source card !=null
+            entity.ContinuousEffects = new List<ContinuousEffect>();
+            
+            var cardInstance = entity as CardInstance;
+            if (cardInstance != null)
+            {
+                cardInstance.Abilities = cardInstance.Abilities.Where(a => a.GetComponent<ContinuousAblityComponent>() == null).ToList();
+                cardInstance.Modifications = cardInstance.Modifications.Where(mod => mod.StaticInfo == null || mod.StaticInfo.SourceCard == null).ToList();
+            }
+        }
     }
 
     public void ApplyStaticEffects()
@@ -65,14 +93,16 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
 
             foreach (var effect in continousEffectsToRemove)
             {
-                RemoveContinuousEffects(effect.SourceCard);
+                RemoveContinuousEffectsFromSource(effect.SourceCard);
             };
         }
     }
 
     private bool HasEffectFromSource(CardGameEntity entityToCheck, CardInstance source, StaticAbility sourceAbility)
     {
-        return entityToCheck.ContinuousEffects.Where(ce => ce.SourceCard == source && ce.SourceAbility == sourceAbility).Any();
+        //Note - Ideally our abilities and our effects would also have unique id's so that we can compare if they are the same
+        //by id and not necessarily compare them by reference. 
+        return entityToCheck.ContinuousEffects.Where(ce => ce.SourceCard.EntityId == source.EntityId && ce.SourceAbility.RulesText == sourceAbility.RulesText).Any();
     }
 
     private void Apply(CardInstance source, StaticAbility sourceAbility)
@@ -99,7 +129,10 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
 
     private void ApplyTo(ContinuousEffect effect, CardGameEntity entity)
     {
-        //entity.ContinuousEffects.Add(effect);
+        //We still need this in order for duplicate effects not to be applied, but we should be depreciating continous effects out.
+        //Instead the actual Modification or Ability will have info on whether or not it is a continous modification or continuous ability.
+        //TODO - remove continuous effects
+        entity.ContinuousEffects.Add(effect);
         //Note this makes it so that static abilities with multiple effects will not work.
         var sourceEffect = effect.SourceAbility.Effects.First();
 
@@ -115,7 +148,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
     /// Remove all continous effects form all units in play where the effect came from a specific source.
     /// </summary>
     /// <param name="sourceCard"></param>
-    private void RemoveContinuousEffects(CardInstance sourceCard)
+    private void RemoveContinuousEffectsFromSource(CardInstance sourceCard)
     {
         foreach (var card in cardGame.GetEntities())
         {

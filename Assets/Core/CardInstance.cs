@@ -566,7 +566,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
         //Note that we are not cloning continous effects on purpose, since they apply automatically from the ContinuousEffect system.
         //We just need to make sure the continous effect system gets called as part of the cloning process.
-        clone.ContinuousEffects = new List<ContinuousEffect>();
+        clone.ContinuousEffects = ContinuousEffects.Clone();
         clone.Modifications = Modifications.Clone();
         clone.Modifications = clone.Modifications.Where(a => a.StaticInfo == null).ToList(); //we cannot keep any static modifications, that will be 
         clone.Counters = Counters.Select(c => c.Clone()).ToList();

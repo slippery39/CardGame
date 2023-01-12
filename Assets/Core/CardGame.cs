@@ -294,7 +294,7 @@ public class CardGame
         //A little bit of a hack, but apply any continous effects in play
         //We don't necessarily need to clone these because they should apply automatically
         //This does mean we have to make sure we don't clone them in the card instance
-
+        clone.ContinuousEffectSystem.RemoveAllStaticEffects();
         clone.ContinuousEffectSystem.ApplyStaticEffects();
 
         return clone;
