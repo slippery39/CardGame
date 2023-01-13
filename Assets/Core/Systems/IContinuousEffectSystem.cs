@@ -48,7 +48,6 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
 
     public void ApplyStaticEffects()
     {
-
         if (cardsWithStaticAbilities == null)
         {
             cardsWithStaticAbilities = cardGame.GetEntities<CardInstance>().Where(c => c.GetAbilitiesAndComponents<StaticAbility>().Any()).ToList();
