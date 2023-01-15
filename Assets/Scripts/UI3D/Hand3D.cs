@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Pool;
 
-[ExecuteAlways]
+
 public class Hand3D : MonoBehaviour
 {
 
@@ -19,15 +19,11 @@ public class Hand3D : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //InitializeCards();
     }
 
     // Update is called once per frame
     void Update()
     {
-#if UNITY_EDITOR
-        InitializeCards();
-#endif
     }
 
     void InitializeCards()
