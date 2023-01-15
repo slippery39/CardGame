@@ -6,6 +6,7 @@ public class DragAndDropController : MonoBehaviour
 {
 
     private Card3D _selectedCard;
+    private float _originalZPos;
 
     // Update is called once per frame
     void Update()
@@ -28,6 +29,7 @@ public class DragAndDropController : MonoBehaviour
                     Debug.Log("Drag and drop controller, card 3d found");
 
                     _selectedCard = hit.collider.gameObject.GetComponentInParent<Card3D>();
+                    _originalZPos = _selectedCard.transform.position.z;
                     Cursor.visible = false;
                 }
             }
@@ -35,7 +37,7 @@ public class DragAndDropController : MonoBehaviour
             {
                 Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(_selectedCard.transform.position).z);
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(position);
-                _selectedCard.transform.position = new Vector3(worldPosition.x, worldPosition.y, worldPosition.z);
+                _selectedCard.transform.position = new Vector3(worldPosition.x, worldPosition.y, 0f);
 
                 _selectedCard = null;
                 Cursor.visible = true;
@@ -47,7 +49,7 @@ public class DragAndDropController : MonoBehaviour
         {
             Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(_selectedCard.transform.position).z);
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(position);
-            _selectedCard.transform.position = new Vector3(worldPosition.x, worldPosition.y, worldPosition.z);
+            _selectedCard.transform.position = new Vector3(worldPosition.x, worldPosition.y, -0.5f);
         }
     }
 

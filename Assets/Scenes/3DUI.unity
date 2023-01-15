@@ -293,6 +293,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3DCard
       objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
 --- !u!114 &462763503 stripped
@@ -332,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2359871292335688439, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.3471022
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2359871292335688439, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -369,6 +373,10 @@ PrefabInstance:
     - target: {fileID: 3440836722685161213, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
@@ -426,6 +434,10 @@ PrefabInstance:
     - target: {fileID: 3440836722685161213, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_Name
       value: 3DCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
@@ -544,6 +556,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3DCard
       objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
 --- !u!114 &762059930 stripped
@@ -616,6 +632,10 @@ PrefabInstance:
     - target: {fileID: 3440836722685161213, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_Name
       value: 3DCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
@@ -857,6 +877,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3DCard
       objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
 --- !u!114 &1448114898 stripped
@@ -923,7 +947,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1491239762}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.91, y: -5.06, z: -0.3471022}
+  m_LocalPosition: {x: -5.91, y: -5.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -991,6 +1015,10 @@ PrefabInstance:
     - target: {fileID: 3440836722685161213, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_Name
       value: 3DCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
@@ -1064,6 +1092,10 @@ PrefabInstance:
     - target: {fileID: 3440836722685161213, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_Name
       value: 3DCard
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811104625072610608, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00000071525574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
