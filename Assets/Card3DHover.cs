@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Card3DHover : MonoBehaviour
 {
-    void OnMouseOver()
+    void OnMouseEnter()
     {
         HoverController.instance.ShowCardTooltip(this.GetComponent<Card3D>());
     }

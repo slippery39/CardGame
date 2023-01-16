@@ -266,7 +266,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3277676048393914202}
   m_Layer: 0
-  m_Name: Model and Texts
+  m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -341,7 +341,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd072ec2f7b563e43b7fb3234fda0602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardModel: {fileID: 2604564431705690934}
+  _cardMesh: {fileID: 2604564431705690934}
+  _cardModelContainer: {fileID: 2424288361873235111}
 --- !u!65 &728662338747177628
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -367,10 +368,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2dc0a7869279154b87d140188e4eb6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sourceCard: {fileID: 2424288361873235111}
-  _hoverCard: {fileID: 0}
-  _scaleFactor: 2
-  _hoverOffSet: {x: 0, y: 2.5, z: 1.26}
 --- !u!1 &4195780226291716068
 GameObject:
   m_ObjectHideFlags: 0

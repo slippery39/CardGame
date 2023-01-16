@@ -5,21 +5,26 @@ using UnityEngine;
 public class Card3D : MonoBehaviour
 {
 
-    [SerializeField] private GameObject _cardModel;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    [SerializeField] private GameObject _cardMesh;
+    [SerializeField] private GameObject _cardModelContainer;
+    public GameObject CardMesh { get => _cardMesh; }
 
     public Bounds GetBounds()
     {
-        return _cardModel.GetComponent<Renderer>().bounds;
+        return _cardMesh.GetComponent<Renderer>().bounds;
     }
+
+    public void SetCardModel(GameObject model)
+    {
+        Destroy(_cardModelContainer);
+        _cardModelContainer = model;
+        _cardModelContainer.transform.SetParent(this.transform, false);
+    }
+
+    public GameObject GetCardModel()
+    {
+        return _cardModelContainer;
+    }
+
+
 }

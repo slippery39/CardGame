@@ -6279,6 +6279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hoverCanvas: {fileID: 1527276249}
+  hoverCard: {fileID: 213392324048660252}
 --- !u!1 &1647735769
 GameObject:
   m_ObjectHideFlags: 0
@@ -7208,7 +7209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd072ec2f7b563e43b7fb3234fda0602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cardModel: {fileID: 8639853507274371415}
+  _cardMesh: {fileID: 8639853507274371415}
+  _cardModelContainer: {fileID: 9125996857899828117}
 --- !u!1 &397664300502863907
 GameObject:
   m_ObjectHideFlags: 0
@@ -11039,7 +11041,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8250143313105082472}
   m_Layer: 0
-  m_Name: Model and Texts
+  m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
