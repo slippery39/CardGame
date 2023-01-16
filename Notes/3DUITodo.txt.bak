@@ -1,5 +1,56 @@
-- snap Card to lane when dragged inside ->
-- card should actually become a child of the lane
+-Wait a little bit before hooking up the rest of the game. I want to concern myself with UI animations and layout mainly 
+for now.
+-We will have test keys / buttons to test certain animations (like drawing a card)
+
+
+(First Step)
+-Do general outline of 3D Layout
+	-Just use sprites for every for now.
+	-Should be able to get the general layout down.
+	-Avatar
+	-Mana
+	-Items
+	-Hand
+	-Lanes
+	-Cards
+	-Graveyard
+-Animations
+		-Attack 
+		-Drawing a card
+		-Spell damage
+		-Destroying
+		-Winning the game
+		-Summoning a Unit / Item
+		-Triggered Ability source?
+-Drag and Drop
+	-dragging and dropping should finish on mouse up, not when clicking again
+	-dragging and dropping into a droppable area should set the card as a child of that area
+-3D Card Prefab
+	-Show back boolean (flips the card, only shows the back)
+-Highlights
+	-UI Entities are highlightable and each one should have its own highlight thingy? (shader??)
+-Research 
+	-How to do a scrollable area in 3D. 
+	-Look into clearing depth flags like that article we found (find url for article again)
+	-Worst case scenario we re-use our popups that we had in our 2D view temporarily.
+
+
+3D Models (or sprites)
+	-Avatar Container
+	-Items Container
+	-Lanes
+	-Mana Container
+	-Mana Spheres
+	-Attack / Activated ability buttons
+
+	
+-Hooking up to game controller
+	-Might need to change the selection logic slightly to account for drag and drop
+	-Spells with targets / units will be "selected" on drag start
+	-Spells without targets / units will be "selected" on drag end (will require a drag onto the general game area in order to play)
+		
+
+
 
 
  
