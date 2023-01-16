@@ -2,6 +2,11 @@
 for now.
 -We will have test keys / buttons to test certain animations (like drawing a card)
 
+TODO Next
+
+	-Hover animation / functionality
+	-Attack animation
+
 
 (First Step)
 -Do general outline of 3D Layout [DONE]
@@ -14,6 +19,9 @@ for now.
 	-Lanes
 	-Cards
 	-Graveyard
+
+	
+
 -Animations
 		-Attack 
 		-Drawing a card
@@ -27,6 +35,12 @@ for now.
 	-dragging and dropping into a droppable area should set the card as a child of that area
 -3D Card Prefab
 	-Show back boolean (flips the card, only shows the back)
+-3D Deck Prefab	
+	-Stack cards [DONE]
+	-Able to reveal top card of deck (if necessary)
+-3D Graveyard Prefab
+	-Stack cards [DONE]
+	-How are we going to play cards from the graveyard (special case, we will keep the click logic in tact. 
 -Highlights
 	-UI Entities are highlightable and each one should have its own highlight thingy? (shader??)
 -Research 
