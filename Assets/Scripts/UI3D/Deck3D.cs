@@ -10,6 +10,18 @@ public class Deck3D : MonoBehaviour
     [SerializeField]public Card3D _cardPrefab;
     [SerializeField]public int _numberOfCards;
 
+    /// <summary>
+    /// Controls the random amount of rotation to apply via perlin noise. 
+    /// Can give the look of a deck that has been slighly manipulated (i.e. cards aren't perfectly rotated in sync)
+    /// </summary>
+    [SerializeField] private float randomRotationModifier = 20f;
+
+    /// <summary>
+    /// Controls the random amount of position to apply via perlin noise. 
+    /// Can give the look of a deck that has been slighly manipulated (i.e. cards aren't perfectly rotated in sync)
+    /// </summary>
+    [SerializeField] private float randomPositionModifier = 0.1f;
+
     private List<Card3D> _instantiatedCards;
 
     private void Update()
@@ -46,8 +58,12 @@ public class Deck3D : MonoBehaviour
             }
             card.transform.SetParent(transform, false);
             var bounds = card.GetBounds().size;
-            card.transform.localPosition = new Vector3(0, 0.01f*i,0);
-            card.transform.localRotation = Quaternion.Euler(270, 180, 0);
+
+            var noise = Mathf.PerlinNoise((i+0.1f)*0.1f, (i+0.1f)*0.1f);
+
+            //Note the y value is the vertical in the world
+            card.transform.localPosition = new Vector3(0 + (noise-0.5f) * randomPositionModifier, 0.01f*i, 0 + (noise - 0.5f) * randomPositionModifier);
+            card.transform.localRotation = Quaternion.Euler(270, 180 + ( (noise-0.5f) * randomRotationModifier), 0);
         }
 
         //Hide any additional cards
