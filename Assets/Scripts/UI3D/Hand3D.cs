@@ -6,13 +6,14 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 
+[ExecuteAlways]
 public class Hand3D : MonoBehaviour
 {
 
     [SerializeField] private Card3D _cardPrefab;
-    [SerializeField] private List<Card3D> _instantiatedCards;
+    private List<Card3D> _instantiatedCards;
 
-    [SerializeField] int numberOfCards = 5;
+    [SerializeField] public int numberOfCards = 5;
     [SerializeField] float cardOffSet = 0.5f;
 
 
@@ -24,9 +25,10 @@ public class Hand3D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+  
     }
 
-    void InitializeCards()
+    public void InitializeCards()
     {
         //Look for any already initialized cards
         var alreadyInitializedCards = this.GetComponentsInChildren<Card3D>(true);
