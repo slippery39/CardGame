@@ -342,7 +342,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardMesh: {fileID: 2604564431705690934}
-  _cardModelContainer: {fileID: 2424288361873235111}
+  _name: {fileID: 5216553768827475064}
+  _combatStats: {fileID: 2811545378075719978}
+  _manaCost: {fileID: 2429886707940722939}
+  _cardType: {fileID: 8229034720589724123}
+  _rulesText: {fileID: 7272900263378099452}
 --- !u!65 &728662338747177628
 BoxCollider:
   m_ObjectHideFlags: 0
