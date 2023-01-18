@@ -9,19 +9,58 @@ public class FightAnimation : MonoBehaviour
     [SerializeField] private Transform thingGettingAttacked;
 
 
+    [SerializeField] private Ease easingMethod = Ease.OutCirc;
+
+    private Sequence attackingSequence;
+    private Sequence defendingSequence;
+
     public void PlayAnimation()
     {
+        //We do not want to run an animation if one is already playing
+        if (
+            (attackingSequence != null && attackingSequence.IsPlaying())
+            || (defendingSequence != null && defendingSequence.IsPlaying())
+            )
+        {
+            return;
+        }
         //The attacking card will "wind up" which means it goes slightly back, then it attacks the other card by moving to the other cards transform
         //at the same time it will knock the other card back a little bit.
         //Afterwards both cards will return to their starting points. 
 
-        var sequence = DOTween.Sequence();
+        var originalAttackPos = attackingCard.transform.position;
+        var originalDefPos = thingGettingAttacked.transform.position;
 
-        var originalPosition = attackingCard.transform.position;
+        var thingGettingAttackedBounds = thingGettingAttacked.GetComponent<Collider>().bounds.min.z;
+        var positionTo = new Vector3(
+            thingGettingAttacked.position.x,
+            thingGettingAttacked.position.y,
+            thingGettingAttackedBounds);
 
-        sequence.Append(attackingCard.transform.DOMove(thingGettingAttacked.transform.position, 0.15f));
-        sequence.Append(attackingCard.transform.DOMove(originalPosition, 0.15f));
+        var attackingSeq = DOTween.Sequence();
+        attackingSeq.Append(attackingCard.transform.DOMove(positionTo, 0.3f)
+        .SetEase(easingMethod))
+        .Append(attackingCard.transform.DOMove(originalAttackPos, 0.1f))
+        .OnComplete(() =>
+        {
+            attackingSequence = null;
+            attackingCard.transform.position = originalAttackPos;
+        });
 
-        sequence.SetEase(Ease.InBack);
+        attackingSequence = attackingSeq;
+
+        var defendingSeq = DOTween.Sequence();
+        defendingSeq.Append(thingGettingAttacked.transform.DOMove(originalDefPos + new Vector3(0, 0, 1), 0.2f)
+        .SetDelay(0.1f)
+        .SetEase(easingMethod)
+        )
+        .Append(thingGettingAttacked.transform.DOMove(originalDefPos, 0.1f))
+        .OnComplete(() =>
+        {
+            defendingSequence = null;
+            thingGettingAttacked.transform.position = originalDefPos;
+        });
+
+        defendingSequence = defendingSeq;
     }
 }
