@@ -557,6 +557,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 441756821}
     m_Modifications:
+    - target: {fileID: 6313385043611861511, guid: d30e5807fca54c64f9f810ffb9483d4f, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: eb9e98a9e186c194494ae23043683166, type: 2}
+    - target: {fileID: 7861852030660219802, guid: d30e5807fca54c64f9f810ffb9483d4f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8840446219832184212, guid: d30e5807fca54c64f9f810ffb9483d4f, type: 3}
       propertyPath: m_Name
       value: Lane3D
@@ -2356,6 +2364,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackingCard: {fileID: 1448813030}
   thingGettingAttacked: {fileID: 313653159}
+  easingMethod: 21
 --- !u!4 &301072650
 Transform:
   m_ObjectHideFlags: 0
@@ -4854,7 +4863,7 @@ Camera:
   m_GameObject: {fileID: 961739749}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 2
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.509434, g: 0.49324623, b: 0.3820755, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -5864,7 +5873,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2359871292335688439, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2359871292335688439, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
       propertyPath: m_LocalRotation.w
