@@ -30,6 +30,13 @@ public class DragAndDropController : MonoBehaviour
                     Debug.Log("Drag and drop controller, card 3d found");
 
                     _selectedCard = hit.collider.gameObject.GetComponent<Card3D>();
+                    //Disable hover tool tip effects when dragging cards around.
+                    var card3DHover = _selectedCard.GetComponent<Card3DHover>();
+                    if (card3DHover != null)
+                    {
+                        HoverController.instance.Disable();
+                        card3DHover.enabled = false;
+                    }
                     _originalZPos = _selectedCard.transform.position.z;
                     Cursor.visible = false;
                 }
@@ -37,6 +44,12 @@ public class DragAndDropController : MonoBehaviour
             else
             {
                 SetSelectedCardPosition(0f);
+                HoverController.instance.Enable();
+                var card3DHover = _selectedCard.GetComponent<Card3DHover>();
+                if (card3DHover != null)
+                {
+                    card3DHover.enabled = true;
+                }
 
                 //Check to see what is underneath it;
 
