@@ -8,6 +8,10 @@ public class DragAndDropController : MonoBehaviour
 
     private Card3D _selectedCard;
     private float _originalZPos;
+    private Quaternion _originalRotation;
+
+
+    private Rigidbody _dragdropRigidBody;
 
     // Update is called once per frame
     void Update()
@@ -30,6 +34,10 @@ public class DragAndDropController : MonoBehaviour
                     Debug.Log("Drag and drop controller, card 3d found");
 
                     _selectedCard = hit.collider.gameObject.GetComponent<Card3D>();
+                    _originalZPos = _selectedCard.transform.position.z;
+                    _originalRotation = _selectedCard.transform.rotation;
+                    Cursor.visible = false;
+                    AddDragDropRigidBody(_selectedCard.gameObject);
                     //Disable hover tool tip effects when dragging cards around.
                     var card3DHover = _selectedCard.GetComponent<Card3DHover>();
                     if (card3DHover != null)
@@ -37,14 +45,14 @@ public class DragAndDropController : MonoBehaviour
                         HoverController.instance.Disable();
                         card3DHover.enabled = false;
                     }
-                    _originalZPos = _selectedCard.transform.position.z;
-                    Cursor.visible = false;
+ 
                 }
             }
             else
             {
                 SetSelectedCardPosition(0f);
                 HoverController.instance.Enable();
+                RemoveDragdropRigidBody();
                 var card3DHover = _selectedCard.GetComponent<Card3DHover>();
                 if (card3DHover != null)
                 {
@@ -52,6 +60,7 @@ public class DragAndDropController : MonoBehaviour
                 }
 
                 //Check to see what is underneath it;
+
 
                 RaycastHit[] hits = CastRayMulti();
                 hits = hits.Where(h => h.collider.gameObject.GetComponent<DropArea>() != null).ToArray();
@@ -94,7 +103,15 @@ public class DragAndDropController : MonoBehaviour
     {
         Vector3 position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.WorldToScreenPoint(_selectedCard.transform.position).z);
         Vector3 worldPosition = Camera.main.ScreenToWorldPoint(position);
-        _selectedCard.transform.position = new Vector3(worldPosition.x, height, worldPosition.z);
+
+        var newWorldPosition = new Vector3(worldPosition.x, height, worldPosition.z);
+        var diff = newWorldPosition - _selectedCard.transform.position;
+
+        var rb = _selectedCard.GetComponent<Rigidbody>();
+        rb.velocity = 10 * diff;
+        rb.rotation = Quaternion.Euler(new Vector3(rb.velocity.z - 270, 0, -rb.velocity.x));
+
+        //_selectedCard.transform.position = new Vector3(worldPosition.x, height, worldPosition.z);
     }
 
     private RaycastHit CastRay()
@@ -139,5 +156,20 @@ public class DragAndDropController : MonoBehaviour
         hits = Physics.RaycastAll(worldMousePointerNear, worldMousePointerFar - worldMousePointerNear);
 
         return hits;
+    }
+
+    private Rigidbody AddDragDropRigidBody(GameObject gameObject)
+    {        
+        var rb = gameObject.AddComponent<Rigidbody>();
+        rb.angularDrag = 3;
+        rb.isKinematic = false;
+        _dragdropRigidBody = rb;
+        return rb;
+    }
+
+    private void RemoveDragdropRigidBody()
+    {
+        _dragdropRigidBody.gameObject.transform.rotation = _originalRotation;
+        Destroy(_dragdropRigidBody);
     }
 }
