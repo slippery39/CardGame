@@ -46,6 +46,9 @@ public class DrawCardAnimation : MonoBehaviour
                 _hand.InitializeCards();
 
                 var lastCard = _hand.GetComponentsInChildren<Card3D>().LastOrDefault();
+                //Hide the card, while we run the animation.
+
+                lastCard.gameObject.SetActive(false);
 
                 if (lastCard == null)
                 {
@@ -56,15 +59,13 @@ public class DrawCardAnimation : MonoBehaviour
                 var position = lastCard.transform.position;
                 var scaling = lastCard.transform.localScale;
                 var rotation = lastCard.transform.rotation;
-                //Hide the card, while we run the animation.
-                lastCard.transform.localScale = new Vector3(0, 0, 0);
                 cardToMove.transform.DOMove(position, 0.5f);
                 cardToMove.transform.DORotateQuaternion(rotation, 0.5f);
                 cardToMove.transform.DOScale(scaling, 0.5f)
                 .OnComplete(() =>
                 {
                     Destroy(cardToMove.gameObject);
-                    lastCard.transform.localScale = scaling;
+                    lastCard.gameObject.SetActive(true);
                 });
             });
         cardToMove.transform.DOLocalRotate(new Vector3(90, 0, 0), 0.25f).SetEase(Ease.Linear);
