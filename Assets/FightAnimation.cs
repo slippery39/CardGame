@@ -9,7 +9,8 @@ public class FightAnimation : MonoBehaviour
     [SerializeField] private Transform thingGettingAttacked;
 
 
-    [SerializeField] private Ease easingMethod = Ease.OutCirc;
+    [SerializeField] private Ease attackingEasingMethod = Ease.InBack;
+    [SerializeField] private Ease defendingEasingMethod = Ease.OutCirc;
 
     private Sequence attackingSequence;
     private Sequence defendingSequence;
@@ -39,7 +40,7 @@ public class FightAnimation : MonoBehaviour
 
         var attackingSeq = DOTween.Sequence();
         attackingSeq.Append(attackingCard.transform.DOMove(positionTo, 0.3f)
-        .SetEase(easingMethod))
+        .SetEase(attackingEasingMethod))
         .Append(attackingCard.transform.DOMove(originalAttackPos, 0.1f))
         .OnComplete(() =>
         {
@@ -51,8 +52,8 @@ public class FightAnimation : MonoBehaviour
 
         var defendingSeq = DOTween.Sequence();
         defendingSeq.Append(thingGettingAttacked.transform.DOMove(originalDefPos + new Vector3(0, 0, 1), 0.2f)
-        .SetDelay(0.1f)
-        .SetEase(easingMethod)
+        .SetDelay(0.25f)
+        .SetEase(defendingEasingMethod)
         )
         .Append(thingGettingAttacked.transform.DOMove(originalDefPos, 0.1f))
         .OnComplete(() =>
