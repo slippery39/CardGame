@@ -8,6 +8,8 @@ public class PlayerBoard3D : MonoBehaviour
     private Hand3D _hand;
     [SerializeField]
     private Graveyard3D _graveyard;
+    [SerializeField]
+    private Lanes3D _lanes;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +29,8 @@ public class PlayerBoard3D : MonoBehaviour
         SetHand(player.Hand.Cards);
         //Graveyard
         SetDiscardPile(player.DiscardPile.Cards);
+
+        SetLanes(player.Lanes);
 
         //Items
 
@@ -62,6 +66,15 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
+        }
+    }
+    
+    private void SetLanes(List<Lane> lanes)
+    {
+        var lane3Ds = _lanes.GetLanes();
+        for (var i = 0; i < lanes.Count; i++)
+        {
+            lane3Ds[i].SetUnitInLane(lanes[i].UnitInLane);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UniRx;
 
 [RequireComponent(typeof(GameService))]
 public class UI3DController : MonoBehaviour
@@ -28,9 +29,15 @@ public class UI3DController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             _gameService.SetupGame(FamousDecks.RandomPremadeDeck(),FamousDecks.RandomPremadeDeck());
+            _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
+            {
+                SetUIGameState(cardGame);
+            });
             _gameService.StartGame();
-            SetUIGameState(_gameService.CardGame);            
+            //SetUIGameState(_gameService.CardGame);            
         }
+
+
     }
 
     public void SetUIGameState(CardGame cardGame)
