@@ -449,12 +449,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cardMesh: {fileID: 2604564431705690934}
-  _cardRenderer: {fileID: 0}
+  _cardRenderer: {fileID: 4550247495422243555}
   _name: {fileID: 5216553768827475064}
   _combatStats: {fileID: 2811545378075719978}
   _manaCost: {fileID: 2429886707940722939}
   _cardType: {fileID: 8229034720589724123}
   _rulesText: {fileID: 7272900263378099452}
+  _cardArtMaterial: {fileID: 2100000, guid: aa912d1780312fb489307fab3f82a8a2, type: 2}
 --- !u!65 &728662338747177628
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1259,7 +1260,7 @@ PrefabInstance:
     - target: {fileID: -7511558181221131132, guid: 7c9cbc6398d99e048a9cf80946a21c59, type: 3}
       propertyPath: m_Materials.Array.data[3]
       value: 
-      objectReference: {fileID: -1147449931009307101, guid: 7c9cbc6398d99e048a9cf80946a21c59, type: 3}
+      objectReference: {fileID: 2100000, guid: aa912d1780312fb489307fab3f82a8a2, type: 2}
     - target: {fileID: -7511558181221131132, guid: 7c9cbc6398d99e048a9cf80946a21c59, type: 3}
       propertyPath: m_Materials.Array.data[4]
       value: 
@@ -1281,5 +1282,10 @@ GameObject:
 --- !u!4 &3417833138483562892 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7c9cbc6398d99e048a9cf80946a21c59, type: 3}
+  m_PrefabInstance: {fileID: 2946528833989406311}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &4550247495422243555 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7511558181221131132, guid: 7c9cbc6398d99e048a9cf80946a21c59, type: 3}
   m_PrefabInstance: {fileID: 2946528833989406311}
   m_PrefabAsset: {fileID: 0}
