@@ -5,6 +5,11 @@ using System.Linq;
 
 public class UI3DController : MonoBehaviour
 {
+    private List<BaseCardData> cardDB = new CardDatabase().GetAll();
+    public void Start()
+    {
+        
+    }
 
     public void Update()
     {
@@ -12,7 +17,7 @@ public class UI3DController : MonoBehaviour
         {
             foreach (var card in FindObjectsOfType<Card3D>())
             {
-                var randomCard = new CardDatabase().GetAll().Randomize().First();
+                var randomCard = cardDB.Randomize().First();
                 card.SetCardInfo(randomCard);
             }
         }

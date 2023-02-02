@@ -456,6 +456,14 @@ MonoBehaviour:
   _cardType: {fileID: 8229034720589724123}
   _rulesText: {fileID: 7272900263378099452}
   _cardArtMaterial: {fileID: 2100000, guid: aa912d1780312fb489307fab3f82a8a2, type: 2}
+  _cardFrameTextures:
+    White: {fileID: 2800000, guid: aab8081bea730444285694555cbee845, type: 3}
+    Blue: {fileID: 2800000, guid: e0ef56f3ebff0884a966615915f7fe3a, type: 3}
+    Black: {fileID: 2800000, guid: 2ec3d52bf18705c4db75c5cd5f30c0d2, type: 3}
+    Red: {fileID: 2800000, guid: 1c9602036ba00a543a1849251202e2a8, type: 3}
+    Green: {fileID: 2800000, guid: 6d284fed05f2deb4583eb4c0db436489, type: 3}
+    Colorless: {fileID: 2800000, guid: 5797d5982b5bd4646b85e84a706dea61, type: 3}
+    MultiColor: {fileID: 2800000, guid: 0a1d7baac4f679d4fa732b01cfe9139c, type: 3}
 --- !u!65 &728662338747177628
 BoxCollider:
   m_ObjectHideFlags: 0
