@@ -3,9 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+[RequireComponent(typeof(GameService))]
 public class UI3DController : MonoBehaviour
 {
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
+    private GameService _gameService;
+
+    [SerializeField]
+    private PlayerBoard3D _player1Board;
+    [SerializeField]
+    private PlayerBoard3D _player2Board;
+
+    private void Awake()
+    {
+        _gameService = GetComponent<GameService>();
+    }
     public void Start()
     {
         
@@ -15,13 +27,19 @@ public class UI3DController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            foreach (var card in FindObjectsOfType<Card3D>())
-            {
-                var randomCard = cardDB.Randomize().First();
-                card.SetCardInfo(randomCard);
-            }
+            _gameService.SetupGame(FamousDecks.RandomPremadeDeck(),FamousDecks.RandomPremadeDeck());
+            _gameService.StartGame();
+            SetUIGameState(_gameService.CardGame);            
         }
     }
+
+    public void SetUIGameState(CardGame cardGame)
+    {
+        Debug.Log("Setting UI Game State");
+        _player1Board.SetBoard(cardGame.Player1);
+        _player2Board.SetBoard(cardGame.Player2);
+    }
+
     public void HandleEvent(object evt)
     {
         //Run Appropriate Animations

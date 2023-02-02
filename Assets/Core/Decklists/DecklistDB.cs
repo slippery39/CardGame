@@ -63,6 +63,11 @@ public interface DecklistDB
 public class FamousDecks : DecklistDB
 {
     //Testing a basic version of affinity without any special abilities.
+
+    public static Decklist RandomPremadeDeck()
+    {
+        return new FamousDecks().GetAll().Randomize().First();
+    }
     public static Decklist AffinityTempTest()
     {
         var decklist = new Decklist
@@ -333,15 +338,6 @@ public class FamousDecks : DecklistDB
             EXTGoblins2005(),
             URDragonstorm2006(),
             GRHazeOfRage2007(),
-            new Decklist
-            {
-                Name = "Test Deck",
-                Cards = $@"
-                    40 Sleight of Hand
-                    40 Chrome Mox
-                    40 Island
-                "
-            }
         };
     }
 }

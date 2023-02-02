@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEngine.Pool;
 
 
-[ExecuteAlways]
 public class Hand3D : MonoBehaviour
 {
 
@@ -28,7 +27,14 @@ public class Hand3D : MonoBehaviour
   
     }
 
-    public void InitializeCards()
+    public List<Card3D> GetCards()
+    {
+        return _instantiatedCards;
+    }
+    /// <summary>
+    /// Updates the cards positions and visibility based on the number of cards to be shown.
+    /// </summary>
+    public void UpdateCards()
     {
         //Look for any already initialized cards
         var alreadyInitializedCards = this.GetComponentsInChildren<Card3D>(true);
@@ -39,17 +45,9 @@ public class Hand3D : MonoBehaviour
             Card3D card;
             if (_instantiatedCards.Count <= i)
             {
-#if UNITY_EDITOR
                 card = PrefabUtility.InstantiatePrefab(_cardPrefab) as Card3D;
-#else
-
                 card = Instantiate<Card3D>(_cardPrefab);
-
-#endif
-
-
                 _instantiatedCards.Add(card);
-
             }
             else
             {

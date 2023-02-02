@@ -43,7 +43,7 @@ public class DrawCardAnimation : MonoBehaviour
 
                 //Ways of doing this : add 1 to the hands number of cards, scale that card down, then use that transform to move our own card.
                 _hand.numberOfCards++;
-                _hand.InitializeCards();
+                _hand.UpdateCards();
 
                 var lastCard = _hand.GetComponentsInChildren<Card3D>().LastOrDefault();
                 //Hide the card, while we run the animation.
