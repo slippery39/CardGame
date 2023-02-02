@@ -134,16 +134,19 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
               .Concat(Exile)
               .Cast<CardGameEntity>().ToList();
 
+        var backEntities = new List<CardGameEntity>();
+
         //Edge case for back cards
-        foreach (var card in entities.GetOfType<CardInstance>())
+        var cardInstances = entities.GetOfType<CardInstance>().ToList();
+        foreach (var cardInstance in cardInstances)
         {
-            if (card.BackCard != null)
+            if (cardInstance.BackCard != null)
             {
-                entities.Add(card.BackCard);
+                entities.Add(cardInstance.BackCard);
             }
         }
 
-        return entities;
+        return entities.Concat(backEntities).ToList();
     }
 
     public List<CardInstance> GetUnitsInPlay()
