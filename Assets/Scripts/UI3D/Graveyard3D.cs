@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-[ExecuteAlways]
 public class Graveyard3D : MonoBehaviour
 {
     [SerializeField] public Card3D _cardPrefab;
@@ -26,9 +25,14 @@ public class Graveyard3D : MonoBehaviour
 
     private void Update()
     {
-        InitializeCards();
+        
     }
-    void InitializeCards()
+
+    public List<Card3D> GetCards()
+    {
+        return _instantiatedCards;
+    }
+    public void UpdateCards()
     {
         //Look for any already initialized cards
         var alreadyInitializedCards = this.GetComponentsInChildren<Card3D>(true);
@@ -39,17 +43,9 @@ public class Graveyard3D : MonoBehaviour
             Card3D card;
             if (_instantiatedCards.Count <= i)
             {
-#if UNITY_EDITOR
                 card = PrefabUtility.InstantiatePrefab(_cardPrefab) as Card3D;
-#else
-
                 card = Instantiate<Card3D>(_cardPrefab);
-
-#endif
-
-
                 _instantiatedCards.Add(card);
-
             }
             else
             {
