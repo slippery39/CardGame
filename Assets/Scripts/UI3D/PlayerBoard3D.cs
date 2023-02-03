@@ -10,6 +10,9 @@ public class PlayerBoard3D : MonoBehaviour
     private Graveyard3D _graveyard;
     [SerializeField]
     private Lanes3D _lanes;
+
+    [SerializeField]
+    private Avatar3D _avatar;
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +40,7 @@ public class PlayerBoard3D : MonoBehaviour
         //Deck
 
         //Life Total
+        SetLifeTotal(player.Health);
 
         //Mana Counts
 
@@ -76,5 +80,11 @@ public class PlayerBoard3D : MonoBehaviour
         {
             lane3Ds[i].SetUnitInLane(lanes[i].UnitInLane);
         }
+    }
+
+
+    private void SetLifeTotal(int amount)
+    {
+        _avatar.SetLifeTotal(amount);
     }
 }
