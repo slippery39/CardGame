@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Mana3D : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private TextMeshProUGUI text;
 
-    // Update is called once per frame
-    void Update()
+    public void SetManaAmount(int current, int total)
     {
-        
+        //We want to automatically hide the mana icon if it doesn't exist in the mana pool.
+        if (current == 0 && total == 0)
+        {
+            this.gameObject.SetActive(false);
+            return;
+        }
+
+        this.gameObject.SetActive(true);
+        text.text = $"{current}/{total}";
     }
 }

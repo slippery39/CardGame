@@ -12,6 +12,9 @@ public class PlayerBoard3D : MonoBehaviour
     private Lanes3D _lanes;
 
     [SerializeField]
+    private ManaPool3D _manaPool;
+
+    [SerializeField]
     private Avatar3D _avatar;
     // Start is called before the first frame update
     void Start()
@@ -43,6 +46,7 @@ public class PlayerBoard3D : MonoBehaviour
         SetLifeTotal(player.Health);
 
         //Mana Counts
+        SetManaPool(player.ManaPool);
 
     }
 
@@ -72,7 +76,7 @@ public class PlayerBoard3D : MonoBehaviour
             card3Ds[i].SetCardInfo(cards[i]);
         }
     }
-    
+
     private void SetLanes(List<Lane> lanes)
     {
         var lane3Ds = _lanes.GetLanes();
@@ -86,5 +90,11 @@ public class PlayerBoard3D : MonoBehaviour
     private void SetLifeTotal(int amount)
     {
         _avatar.SetLifeTotal(amount);
+    }
+
+
+    private void SetManaPool(ManaPool pool)
+    {
+        _manaPool.SetManaPool(pool);
     }
 }
