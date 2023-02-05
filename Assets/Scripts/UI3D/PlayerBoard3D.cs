@@ -10,23 +10,12 @@ public class PlayerBoard3D : MonoBehaviour
     private Graveyard3D _graveyard;
     [SerializeField]
     private Lanes3D _lanes;
-
+    [SerializeField]
+    private Items3D _items;
     [SerializeField]
     private ManaPool3D _manaPool;
-
     [SerializeField]
     private Avatar3D _avatar;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 
     public void SetBoard(Player player)
     {
@@ -35,16 +24,13 @@ public class PlayerBoard3D : MonoBehaviour
         SetHand(player.Hand.Cards);
         //Graveyard
         SetDiscardPile(player.DiscardPile.Cards);
-
+        //Lanes
         SetLanes(player.Lanes);
-
         //Items
-
+        SetItems(player.Items.Cards);
         //Deck
-
         //Life Total
         SetLifeTotal(player.Health);
-
         //Mana Counts
         SetManaPool(player.ManaPool);
 
@@ -83,6 +69,19 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < lanes.Count; i++)
         {
             lane3Ds[i].SetUnitInLane(lanes[i].UnitInLane);
+        }
+    }
+
+    private void SetItems(List<CardInstance> cards)
+    {
+        //Setting a players items
+        _items.numberOfCards = cards.Count;
+        _items.UpdateCards();
+        var card3Ds = _items.GetCards();
+
+        for (var i = 0; i < cards.Count; i++)
+        {
+            card3Ds[i].SetCardInfo(cards[i]);
         }
     }
 
