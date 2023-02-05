@@ -46,7 +46,6 @@ public class Hand3D : MonoBehaviour
             if (_instantiatedCards.Count <= i)
             {
                 card = PrefabUtility.InstantiatePrefab(_cardPrefab) as Card3D;
-                card = Instantiate<Card3D>(_cardPrefab);
                 _instantiatedCards.Add(card);
             }
             else
