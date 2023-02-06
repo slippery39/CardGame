@@ -54,6 +54,11 @@ public class GameService : MonoBehaviour
         return _cardGame.EventLogSystem.GetGameEventLogsAsObservable();
     }
 
+    public IObservable<GameEvent> GetGameEventObservable()
+    {
+        return _cardGame.GameEventSystem.GameEventObservable;
+    }
+
     public IObservable<CardGame> GetOnGameStateUpdatedObservable()
     {
         var gameStateObs = _cardGame.GameStateChangedObservable;

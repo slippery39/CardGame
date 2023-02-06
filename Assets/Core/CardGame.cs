@@ -51,6 +51,12 @@ public class CardGame
     private IModificationsSystem _modificationsSystem;
     private IAdditionalCostSystem _additionalCostSystem;
 
+    //GameEvent system is the newer version of the event log system. 
+    //Starting it clean as its own system as to not interfere with any existing code
+    //that needs to use the event log system.
+    private IGameEventSystem _gameEventSystem;
+
+    //Older version of our event system.
     private IEventLogSystem _eventLogSystem;
 
     //Debug purposes only
@@ -61,6 +67,7 @@ public class CardGame
     #region Public Properties
 
     //This should be at the top to make sure the json serializer serialized all entities here first
+    //TODO - this should be serialized / copied seperately to save space / processing time.
     public Dictionary<string, BaseCardData> RegisteredCardData { get; set; }
 
 
@@ -147,6 +154,9 @@ public class CardGame
 
     [JsonIgnore]
     public IObservable<CardGame> OnGameOverObservable => OnGameOver.AsObservable();
+
+    [JsonIgnore]
+    public IGameEventSystem GameEventSystem { get => _gameEventSystem; set => _gameEventSystem = value; }
     #endregion
 
 
@@ -194,6 +204,7 @@ public class CardGame
         _cardGameLogger = new UnityCardGameLogger();
 
         _eventLogSystem = new EventLogSystem(this);
+        _gameEventSystem = new GameEventSystem(this);
 
         //TODO - GameState Stuff:
         CurrentGameState = GameState.WaitingForAction;
@@ -271,6 +282,7 @@ public class CardGame
         {
             clone.EventLogSystem = new EmptyEventLogSystem();
             clone._cardGameLogger = new EmptyLogger();
+            clone._gameEventSystem = new EmptyGameEventSystem();
         }
 
 
@@ -420,7 +432,7 @@ public class CardGame
         }
 
         cardInstance.CurrentZone = zone;
-        zone.Add(cardInstance);        
+        zone.Add(cardInstance);
     }
 
     public void AddPlayerToGame(Player player)
@@ -619,7 +631,7 @@ public class CardGame
                 choice.Choices = GetEntities<CardInstance>().Where(t => entityIds.Contains(t.EntityId)).ToList();
             }
         }
-        
+
 
         if (action.CardToPlay == null && prevCardToPlay != null)
         {
@@ -802,7 +814,7 @@ public class CardGame
             _cachedZones = zones;
         }
         //TODO - generalize this?
-        return _cachedZones; 
+        return _cachedZones;
     }
 
     public List<CardGameEntity> GetEntities()
@@ -811,12 +823,12 @@ public class CardGame
     }
 
     public IEnumerable<T> GetEntities<T>() where T : CardGameEntity
-    {       
+    {
         if (typeof(T) is CardInstance)
         {
             return this._registeredCardEntities.Cast<T>();
         }
-        
+
         //TODO - Cache CardInsta nces in a seperate list
         //Whenever a CardInstance is added to the game, it should be added to this list.\
         return _registeredEntities.Where(e => e is T).Cast<T>();
