@@ -4,12 +4,13 @@ using UnityEngine;
 using UniRx;
 using System.Linq;
 
-public class AnimationManager : MonoBehaviour
+public class UI3DGameEventManager : MonoBehaviour
 {
     [SerializeField] private UI3DController _uiController;
     [SerializeField] private GameService _gameService;
-    [SerializeField] private Queue<GameEvent> _animationQueue = new Queue<GameEvent>();
+    [SerializeField] private Queue<GameEvent> _eventQueue = new Queue<GameEvent>();
     [SerializeField] private bool _isPlayingAnimation = false;
+    //For debug purposes
     [SerializeField] private GameEvent _currentGameEvent;
 
 
@@ -30,9 +31,9 @@ public class AnimationManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_animationQueue.Count > 0 && _currentGameEvent == null)
+        if (_eventQueue.Count > 0 && _currentGameEvent == null)
         {
-            PlayNextAnimation();
+            HandleGameEvent();
         }
         //If the animation queue has an animation to be played && an animation is not currently playing
         //start playing that animation
@@ -42,15 +43,15 @@ public class AnimationManager : MonoBehaviour
 
     void AddEventToQueue(GameEvent gameEvent)
     {
-        _animationQueue.Enqueue(gameEvent);
+        _eventQueue.Enqueue(gameEvent);
     }
 
-    void PlayNextAnimation()
+    void HandleGameEvent()
     {
         _isPlayingAnimation = true;
-        if (_animationQueue.Count > 0)
+        if (_eventQueue.Count > 0)
         {
-            _currentGameEvent = _animationQueue.Dequeue();
+            _currentGameEvent = _eventQueue.Dequeue();
             if (_currentGameEvent is GameStateUpdatedEvent)
             {
                 //Update the current game state

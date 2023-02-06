@@ -9,7 +9,7 @@ public class UI3DController : MonoBehaviour
 {
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
     private GameService _gameService;
-    private AnimationManager _animationManager;
+    private UI3DGameEventManager _gameEventManager;
 
     [SerializeField]
     private PlayerBoard3D _player1Board;
