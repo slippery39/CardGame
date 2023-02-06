@@ -9,6 +9,8 @@ public interface IGameEventSystem
 {
     public IObservable<GameEvent> GameEventObservable { get; }
     public void FireEvent(GameEvent gameEvent);
+
+    public GameEvent CreateAttackEvent(int attackerId, int defenderId);
 }
 
 //Used if we are using our card game for the AI. 
@@ -17,6 +19,11 @@ public class EmptyGameEventSystem : CardGameSystem, IGameEventSystem
     private Subject<GameEvent> gameEventSubject = new Subject<GameEvent>();
 
     public IObservable<GameEvent> GameEventObservable => gameEventSubject.AsObservable();
+
+    public GameEvent CreateAttackEvent(int attackerId, int defenderId)
+    {
+        return null;
+    }
 
     public void FireEvent(GameEvent gameEvent)
     {
@@ -46,7 +53,7 @@ public class GameEventSystem : CardGameSystem, IGameEventSystem
             EventId = nextEventId++,
             AttackerId = attackerId,
             DefenderId = defenderId,
-            //ResultingState = cardGame.Copy()
+            ResultingState = cardGame.Copy()
         };
     }
 }

@@ -6,11 +6,15 @@ using UniRx;
 public class AnimationManager : MonoBehaviour
 {
     [SerializeField] private GameService _gameService;
+    [SerializeField] private Queue<GameEvent> _animationQueue = new Queue<GameEvent>();
+    [SerializeField] private bool _isPlayingAnimation = false;
+    [SerializeField] private GameEvent _currentGameEvent;
+    //[SerializeField] private GameAnimation _currentAnimation;
 
     // Start is called before the first frame update
     void Start()
     {
-        _gameService.OnGameEvent.Subscribe(gameEvent =>
+        _gameService.GetGameEventObservable().Subscribe(gameEvent =>
         {
             AddEventToQueue(gameEvent);
             //Add the event to our internal animation queue.
@@ -20,7 +24,7 @@ public class AnimationManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (animationQueue.Count>0 && currentAnimation == null)
+        if (_animationQueue.Count > 0 /*&& currentAnimation == null*/)
         {
             PlayNextAnimation();
         }
@@ -30,13 +34,24 @@ public class AnimationManager : MonoBehaviour
         //set the resulting state as well.
     }
 
-   void AddEventToQueue(CardGameEvent gameEvent)
+    void AddEventToQueue(GameEvent gameEvent)
     {
-
+        _animationQueue.Enqueue(gameEvent);
     }
 
     void PlayNextAnimation()
     {
+        _isPlayingAnimation = true;
+        if (_animationQueue.Count > 0)
+        {
+            _currentGameEvent = _animationQueue.Dequeue();
+        }
+        else
+        {
+            _isPlayingAnimation = false;
+        }
 
+        //TODO - Properly end animations.
+        Debug.Log("Playing animation!" + _currentGameEvent.ToString());
     }
 }

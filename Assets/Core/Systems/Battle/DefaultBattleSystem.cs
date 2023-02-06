@@ -7,15 +7,6 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
     {
         this.cardGame = cardGame;
     }
-    public void ExecuteBattles()
-    {
-        var attackingLanes = cardGame.ActivePlayer.Lanes;
-
-        for (int i = 0; i < attackingLanes.Count; i++)
-        {
-            Battle(i);
-        }
-    }
 
     public bool CanBattle(int laneIndex)
     {
@@ -85,6 +76,8 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
     private void DirectAttack(Lane attackingLane, Lane defendingLane)
     {
         cardGame.EventLogSystem.AddEvent($"{attackingLane.UnitInLane.Name} attacked {cardGame.InactivePlayer.Name}");
+        cardGame.GameEventSystem.FireEvent(
+            cardGame.GameEventSystem.CreateAttackEvent(attackingLane.UnitInLane.EntityId, cardGame.InactivePlayer.EntityId));
         //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
         cardGame.DamageSystem.DealCombatDamageToPlayer(attackingLane.UnitInLane, cardGame.InactivePlayer);
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects();

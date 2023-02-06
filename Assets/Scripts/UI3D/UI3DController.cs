@@ -9,6 +9,7 @@ public class UI3DController : MonoBehaviour
 {
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
     private GameService _gameService;
+    private AnimationManager _animationManager;
 
     [SerializeField]
     private PlayerBoard3D _player1Board;
@@ -21,14 +22,14 @@ public class UI3DController : MonoBehaviour
     }
     public void Start()
     {
-        
+
     }
 
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            _gameService.SetupGame(FamousDecks.RandomPremadeDeck(),FamousDecks.RandomPremadeDeck());
+            _gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
             {
                 SetUIGameState(cardGame);

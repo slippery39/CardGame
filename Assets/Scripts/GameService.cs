@@ -18,6 +18,8 @@ public class GameService : MonoBehaviour
     public bool GameOver { get => _cardGame.CurrentGameState == GameState.GameOver; }
     #endregion
 
+    private Subject<GameEvent> _gameEventSubject = new Subject<GameEvent>();
+
     #region Public Methods
     public void SetupGame(Decklist player1Deck, Decklist player2Deck)
     {
@@ -30,6 +32,13 @@ public class GameService : MonoBehaviour
         {
             throw new Exception("StartGame() has failed. Game is null. Perhaps you forgot to Setup the game first?");
         }
+
+        //Push any events happening from the card game to this 
+        _cardGame.GameEventSystem.GameEventObservable.Subscribe((gameEvent) =>
+        {
+            this._gameEventSubject.OnNext(gameEvent);
+        });
+
         _cardGame.StartGame();
         _hasGameStarted = true;
     }
@@ -56,7 +65,7 @@ public class GameService : MonoBehaviour
 
     public IObservable<GameEvent> GetGameEventObservable()
     {
-        return _cardGame.GameEventSystem.GameEventObservable;
+        return _gameEventSubject.AsObservable();
     }
 
     public IObservable<CardGame> GetOnGameStateUpdatedObservable()
