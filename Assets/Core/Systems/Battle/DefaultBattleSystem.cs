@@ -93,6 +93,8 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
         if (defendingUnit != null)
         {
             cardGame.EventLogSystem.AddEvent($"{attackingUnit.Name} attacked {defendingUnit.Name}");
+            cardGame.GameEventSystem.FireEvent(
+            cardGame.GameEventSystem.CreateAttackEvent(attackingUnit.EntityId, defendingUnit.EntityId));
             //Both lanes have units, they will attack eachother.
             cardGame.DamageSystem.DealCombatDamageToUnits(attackingUnit, defendingUnit);
         }

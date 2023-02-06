@@ -78,6 +78,7 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
         //we have a subscriber to it, otherwise it is useless, we might want to consider changing this to an event so we can easily check
         //if it has been subscribed to.
         cardGame.EventLogSystem.FireGameStateChanged();
+        cardGame.GameEventSystem.FireGameStateUpdatedEvent();
     }
 
     //Returns true if something died, which means we have to apply/remove any static effects and check again.

@@ -20,6 +20,8 @@ public class PlayerBoard3D : MonoBehaviour
     public void SetBoard(Player player)
     {
         Debug.Log("Setting board 3d for player : " + player.Name);
+        //Avatar
+        SetAvatar(player);
         //Hand
         SetHand(player.Hand.Cards);
         //Graveyard
@@ -36,6 +38,17 @@ public class PlayerBoard3D : MonoBehaviour
 
     }
 
+    //TODO - place this in the avatar component itself.
+    private void SetAvatar(Player player)
+    {
+        var entity = _avatar.GetComponent<UIGameEntity3D>();
+        if (entity == null)
+        {
+            entity = _avatar.gameObject.AddComponent<UIGameEntity3D>();
+        }
+        entity.EntityId = player.EntityId;
+    }
+
     //TODO - use ICard instead?
     private void SetHand(List<CardInstance> cards)
     {
@@ -47,6 +60,7 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
+            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
         }
     }
 
@@ -60,6 +74,7 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
+            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
         }
     }
 
@@ -82,6 +97,7 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
+            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
         }
     }
 

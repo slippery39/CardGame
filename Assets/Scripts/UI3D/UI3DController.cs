@@ -30,15 +30,15 @@ public class UI3DController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             _gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
+            /*
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
             {
                 SetUIGameState(cardGame);
             });
+            */
             _gameService.StartGame();
             //SetUIGameState(_gameService.CardGame);            
         }
-
-
     }
 
     public void SetUIGameState(CardGame cardGame)

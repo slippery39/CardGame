@@ -10,10 +10,13 @@ public interface IGameEventSystem
     public IObservable<GameEvent> GameEventObservable { get; }
     public void FireEvent(GameEvent gameEvent);
 
+    public void FireGameStateUpdatedEvent();
+
     public GameEvent CreateAttackEvent(int attackerId, int defenderId);
 }
 
 //Used if we are using our card game for the AI. 
+//No need for events there.
 public class EmptyGameEventSystem : CardGameSystem, IGameEventSystem
 {
     private Subject<GameEvent> gameEventSubject = new Subject<GameEvent>();
@@ -25,6 +28,10 @@ public class EmptyGameEventSystem : CardGameSystem, IGameEventSystem
         return null;
     }
 
+    public void FireGameStateUpdatedEvent()
+    {
+
+    }
     public void FireEvent(GameEvent gameEvent)
     {
 
@@ -46,6 +53,14 @@ public class GameEventSystem : CardGameSystem, IGameEventSystem
         gameEventSubject.OnNext(gameEvent);
     }
 
+    public void FireGameStateUpdatedEvent()
+    {
+        gameEventSubject.OnNext(new GameStateUpdatedEvent
+        {
+            ResultingState = cardGame.Copy()
+        });
+    }
+
     public GameEvent CreateAttackEvent(int attackerId, int defenderId)
     {
         return new AttackGameEvent
@@ -53,7 +68,6 @@ public class GameEventSystem : CardGameSystem, IGameEventSystem
             EventId = nextEventId++,
             AttackerId = attackerId,
             DefenderId = defenderId,
-            ResultingState = cardGame.Copy()
         };
     }
 }
@@ -61,7 +75,6 @@ public class GameEventSystem : CardGameSystem, IGameEventSystem
 public abstract class GameEvent
 {
     public int EventId { get; set; }
-    public CardGame ResultingState { get; set; }
 }
 
 //Note if we just store the attacker and defender as references then 
@@ -73,6 +86,11 @@ public class AttackGameEvent : GameEvent
     public int DefenderId { get; set; }
 }
 
+public class GameStateUpdatedEvent : GameEvent
+{
+    public CardGame ResultingState { get; set; }
+}
+
 //Game Events needed (phase 1)
 //UnitAttack
 //EntityDamaged
@@ -80,4 +98,5 @@ public class AttackGameEvent : GameEvent
 //GameStart
 //GameEnd
 //Draw Card
+//Turn Start
 

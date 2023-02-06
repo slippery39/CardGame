@@ -1,4 +1,5 @@
 using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,8 +16,10 @@ public class FightAnimation : MonoBehaviour
     private Sequence attackingSequence;
     private Sequence defendingSequence;
 
-    public void PlayAnimation()
+    public void PlayAnimation(Transform attacking, Transform defending,Action onComplete = null)
     {
+        attackingCard = attacking;
+        thingGettingAttacked = defending;
         //We do not want to run an animation if one is already playing
         if (
             (attackingSequence != null && attackingSequence.IsPlaying())
@@ -60,6 +63,10 @@ public class FightAnimation : MonoBehaviour
         {
             defendingSequence = null;
             thingGettingAttacked.transform.position = originalDefPos;
+            if (onComplete != null)
+            {
+                onComplete();
+            }
         });
 
         defendingSequence = defendingSeq;
