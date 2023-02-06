@@ -9,14 +9,16 @@ public class FightAnimation : MonoBehaviour
     [SerializeField] private Transform attackingCard;
     [SerializeField] private Transform thingGettingAttacked;
 
+    [SerializeField] private float _animationTime = 0.5f;
+    [SerializeField] private float _defendBounceAmount = 0.5f;
 
-    [SerializeField] private Ease attackingEasingMethod = Ease.InBack;
-    [SerializeField] private Ease defendingEasingMethod = Ease.OutCirc;
+    [SerializeField] private AnimationCurve _attackAnimationCurve;
+    [SerializeField] private AnimationCurve _defendAnimationCurve;
 
     private Sequence attackingSequence;
     private Sequence defendingSequence;
 
-    public void PlayAnimation(Transform attacking, Transform defending,Action onComplete = null)
+    public void PlayAnimation(Transform attacking, Transform defending, Action onComplete = null)
     {
         attackingCard = attacking;
         thingGettingAttacked = defending;
@@ -42,9 +44,8 @@ public class FightAnimation : MonoBehaviour
             thingGettingAttackedBounds);
 
         var attackingSeq = DOTween.Sequence();
-        attackingSeq.Append(attackingCard.transform.DOMove(positionTo, 0.3f)
-        .SetEase(attackingEasingMethod))
-        .Append(attackingCard.transform.DOMove(originalAttackPos, 0.1f))
+        attackingSeq.Append(attackingCard.transform.DOMove(positionTo, _animationTime)
+        .SetEase(_attackAnimationCurve))
         .OnComplete(() =>
         {
             attackingSequence = null;
@@ -54,11 +55,9 @@ public class FightAnimation : MonoBehaviour
         attackingSequence = attackingSeq;
 
         var defendingSeq = DOTween.Sequence();
-        defendingSeq.Append(thingGettingAttacked.transform.DOMove(originalDefPos + new Vector3(0, 0, 1), 0.2f)
-        .SetDelay(0.25f)
-        .SetEase(defendingEasingMethod)
+        defendingSeq.Append(thingGettingAttacked.transform.DOMove(originalDefPos + ((positionTo*-1).normalized * _defendBounceAmount), _animationTime)
+        .SetEase(_defendAnimationCurve)
         )
-        .Append(thingGettingAttacked.transform.DOMove(originalDefPos, 0.1f))
         .OnComplete(() =>
         {
             defendingSequence = null;

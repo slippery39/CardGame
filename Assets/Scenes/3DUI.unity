@@ -3636,8 +3636,92 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackingCard: {fileID: 0}
   thingGettingAttacked: {fileID: 0}
-  attackingEasingMethod: 26
-  defendingEasingMethod: 21
+  _animationTime: 0.5
+  _defendBounceAmount: -0.5
+  _attackAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.19931468
+      value: -0.2095012
+      inSlope: 0.8095241
+      outSlope: 0.8095241
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.38736618
+      value: 0.94381887
+      inSlope: -1.7225281
+      outSlope: -1.7225281
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.23120834
+      outWeight: 0.114945166
+    - serializedVersion: 3
+      time: 0.5031626
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _defendAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: -0.017315552
+      outSlope: -0.017315552
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.28375244
+      value: -0.00491333
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7019043
+      value: 0.9869461
+      inSlope: -3.9970376
+      outSlope: -3.9970376
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.796875
+      value: 0.0024719238
+      inSlope: -10.366083
+      outSlope: -10.366083
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &301072650
 Transform:
   m_ObjectHideFlags: 0
