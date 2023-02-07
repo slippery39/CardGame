@@ -239,6 +239,15 @@ public class CardDatabase : ICardDatabase
     {
         _cards = new List<BaseCardData>();
 
+        _cards.Add(new UnitCardData
+        {
+            Name = "Raging Goblin",
+            ManaCost = "R",
+            Power = 1,
+            Toughness = 1,
+            Colors = new List<CardColor> { CardColor.Red },
+            Abilities = new List<CardAbility> { new HasteAbility() }
+        });
         //Create cards here for now.
         _cards.Add(new UnitCardData()
         {
@@ -3301,11 +3310,11 @@ public class CardDatabase : ICardDatabase
         {
             TypeNameHandling = TypeNameHandling.All,
             TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
-        });        
+        });
 
         _cards = JsonConvert.DeserializeObject<List<BaseCardData>>(json, new JsonSerializerSettings
         {
-            TypeNameHandling  = TypeNameHandling.All,
+            TypeNameHandling = TypeNameHandling.All,
             TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
         });
 

@@ -25,6 +25,12 @@ public class DefaultDamageSystem : CardGameSystem, IDamageSystem
         //TODO - Deal Damage needs to work with players too.
 
         cardGame.Log($"{damagedPlayer} has taken {damage} combat damage!");
+        cardGame.GameEventSystem.FireEvent(
+                        new DamageEvent
+                        {
+                            DamagedId = damagedPlayer.EntityId,
+                            DamageAmount = damage
+                        });
 
         //Trigger Damage Dealt Abilities.
         //TODO - Handle case if 0 damage is dealt for whatever reason.
@@ -99,6 +105,13 @@ public class DefaultDamageSystem : CardGameSystem, IDamageSystem
             return;
         }
         damagedUnit.DamageTaken += damage;
+        cardGame.GameEventSystem.FireEvent(
+        new DamageEvent
+        {
+            DamagedId = damagedUnit.EntityId,
+            DamageAmount = damage
+        }
+        );
     }
 
     private void DealDamage(CardGameEntity damagedEntity, int damage)
@@ -106,6 +119,13 @@ public class DefaultDamageSystem : CardGameSystem, IDamageSystem
         if (damagedEntity is Player)
         {
             ((Player)damagedEntity).Health -= damage;
+
+            cardGame.GameEventSystem.FireEvent(
+                                new DamageEvent
+                                {
+                                    DamagedId = damagedEntity.EntityId,
+                                    DamageAmount = damage
+                                });
         }
         if (damagedEntity is CardInstance)
         {

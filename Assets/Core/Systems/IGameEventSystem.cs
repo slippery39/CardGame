@@ -72,6 +72,7 @@ public class GameEventSystem : CardGameSystem, IGameEventSystem
     }
 }
 
+
 public abstract class GameEvent
 {
     public int EventId { get; set; }
@@ -80,10 +81,17 @@ public abstract class GameEvent
 //Note if we just store the attacker and defender as references then 
 //we wont be able to ensure that they will be the same by the time the
 //UI acts on the event.
+
 public class AttackGameEvent : GameEvent
 {
     public int AttackerId { get; set; }
     public int DefenderId { get; set; }
+}
+
+public class DamageEvent : GameEvent
+{
+    public int DamagedId { get; set; }
+    public int DamageAmount { get; set; }
 }
 
 public class GameStateUpdatedEvent : GameEvent

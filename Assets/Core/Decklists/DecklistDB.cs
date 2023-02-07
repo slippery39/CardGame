@@ -288,6 +288,29 @@ public class FamousDecks : DecklistDB
         };
     }
 
+    public static Decklist RagingGoblins()
+    {
+        return new Decklist
+        {
+            Name = "Raging Goblins",
+            Format = "Test",
+            Cards = $@"45 Raging Goblin
+                        15 Mountain"
+        };
+    }
+
+    public static Decklist AllLands()
+    {
+        return new Decklist
+        {
+            Name = "AllLands",
+            Format = "Test",
+            Cards = $@"50 Island
+                        10 Sleight Of Hand"
+        };
+    }
+
+
     public static Decklist RGValakut2011()
     {
         //Note we replaced Khalni Heart Expedition with Rampant Growth
@@ -338,6 +361,8 @@ public class FamousDecks : DecklistDB
             EXTGoblins2005(),
             URDragonstorm2006(),
             GRHazeOfRage2007(),
+            RagingGoblins(),
+            AllLands()
         };
     }
 }

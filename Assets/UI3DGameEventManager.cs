@@ -13,9 +13,11 @@ public class UI3DGameEventManager : MonoBehaviour
     //For debug purposes
     [SerializeField] private GameEvent _currentGameEvent;
 
-
+    [Header("Animations")]
     [SerializeField]
     private FightAnimation _fightAnimation;
+    [SerializeField]
+    private DamageAnimation _damageAnimation;
     //[SerializeField] private GameAnimation _currentAnimation;
 
     // Start is called before the first frame update
@@ -58,6 +60,20 @@ public class UI3DGameEventManager : MonoBehaviour
                 var evt = _currentGameEvent as GameStateUpdatedEvent;
                 _uiController.SetUIGameState(evt.ResultingState);
                 _currentGameEvent = null;
+            }
+            else if (_currentGameEvent is DamageEvent)
+            {
+                var evt = _currentGameEvent as DamageEvent;
+                var damagedEntity = GameObject.FindObjectsOfType<UIGameEntity3D>()
+                     .Where(ent => ent.EntityId == evt.DamagedId)
+                     .FirstOrDefault();
+                if (damagedEntity == null)
+                {
+                    this._currentGameEvent = null;
+                    return;
+                }
+
+                this._damageAnimation.PlayAnimation(damagedEntity.transform, evt.DamageAmount, () => this._currentGameEvent = null);
             }
             else if (_currentGameEvent is AttackGameEvent)
             {
