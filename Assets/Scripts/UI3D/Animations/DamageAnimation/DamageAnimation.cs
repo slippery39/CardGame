@@ -19,6 +19,8 @@ public class DamageAnimation : MonoBehaviour
     [SerializeField]
     private AnimationCurve _fadeOutCurve;
 
+    public float AnimationTime { get => _animationTime; set => _animationTime = value; }
+
     public void PlayAnimation(Transform transform, int damageAmount, Action onComplete = null)
     {
         _damageTextPrefab.gameObject.SetActive(true);

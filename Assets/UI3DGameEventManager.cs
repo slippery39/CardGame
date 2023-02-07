@@ -13,12 +13,18 @@ public class UI3DGameEventManager : MonoBehaviour
     //For debug purposes
     [SerializeField] private GameEvent _currentGameEvent;
 
+
+
+
     [Header("Animations")]
     [SerializeField]
     private FightAnimation _fightAnimation;
     [SerializeField]
     private DamageAnimation _damageAnimation;
     //[SerializeField] private GameAnimation _currentAnimation;
+
+    [SerializeField]
+    private float animationTime = 0.5f;
 
     // Start is called before the first frame update
     void Start()
@@ -28,20 +34,27 @@ public class UI3DGameEventManager : MonoBehaviour
             AddEventToQueue(gameEvent);
             //Add the event to our internal animation queue.
         });
+
+        SetAnimationTimes();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (_eventQueue.Count > 0 && _currentGameEvent == null)
-        {
-            HandleGameEvent();
-        }
         //If the animation queue has an animation to be played && an animation is not currently playing
         //start playing that animation
         //once the animation is done, remove it from the queue
         //set the resulting state as well.
+
+
+        if (_eventQueue.Count > 0 && _currentGameEvent == null)
+        {
+            HandleGameEvent();
+        }
+        //Update every frame in case it gets changed in the inspector.
+        SetAnimationTimes();
     }
+
 
     void AddEventToQueue(GameEvent gameEvent)
     {
@@ -98,5 +111,11 @@ public class UI3DGameEventManager : MonoBehaviour
         {
             _isPlayingAnimation = false;
         }
+    }
+
+    private void SetAnimationTimes()
+    {
+        _fightAnimation.AnimationTime = animationTime;
+        _damageAnimation.AnimationTime = animationTime;
     }
 }

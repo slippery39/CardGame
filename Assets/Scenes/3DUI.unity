@@ -5282,7 +5282,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &530451380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5729,7 +5729,7 @@ GameObject:
   - component: {fileID: 655518969}
   - component: {fileID: 655518968}
   m_Layer: 0
-  m_Name: AnimationManager
+  m_Name: GameEventManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5752,6 +5752,7 @@ MonoBehaviour:
   _isPlayingAnimation: 0
   _fightAnimation: {fileID: 301072649}
   _damageAnimation: {fileID: 962464619}
+  animationTime: 0.2
 --- !u!4 &655518969
 Transform:
   m_ObjectHideFlags: 0

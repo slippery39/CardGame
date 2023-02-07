@@ -18,6 +18,8 @@ public class FightAnimation : MonoBehaviour
     private Sequence attackingSequence;
     private Sequence defendingSequence;
 
+    public float AnimationTime { get => _animationTime; set => _animationTime = value; }
+
     public void PlayAnimation(Transform attacking, Transform defending, Action onComplete = null)
     {
         attackingCard = attacking;

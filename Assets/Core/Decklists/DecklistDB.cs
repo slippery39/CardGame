@@ -305,8 +305,8 @@ public class FamousDecks : DecklistDB
         {
             Name = "AllLands",
             Format = "Test",
-            Cards = $@"50 Island
-                        10 Sleight Of Hand"
+            Cards = $@"45 Lightning Bolt
+                        15 Mountain"
         };
     }
 
