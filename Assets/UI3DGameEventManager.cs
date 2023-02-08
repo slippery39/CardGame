@@ -21,6 +21,8 @@ public class UI3DGameEventManager : MonoBehaviour
     private FightAnimation _fightAnimation;
     [SerializeField]
     private DamageAnimation _damageAnimation;
+    [SerializeField]
+    private DrawCardAnimation _drawCardAnimation;
     //[SerializeField] private GameAnimation _currentAnimation;
 
     [SerializeField]
@@ -74,6 +76,32 @@ public class UI3DGameEventManager : MonoBehaviour
                 _uiController.SetUIGameState(evt.ResultingState);
                 _currentGameEvent = null;
             }
+            else if (_currentGameEvent is DrawCardEvent)
+            {
+                var evt = _currentGameEvent as DrawCardEvent;
+                /*
+                 * Need to find the board which corresponds to the id of the player drawing a card
+                 * From there we can find its "Deck" and "Hand" game objects
+                 * And run the draw card animation.
+                 */
+                var playerBoard = _uiController.GetPlayerBoards().Where(pb => pb.PlayerId == evt.PlayerId).FirstOrDefault();
+
+                /*
+                 * How do we get the drawn card?
+                 */
+                //We might have issues below if we grab it directly from the game state... maybe we should pass in the current card state in to the
+                //event? Although the way things are set up we might have some issues. 
+
+                //Another possiblity is to save the important parts of the card in the event itself, such as the type, name rules text etc.. and then
+                //pass it into the card raw animation through the Card3DOptions interface. 
+                //since our card draw animation creates a temporary copy anyways, it probably doesn't matter too much if it isn't 100% accurate 
+                //for the 0.5 to 1 second time the animation is running.
+
+                var cardInstanceDrawn = _uiController.GetComponent<GameService>().CardGame.GetEntities<CardInstance>().Where(c => c.EntityId == evt.DrawnCardId).FirstOrDefault();
+                _drawCardAnimation.PlayAnimation(playerBoard.Deck, playerBoard.Hand, cardInstanceDrawn, () => this._currentGameEvent = null);
+
+
+            }
             else if (_currentGameEvent is DamageEvent)
             {
                 var evt = _currentGameEvent as DamageEvent;
@@ -117,5 +145,6 @@ public class UI3DGameEventManager : MonoBehaviour
     {
         _fightAnimation.AnimationTime = animationTime;
         _damageAnimation.AnimationTime = animationTime;
+        _drawCardAnimation.AnimationTime = animationTime;
     }
 }

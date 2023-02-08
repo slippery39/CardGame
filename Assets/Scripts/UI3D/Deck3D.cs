@@ -24,11 +24,12 @@ public class Deck3D : MonoBehaviour
 
     private List<Card3D> _instantiatedCards;
 
-    private void Update()
+    public List<Card3D> GetCards()
     {
-        InitializeCards();
+        return _instantiatedCards;
     }
-    void InitializeCards()
+
+    public void UpdateCards()
     {
         //Look for any already initialized cards
         var alreadyInitializedCards = this.GetComponentsInChildren<Card3D>(true);
@@ -46,10 +47,7 @@ public class Deck3D : MonoBehaviour
                 card = Instantiate<Card3D>(_cardPrefab);
 
 #endif
-
-
                 _instantiatedCards.Add(card);
-
             }
             else
             {

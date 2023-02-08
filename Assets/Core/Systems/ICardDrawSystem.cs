@@ -27,6 +27,11 @@ public class DefaultCardDrawSystem : CardGameSystem, ICardDrawSystem
         {
             var card = player.Deck.GetTopCard();
             cardGame.ZoneChangeSystem.MoveToZone(card, player.Hand);
+            cardGame.GameEventSystem.FireEvent(new DrawCardEvent
+            {
+                PlayerId = player.PlayerId,
+                DrawnCardId = card.EntityId
+            });
             return card;
         }
         else

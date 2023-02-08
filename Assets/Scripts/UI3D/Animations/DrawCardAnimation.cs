@@ -3,26 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class DrawCardAnimation : MonoBehaviour
 {
     [SerializeField] private GameObject _drawCardTransform1;
     [SerializeField] private Deck3D _deck;
     [SerializeField] private Hand3D _hand;
-    // Start is called before the first frame update
-    void Start()
-    {
+    [SerializeField] private float _animationTime = 0.3f;
 
-    }
+    public float AnimationTime { get => _animationTime; set => _animationTime = value; }
 
-    public void PlayAnimation()
+    public void PlayAnimation(Deck3D deck, Hand3D hand, CardInstance cardDrawn, Action onComplete = null)
     {
-        Debug.Log("playing animation");
         //Grab the last card3D gameObject from the deck.
         //de parent the card
+        _deck = deck;
+        _hand = hand;
 
         var cardToMove = _deck.GetComponentsInChildren<Card3D>().ToList().LastOrDefault();
-        cardToMove.transform.SetParent(null);
+        //cardToMove.transform.SetParent(null);
+        cardToMove.SetCardInfo(cardDrawn);
 
         if (cardToMove == null)
         {
@@ -35,7 +36,7 @@ public class DrawCardAnimation : MonoBehaviour
 
         //Move it to the draw card point,
         //At the same time as moving, we want to rotate it so that the card information is facing the player
-        cardToMove.transform.DOMove(_drawCardTransform1.transform.position, 0.5f).SetEase(Ease.Linear)
+        cardToMove.transform.DOMove(_drawCardTransform1.transform.position, _animationTime).SetEase(Ease.Linear)
             .OnComplete(() =>
             {
                 //Afterwards, move the card into the players hand at the next available spot. 
@@ -66,6 +67,10 @@ public class DrawCardAnimation : MonoBehaviour
                 {
                     Destroy(cardToMove.gameObject);
                     lastCard.gameObject.SetActive(true);
+                    if (onComplete != null)
+                    {
+                        onComplete();
+                    }
                 });
             });
         cardToMove.transform.DOLocalRotate(new Vector3(90, 0, 0), 0.25f).SetEase(Ease.Linear);

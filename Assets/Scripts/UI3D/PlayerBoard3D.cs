@@ -7,6 +7,8 @@ public class PlayerBoard3D : MonoBehaviour
     [SerializeField]
     private Hand3D _hand;
     [SerializeField]
+    private Deck3D _deck;
+    [SerializeField]
     private Graveyard3D _graveyard;
     [SerializeField]
     private Lanes3D _lanes;
@@ -16,14 +18,29 @@ public class PlayerBoard3D : MonoBehaviour
     private ManaPool3D _manaPool;
     [SerializeField]
     private Avatar3D _avatar;
+    [SerializeField]
+    private int _playerId;
+
+    public int PlayerId { get => _playerId; }
+    public Hand3D Hand { get => _hand;}
+    public Graveyard3D Graveyard { get => _graveyard; }
+    public Lanes3D Lanes { get => _lanes;}
+    public Items3D Items { get => _items; }
+    public ManaPool3D ManaPool { get => _manaPool;  }
+    public Avatar3D Avatar { get => _avatar; }
+    public Deck3D Deck { get => _deck; set => _deck = value; }
 
     public void SetBoard(Player player)
     {
         Debug.Log("Setting board 3d for player : " + player.Name);
+
+        _playerId = player.PlayerId;
         //Avatar
         SetAvatar(player);
         //Hand
         SetHand(player.Hand.Cards);
+        //Deck
+        SetDeck(player.Deck.Cards);
         //Graveyard
         SetDiscardPile(player.DiscardPile.Cards);
         //Lanes
@@ -48,7 +65,19 @@ public class PlayerBoard3D : MonoBehaviour
         }
         entity.EntityId = player.EntityId;
     }
+    private void SetDeck(List<CardInstance> cards)
+    {
+        _deck._numberOfCards = cards.Count;
+        _deck.UpdateCards();
 
+        var card3Ds = _deck.GetCards();
+
+        for (var i = 0; i < cards.Count; i++)
+        {
+            card3Ds[i].SetCardInfo(cards[i]);
+            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
+        }
+    }
     //TODO - use ICard instead?
     private void SetHand(List<CardInstance> cards)
     {

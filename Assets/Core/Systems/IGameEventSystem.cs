@@ -94,6 +94,12 @@ public class DamageEvent : GameEvent
     public int DamageAmount { get; set; }
 }
 
+public class DrawCardEvent : GameEvent
+{
+    public int PlayerId { get; set; }
+    public int DrawnCardId { get; set; }
+}
+
 public class GameStateUpdatedEvent : GameEvent
 {
     public CardGame ResultingState { get; set; }

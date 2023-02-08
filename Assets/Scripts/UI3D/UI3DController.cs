@@ -20,10 +20,6 @@ public class UI3DController : MonoBehaviour
     {
         _gameService = GetComponent<GameService>();
     }
-    public void Start()
-    {
-
-    }
 
     public void Update()
     {
@@ -40,6 +36,11 @@ public class UI3DController : MonoBehaviour
             _gameService.StartGame();
             //SetUIGameState(_gameService.CardGame);            
         }
+    }
+
+    public List<PlayerBoard3D> GetPlayerBoards()
+    {
+        return new List<PlayerBoard3D> { _player1Board, _player2Board };
     }
 
     public void SetUIGameState(CardGame cardGame)
