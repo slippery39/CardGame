@@ -100,6 +100,11 @@ public class DrawCardEvent : GameEvent
     public int DrawnCardId { get; set; }
 }
 
+public class UnitDiedEvent : GameEvent
+{
+    public int UnitId { get; set; }
+}
+
 public class GameStateUpdatedEvent : GameEvent
 {
     public CardGame ResultingState { get; set; }

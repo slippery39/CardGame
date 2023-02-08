@@ -76,6 +76,26 @@ public class UI3DGameEventManager : MonoBehaviour
                 _uiController.SetUIGameState(evt.ResultingState);
                 _currentGameEvent = null;
             }
+            else if (_currentGameEvent is UnitDiedEvent)
+            {
+                var evt = _currentGameEvent as UnitDiedEvent;
+
+                var entity = GameObject.FindObjectsOfType<UIGameEntity3D>()
+                            .Where(ent => ent.EntityId == evt.UnitId)
+                            .FirstOrDefault();
+
+                if (entity == null)
+                {
+                    _currentGameEvent = null;
+                    return;
+                }
+
+                var card = entity.GetComponent<Card3D>();
+
+                //TODO - Add animation time.
+                card.PlayDissolve(() => _currentGameEvent = null);
+
+            }
             else if (_currentGameEvent is DrawCardEvent)
             {
                 var evt = _currentGameEvent as DrawCardEvent;

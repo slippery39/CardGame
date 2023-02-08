@@ -49,7 +49,13 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         if ((currentZone.ZoneType == ZoneType.InPlay) && zoneTo is DiscardPile)
         {
             card.DamageTaken = 0;
+            cardGame.GameEventSystem.FireEvent(
+                new UnitDiedEvent
+                {
+                    UnitId = card.EntityId
+                });
             OnDeathTriggers(card);
+
         }
     }
 
