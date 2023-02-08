@@ -7,7 +7,6 @@ using System;
 
 public class DrawCardAnimation : MonoBehaviour
 {
-    [SerializeField] private GameObject _drawCardTransform1;
     [SerializeField] private Deck3D _deck;
     [SerializeField] private Hand3D _hand;
     [SerializeField] private float _animationTime = 0.3f;
@@ -34,45 +33,40 @@ public class DrawCardAnimation : MonoBehaviour
         //Update the cards in the deck.
         _deck._numberOfCards--;
 
+        //Afterwards, move the card into the players hand at the next available spot. 
+        //We need to find out where the next transform is in the hand
+        //Ways of doing this : add 1 to the hands number of cards, scale that card down, then use that transform to move our own card.
+        _hand.numberOfCards++;
+        _hand.UpdateCards();
+
+        var lastCard = _hand.GetComponentsInChildren<Card3D>().LastOrDefault();
+        //Hide the card, while we run the animation.
+
+        lastCard.gameObject.SetActive(false);
+
+        if (lastCard == null)
+        {
+            Debug.LogWarning("Last Card in hand is null");
+            return;
+        }
+
+        var position = lastCard.transform.position;
+        var scaling = lastCard.transform.localScale;
+        var rotation = lastCard.transform.rotation;
+
         //Move it to the draw card point,
         //At the same time as moving, we want to rotate it so that the card information is facing the player
-        cardToMove.transform.DOMove(_drawCardTransform1.transform.position, _animationTime).SetEase(Ease.Linear)
+        cardToMove.transform.DOMove(position, _animationTime).SetEase(Ease.Linear);
+        cardToMove.transform.DORotateQuaternion(rotation, _animationTime);
+        cardToMove.transform.DOScale(scaling, _animationTime)
             .OnComplete(() =>
             {
-                //Afterwards, move the card into the players hand at the next available spot. 
-                //We need to find out where the next transform is in the hand
-
-                //Ways of doing this : add 1 to the hands number of cards, scale that card down, then use that transform to move our own card.
-                _hand.numberOfCards++;
-                _hand.UpdateCards();
-
-                var lastCard = _hand.GetComponentsInChildren<Card3D>().LastOrDefault();
-                //Hide the card, while we run the animation.
-
-                lastCard.gameObject.SetActive(false);
-
-                if (lastCard == null)
+                Destroy(cardToMove.gameObject);
+                lastCard.gameObject.SetActive(true);
+                if (onComplete != null)
                 {
-                    Debug.LogWarning("Last Card in hand is null");
-                    return;
+                    onComplete();
                 }
-
-                var position = lastCard.transform.position;
-                var scaling = lastCard.transform.localScale;
-                var rotation = lastCard.transform.rotation;
-                cardToMove.transform.DOMove(position, 0.5f);
-                cardToMove.transform.DORotateQuaternion(rotation, 0.5f);
-                cardToMove.transform.DOScale(scaling, 0.5f)
-                .OnComplete(() =>
-                {
-                    Destroy(cardToMove.gameObject);
-                    lastCard.gameObject.SetActive(true);
-                    if (onComplete != null)
-                    {
-                        onComplete();
-                    }
-                });
             });
-        cardToMove.transform.DOLocalRotate(new Vector3(90, 0, 0), 0.25f).SetEase(Ease.Linear);
     }
 }
