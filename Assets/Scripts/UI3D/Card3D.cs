@@ -22,6 +22,9 @@ public class Card3D : MonoBehaviour
 
     [SerializeField] private CardFrameTextures _cardFrameTextures;
 
+    [SerializeField] private Card3DMaterialSet _dissolveMaterials;
+    [SerializeField] private Card3DMaterialSet _summonMaterials;
+
 
     private void Awake()
     {
@@ -173,21 +176,30 @@ public class Card3D : MonoBehaviour
         _cardRenderer.materials[0].SetTexture("_Albedo", cardFrameTexture);
     }
 
+    public void SetMaterials(Card3DMaterialSet materials)
+    {
+        var cardFrameTexture = (Texture2D)_cardRenderer.materials[0].GetTexture("_Albedo");
+        var artTexture = (Texture2D)_cardRenderer.materials[3].GetTexture("_Albedo");
+        _cardRenderer.SetMaterials(materials.ToList());
+        SetArt(artTexture);
+        SetCardFrame(cardFrameTexture);
+    }
+
     public void PlayDissolve(Action onComplete = null)
     {
+        SetMaterials(_dissolveMaterials);
         StartCoroutine(DissolveCo(onComplete));
-
     }
 
     private IEnumerator DissolveCo(Action onComplete = null)
     {
         //Hide Everything to run the dissolve animation
-        this._rulesText.gameObject.SetActive(false);
-        this._manaCost.gameObject.SetActive(false);
-        this._name.gameObject.SetActive(false);
-        this._combatStats.gameObject.SetActive(false);
-        this._cardType.gameObject.SetActive(false);
-        this._cardTextContainer.gameObject.SetActive(false);
+        _rulesText.gameObject.SetActive(false);
+        _manaCost.gameObject.SetActive(false);
+        _name.gameObject.SetActive(false);
+        _combatStats.gameObject.SetActive(false);
+        _cardType.gameObject.SetActive(false);
+        _cardTextContainer.gameObject.SetActive(false);
 
         for (var t = 0f; t < 1.01; t += 0.05f)
         {
@@ -230,4 +242,18 @@ public class CardFrameTextures
     public Texture2D Green;
     public Texture2D Colorless;
     public Texture2D MultiColor;
+}
+
+[System.Serializable]
+public class Card3DMaterialSet
+{
+    public Material art;
+    public Material cardFrame;
+    public Material cardSides;
+    public Material cardBack;
+
+    public List<Material> ToList()
+    {
+        return new List<Material> { cardFrame, cardBack, cardSides, art };
+    }
 }

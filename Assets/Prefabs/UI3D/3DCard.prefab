@@ -465,6 +465,16 @@ MonoBehaviour:
     Green: {fileID: 2800000, guid: 6d284fed05f2deb4583eb4c0db436489, type: 3}
     Colorless: {fileID: 2800000, guid: 5797d5982b5bd4646b85e84a706dea61, type: 3}
     MultiColor: {fileID: 2800000, guid: 0a1d7baac4f679d4fa732b01cfe9139c, type: 3}
+  _dissolveMaterials:
+    art: {fileID: 2100000, guid: b97ec6378fd8fb94e9d5b092cc0a9d3f, type: 2}
+    cardFrame: {fileID: 2100000, guid: fb0b50baa4eb044479cdaaa29adb019e, type: 2}
+    cardSides: {fileID: 2100000, guid: 9a69b6c8f17716c4ba82b1a15c4c50da, type: 2}
+    cardBack: {fileID: 2100000, guid: e4a890d0526091f42bef6a23b5509f86, type: 2}
+  _summonMaterials:
+    art: {fileID: 2100000, guid: c18e5c8828bcd214090d82608f3e8553, type: 2}
+    cardFrame: {fileID: 2100000, guid: 1be584f0dec06764cbf6091c2530768d, type: 2}
+    cardSides: {fileID: 2100000, guid: 04e536a3133621c458ae54180fee91dd, type: 2}
+    cardBack: {fileID: 2100000, guid: 5a3fc2cf74cd37a44a328d65fd43406a, type: 2}
 --- !u!65 &728662338747177628
 BoxCollider:
   m_ObjectHideFlags: 0
