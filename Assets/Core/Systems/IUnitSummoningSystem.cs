@@ -24,6 +24,13 @@ public class DefaultUnitSummoningSystem : CardGameSystem, IUnitSummoningSystem
         }
         cardGame.ZoneChangeSystem.MoveToZone(unitCard, emptyLanes.First());
 
+        cardGame.GameEventSystem.FireEvent(new UnitSummonedEvent
+        {
+            PlayerId = player.PlayerId,
+            LaneId = laneEntityId,
+            UnitId = unitCard.EntityId
+        });
+
         //Search for any abilities with an EntersPlay callback, slightly different from triggered abilities as these would happen immediatly.
 
         var onSummonAbilities = unitCard.Abilities.GetOfType<IOnSummon>();

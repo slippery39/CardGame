@@ -90,6 +90,14 @@ public class UnitDiedEvent : GameEvent
     public int UnitId { get; set; }
 }
 
+public class UnitSummonedEvent : GameEvent
+{
+    public int PlayerId { get; set; }
+    public int UnitId { get; set; }
+    public int LaneId { get; set; }
+}
+
+
 public class GameStateUpdatedEvent : GameEvent
 {
     public CardGame ResultingState { get; set; }

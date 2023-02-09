@@ -18,4 +18,14 @@ public class UIGameEntity3D : MonoBehaviour
         entity.EntityId = cardInstance.EntityId;
         return entity;
     }
+    public static UIGameEntity3D AddToLane(Lane3D lane3D, Lane lane)
+    {
+        var entity = lane3D.gameObject.GetComponent<UIGameEntity3D>();
+        if (entity == null)
+        {
+            entity = lane3D.gameObject.AddComponent<UIGameEntity3D>();
+        }
+        entity.EntityId = lane.EntityId;
+        return entity;
+    }
 }

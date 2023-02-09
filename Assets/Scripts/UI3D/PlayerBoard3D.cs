@@ -112,6 +112,7 @@ public class PlayerBoard3D : MonoBehaviour
         var lane3Ds = _lanes.GetLanes();
         for (var i = 0; i < lanes.Count; i++)
         {
+            UIGameEntity3D.AddToLane(lane3Ds[i], lanes[i]);
             lane3Ds[i].SetUnitInLane(lanes[i].UnitInLane);
         }
     }

@@ -185,6 +185,38 @@ public class Card3D : MonoBehaviour
         SetCardFrame(cardFrameTexture);
     }
 
+    public void PlaySummon(Action onComplete = null)
+    {
+        SetMaterials(_summonMaterials);
+        StartCoroutine(SummonCo(onComplete));
+    }
+    private IEnumerator SummonCo(Action onComplete = null)
+    {
+        //Hide Everything to run the dissolve animation
+        _rulesText.gameObject.SetActive(false);
+        _manaCost.gameObject.SetActive(false);
+        _name.gameObject.SetActive(false);
+        _combatStats.gameObject.SetActive(false);
+        _cardType.gameObject.SetActive(false);
+        _cardTextContainer.gameObject.SetActive(false);
+
+        for (var t = 0f; t < 1.01; t += 0.05f)
+        {
+            for (var i = 0; i < _cardRenderer.materials.Length; i++)
+            {
+                var material = _cardRenderer.materials[i];
+                material.SetFloat("_DissolveAmount", 1 - t);
+            }
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        Debug.Log("Dissolve Completed!");
+        if (onComplete != null)
+        {
+            onComplete();
+        }
+    }
+
     public void PlayDissolve(Action onComplete = null)
     {
         SetMaterials(_dissolveMaterials);

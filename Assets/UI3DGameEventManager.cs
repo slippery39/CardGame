@@ -76,6 +76,38 @@ public class UI3DGameEventManager : MonoBehaviour
                 _uiController.SetUIGameState(evt.ResultingState);
                 _currentGameEvent = null;
             }
+            else if (_currentGameEvent is UnitSummonedEvent)
+            {
+                var evt = _currentGameEvent as UnitSummonedEvent;
+                var unit = GameObject.FindObjectsOfType<UIGameEntity3D>()
+                            .Where(ent => ent.EntityId == evt.UnitId)
+                            .FirstOrDefault();
+                var card3D = unit.GetComponent<Card3D>();
+
+                var lane = GameObject.FindObjectsOfType<UIGameEntity3D>()
+                     .Where(ent => ent.EntityId == evt.LaneId)
+                     .FirstOrDefault();
+
+                if (unit == null)
+                {
+                    _currentGameEvent = null;
+                    return;
+                }
+
+                var newCard = Instantiate(card3D);
+
+                //Hide the card
+                card3D.gameObject.SetActive(false);
+
+                newCard.transform.position = lane.transform.position;
+                newCard.transform.rotation = lane.transform.rotation;
+                newCard.GetComponent<Card3D>().PlaySummon(() =>
+                {
+                    Destroy(newCard.gameObject);
+                    _currentGameEvent = null;                   
+                });
+
+            }
             else if (_currentGameEvent is UnitDiedEvent)
             {
                 var evt = _currentGameEvent as UnitDiedEvent;
