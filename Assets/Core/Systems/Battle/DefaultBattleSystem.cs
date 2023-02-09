@@ -76,8 +76,11 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
     private void DirectAttack(Lane attackingLane, Lane defendingLane)
     {
         cardGame.EventLogSystem.AddEvent($"{attackingLane.UnitInLane.Name} attacked {cardGame.InactivePlayer.Name}");
-        cardGame.GameEventSystem.FireEvent(
-            cardGame.GameEventSystem.CreateAttackEvent(attackingLane.UnitInLane.EntityId, cardGame.InactivePlayer.EntityId));
+        cardGame.GameEventSystem.FireEvent(new AttackGameEvent
+        {
+            AttackerId = attackingLane.UnitInLane.EntityId,
+            DefenderId = cardGame.InactivePlayer.EntityId
+        });
         //Assuming that a players units cannot attack him, it should always be the inactive player getting attacked.
         cardGame.DamageSystem.DealCombatDamageToPlayer(attackingLane.UnitInLane, cardGame.InactivePlayer);
         cardGame.StateBasedEffectSystem.CheckStateBasedEffects();
@@ -93,8 +96,11 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
         if (defendingUnit != null)
         {
             cardGame.EventLogSystem.AddEvent($"{attackingUnit.Name} attacked {defendingUnit.Name}");
-            cardGame.GameEventSystem.FireEvent(
-            cardGame.GameEventSystem.CreateAttackEvent(attackingUnit.EntityId, defendingUnit.EntityId));
+            cardGame.GameEventSystem.FireEvent(new AttackGameEvent
+            {
+                AttackerId = attackingUnit.EntityId,
+                DefenderId = defendingUnit.EntityId
+            });
             //Both lanes have units, they will attack eachother.
             cardGame.DamageSystem.DealCombatDamageToUnits(attackingUnit, defendingUnit);
         }
