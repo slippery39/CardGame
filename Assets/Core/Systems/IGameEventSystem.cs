@@ -97,6 +97,13 @@ public class UnitSummonedEvent : GameEvent
     public int LaneId { get; set; }
 }
 
+public class TurnStartEvent : GameEvent
+{
+    public string PlayerName { get; set; }
+    public int PlayerId { get; set; }
+
+}
+
 
 public class GameStateUpdatedEvent : GameEvent
 {

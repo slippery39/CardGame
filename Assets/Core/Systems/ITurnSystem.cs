@@ -29,6 +29,11 @@ public class DefaultTurnSystem : CardGameSystem, ITurnSystem
     public void StartTurn()
     {
         cardGame.EventLogSystem.AddEvent($"{cardGame.ActivePlayer.Name}'s Turn: ID: {TurnId}");
+        cardGame.GameEventSystem.FireEvent(new TurnStartEvent
+        {
+            PlayerId = cardGame.ActivePlayer.PlayerId
+        });
+
         cardGame.SpellsCastThisTurn = 0;
         //Reset any spent mana
         cardGame.ManaSystem.ResetManaAndEssence(cardGame.ActivePlayer);
