@@ -5385,7 +5385,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &521987336
 Transform:
   m_ObjectHideFlags: 0
@@ -5415,8 +5415,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _turnStartText: {fileID: 1597309456}
-  lerpTime: 0
-  _isPlaying: 0
   _animationTime: 1
   _movementCurve:
     serializedVersion: 2
