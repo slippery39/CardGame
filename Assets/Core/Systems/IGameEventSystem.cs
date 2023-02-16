@@ -101,7 +101,13 @@ public class TurnStartEvent : GameEvent
 {
     public string PlayerName { get; set; }
     public int PlayerId { get; set; }
-     
+
+}
+
+public class PlayCardEvent : GameEvent
+{
+    public int CardId { get; set; }
+    public List<int> Targets { get; set; }
 }
 
 

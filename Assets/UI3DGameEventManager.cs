@@ -23,6 +23,9 @@ public class UI3DGameEventManager : MonoBehaviour
     private DamageAnimation _damageAnimation;
     [SerializeField]
     private DrawCardAnimation _drawCardAnimation;
+    //using a stack 3d for now
+    [SerializeField]
+    private Stack3D _playCardAnimation;
     //[SerializeField] private GameAnimation _currentAnimation;
     [SerializeField]
     private TurnStartAnimation _turnStartAnimation;
@@ -77,6 +80,11 @@ public class UI3DGameEventManager : MonoBehaviour
                 var evt = _currentGameEvent as GameStateUpdatedEvent;
                 _uiController.SetUIGameState(evt.ResultingState);
                 _currentGameEvent = null;
+            }
+            else if (_currentGameEvent is PlayCardEvent)
+            {
+                var evt = _currentGameEvent as PlayCardEvent;
+                _playCardAnimation.PlayAnimation("Playing " + evt.CardId,()=>_currentGameEvent = null);
             }
             else if (_currentGameEvent is TurnStartEvent)
             {

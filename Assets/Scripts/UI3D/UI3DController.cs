@@ -16,6 +16,9 @@ public class UI3DController : MonoBehaviour
     [SerializeField]
     private PlayerBoard3D _player2Board;
 
+    [SerializeField]
+    private Stack3D _stack3D;
+
     private void Awake()
     {
         _gameService = GetComponent<GameService>();
@@ -26,7 +29,7 @@ public class UI3DController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             //_gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
-            _gameService.SetupGame(FamousDecks.RagingGoblins(), FamousDecks.AllLands());
+            _gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.AllLands());
             /*
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
             {
@@ -45,7 +48,7 @@ public class UI3DController : MonoBehaviour
 
     public void SetUIGameState(CardGame cardGame)
     {
-        Debug.Log("Setting UI Game State");
+        //Debug.Log("Setting UI Game State");
         _player1Board.SetBoard(cardGame.Player1);
         _player2Board.SetBoard(cardGame.Player2);
     }

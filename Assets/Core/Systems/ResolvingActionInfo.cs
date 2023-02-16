@@ -22,8 +22,5 @@ public class ResolvingCardInstanceActionInfo : ResolvingActionInfo
     public CardGameAction Action { get; set; }
     public CardInstance CardInstance { get; set; }
 }
-public class ResolvingCardInstanceActionInfo<T> : ResolvingCardInstanceActionInfo where T: CardGameAction
-{
-    public new T Action { get; set; }
-}
+
 
