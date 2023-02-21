@@ -13,9 +13,6 @@ public class UI3DGameEventManager : MonoBehaviour
     //For debug purposes
     [SerializeField] private GameEvent _currentGameEvent;
 
-
-
-
     [Header("Animations")]
     [SerializeField]
     private FightAnimation _fightAnimation;
@@ -84,12 +81,18 @@ public class UI3DGameEventManager : MonoBehaviour
             else if (_currentGameEvent is PlayCardEvent)
             {
                 var evt = _currentGameEvent as PlayCardEvent;
-                _playCardAnimation.PlayAnimation("Playing " + evt.CardId,()=>_currentGameEvent = null);
+                //Need a way to grab the card information from the card id
+                var unit = GameObject.FindObjectsOfType<UIGameEntity3D>()
+                .Where(ent => ent.EntityId == evt.CardId)
+                .FirstOrDefault();
+                var card3D = unit.GetComponent<Card3D>();
+
+                _playCardAnimation.PlayAnimation(card3D,()=>_currentGameEvent = null);
             }
             else if (_currentGameEvent is TurnStartEvent)
             {
                 var evt = _currentGameEvent as TurnStartEvent;
-                _turnStartAnimation.PlayTurnStartAnimation(evt.PlayerName + "'s turn",()=>_currentGameEvent = null);
+                _turnStartAnimation.PlayTurnStartAnimation(evt.PlayerName + "'s turn", () => _currentGameEvent = null);
 
             }
             else if (_currentGameEvent is UnitSummonedEvent)
@@ -120,7 +123,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 newCard.GetComponent<Card3D>().PlaySummon(() =>
                 {
                     Destroy(newCard.gameObject);
-                    _currentGameEvent = null;                   
+                    _currentGameEvent = null;
                 });
 
             }
