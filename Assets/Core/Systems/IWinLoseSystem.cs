@@ -1,4 +1,6 @@
-﻿public interface IWinLoseSystem
+﻿using System.Linq;
+
+public interface IWinLoseSystem
 {
     public void LoseGame(Player player);
     public void CheckLosers();
@@ -31,8 +33,16 @@ public class DefaultWinLoseSystem : CardGameSystem, IWinLoseSystem
         {
             if (p.IsLoser)
             {
-                //We would have some sort of lose game event ideally.
+                var winner = cardGame.Players.Where(pl => pl.EntityId != p.EntityId).FirstOrDefault();
                 cardGame.CurrentGameState = GameState.GameOver;
+                cardGame.GameEventSystem.FireGameStateUpdatedEvent();
+                cardGame.GameEventSystem.FireEvent(new GameEndEvent
+                {
+                    LoserId = p.EntityId,
+                    LoserName = p.Name,
+                    WinnerId = winner.EntityId,
+                    WinnerName = winner.Name
+                });
                 cardGame.EventLogSystem.AddEvent($"Player {p.Name} has lost the game!");
                 cardGame.OnGameOver.OnNext(cardGame);
             }

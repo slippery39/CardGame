@@ -5593,7 +5593,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   initialPosition: {x: 0, y: 0, z: 0}
-  endPosition: {x: 11, y: 4.7, z: 6.1}
+  endPosition: {x: 20, y: 4.7, z: 6.1}
 --- !u!1 &530451379
 GameObject:
   m_ObjectHideFlags: 0

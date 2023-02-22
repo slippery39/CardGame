@@ -27,9 +27,10 @@ public class TurnStartAnimation : MonoBehaviour
         this.initialPosition = this.transform.position;
     }
 
-    public void PlayTurnStartAnimation(string label, Action onComplete = null)
+    public void PlayTextAnimation(string label, Action onComplete = null)
     {
         this.gameObject.SetActive(true);
+        _turnStartText.text = label;
         this.transform.position = this.initialPosition;
         this.transform.DOMove(endPosition, _animationTime)
             .SetEase(_movementCurve)

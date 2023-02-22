@@ -249,6 +249,9 @@ public class CardGame
         _cardDrawSystem.DrawOpeningHand(Player1);
         _cardDrawSystem.DrawOpeningHand(Player2);
 
+        this.GameEventSystem.FireGameStateUpdatedEvent();
+        this.GameEventSystem.FireEvent(new GameStartEvent());
+        
         this.EventLogSystem.FireGameStateChanged();
     }
 
@@ -675,11 +678,6 @@ public class CardGame
         {
             ManaSystem.PlayManaCard(player, cardToPlay);
 
-            this.GameEventSystem.FireEvent(new PlayCardEvent
-            {
-                CardId = cardToPlay.EntityId,
-                Targets = new List<int> { }
-            });
 
             _stateBasedEffectSystem.CheckStateBasedEffects();
         }

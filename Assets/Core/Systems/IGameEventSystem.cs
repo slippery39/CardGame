@@ -110,6 +110,19 @@ public class PlayCardEvent : GameEvent
     public List<int> Targets { get; set; }
 }
 
+public class GameStartEvent : GameEvent
+{
+
+}
+
+public class GameEndEvent : GameEvent
+{
+    public int LoserId { get; set; }
+    public string LoserName { get; set; }
+    public string WinnerName { get; set; }
+    public int WinnerId { get; set; }
+}
+
 
 public class GameStateUpdatedEvent : GameEvent
 {

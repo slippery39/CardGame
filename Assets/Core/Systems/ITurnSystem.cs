@@ -31,7 +31,8 @@ public class DefaultTurnSystem : CardGameSystem, ITurnSystem
         cardGame.EventLogSystem.AddEvent($"{cardGame.ActivePlayer.Name}'s Turn: ID: {TurnId}");
         cardGame.GameEventSystem.FireEvent(new TurnStartEvent
         {
-            PlayerId = cardGame.ActivePlayer.PlayerId
+            PlayerId = cardGame.ActivePlayer.PlayerId,
+            PlayerName = cardGame.ActivePlayer.Name
         });
 
         cardGame.SpellsCastThisTurn = 0;

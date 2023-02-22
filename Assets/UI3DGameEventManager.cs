@@ -78,6 +78,16 @@ public class UI3DGameEventManager : MonoBehaviour
                 _uiController.SetUIGameState(evt.ResultingState);
                 _currentGameEvent = null;
             }
+            else if (_currentGameEvent is GameStartEvent)
+            {
+                var evt = _currentGameEvent as GameStartEvent;
+                _turnStartAnimation.PlayTextAnimation("Game Start!", () => _currentGameEvent = null);
+            }
+            else if (_currentGameEvent is GameEndEvent)
+            {
+                var evt = _currentGameEvent as GameEndEvent;
+                _turnStartAnimation.PlayTextAnimation($"Game Over! {evt.WinnerName} has won!", () => _currentGameEvent = null);
+            }
             else if (_currentGameEvent is PlayCardEvent)
             {
                 var evt = _currentGameEvent as PlayCardEvent;
@@ -87,12 +97,12 @@ public class UI3DGameEventManager : MonoBehaviour
                 .FirstOrDefault();
                 var card3D = unit.GetComponent<Card3D>();
 
-                _playCardAnimation.PlayAnimation(card3D,()=>_currentGameEvent = null);
+                _playCardAnimation.PlayAnimation(card3D, () => _currentGameEvent = null);
             }
             else if (_currentGameEvent is TurnStartEvent)
             {
                 var evt = _currentGameEvent as TurnStartEvent;
-                _turnStartAnimation.PlayTurnStartAnimation(evt.PlayerName + "'s turn", () => _currentGameEvent = null);
+                _turnStartAnimation.PlayTextAnimation(evt.PlayerName + "'s turn", () => _currentGameEvent = null);
 
             }
             else if (_currentGameEvent is UnitSummonedEvent)

@@ -132,6 +132,12 @@ public class DefaultManaSystem : CardGameSystem, IManaSystem
     {
         var manaCard = card.CurrentCardData as ManaCardData;
 
+        cardGame.GameEventSystem.FireEvent(new PlayCardEvent
+        {
+            CardId =  card.EntityId,
+            Targets = new List<int> { }
+        });
+
         if (!(forceEmpty) && (manaCard.ReadyImmediately == true || (manaCard.ReadyImmediately == false && manaCard.ReadyCondition?.IsReady(cardGame, player) == true)))
         {
             AddMana(player, manaCard.ManaAdded);
