@@ -456,6 +456,11 @@ public class CardGame
         //Quick fix for the issue with the geist of saint traft angel token appearing and dissapearing in the ui.
         //Its due the game ui not properly updating the state after the angel is summoned
         //This should only be a temporary fix and we should look for a way to handle these scenarios in the UI more elegantly.
+        //Note that its actually due to triggered abilities not using the stack.
+        //Our stack fires a GameStateUpdatedEvent() after every ability resolves, but because our triggered abilities 
+        //Just happen and don't get put on the stack, we may see some more weird animations going on.
+        //The long term fix would be to update triggered abilities to use the stack, but I think its something we'll need 
+        //to make sure happens in our next project, not this one. Just going to try to get this project done.
         GameEventSystem.FireGameStateUpdatedEvent();
     }
 
