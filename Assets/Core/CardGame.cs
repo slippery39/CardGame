@@ -453,6 +453,10 @@ public class CardGame
             }
             );
         }
+        //Quick fix for the issue with the geist of saint traft angel token appearing and dissapearing in the ui.
+        //Its due the game ui not properly updating the state after the angel is summoned
+        //This should only be a temporary fix and we should look for a way to handle these scenarios in the UI more elegantly.
+        GameEventSystem.FireGameStateUpdatedEvent();
     }
 
     public void AddPlayerToGame(Player player)

@@ -32,7 +32,7 @@ public class UI3DController : MonoBehaviour
         {
             _gameEventManager.Reset();
             //_gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
-            _gameService.SetupGame(FamousDecks.UWDelver2012(), FamousDecks.EXTGoblins2005());
+            _gameService.SetupGame(FamousDecks.TokenTest(), FamousDecks.TokenTest());
             /*
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
             {

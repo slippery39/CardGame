@@ -179,6 +179,19 @@ public class FamousDecks : DecklistDB
         };
     }
 
+    public static Decklist TokenTest()
+    {
+        return new Decklist
+        {
+            Name = "Token Test",
+            Format = "Test",
+            Cards = @"
+                40 Geist of Saint Traft
+                20 Seachrome Coast
+                "
+        };
+    }
+
     public static Decklist URDragonstorm2006()
     {
         return new Decklist

@@ -244,5 +244,6 @@ public class UI3DGameEventManager : MonoBehaviour
         _fightAnimation.AnimationTime = animationTime;
         _damageAnimation.AnimationTime = animationTime;
         _drawCardAnimation.AnimationTime = animationTime;
+        
     }
 }
