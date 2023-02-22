@@ -29,7 +29,7 @@ public class UI3DController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             //_gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
-            _gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
+            _gameService.SetupGame(FamousDecks.UWDelver2012(), FamousDecks.EXTGoblins2005());
             /*
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
             {

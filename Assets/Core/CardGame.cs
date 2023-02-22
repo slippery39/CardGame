@@ -251,7 +251,7 @@ public class CardGame
 
         this.GameEventSystem.FireGameStateUpdatedEvent();
         this.GameEventSystem.FireEvent(new GameStartEvent());
-        
+
         this.EventLogSystem.FireGameStateChanged();
     }
 
@@ -435,7 +435,24 @@ public class CardGame
         }
 
         cardInstance.CurrentZone = zone;
+
+
+
         zone.Add(cardInstance);
+
+        GameEventSystem.FireGameStateUpdatedEvent();
+
+        //if its being added to a lane, consider it a summoning effect
+        if (cardInstance.CurrentZone is Lane)
+        {
+            GameEventSystem.FireEvent(new UnitSummonedEvent()
+            {
+                PlayerId = player.PlayerId,
+                LaneId = (cardInstance.CurrentZone as Lane).EntityId,
+                UnitId = cardInstance.EntityId
+            }
+            );
+        }
     }
 
     public void AddPlayerToGame(Player player)
