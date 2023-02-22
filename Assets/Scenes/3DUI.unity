@@ -8171,6 +8171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cff1f1ace48ae2048bf069b72bd1712a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _gameEventManager: {fileID: 655518968}
   _player1Board: {fileID: 54857112}
   _player2Board: {fileID: 692885231}
   _stack3D: {fileID: 0}

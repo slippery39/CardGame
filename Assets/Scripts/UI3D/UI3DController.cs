@@ -9,6 +9,7 @@ public class UI3DController : MonoBehaviour
 {
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
     private GameService _gameService;
+    [SerializeField]
     private UI3DGameEventManager _gameEventManager;
 
     [SerializeField]
@@ -26,8 +27,10 @@ public class UI3DController : MonoBehaviour
 
     public void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.A))
         {
+            _gameEventManager.Reset();
             //_gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
             _gameService.SetupGame(FamousDecks.UWDelver2012(), FamousDecks.EXTGoblins2005());
             /*

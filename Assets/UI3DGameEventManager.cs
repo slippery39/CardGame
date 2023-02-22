@@ -63,6 +63,14 @@ public class UI3DGameEventManager : MonoBehaviour
         SetAnimationTimes();
     }
 
+    public void Reset()
+    {
+        //TODO - Need to be able to cancel any current animation going on so that no errors occur
+        this._eventQueue.Clear();
+        this._gameOverAnimation.gameObject.SetActive(false);
+        this._turnStartAnimation.gameObject.SetActive(false);
+    }
+
 
     void AddEventToQueue(GameEvent gameEvent)
     {
@@ -90,12 +98,12 @@ public class UI3DGameEventManager : MonoBehaviour
             else if (_currentGameEvent is GameStartEvent)
             {
                 var evt = _currentGameEvent as GameStartEvent;
-                _turnStartAnimation.PlayTextAnimation("Game Start!",NextEvent);
+                _turnStartAnimation.PlayTextAnimation("Game Start!", NextEvent);
             }
             else if (_currentGameEvent is GameEndEvent)
             {
                 var evt = _currentGameEvent as GameEndEvent;
-                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!",NextEvent);
+                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!", NextEvent);
             }
             else if (_currentGameEvent is PlayCardEvent)
             {
@@ -106,12 +114,12 @@ public class UI3DGameEventManager : MonoBehaviour
                 .FirstOrDefault();
                 var card3D = unit.GetComponent<Card3D>();
 
-                _playCardAnimation.PlayAnimation(card3D,NextEvent);
+                _playCardAnimation.PlayAnimation(card3D, NextEvent);
             }
             else if (_currentGameEvent is TurnStartEvent)
             {
                 var evt = _currentGameEvent as TurnStartEvent;
-                _turnStartAnimation.PlayTextAnimation(evt.PlayerName + "'s turn",NextEvent);
+                _turnStartAnimation.PlayTextAnimation(evt.PlayerName + "'s turn", NextEvent);
 
             }
             else if (_currentGameEvent is UnitSummonedEvent)
@@ -188,7 +196,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 //for the 0.5 to 1 second time the animation is running.
 
                 var cardInstanceDrawn = _uiController.GetComponent<GameService>().CardGame.GetEntities<CardInstance>().Where(c => c.EntityId == evt.DrawnCardId).FirstOrDefault();
-                _drawCardAnimation.PlayAnimation(playerBoard.Deck, playerBoard.Hand, cardInstanceDrawn,NextEvent);
+                _drawCardAnimation.PlayAnimation(playerBoard.Deck, playerBoard.Hand, cardInstanceDrawn, NextEvent);
 
 
             }
@@ -204,7 +212,7 @@ public class UI3DGameEventManager : MonoBehaviour
                     return;
                 }
 
-                this._damageAnimation.PlayAnimation(damagedEntity.transform, evt.DamageAmount,NextEvent);
+                this._damageAnimation.PlayAnimation(damagedEntity.transform, evt.DamageAmount, NextEvent);
             }
             else if (_currentGameEvent is AttackGameEvent)
             {
@@ -222,7 +230,7 @@ public class UI3DGameEventManager : MonoBehaviour
                     return;
                 }
 
-                this._fightAnimation.PlayAnimation(attacker.transform, defender.transform,NextEvent);
+                this._fightAnimation.PlayAnimation(attacker.transform, defender.transform, NextEvent);
             }
         }
         else
