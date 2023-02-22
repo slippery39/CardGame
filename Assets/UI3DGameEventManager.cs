@@ -69,6 +69,11 @@ public class UI3DGameEventManager : MonoBehaviour
         _eventQueue.Enqueue(gameEvent);
     }
 
+    void NextEvent()
+    {
+        _currentGameEvent = null;
+    }
+
     void HandleGameEvent()
     {
         _isPlayingAnimation = true;
@@ -85,12 +90,12 @@ public class UI3DGameEventManager : MonoBehaviour
             else if (_currentGameEvent is GameStartEvent)
             {
                 var evt = _currentGameEvent as GameStartEvent;
-                _turnStartAnimation.PlayTextAnimation("Game Start!", () => _currentGameEvent = null);
+                _turnStartAnimation.PlayTextAnimation("Game Start!",NextEvent);
             }
             else if (_currentGameEvent is GameEndEvent)
             {
                 var evt = _currentGameEvent as GameEndEvent;
-                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!", () => _currentGameEvent = null);
+                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!",NextEvent);
             }
             else if (_currentGameEvent is PlayCardEvent)
             {
@@ -101,12 +106,12 @@ public class UI3DGameEventManager : MonoBehaviour
                 .FirstOrDefault();
                 var card3D = unit.GetComponent<Card3D>();
 
-                _playCardAnimation.PlayAnimation(card3D, () => _currentGameEvent = null);
+                _playCardAnimation.PlayAnimation(card3D,NextEvent);
             }
             else if (_currentGameEvent is TurnStartEvent)
             {
                 var evt = _currentGameEvent as TurnStartEvent;
-                _turnStartAnimation.PlayTextAnimation(evt.PlayerName + "'s turn", () => _currentGameEvent = null);
+                _turnStartAnimation.PlayTextAnimation(evt.PlayerName + "'s turn",NextEvent);
 
             }
             else if (_currentGameEvent is UnitSummonedEvent)
@@ -137,7 +142,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 newCard.GetComponent<Card3D>().PlaySummon(() =>
                 {
                     Destroy(newCard.gameObject);
-                    _currentGameEvent = null;
+                    NextEvent();
                 });
 
             }
@@ -151,14 +156,14 @@ public class UI3DGameEventManager : MonoBehaviour
 
                 if (entity == null)
                 {
-                    _currentGameEvent = null;
+                    NextEvent();
                     return;
                 }
 
                 var card = entity.GetComponent<Card3D>();
 
                 //TODO - Add animation time.
-                card.PlayDissolve(() => _currentGameEvent = null);
+                card.PlayDissolve(NextEvent);
 
             }
             else if (_currentGameEvent is DrawCardEvent)
@@ -183,7 +188,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 //for the 0.5 to 1 second time the animation is running.
 
                 var cardInstanceDrawn = _uiController.GetComponent<GameService>().CardGame.GetEntities<CardInstance>().Where(c => c.EntityId == evt.DrawnCardId).FirstOrDefault();
-                _drawCardAnimation.PlayAnimation(playerBoard.Deck, playerBoard.Hand, cardInstanceDrawn, () => this._currentGameEvent = null);
+                _drawCardAnimation.PlayAnimation(playerBoard.Deck, playerBoard.Hand, cardInstanceDrawn,NextEvent);
 
 
             }
@@ -195,11 +200,11 @@ public class UI3DGameEventManager : MonoBehaviour
                      .FirstOrDefault();
                 if (damagedEntity == null)
                 {
-                    this._currentGameEvent = null;
+                    NextEvent();
                     return;
                 }
 
-                this._damageAnimation.PlayAnimation(damagedEntity.transform, evt.DamageAmount, () => this._currentGameEvent = null);
+                this._damageAnimation.PlayAnimation(damagedEntity.transform, evt.DamageAmount,NextEvent);
             }
             else if (_currentGameEvent is AttackGameEvent)
             {
@@ -217,7 +222,7 @@ public class UI3DGameEventManager : MonoBehaviour
                     return;
                 }
 
-                this._fightAnimation.PlayAnimation(attacker.transform, defender.transform, () => this._currentGameEvent = null);
+                this._fightAnimation.PlayAnimation(attacker.transform, defender.transform,NextEvent);
             }
         }
         else
