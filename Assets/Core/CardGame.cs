@@ -632,17 +632,6 @@ public class CardGame
             }
         }
 
-
-        if (action.CardToPlay == null && prevCardToPlay != null)
-        {
-            var debug = 0;
-        }
-
-        //check double faced cards
-
-
-
-
         if (action.IsValidAction(this))
         {
             action.DoAction(this);
@@ -685,6 +674,13 @@ public class CardGame
         if (cardToPlay.CurrentCardData is ManaCardData)
         {
             ManaSystem.PlayManaCard(player, cardToPlay);
+
+            this.GameEventSystem.FireEvent(new PlayCardEvent
+            {
+                CardId = cardToPlay.EntityId,
+                Targets = new List<int> { }
+            });
+
             _stateBasedEffectSystem.CheckStateBasedEffects();
         }
         else if (cardToPlay.CurrentCardData is UnitCardData)

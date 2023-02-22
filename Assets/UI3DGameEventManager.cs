@@ -82,7 +82,7 @@ public class UI3DGameEventManager : MonoBehaviour
             {
                 var evt = _currentGameEvent as PlayCardEvent;
                 //Need a way to grab the card information from the card id
-                var unit = GameObject.FindObjectsOfType<UIGameEntity3D>()
+                var unit = GameObject.FindObjectsOfType<UIGameEntity3D>(true)
                 .Where(ent => ent.EntityId == evt.CardId)
                 .FirstOrDefault();
                 var card3D = unit.GetComponent<Card3D>();

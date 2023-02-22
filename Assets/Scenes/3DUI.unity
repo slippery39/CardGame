@@ -416,6 +416,7 @@ Transform:
   - {fileID: 2012837836}
   - {fileID: 1936572369}
   - {fileID: 1128734958}
+  - {fileID: 201308072}
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -437,6 +438,7 @@ MonoBehaviour:
   _lanes: {fileID: 441756822}
   _items: {fileID: 2032633650}
   _manaPool: {fileID: 2012837837}
+  _exile: {fileID: 201308073}
   _avatar: {fileID: 1572587833}
   _playerId: 0
 --- !u!1001 &80658726
@@ -3083,25 +3085,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3DCard
       objectReference: {fileID: 0}
+    - target: {fileID: 3440836722685161213, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7121760409298961058, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 4195780226291716068, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 8893890023996579873, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 6522911224163847953, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-    - targetCorrespondingSourceObject: {fileID: 869115917357393347, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
 --- !u!4 &195114479 stripped
 Transform:
@@ -3119,6 +3110,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd072ec2f7b563e43b7fb3234fda0602, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &201308071
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 201308072}
+  - component: {fileID: 201308073}
+  m_Layer: 0
+  m_Name: Exile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &201308072
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201308071}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 54857111}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &201308073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 201308071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89892ba39a10ad34495d0f9c3a1bd1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardPrefab: {fileID: 6770281957773621294, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+  numberOfCards: 5
+  cardsPerRow: 4
+  cardSpacingY: 0.5
+  cardSpacingX: 0.5
+  rowOffsetX: -4
+  rowOffsetY: -4
 --- !u!1 &203844586
 GameObject:
   m_ObjectHideFlags: 0
@@ -6114,6 +6156,7 @@ Transform:
   - {fileID: 267996257}
   - {fileID: 166803980}
   - {fileID: 423128355}
+  - {fileID: 1187337461}
   m_Father: {fileID: 0}
   m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6135,6 +6178,7 @@ MonoBehaviour:
   _lanes: {fileID: 2115895904}
   _items: {fileID: 671763156}
   _manaPool: {fileID: 1235458903}
+  _exile: {fileID: 1187337462}
   _avatar: {fileID: 2014469017}
   _playerId: 0
 --- !u!1001 &736261185
@@ -7019,6 +7063,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2359871292335688439, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
   m_PrefabInstance: {fileID: 1161851596}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1187337460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1187337461}
+  - component: {fileID: 1187337462}
+  m_Layer: 0
+  m_Name: Exile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1187337461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187337460}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 692885230}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1187337462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187337460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89892ba39a10ad34495d0f9c3a1bd1aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _cardPrefab: {fileID: 6770281957773621294, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
+  numberOfCards: 5
+  cardsPerRow: 4
+  cardSpacingY: 0.5
+  cardSpacingX: 0.5
+  rowOffsetX: -4
+  rowOffsetY: -4
 --- !u!114 &1235458903 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8987015160756348078, guid: 801c0011251190346b2b315221462509, type: 3}

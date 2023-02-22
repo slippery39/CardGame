@@ -16,6 +16,10 @@ public class PlayerBoard3D : MonoBehaviour
     private Items3D _items;
     [SerializeField]
     private ManaPool3D _manaPool;
+
+    [SerializeField]
+    private Exile3D _exile;
+
     [SerializeField]
     private Avatar3D _avatar;
     [SerializeField]
@@ -53,6 +57,8 @@ public class PlayerBoard3D : MonoBehaviour
         //Mana Counts
         SetManaPool(player.ManaPool);
 
+        SetExile(player.Exile.Cards);
+
     }
 
     //TODO - place this in the avatar component itself.
@@ -65,6 +71,22 @@ public class PlayerBoard3D : MonoBehaviour
         }
         entity.EntityId = player.EntityId;
     }
+
+    private void SetExile(List<CardInstance> cards)
+    {
+        _exile.numberOfCards = cards.Count;
+        _exile.UpdateCards();
+
+
+        var card3Ds = _exile.GetCards();
+
+        for (var i = 0; i < cards.Count; i++)
+        {
+            card3Ds[i].SetCardInfo(cards[i]);
+            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
+        }
+    }
+
     private void SetDeck(List<CardInstance> cards)
     {
         _deck._numberOfCards = cards.Count;
