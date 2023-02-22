@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using System.Linq;
+using System;
 
 public class UI3DGameEventManager : MonoBehaviour
 {
@@ -26,6 +27,9 @@ public class UI3DGameEventManager : MonoBehaviour
     //[SerializeField] private GameAnimation _currentAnimation;
     [SerializeField]
     private TurnStartAnimation _turnStartAnimation;
+
+    [SerializeField]
+    private GameOverAnimation _gameOverAnimation;
 
     [SerializeField]
     private float animationTime = 0.5f;
@@ -86,7 +90,7 @@ public class UI3DGameEventManager : MonoBehaviour
             else if (_currentGameEvent is GameEndEvent)
             {
                 var evt = _currentGameEvent as GameEndEvent;
-                _turnStartAnimation.PlayTextAnimation($"Game Over! {evt.WinnerName} has won!", () => _currentGameEvent = null);
+                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!", () => _currentGameEvent = null);
             }
             else if (_currentGameEvent is PlayCardEvent)
             {
