@@ -1,18 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 [RequireComponent(typeof(UIGameController))]
 public class GameUIStateMachine : MonoBehaviour
 {
     //State history?
     public IGameUIState CurrentState;
-    private UIGameController _gameController;
-    public UIGameController GameController { get => _gameController; set => _gameController = value; }
+    private IUIGameController _gameController;
+    public IUIGameController GameController { get => _gameController; set => _gameController = value; }
     public CardGame CardGame { get => _gameController.CardGame; }
     public GameService GameService { get => _gameController.GameService; }
 
     private void Start()
     {
-        _gameController = GetComponent<UIGameController>();
+        _gameController = GetComponent<IUIGameController>();
         ToIdle();
     }
 
@@ -80,7 +81,7 @@ public class GameUIStateMachine : MonoBehaviour
     {
         ChangeState(new GameUIIdleState(this));
     }
-
-
 }
+
+
 
