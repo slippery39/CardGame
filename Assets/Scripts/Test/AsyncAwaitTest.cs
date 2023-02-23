@@ -12,12 +12,6 @@ public class AsyncAwaitTest : MonoBehaviour
         TestGetString();   
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private async Task<string> TestGetString()
     {
         string str = await Task.Run<string>(() =>

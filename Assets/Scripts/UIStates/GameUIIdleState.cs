@@ -5,10 +5,8 @@ using UnityEngine;
 
 public class GameUIIdleState : IGameUIState
 {
-
     private CardGame _cardGame => _stateMachine.CardGame;
-    private Player ActingPlayer { get => _cardGame.ActivePlayer; }
-    private GameUIStateMachine _stateMachine;
+    private readonly GameUIStateMachine _stateMachine;
 
     public GameUIIdleState(GameUIStateMachine stateMachine)
     {

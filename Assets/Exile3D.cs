@@ -1,15 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
-using UnityEngine;
-using UnityEngine.Pool;
-
-
 
 public class Exile3D : MonoBehaviour
 {
@@ -17,7 +10,7 @@ public class Exile3D : MonoBehaviour
     [SerializeField] private Card3D _cardPrefab;
     private List<Card3D> _instantiatedCards;
 
-    [SerializeField] public int numberOfCards = 5;
+    public int numberOfCards = 5;
     [SerializeField] int cardsPerRow = 4;
     [SerializeField] float cardSpacingY = 0.5f;
     [SerializeField] float cardSpacingX = 0.5f;

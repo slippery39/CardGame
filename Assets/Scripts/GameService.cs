@@ -18,7 +18,7 @@ public class GameService : MonoBehaviour
     public bool GameOver { get => _cardGame.CurrentGameState == GameState.GameOver; }
     #endregion
 
-    private Subject<GameEvent> _gameEventSubject = new Subject<GameEvent>();
+    private readonly Subject<GameEvent> _gameEventSubject = new();
 
     #region Public Methods
     public void SetupGame(Decklist player1Deck, Decklist player2Deck)

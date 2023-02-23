@@ -4,21 +4,7 @@ using UnityEngine;
 
 public class DropArea : MonoBehaviour
 {
-
-    public bool enabled = true;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    public bool isEnabled = true;
     void OnDrop(GameObject gameObject)
     {
         var onDropHandler = this.GetComponent<IOnDropHandler>();

@@ -23,8 +23,8 @@ public abstract class CardGameAction
     /// </summary>
     /// <param name="cardGame"></param>
     /// <returns></returns>
-    public virtual List<CardGameEntity> GetValidTargets(CardGame cardGame) => new List<CardGameEntity>();
-    public virtual List<CardGameEntity> GetValidAdditionalCosts(CardGame cardGame) => new List<CardGameEntity> { };
+    public virtual List<CardGameEntity> GetValidTargets(CardGame cardGame) => new();
+    public virtual List<CardGameEntity> GetValidAdditionalCosts(CardGame cardGame) => new() { };
 
 
     public List<CardGameEntity> AdditionalChoices { get; set; } = new List<CardGameEntity>();
@@ -114,7 +114,7 @@ public abstract class CardGameAction
 public class PlayUnitAction : CardGameAction
 {
     public Lane Lane { get; set; }
-    public override List<CardGameEntity> Targets { get { return new List<CardGameEntity> { Lane }; } set { if (value[0] is Lane) { Lane = (Lane)value[0]; } } }
+    public override List<CardGameEntity> Targets { get { return new List<CardGameEntity> { Lane }; } set { if (value[0] is Lane lane) { Lane = lane; } } }
 
     public override bool IsValidAction(CardGame cardGame)
     {
@@ -136,8 +136,7 @@ public class PlayUnitAction : CardGameAction
     {
         return String.Join("\r\n", SourceCard.Abilities.Where(ab =>
          {
-             var actAb = ab as ActivatedAbility;
-             if (actAb != null)
+             if (ab is ActivatedAbility actAb)
              {
                  return actAb.ActivationZone == ZoneType.InPlay;
              }

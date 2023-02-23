@@ -37,10 +37,10 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         {
             _currentCardData = value;
 
-            if (_currentCardData is UnitCardData)
+            if (_currentCardData is UnitCardData data)
             {
-                _powerWithoutMods = ((UnitCardData)_currentCardData).Power;
-                _toughnessWithoutMods = ((UnitCardData)_currentCardData).Toughness;
+                _powerWithoutMods = data.Power;
+                _toughnessWithoutMods = data.Toughness;
             }
         }
     }
@@ -54,7 +54,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     [JsonIgnore]
     public List<Effect> Effects
     {
-        get { if (_currentCardData is SpellCardData) { return ((SpellCardData)_currentCardData).Effects; } else { return new List<Effect>(); } }
+        get { if (_currentCardData is SpellCardData data) { return data.Effects; } else { return new List<Effect>(); } }
     }
 
     [JsonIgnore]
@@ -63,7 +63,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         get
         {
             var str = "";
-            if (_isExhausted && !(_currentCardData is SpellCardData))
+            if (_isExhausted && _currentCardData is not SpellCardData)
             {
                 str += "EXHAUSTED \r\n";
             }
@@ -197,7 +197,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
             //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
             if (!applyPowerToughnessSwitchEffects)
             {
-                powerModifications = powerModifications.Where(mod => !(mod is ModSwitchPowerandToughness)).ToList();
+                powerModifications = powerModifications.Where(mod => mod is not ModSwitchPowerandToughness).ToList();
             }
 
             foreach (var modification in powerModifications)
@@ -227,7 +227,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
             //We have to ignore any switching power and toughness modifications or we could cause an infinite loop.
             if (!applyPowerToughnessSwitchEffects)
             {
-                toughnessModifications = toughnessModifications.Where(mod => !(mod is ModSwitchPowerandToughness)).ToList();
+                toughnessModifications = toughnessModifications.Where(mod => mod is not ModSwitchPowerandToughness).ToList();
             }
 
             foreach (var modification in toughnessModifications)
@@ -318,9 +318,8 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
             BackCard.FrontCard = this;
         }
 
-        if (_currentCardData is UnitCardData)
+        if (_currentCardData is UnitCardData unitCardData)
         {
-            var unitCardData = (UnitCardData)_currentCardData;
             _powerWithoutMods = unitCardData.Power;
             _toughnessWithoutMods = unitCardData.Toughness;
         }
@@ -355,10 +354,8 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         _currentCardData = cardData.Clone();
         Abilities = cardData.Abilities.ToList();
 
-
-        if (_currentCardData is UnitCardData)
+        if (_currentCardData is UnitCardData unitCardData)
         {
-            var unitCardData = (UnitCardData)_currentCardData;
             _powerWithoutMods = unitCardData.Power;
             _toughnessWithoutMods = unitCardData.Toughness;
         }
@@ -393,26 +390,21 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     public List<CardGameAction> GetAvailableActionsWithTargets()
     {
         var actions = GetAvailableActions();
-        List<CardGameAction> actionList = new List<CardGameAction>();
+        List<CardGameAction> actionList = new();
 
         foreach (var action in actions)
         {
             var needsTargets = this.CurrentCardData is UnitCardData || _cardGame.TargetSystem.CardNeedsTargets(this.GetOwner(), this);
             var targets = action.GetValidTargets(CardGame);
 
-            var additionalCosts = action.GetValidAdditionalCosts(CardGame);            
-
-            if (needsTargets && action is PlaySpellAction)
-            {
-                var debug = 0;
-            }
+            var additionalCosts = action.GetValidAdditionalCosts(CardGame);
 
             //TODO : This check will fail, we need to check if the action is one that actually needs targets, not only if there are no valid targets found.
-            if ( (!needsTargets && targets.Count == 0) && additionalCosts.Count == 0)
+            if ((!needsTargets && targets.Count == 0) && additionalCosts.Count == 0)
             {
                 actionList.Add(action);
             }
-            else if ( (needsTargets && targets.Count > 0) && additionalCosts.Count == 0)
+            else if ((needsTargets && targets.Count > 0) && additionalCosts.Count == 0)
             {
                 List<CardGameAction> actionsWithTargets = targets.Select(t =>
                 {
@@ -423,7 +415,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
                 actionList.AddRange(actionsWithTargets);
             }
-            else if ( (!needsTargets && targets.Count == 0) && additionalCosts.Count > 0)
+            else if ((!needsTargets && targets.Count == 0) && additionalCosts.Count > 0)
             {
                 List<CardGameAction> actionsWithAdditionalCosts = additionalCosts.Select(ac =>
                 {
@@ -434,7 +426,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
                 actionList.AddRange(actionsWithAdditionalCosts);
             }
-            else if ( (needsTargets && targets.Count > 0) && additionalCosts.Count > 0)
+            else if ((needsTargets && targets.Count > 0) && additionalCosts.Count > 0)
             {
                 //Make a permutation of each list.
                 //For each valid target
@@ -512,15 +504,6 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
                 actions.Add(CardGameAction.CreateAction(this, ability));
             }
         }
-
-        if (actions.Where(act =>
-        {
-            return (act is PlaySpellAction || act is PlayUnitAction) && act.CardToPlay == null;
-        }).Count() > 0)
-        {
-            var debug = 0;
-        }
-
         return actions;
     }
 
@@ -575,7 +558,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         clone.CardGame = cardGame;
 
         if (_currentCardData.BackCard != null)
-        {         
+        {
             clone.BackCard = new CardInstance(cardGame, _currentCardData.BackCard);
             clone.BackCard.FrontCard = clone;
             clone.BackCard.EntityId = BackCard.EntityId;

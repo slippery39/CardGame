@@ -10,10 +10,8 @@ using UnityEngine;
 /// </summary>
 public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastChoice
 {
-    private CardGame _cardGame => _stateMachine.CardGame;
-    private Player _actingPlayer => _cardGame.ActivePlayer;
-    private GameUIStateMachine _stateMachine;
-    private CardInstance _cardWithMultipleActions;
+    private readonly GameUIStateMachine _stateMachine;
+    private readonly CardInstance _cardWithMultipleActions;
 
     public GameUIChooseCardActionState(GameUIStateMachine stateMachine, CardInstance cardWithMultipleActions)
     {
@@ -48,7 +46,7 @@ public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastC
     {
         _stateMachine.GameController.CloseActionChoicePopup();
     }
-    
+
     public void HandleSelection(int entityId)
     {
         return;
@@ -56,8 +54,7 @@ public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastC
 
     public void HandleCastChoiceSelection(int castChoiceId)
     {
-        var action = _cardWithMultipleActions.GetAvailableActions()[castChoiceId];
-       _stateMachine.HandleAction(_cardWithMultipleActions.GetAvailableActions()[castChoiceId]);
+        _stateMachine.HandleAction(_cardWithMultipleActions.GetAvailableActions()[castChoiceId]);
     }
 
 

@@ -24,10 +24,6 @@ public class SimService
             var nextAction = new DefaultBrain().GetNextAction(cardGame);
             cardGame.ProcessAction(nextAction);
             numActions++;
-            if (numActions > 1000)
-            {
-                var i = 0;
-            }
         }
 
         var gameOverInfo = cardGame.WinLoseSystem.GetGameOverInfo();
@@ -73,7 +69,7 @@ public class SimService
 
         //Formatting for our table
 
-        Dictionary<string, SimResultDataForDeck> resultDataPerDeck = new Dictionary<string, SimResultDataForDeck>();
+        Dictionary<string, SimResultDataForDeck> resultDataPerDeck = new();
        
         foreach (var result in results)
         {            

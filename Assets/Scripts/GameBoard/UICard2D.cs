@@ -68,8 +68,8 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
     {     
         //TODO - How are we going to set this?
         // EntityId = -1;
-        _frontOfCard.gameObject.SetActive(false);
-        _backOfCard.gameObject.SetActive(true);
+        _frontOfCard.SetActive(false);
+        _backOfCard.SetActive(true);
 
         var uiGameEntity = GetComponent<UIGameEntity>();
         if (uiGameEntity != null)
@@ -143,8 +143,7 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
             cardForAction.Abilities = cardForAction.Abilities.Where(
                 ab =>
                 {
-                    var actAb = ab as ActivatedAbility;
-                    if (actAb != null)
+                    if (ab is ActivatedAbility actAb)
                     {
                         if (actAb.ActivationZone == cardForAction.GetZone().ZoneType)
                         {
@@ -157,7 +156,7 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
             //This will not work for multiple cast modifiers.
             if (action.CastModifiers.IsNullOrEmpty())
             {
-                cardForAction.Abilities = cardForAction.Abilities.Where(ab => !(ab is ICastModifier)).ToList();
+                cardForAction.Abilities = cardForAction.Abilities.Where(ab => ab is not ICastModifier).ToList();
             }
 
             SetCardData(cardForAction);
@@ -203,16 +202,12 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
         //Cards that are revealed to owner
         if (!shouldSeeCard)
         {
-            if (cardInstance.GetZone().ZoneType == ZoneType.InPlay)
-            {
-                var debug = 0;
-            }
             SetAsUnknownCard();
             return;
         }
 
-        _backOfCard.gameObject.SetActive(false);
-        _frontOfCard.gameObject.SetActive(true);
+        _backOfCard.SetActive(false);
+        _frontOfCard.SetActive(true);
 
         //TODO - Refaftor - EntityID will not be stored here anymore, figure out where to put it.
         //EntityId = cardInstance.EntityId;
@@ -277,16 +272,16 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
             var color = colors.First();
 
             //Do a single color frame.
-            switch (color)
+            _cardFrame.sprite = color switch
             {
-                case CardColor.White: _cardFrame.sprite = whiteCardFrame; break;
-                case CardColor.Blue: _cardFrame.sprite = blueCardFrame; break;
-                case CardColor.Green: _cardFrame.sprite = greenCardFrame; break;
-                case CardColor.Red: _cardFrame.sprite = redCardFrame; break;
-                case CardColor.Black: _cardFrame.sprite = blackCardFrame; break;
-                case CardColor.Colorless: _cardFrame.sprite = colorlessCardFrame; break;
-                default: _cardFrame.sprite = colorlessCardFrame; break;
-            }
+                CardColor.White => whiteCardFrame,
+                CardColor.Blue => blueCardFrame,
+                CardColor.Green => greenCardFrame,
+                CardColor.Red => redCardFrame,
+                CardColor.Black => blackCardFrame,
+                CardColor.Colorless => colorlessCardFrame,
+                _ => colorlessCardFrame,
+            };
         }
     }
 
@@ -310,18 +305,18 @@ public class UICard2D : MonoBehaviour, IUICard, IHighlightable
 
     public void Highlight()
     {
-        _highlight.gameObject.SetActive(true);
+        _highlight.SetActive(true);
         _highlight.GetComponent<Image>().color = Color.green;
     }
 
     public void Highlight(Color highlightColor)
     {
-        _highlight.gameObject.SetActive(true);
+        _highlight.SetActive(true);
         _highlight.GetComponent<Image>().color = highlightColor;
     }
 
     public void StopHighlight()
     {
-        _highlight.gameObject.SetActive(false);
+        _highlight.SetActive(false);
     }
 }

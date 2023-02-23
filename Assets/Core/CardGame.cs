@@ -14,19 +14,19 @@ public class CardGame
 {
     #region Private Fields
 
-    private List<Player> _players = new List<Player>();
+    private List<Player> _players = new();
     private int _activePlayerId = 1;
-    private int _numberOfLanes = 5;
-    private int _startingPlayerHealth = 3;
+    private readonly int _numberOfLanes = 5;
+    private readonly int _startingPlayerHealth = 3;
     //need to make sure this is serialized or else we wont be able to properly id tokens.
     [JsonProperty]
     private int _nextEntityId = 1;
     private int _nextPlayerId = 1;
 
     [JsonProperty]
-    private List<CardGameEntity> _registeredEntities = new List<CardGameEntity>();
+    private readonly List<CardGameEntity> _registeredEntities = new();
     [JsonProperty]
-    private List<CardInstance> _registeredCardEntities = new List<CardInstance>();
+    private readonly List<CardInstance> _registeredCardEntities = new();
 
     private IBattleSystem _battleSystem;
     private IDamageSystem _damageSystem;
@@ -653,8 +653,7 @@ public class CardGame
         //Edge case for ResolveChoiceActions;
         if (action as ResolveChoiceAction != null)
         {
-            var choice = action as ResolveChoiceAction;
-            if (choice != null)
+            if (action is ResolveChoiceAction choice)
             {
                 var entityIds = choice.Choices.Select(t => t.EntityId);
                 choice.Choices = GetEntities<CardInstance>().Where(t => entityIds.Contains(t.EntityId)).ToList();
@@ -810,7 +809,7 @@ public class CardGame
 
         if (_cachedZones == null)
         {
-            List<IZone> zones = new List<IZone>();
+            List<IZone> zones = new();
 
             zones.Add(Player1.Hand);
             zones.Add(Player2.Hand);
@@ -844,6 +843,7 @@ public class CardGame
 
     public IEnumerable<T> GetEntities<T>() where T : CardGameEntity
     {
+        //Not working the way we would expect
         if (typeof(T) is CardInstance)
         {
             return this._registeredCardEntities.Cast<T>();
@@ -911,66 +911,5 @@ public class CardGame
     public void Log(string message)
     {
         Logger.Log(message);
-    }
-    private void AddRandomUnitsToLane(Player player)
-    {
-        CardDatabase db = new CardDatabase();
-        var unitsOnly = db.GetAll().Where(c => c.GetType() == typeof(UnitCardData)).ToList();
-
-        var rng = new System.Random();
-
-        foreach (Lane lane in player.Lanes)
-        {
-            var randomIndex = rng.Next(0, unitsOnly.Count());
-            AddCardToGame(player, unitsOnly[randomIndex], lane);
-        }
-    }
-
-    void BuildDeck(Player player, CardColor deckColor, string manaName)
-    {
-        var cardDB = new CardDatabase();
-
-        //var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Colors.Contains(deckColor) || card.Colors.Contains(CardColor.Colorless));
-        //var cardsToSelectFrom = cardDB.GetAll().Where(card => card is SpellCardData).ToList();
-        // var cardsToSelectFrom = cardDB.GetAll().Where(card => card.GetAbilities<ActivatedAbility>().Any() && card.Colors.Contains(CardColor.Blue));
-        //var cardsToSelectFrom = cardDB.GetAll();
-        var cardsToSelectFrom = cardDB.GetAll().Where(card => card.Name == "Oracle of Mul Daya");
-        //Testing out if we can instantiate an affinity deck.
-
-
-        var decklist = FamousDecks.RGValakut2011().ToDeck();
-
-        decklist.ForEach(card =>
-        {
-            AddCardToGame(player, card, player.Deck);
-        });
-
-        player.Deck.Shuffle();
-        return;
-    }
-
-    void AddRandomCardsToDeck()
-    {
-        var cardDB = new CardDatabase();
-        var cards = cardDB.GetAll().ToList();
-
-        var manaNameLookup = new Dictionary<CardColor, string>()
-        {
-            { CardColor.White, "Plains" },
-            { CardColor.Black, "Swamp" },
-            { CardColor.Blue,"Island" },
-            {CardColor.Green,"Forest" },
-            {CardColor.Red,"Mountain" }
-        };
-
-        var deckColor = new List<CardColor>() { CardColor.White, CardColor.Blue, CardColor.Black, CardColor.Red, CardColor.Green }
-        .Randomize().ToList()[0];
-
-        BuildDeck(Player1, deckColor, manaNameLookup[deckColor]);
-
-        var deckColor2 = new List<CardColor>() { CardColor.White, CardColor.Blue, CardColor.Black, CardColor.Red, CardColor.Green }
-        .Randomize().ToList()[0];
-        BuildDeck(Player2, deckColor2, manaNameLookup[deckColor2]);
-
     }
 }
