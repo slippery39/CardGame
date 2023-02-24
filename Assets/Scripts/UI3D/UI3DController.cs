@@ -64,47 +64,10 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _player1Board.SetBoard(cardGame.Player1);
         _player2Board.SetBoard(cardGame.Player2);
     }
-
-    public void HandleEvent(object evt)
+    
+    public void HandleSelection(int entityID)
     {
-        //Run Appropriate Animations
-
-        //Set the state of the game UI
-
-
-        //SetGameState(evt.ResultingGameState);     
-    }
-
-
-    public void SetGameState(CardGame gameState)
-    {
-        //for each entity in the game State, go through and update the entity in the UI that corresponds to it.
-        //cards that are not revealed (i.e. cards in your deck that are face down) or cards in the opponent hand should not correspond to a specific entity yet
-        //we will use an entity id of -1 for this case.
-
-        /*
-         * 
-         * foreach player ->
-         * 
-         * foreach(var card in hand){
-         *  update the cards in the players hand
-         * }
-         * 
-         * foreach(var card in graveyard){
-         *  update the card in the players graveyard
-         * }
-         * 
-         * foreach(var card in lane){
-         *  update the cards in play
-         * }
-         * 
-         * foreach (var card in items){
-         *  update the cards in items
-         * }
-         * 
-         * also deal with revealed cards
-         * 
-         */
+       _gameUIStateMachine.CurrentState.HandleSelection(entityID);
     }
 
     public IEnumerable<IUIGameEntity> GetUIEntities()

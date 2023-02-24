@@ -10,6 +10,8 @@ public class DragAndDropController : MonoBehaviour
     private float _originalZPos;
     private Quaternion _originalRotation;
 
+    [SerializeField]
+    private UI3DController _ui3DController;
 
     private Rigidbody _dragdropRigidBody;
 
@@ -22,7 +24,7 @@ public class DragAndDropController : MonoBehaviour
             if (_selectedCard == null)
             {
                 //Pick up the card
-                RaycastHit hit = CastRay();
+                RaycastHit hit = UnityHelper.CastRay();
 
                 if (hit.collider != null)
                 {
@@ -34,6 +36,7 @@ public class DragAndDropController : MonoBehaviour
                     Debug.Log("Drag and drop controller, card 3d found");
 
                     _selectedCard = hit.collider.gameObject.GetComponent<Card3D>();
+
                     _originalZPos = _selectedCard.transform.position.z;
                     _originalRotation = _selectedCard.transform.rotation;
                     Cursor.visible = false;
@@ -45,7 +48,7 @@ public class DragAndDropController : MonoBehaviour
                         HoverController.instance.Disable();
                         card3DHover.enabled = false;
                     }
- 
+
                 }
             }
             else
@@ -62,7 +65,7 @@ public class DragAndDropController : MonoBehaviour
                 //Check to see what is underneath it;
 
 
-                RaycastHit[] hits = CastRayMulti();
+                RaycastHit[] hits = UnityHelper.CastRayMulti();
                 hits = hits.Where(h => h.collider.gameObject.GetComponent<DropArea>() != null).ToArray();
 
                 if (!hits.Any())
@@ -113,53 +116,8 @@ public class DragAndDropController : MonoBehaviour
 
         //_selectedCard.transform.position = new Vector3(worldPosition.x, height, worldPosition.z);
     }
-
-    private RaycastHit CastRay()
-    {
-        Vector3 screenMousePositionFar = new Vector3(
-            Input.mousePosition.x,
-            Input.mousePosition.y,
-            Camera.main.farClipPlane);
-
-        Vector3 screenMousePositionNear = new Vector3(
-            Input.mousePosition.x,
-            Input.mousePosition.y,
-            Camera.main.nearClipPlane);
-
-        Vector3 worldMousePointerFar = Camera.main.ScreenToWorldPoint(screenMousePositionFar);
-        Vector3 worldMousePointerNear = Camera.main.ScreenToWorldPoint(screenMousePositionNear);
-
-        RaycastHit hit;
-
-        Physics.Raycast(worldMousePointerNear, worldMousePointerFar - worldMousePointerNear, out hit);
-
-        return hit;
-    }
-
-    private RaycastHit[] CastRayMulti()
-    {
-        Vector3 screenMousePositionFar = new Vector3(
-    Input.mousePosition.x,
-    Input.mousePosition.y,
-    Camera.main.farClipPlane);
-
-        Vector3 screenMousePositionNear = new Vector3(
-            Input.mousePosition.x,
-            Input.mousePosition.y,
-            Camera.main.nearClipPlane);
-
-        Vector3 worldMousePointerFar = Camera.main.ScreenToWorldPoint(screenMousePositionFar);
-        Vector3 worldMousePointerNear = Camera.main.ScreenToWorldPoint(screenMousePositionNear);
-
-        RaycastHit[] hits;
-
-        hits = Physics.RaycastAll(worldMousePointerNear, worldMousePointerFar - worldMousePointerNear);
-
-        return hits;
-    }
-
     private Rigidbody AddDragDropRigidBody(GameObject gameObject)
-    {        
+    {
         var rb = gameObject.AddComponent<Rigidbody>();
         rb.angularDrag = 3;
         rb.isKinematic = false;

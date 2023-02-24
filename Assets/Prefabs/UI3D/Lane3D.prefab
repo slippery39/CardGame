@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 731052f3f11b4504abb055be5999dbac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enabled: 1
+  isEnabled: 1
 --- !u!65 &8840446219832185448
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36db81f2eb6e6f54c97d095c7f721cd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _laneSprite: {fileID: 7861852030660219802}
   _card: {fileID: 4905263884122735275}
 --- !u!1001 &1866214359905434245
 PrefabInstance:
