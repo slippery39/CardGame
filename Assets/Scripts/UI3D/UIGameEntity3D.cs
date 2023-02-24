@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIGameEntity3D : MonoBehaviour
+public class UIGameEntity3D : MonoBehaviour, IUIGameEntity
 {
     [SerializeField]
     int _entityId;
@@ -27,5 +27,32 @@ public class UIGameEntity3D : MonoBehaviour
         }
         entity.EntityId = lane.EntityId;
         return entity;
+    }
+
+    public virtual void Highlight()
+    {
+        var highlight = this.GetComponent<IHighlightable>();
+        if (highlight != null)
+        {
+            highlight.Highlight();
+        }
+    }
+
+    public virtual void Highlight(Color highlightColor)
+    {
+        var highlight = this.GetComponent<IHighlightable>();
+        if (highlight != null)
+        {
+            highlight.Highlight(highlightColor);
+        }
+    }
+
+    public virtual void StopHighlight()
+    {
+        var highlight = this.GetComponent<IHighlightable>();
+        if (highlight != null)
+        {
+            highlight.StopHighlight();
+        }
     }
 }

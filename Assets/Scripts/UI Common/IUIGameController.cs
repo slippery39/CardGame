@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 //Not sure if the interface name is correct
 public interface IUIGameController
 {
-    IEnumerable<UIGameEntity> GetUIEntities();
+    IEnumerable<IUIGameEntity> GetUIEntities();
     void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title);
     void ShowGameOverScreen();
     void CloseChoiceWindow();

@@ -5,12 +5,15 @@ using System.Linq;
 using UniRx;
 
 [RequireComponent(typeof(GameService))]
-public class UI3DController : MonoBehaviour
+public class UI3DController : MonoBehaviour, IUIGameController
 {
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
     private GameService _gameService;
     [SerializeField]
     private UI3DGameEventManager _gameEventManager;
+
+    [SerializeField]
+    private GameUIStateMachine _gameUIStateMachine;
 
     [SerializeField]
     private PlayerBoard3D _player1Board;
@@ -19,6 +22,10 @@ public class UI3DController : MonoBehaviour
 
     [SerializeField]
     private Stack3D _stack3D;
+
+    public CardGame CardGame => _gameService.CardGame;
+
+    public GameService GameService => _gameService;
 
     private void Awake()
     {
@@ -40,6 +47,8 @@ public class UI3DController : MonoBehaviour
             });
             */
             _gameService.StartGame();
+            //Make sure this works with our animations as well.
+            _gameUIStateMachine.ToIdle();
             //SetUIGameState(_gameService.CardGame);            
         }
     }
@@ -96,5 +105,41 @@ public class UI3DController : MonoBehaviour
          * also deal with revealed cards
          * 
          */
+    }
+
+    public IEnumerable<IUIGameEntity> GetUIEntities()
+    {
+        //TODO - better way of doing this
+        return FindObjectsOfType<UIGameEntity3D>().Cast<IUIGameEntity>();
+    }
+
+    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title)
+    {
+        //TODO
+        return;
+    }
+
+    public void ShowGameOverScreen()
+    {
+        //TODO 
+        return;
+    }
+
+    public void CloseChoiceWindow()
+    {
+        //TODO
+        return;
+    }
+
+    public void ShowActionChoicePopup(List<CardGameAction> actions)
+    {
+        //TODO
+        return;
+    }
+
+    public void CloseActionChoicePopup()
+    {
+        //TODO
+        return;
     }
 }

@@ -8152,6 +8152,7 @@ GameObject:
   - component: {fileID: 1651987500}
   - component: {fileID: 1651987502}
   - component: {fileID: 1651987501}
+  - component: {fileID: 1651987503}
   m_Layer: 0
   m_Name: UI3DController
   m_TagString: Untagged
@@ -8172,6 +8173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameEventManager: {fileID: 655518968}
+  _gameUIStateMachine: {fileID: 1651987503}
   _player1Board: {fileID: 54857112}
   _player2Board: {fileID: 692885231}
   _stack3D: {fileID: 0}
@@ -8239,6 +8241,18 @@ MonoBehaviour:
   _disabled: 0
   _gameService: {fileID: 1651987500}
   _isChoosing: 0
+--- !u!114 &1651987503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1651987497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b72155dfae94994a976b43d83fe6da6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1658423469
 GameObject:
   m_ObjectHideFlags: 0

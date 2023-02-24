@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(UIGameController))]
+[RequireComponent(typeof(IUIGameController))]
 public class GameUIStateMachine : MonoBehaviour
 {
     //State history?
@@ -31,6 +31,14 @@ public class GameUIStateMachine : MonoBehaviour
             return "";
         }
         return CurrentState.GetMessage();
+    }
+
+    private void Update()
+    {
+        if (CurrentState != null)
+        {
+            CurrentState.OnUpdate();
+        }
     }
 
     //TODO - We should actually just be passing in the action here. 

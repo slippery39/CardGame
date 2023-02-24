@@ -13,7 +13,7 @@ using UnityEngine.EventSystems;
 /// </summary>
 /// 
 //TODO - This should be a component, not a class that gets inherited from.
-public class UIGameEntity : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler
+public class UIGameEntity : MonoBehaviour, IUIGameEntity, IPointerClickHandler, IPointerEnterHandler, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField]
     bool clickEventsEnabled = true;

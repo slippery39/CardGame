@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System;
 
-public class Card3D : MonoBehaviour
+public class Card3D : MonoBehaviour, IHighlightable
 {
     [SerializeField] private GameObject _cardMesh;
     [SerializeField] private Renderer _cardRenderer;
@@ -20,8 +20,11 @@ public class Card3D : MonoBehaviour
     [SerializeField] private GameObject _cardTextContainer;
     [SerializeField] private Material _cardArtMaterial;
 
+    [SerializeField] private GameObject _highlightObject;
+
     [SerializeField] private CardFrameTextures _cardFrameTextures;
 
+    [Header("Materials For Animation")]
     [SerializeField] private Card3DMaterialSet _dissolveMaterials;
     [SerializeField] private Card3DMaterialSet _summonMaterials;
 
@@ -248,6 +251,22 @@ public class Card3D : MonoBehaviour
         {
             onComplete();
         }
+    }
+
+    public void Highlight()
+    {
+        this._highlightObject.SetActive(true);
+    }
+
+    public void Highlight(Color highlightColor)
+    {
+        this._highlightObject.SetActive(true);
+        //TODO - set color
+    }
+
+    public void StopHighlight()
+    {
+        this._highlightObject.SetActive(false);
     }
 }
 

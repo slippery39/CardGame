@@ -183,7 +183,6 @@ GameObject:
   - component: {fileID: 1310469568370528661}
   - component: {fileID: 1731972493085541976}
   - component: {fileID: 3789175090983929429}
-  - component: {fileID: 584863098688286974}
   m_Layer: 0
   m_Name: Highlight
   m_TagString: Untagged
@@ -256,28 +255,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &584863098688286974
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1739217834721237111}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2304246515688227154
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,7 +411,7 @@ Transform:
   - {fileID: 3277676048393914202}
   - {fileID: 1310469568370528661}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6770281957773621294
 MonoBehaviour:
@@ -457,6 +434,7 @@ MonoBehaviour:
   _rulesText: {fileID: 7272900263378099452}
   _cardTextContainer: {fileID: 2304246515688227154}
   _cardArtMaterial: {fileID: 2100000, guid: aa912d1780312fb489307fab3f82a8a2, type: 2}
+  _highlightObject: {fileID: 1739217834721237111}
   _cardFrameTextures:
     White: {fileID: 2800000, guid: aab8081bea730444285694555cbee845, type: 3}
     Blue: {fileID: 2800000, guid: e0ef56f3ebff0884a966615915f7fe3a, type: 3}
