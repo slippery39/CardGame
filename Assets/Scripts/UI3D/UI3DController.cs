@@ -42,8 +42,8 @@ public class UI3DController : MonoBehaviour, IUIGameController
         if (Input.GetKeyDown(KeyCode.A))
         {
             _gameEventManager.Reset();
-            //_gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
-            _gameService.SetupGame(FamousDecks.TokenTest(), FamousDecks.TokenTest());
+            _gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
+            //_gameService.SetupGame(FamousDecks.TokenTest(), FamousDecks.TokenTest());
             /*
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
             {
@@ -70,6 +70,11 @@ public class UI3DController : MonoBehaviour, IUIGameController
         var lane = CardGame.ActivePlayer.Lanes.Where(l => l.EntityId == entityId).FirstOrDefault();
         var index = CardGame.ActivePlayer.Lanes.IndexOf(lane);
         GameService.ProcessAction(CreateFightAction(index));
+    }
+
+    public void DoAbility(int entityId)
+    {
+
     }
 
 
