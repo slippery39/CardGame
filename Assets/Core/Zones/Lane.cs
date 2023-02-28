@@ -3,7 +3,7 @@
 //NOTE - Unity does not support null in serialization. If we want things to be serialized, we should use the null object pattern instead.
 //Don't use System.Serializable unless we are 100% sure nothing will be set to null.
 public class Lane : CardGameEntity, IZone, IDeepCloneable<Lane>
-{
+{        
     private CardInstance _unitInLane;
     #region Public Properties
     public CardInstance UnitInLane { get { return _unitInLane; } set { _unitInLane = value; } }
@@ -52,6 +52,16 @@ public class Lane : CardGameEntity, IZone, IDeepCloneable<Lane>
 
         return clone;
 
+    }
+
+    public bool CanBattle()
+    {
+        if (UnitInLane == null)
+        {
+            return false;
+        }
+        //Note : We should possibly have all our objects contain a convenience reference to a card game.
+        return UnitInLane.CardGame.ActivePlayerId == UnitInLane.OwnerId && UnitInLane.CardGame.BattleSystem.CanBattle(LaneIndex);
     }
 
     public bool IsEmpty()

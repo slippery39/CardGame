@@ -51,8 +51,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
     //Effects was being added to every time we serialize / deserialize it.
-    [JsonIgnore]
-    public List<Effect> Effects
+    [JsonIgnore]    public List<Effect> Effects
     {
         get { if (_currentCardData is SpellCardData data) { return data.Effects; } else { return new List<Effect>(); } }
     }

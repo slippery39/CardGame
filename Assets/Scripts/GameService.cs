@@ -52,6 +52,16 @@ public class GameService : MonoBehaviour
 
         _cardGame.ProcessAction(action);
     }
+    
+    public void EndTurn()
+    {
+        if (_cardGame == null)
+        {
+            throw new Exception("EndTurn() has failed. Game is null. Perhaps you forgot to Setup the game first?");
+        }
+        var endTurnAction = new NextTurnAction();
+        _cardGame.ProcessAction(endTurnAction);
+    }
 
     public void MakeChoice(List<CardInstance> choices)
     {

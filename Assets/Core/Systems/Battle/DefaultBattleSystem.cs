@@ -30,6 +30,13 @@ public class DefaultBattleSystem : CardGameSystem, IBattleSystem
         return unitCanAttack;
     }
 
+    public bool CanBattleLaneID(int laneId)
+    {
+        var lane = cardGame.ActivePlayer.Lanes.FirstOrDefault(l=>l.EntityId == laneId);
+        var laneIndex = cardGame.ActivePlayer.Lanes.IndexOf(lane);
+        return CanBattle(laneIndex);
+    }
+
 
     public void Battle(int laneIndex)
     {

@@ -27,8 +27,12 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     public GameService GameService => _gameService;
 
+    public static UI3DController Instance { get => _instance; set => _instance = value; }
+    private static UI3DController _instance;
+
     private void Awake()
     {
+        Instance = this;
         _gameService = GetComponent<GameService>();
     }
 
@@ -53,10 +57,28 @@ public class UI3DController : MonoBehaviour, IUIGameController
         }
     }
 
+    private FightAction CreateFightAction(int laneIndex)
+    {
+        return new FightAction
+        {
+            Player = CardGame.ActivePlayer,
+            LaneIndex = laneIndex
+        };
+    }
+    public void DoAttack(int entityId)
+    {
+        var lane = CardGame.ActivePlayer.Lanes.Where(l => l.EntityId == entityId).FirstOrDefault();
+        var index = CardGame.ActivePlayer.Lanes.IndexOf(lane);
+        GameService.ProcessAction(CreateFightAction(index));
+    }
+
+
     public List<PlayerBoard3D> GetPlayerBoards()
     {
         return new List<PlayerBoard3D> { _player1Board, _player2Board };
     }
+
+
 
     public void SetUIGameState(CardGame cardGame)
     {
@@ -64,10 +86,10 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _player1Board.SetBoard(cardGame.Player1);
         _player2Board.SetBoard(cardGame.Player2);
     }
-    
+
     public void HandleSelection(int entityID)
     {
-       _gameUIStateMachine.CurrentState.HandleSelection(entityID);
+        _gameUIStateMachine.CurrentState.HandleSelection(entityID);
     }
 
     public IEnumerable<IUIGameEntity> GetUIEntities()
@@ -104,5 +126,11 @@ public class UI3DController : MonoBehaviour, IUIGameController
     {
         //TODO
         return;
+    }
+
+
+    public void EndTurn()
+    {
+        _gameService.EndTurn();
     }
 }
