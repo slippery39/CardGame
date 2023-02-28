@@ -97,7 +97,7 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
             new PlayCardEvent
             {
                 CardId = cardInstance.EntityId,
-                Targets = action.Targets.Select(t => t.EntityId).ToList()
+                Targets = action.Targets!=null? action.Targets.Select(t => t.EntityId).ToList() : new List<int>()
             }
         );
             cardGame.ZoneChangeSystem.MoveToZone(cardInstance, stackZone);
