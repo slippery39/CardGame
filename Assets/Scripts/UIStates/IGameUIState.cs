@@ -11,5 +11,5 @@ public interface IGameUIState
     {
 
     }
-   void HandleSelection(int entityId);
+    void HandleSelection(int entityId);
 }

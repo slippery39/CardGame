@@ -46,6 +46,22 @@ public class Card3D : MonoBehaviour, IHighlightable
         return _cardMesh.GetComponent<MeshRenderer>().bounds;
     }
 
+    public void SetCardInfo(CardGameAction action)
+    {
+        var cardOptions = new Card3DOptions
+        {
+            CardName = action.SourceCard?.Name,
+            ManaCost = action.SourceCard.ManaCost, //TODO - actions currently don't have a mana cost?
+            CardType = action.SourceCard.CardType,
+            RulesText = action.ToUIString(),
+            CastShadows = false,
+            ArtTexture = Resources.Load<Texture2D>(action.SourceCard.ArtPath),
+            CardFrameTexture = GetCardFrameTexture(action.SourceCard.Colors),
+        };
+
+        SetCardInfo(cardOptions);
+    }
+
     public void SetCardInfo(BaseCardData card, bool castShadows = true)
     {
         var cardOptions = new Card3DOptions

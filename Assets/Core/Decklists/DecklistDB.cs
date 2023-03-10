@@ -318,8 +318,8 @@ public class FamousDecks : DecklistDB
         {
             Name = "AllLands",
             Format = "Test",
-            Cards = $@"45 Lightning Bolt
-                        15 Mountain"
+            Cards = $@"15 Lightning Bolt
+                       45 Cragcrown Pathway"
         };
     }
 

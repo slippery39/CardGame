@@ -69,14 +69,17 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
             str += string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
 
-
-
             if (_currentCardData is SpellCardData)
             {
                 var additionalCostText = AdditionalCost != null ? $"Additional Cost : {AdditionalCost.RulesText}\r\n" : "";
                 var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
                 var effectsText = string.Join("\r\n", Effects.Select(ef => ef.RulesText));
                 str = additionalCostText + "\r\n" + abilitiesText + "\r\n" + effectsText;
+            }
+
+            if (_currentCardData is ManaCardData)
+            {
+                return _currentCardData.RulesText;
             }
 
             if (Shields > 0)

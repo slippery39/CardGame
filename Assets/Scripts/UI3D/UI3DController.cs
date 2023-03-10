@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UniRx;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(GameService))]
 public class UI3DController : MonoBehaviour, IUIGameController
@@ -21,19 +22,40 @@ public class UI3DController : MonoBehaviour, IUIGameController
     private PlayerBoard3D _player2Board;
 
     [SerializeField]
+    private UIChooseActionPopup3D _chooseActionPopup;
+
+    [SerializeField]
+    private Button _endTurnButton;
+
+    [SerializeField]
     private Stack3D _stack3D;
+
+    [SerializeField]
+    private DeveloperPanel _developerPanel;
 
     public CardGame CardGame => _gameService.CardGame;
 
     public GameService GameService => _gameService;
 
     public static UI3DController Instance { get => _instance; set => _instance = value; }
+    public GameUIStateMachine GameUIStateMachine { get => _gameUIStateMachine; set => _gameUIStateMachine = value; }
+
     private static UI3DController _instance;
 
     private void Awake()
     {
         Instance = this;
         _gameService = GetComponent<GameService>();
+        _endTurnButton.onClick.AddListener(() =>
+        {
+            this.EndTurn();
+        }
+        );
+    }
+
+    public void Start()
+    {
+        _developerPanel.Initialize(this);
     }
 
     public void Update()
@@ -42,7 +64,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
         if (Input.GetKeyDown(KeyCode.A))
         {
             _gameEventManager.Reset();
-            _gameService.SetupGame(FamousDecks.RandomPremadeDeck(), FamousDecks.RandomPremadeDeck());
+            _gameService.SetupGame(FamousDecks.AllLands(), FamousDecks.AllLands());
             //_gameService.SetupGame(FamousDecks.TokenTest(), FamousDecks.TokenTest());
             /*
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
@@ -124,18 +146,35 @@ public class UI3DController : MonoBehaviour, IUIGameController
     public void ShowActionChoicePopup(List<CardGameAction> actions)
     {
         //TODO
+        _chooseActionPopup.gameObject.SetActive(true);
+        _chooseActionPopup.SetCard(actions);
         return;
     }
 
     public void CloseActionChoicePopup()
     {
         //TODO
+        _chooseActionPopup.gameObject.SetActive(false);
         return;
+    }
+
+    public void HandleCastChoice(int castChoiceInfo)
+    {
+        //TODO - handle this in the state itself instead of doing this..
+        if (_gameUIStateMachine.CurrentState is IGameUIStateHandleCastChoice)
+        {
+            Debug.Log($"Cast Choice Handled {castChoiceInfo}");
+            (_gameUIStateMachine.CurrentState as IGameUIStateHandleCastChoice).HandleCastChoiceSelection(castChoiceInfo);
+        }
     }
 
 
     public void EndTurn()
     {
+        //reset the game state in case they are currently in another state
+        //ideally they shouldn't be able to end the turn unless they are in the idle state
+        //OR (possibly better solution:) the state should update based on game events from the game service
+        _gameUIStateMachine.ToIdle();
         _gameService.EndTurn();
     }
 }
