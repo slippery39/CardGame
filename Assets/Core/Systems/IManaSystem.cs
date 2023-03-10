@@ -132,6 +132,11 @@ public class DefaultManaSystem : CardGameSystem, IManaSystem
     {
         var manaCard = card.CurrentCardData as ManaCardData;
 
+        //Need to move it to ezile first.. regular cards would go on the stack
+        cardGame.ZoneChangeSystem.MoveToZone(card, player.Exile);
+
+        cardGame.GameEventSystem.FireGameStateUpdatedEvent();
+
         cardGame.GameEventSystem.FireEvent(new PlayCardEvent
         {
             CardId =  card.EntityId,
@@ -156,8 +161,7 @@ public class DefaultManaSystem : CardGameSystem, IManaSystem
         }
 
         //Trigger any mana enters play effects      
-        cardGame.HandleTriggeredAbilities(player.GetCardsInPlay(), TriggerType.SelfManaPlayed);
-        cardGame.ZoneChangeSystem.MoveToZone(card, player.Exile);
+        cardGame.HandleTriggeredAbilities(player.GetCardsInPlay(), TriggerType.SelfManaPlayed);        
     }
 
     public void PlayManaCardFromEffect(Player player, CardInstance card, bool forceEmpty)

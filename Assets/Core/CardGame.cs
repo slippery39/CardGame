@@ -697,6 +697,7 @@ public class CardGame
         {
             cardToPlay.FrontCard.TransformToCardData(cardToPlay.CurrentCardData);
             cardToPlay = cardToPlay.FrontCard;
+            GameEventSystem.FireGameStateUpdatedEvent();
         }
 
         if (cardToPlay.CurrentCardData is ManaCardData)
