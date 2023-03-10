@@ -1208,26 +1208,6 @@ public class CardDatabase : ICardDatabase
                     ManaCost = "1R",
                 }
             },
-            /*
-            BackCard = new SpellCardData
-            {
-                Name = "Gempalm Incinerate",
-                ManaCost = "1R",
-                Colors = new List<CardColor> { CardColor.Red },
-                Effects = new List<Effect>
-                    {
-                        new DamageEffect
-                        {
-                           Amount = 2,
-                           TargetType = TargetType.TargetUnits
-                        },
-                        new DrawCardEffect
-                        {
-                            Amount = 1
-                        }
-                    }
-            }
-            */
         });
 
 
@@ -3308,13 +3288,15 @@ public class CardDatabase : ICardDatabase
         string json = JsonConvert.SerializeObject(_cards, Formatting.Indented, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+            ObjectCreationHandling = ObjectCreationHandling.Replace
         });
 
         _cards = JsonConvert.DeserializeObject<List<BaseCardData>>(json, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple
+            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
+            ObjectCreationHandling = ObjectCreationHandling.Replace
         });
 
         File.WriteAllText(@"./tempCardsJson", json);
