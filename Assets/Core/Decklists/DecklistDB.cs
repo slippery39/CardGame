@@ -319,7 +319,8 @@ public class FamousDecks : DecklistDB
             Name = "AllLands",
             Format = "Test",
             Cards = $@"15 Lightning Bolt
-                       45 Cragcrown Pathway"
+                       30 Gempalm Incinerator
+                       30 Cragcrown Pathway"
         };
     }
 

@@ -2,7 +2,7 @@
 
 public class CyclingAbility : ActivatedAbility
 {
-    public override string RulesText => $"Cycling : {ManaCost}";
+    public override string RulesText => $"Cycling : " + base.RulesText;
 
     public CyclingAbility()
     {
