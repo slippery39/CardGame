@@ -28,8 +28,11 @@ public class UIChooseActionPopup3D : MonoBehaviour
         {
             return;
         }
+
         _choice1.SetCardInfo(_actions[0]);
         _choice2.SetCardInfo(_actions[1]);
+
+        var h = 0;
     }
 
     void SetTitle()

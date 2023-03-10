@@ -3298,11 +3298,10 @@ public class CardDatabase : ICardDatabase
             {
                 card.ArtPath = $"{ArtPath}{card.Name.Replace(" ", "").Replace(",", "").Replace("'", "")}";
             }
-
-
-            //Attempt to serialize cards
-
-
+            if (card.BackCard != null)
+            {
+                card.BackCard.ArtPath = $"{ArtPath}{card.BackCard.Name.Replace(" ", "").Replace(",", "").Replace("'", "")}";
+            }
         }
 
 

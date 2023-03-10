@@ -3675,6 +3675,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6564856207125689061, guid: 801c0011251190346b2b315221462509, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6592408469573626434, guid: 801c0011251190346b2b315221462509, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -5452,7 +5456,6 @@ GameObject:
   - component: {fileID: 460317620}
   - component: {fileID: 460317619}
   - component: {fileID: 460317618}
-  - component: {fileID: 460317617}
   - component: {fileID: 460317616}
   m_Layer: 5
   m_Name: Dev Canvas
@@ -5475,23 +5478,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _ui3DController: {fileID: 0}
   _uiStateText: {fileID: 1904139788}
---- !u!114 &460317617
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 460317615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &460317618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7984,7 +7970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -9547,8 +9533,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -685, y: 420}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -569.40735, y: 375.03674}
+  m_SizeDelta: {x: 431.1853, y: 139.9265}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1916101343
 GameObject:
@@ -10585,6 +10571,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6374284369754400507, guid: 801c0011251190346b2b315221462509, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6564856207125689061, guid: 801c0011251190346b2b315221462509, type: 3}
+      propertyPath: m_RaycastTarget
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6592408469573626434, guid: 801c0011251190346b2b315221462509, type: 3}
