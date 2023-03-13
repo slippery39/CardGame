@@ -63,6 +63,7 @@ public class DrawCardAnimation : MonoBehaviour
             {
                 Destroy(cardToMove.gameObject);
                 lastCard.gameObject.SetActive(true);
+                lastCard.SetCardInfo(cardToMove); //need this just in case we haven't gotten an updated game state yet from the game.
                 if (onComplete != null)
                 {
                     onComplete();
