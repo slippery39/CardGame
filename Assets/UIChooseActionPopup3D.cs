@@ -2,19 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIChooseActionPopup3D : MonoBehaviour
 {
     [SerializeField]
     private TextMeshProUGUI _title;
     [SerializeField]
-
-    //TODO - Build a UI Action Representation Object
     private Card3D _choice1;
     [SerializeField]
     private Card3D _choice2;
 
+    [SerializeField]
+    private Button _cancelButton;
+
     private List<CardGameAction> _actions;
+
+    public void Initialize(UI3DController _ui3DController)
+    {
+        _cancelButton.onClick.AddListener(() =>
+        {
+            _ui3DController.GameUIStateMachine.ToIdle();
+        });
+    }
     public void SetCard(List<CardGameAction> actions)
     {
         _actions = actions;

@@ -51,6 +51,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
             this.EndTurn();
         }
         );
+        _chooseActionPopup.Initialize(this);
     }
 
     public void Start()
