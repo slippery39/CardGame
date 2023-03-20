@@ -26,7 +26,7 @@ public class StackedSliderTest : MonoBehaviour
     Bounds _containerBounds;
 
     [SerializeField]
-    float _paddingLeft = 0.5f; //only applies when the slider is showing.
+    float _paddingLeftRight = 0.5f; //only applies when the slider is showing.
 
     void Awake()
     {
@@ -51,7 +51,11 @@ public class StackedSliderTest : MonoBehaviour
         else
         {
             var leftPoint = _camera.ScreenToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane));
-            _container.transform.position = new Vector3(leftPoint.x + _paddingLeft, middlePoint.y - (_containerBounds.center.y), _container.transform.position.z);
+            var rightPoint = _camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, _camera.nearClipPlane));
+            _container.transform.position = new Vector3(leftPoint.x + _paddingLeftRight, middlePoint.y - (_containerBounds.center.y), _container.transform.position.z);
+            //Calculates the position of the container based on the slider value.
+            var sliderVal = _slider.value;
+            _container.transform.position -= new Vector3(Mathf.Lerp(0, _containerBounds.max.x - _paddingLeftRight -( (rightPoint.x-leftPoint.x)/2), sliderVal), 0, 0);
         }
     }
    
