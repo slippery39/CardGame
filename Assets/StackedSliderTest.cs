@@ -105,7 +105,7 @@ public class StackedSliderTest : MonoBehaviour
 
 
 
-    private Bounds CalculateLocalBounds(GameObject gameObject)
+    private Bounds CalculateLocalBounds(GameObject gameObject, bool includeParentTransform = false)
     {
         Quaternion currentRotation = gameObject.transform.rotation;
         gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -117,8 +117,21 @@ public class StackedSliderTest : MonoBehaviour
             return new Bounds(gameObject.transform.position, Vector3.zero);
         }
 
-        Bounds bounds = new Bounds(gameObject.transform.position, Vector3.zero);
 
+        //If the include parent transform flag is set, we want to include the parents transform as part of the bounds
+        //This may not be what is intended if the parent is for example an empty game object and doesn't actually show anything on screen
+        Bounds bounds;
+
+        if (includeParentTransform)
+        {
+            bounds = new Bounds(gameObject.transform.position, Vector3.zero);
+        }
+        else
+        {
+            bounds = new Bounds(renderers[0].gameObject.transform.position, Vector3.zero);
+        }
+
+        //Loop through each renderer accumulating each renderers bounds.
         foreach (Renderer renderer in gameObject.GetComponentsInChildren<Renderer>())
         {
             bounds.Encapsulate(renderer.bounds);
