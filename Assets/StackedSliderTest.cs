@@ -11,7 +11,7 @@ public class StackedSliderTest : MonoBehaviour
     Camera _camera;
 
     [SerializeField]
-    private Slider _slider;
+    private Scrollbar _scrollbar;
 
     [SerializeField]
     private GameObject _container;
@@ -38,8 +38,10 @@ public class StackedSliderTest : MonoBehaviour
         //BUG - we need to determine the proper order for all of this to happen so that everything updates in one frame.
         _containerBounds = CalculateLocalBounds(_container);
         _showSlider = !IsInsideCameraViewport(_containerBounds);
-        _slider.gameObject.SetActive(_showSlider);
+        _scrollbar.gameObject.SetActive(_showSlider);
 
+        var leftPoint = _camera.ScreenToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane));
+        var rightPoint = _camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, _camera.nearClipPlane));
         var middlePoint = _camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, _camera.nearClipPlane));
 
         //Bounding box is on the screen.
@@ -50,13 +52,22 @@ public class StackedSliderTest : MonoBehaviour
         //Bounding box is off the screen.
         else
         {
-            var leftPoint = _camera.ScreenToWorldPoint(new Vector3(0, 0, _camera.nearClipPlane));
-            var rightPoint = _camera.ScreenToWorldPoint(new Vector3(Screen.width, 0, _camera.nearClipPlane));
             _container.transform.position = new Vector3(leftPoint.x + _paddingLeftRight, middlePoint.y - (_containerBounds.center.y), _container.transform.position.z);
             //Calculates the position of the container based on the slider value.
-            var sliderVal = _slider.value;
+            var sliderVal = _scrollbar.value;
             _container.transform.position -= new Vector3(Mathf.Lerp(0, _containerBounds.max.x - _paddingLeftRight -( (rightPoint.x-leftPoint.x)/2), sliderVal), 0, 0);
         }
+
+        var cameraPointDiff = rightPoint - leftPoint;
+        var knobSizePerc = Mathf.Clamp(cameraPointDiff.x / _containerBounds.size.x, 0.1f, 0.8f);
+        _scrollbar.size = knobSizePerc;
+        
+        //SLIDER Knob Size
+        /*
+         * Slider knob size should depend on the % of the container is visible at any one time
+         * based on _containerBounds.size and _camera.ScreenToWorldPoint
+         */
+
     }
    
 
