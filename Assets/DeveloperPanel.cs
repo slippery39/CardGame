@@ -24,7 +24,7 @@ public class DeveloperPanel : MonoBehaviour
         }
 
         var state = _ui3DController.GameUIStateMachine.CurrentState;
-        var stateName = state.GetType().Name;
+        var stateName = state?.GetType().Name;
 
         _uiStateText.text = "UI State : " + stateName;
     }

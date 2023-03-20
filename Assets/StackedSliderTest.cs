@@ -41,12 +41,15 @@ public class StackedSliderTest : MonoBehaviour
     [SerializeField]
     Transform _visibleBoundsObject;
 
+    [SerializeField]
+    Camera camera;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        var camera = this.GetComponent<Camera>();
+        camera = this.GetComponent<Camera>();
         cameraMin = camera.ViewportToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
         cameraMax = camera.ViewportToWorldPoint(new Vector3(1, 1, camera.nearClipPlane));
         cameraDiff = cameraMax - cameraMin;
@@ -59,33 +62,6 @@ public class StackedSliderTest : MonoBehaviour
         minX = float.MaxValue;
         maxX = float.MinValue;
 
-        foreach (Transform t in gameObjects)
-        {
-            if (t.transform == this.transform)
-            {
-                continue;
-            }
-
-            if (t.transform.localPosition.x < minX)
-            {
-                minX = t.transform.localPosition.x;
-            }
-            if (t.transform.localPosition.x - cameraDiff.x + paddingX > maxX)
-            {
-                maxX = t.transform.localPosition.x - cameraDiff.x + paddingX;
-                maxXReal = t.transform.localPosition.x;
-            }
-        }
-
-        if (maxXReal > cameraDiff.x)
-        {
-            _showSlider = true;
-        }
-        else
-        {
-            _showSlider = false;
-        }
-
         _containerBounds = CalculateLocalBounds(_container);
     }
 
@@ -94,13 +70,57 @@ public class StackedSliderTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //BUG - we need to determine the proper order for all of this to happen so that everything updates in one frame.
+
+        Bounds _containerBounds = CalculateLocalBounds(_container);
+        _showSlider = !IsInsideCameraViewport(_containerBounds);
         _slider.gameObject.SetActive(_showSlider);
-        CalculateLocalBounds(_container);
+        var middlePoint = camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, camera.nearClipPlane));
+        if (_showSlider == false)
+        {
+            _container.transform.position = new Vector3(middlePoint.x - (_containerBounds.center.x), middlePoint.y - (_containerBounds.center.y), _container.transform.position.z);
+        }
+        //Bounding box is off the screen.
+        else
+        {
+            var leftPoint = camera.ScreenToWorldPoint(new Vector3(0, 0, camera.nearClipPlane));
+            _container.transform.position = new Vector3(leftPoint.x + 0.5f, middlePoint.y - (_containerBounds.center.y), _container.transform.position.z);
+        }
+
+        //The math to make it left aligned would be, screen 0 + half of the first game objects bounds + padding
+
+
+        /*We need to calculate the size of all the cards
+        We need to calculate if the size of all the cards would be contained within the cameras view
+        
+        IF (isContainedInView)
+            center the container inside the camera
+        ELSE 
+            container should be (left or potentially modified via a setting) aligned based on the camera
+            and the scrollbar should show.
+
+        */
         /*
         _container.transform.localPosition = new Vector3(Mathf.Lerp(minX, minX - maxX, _slider.value),
             _container.transform.localPosition.y,
             _container.transform.localPosition.z);
         */
+    }
+
+
+    private bool IsInsideCameraViewport(Bounds bounds)
+    {
+        //BUG - bounds.min and bounds.max are in local space, not world space
+        Vector3 minPosition = camera.WorldToViewportPoint(_container.transform.position + bounds.min);
+        Vector3 maxPosition = camera.WorldToViewportPoint(_container.transform.position + bounds.max);
+
+        if (minPosition.x < 0 || maxPosition.x > 1)
+        {
+            return false;
+        }
+
+        return true;
     }
 
 
@@ -112,7 +132,7 @@ public class StackedSliderTest : MonoBehaviour
 
         var renderers = gameObject.GetComponentsInChildren<Renderer>();
 
-        if (renderers.Length  == 0)
+        if (renderers.Length == 0)
         {
             return new Bounds(gameObject.transform.position, Vector3.zero);
         }
