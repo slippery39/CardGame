@@ -14,7 +14,23 @@ public class ClickController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //Pick up the card
-            RaycastHit hit = UnityHelper.CastRay();
+
+            var cameras = GameObject.FindObjectsOfType<Camera>();
+
+            //check if we have a UI camera available.
+            var uiCamera = cameras.Where(c => c.gameObject.tag == "UI Camera").FirstOrDefault();
+
+            RaycastHit hit;
+            if (uiCamera == null)
+            {
+                //Grab the hit from our main camera.
+                hit = UnityHelper.CastRay();
+            }
+            else
+            {
+                //Grab the hit from our ui camera.
+                hit = UnityHelper.CastRay(uiCamera);
+            }
 
             if (hit.collider != null)
             {
