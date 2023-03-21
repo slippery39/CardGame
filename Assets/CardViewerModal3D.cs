@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-
-public class StackedSliderTest : MonoBehaviour
+public class CardViewerModal3D : MonoBehaviour
 {
     [SerializeField]
     Camera _camera;

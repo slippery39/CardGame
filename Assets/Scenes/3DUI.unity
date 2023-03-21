@@ -8666,7 +8666,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1324620349
 Transform:
   m_ObjectHideFlags: 0
@@ -10111,35 +10111,14 @@ GameObject:
   - component: {fileID: 1854101071}
   - component: {fileID: 1854101070}
   - component: {fileID: 1854101068}
-  - component: {fileID: 1854101067}
+  - component: {fileID: 1854101072}
   m_Layer: 3
-  m_Name: Stacked Camera Test
+  m_Name: Card Viewer Modal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1854101067
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1854101066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82ba0e59fc6bfe44ba109e6c018a70b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _camera: {fileID: 0}
-  _scrollbar: {fileID: 2071561545}
-  _container: {fileID: 1884994254}
-  _visibleBoundsObject: {fileID: 1324620349}
-  _showSlider: 1
-  _containerBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  _paddingLeftRight: 0.5
 --- !u!114 &1854101068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10253,6 +10232,27 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: -10.69, y: 0, z: 0}
+--- !u!114 &1854101072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1854101066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82ba0e59fc6bfe44ba109e6c018a70b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 0}
+  _scrollbar: {fileID: 2071561545}
+  _container: {fileID: 1884994254}
+  _visibleBoundsObject: {fileID: 1324620349}
+  _showSlider: 1
+  _containerBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  _paddingLeftRight: 0.5
 --- !u!4 &1862265440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2359871292335688439, guid: 77fd5232cd396a24fa2f42f954ae14a4, type: 3}
