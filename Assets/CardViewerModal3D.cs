@@ -26,13 +26,22 @@ public class CardViewerModal3D : MonoBehaviour
     [SerializeField]
     float _paddingLeftRight = 0.5f; //only applies when the slider is showing.
 
+    [SerializeField]
+    float _cardSpacing = 1f;
+
     void Awake()
     {
         _camera = this.GetComponent<Camera>();
     }
 
+    private void Start()
+    {
+        DoCardLayout();
+    }
+
     void Update()
     {
+        DoCardLayout();
         //BUG - we need to determine the proper order for all of this to happen so that everything updates in one frame.
         _containerBounds = CalculateLocalBounds(_container);
         _showSlider = !IsInsideCameraViewport(_containerBounds);
@@ -68,6 +77,17 @@ public class CardViewerModal3D : MonoBehaviour
 
     }
    
+    private void DoCardLayout()
+    {
+        var cards = _container.GetComponentsInChildren<Card3D>();
+
+        for (var i = 0; i < cards.Length; i++)
+        {
+            var card = cards[i];
+            var xPos = (i * (card.GetComponent<Collider>().bounds.size.x + _cardSpacing));
+            card.transform.localPosition = new Vector3(xPos, 0, 0); 
+        }
+    }
 
     private bool IsInsideCameraViewport(Bounds bounds)
     {
