@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +30,10 @@ public class CardViewerModal3D : MonoBehaviour
 
     [SerializeField]
     float _cardSpacing = 1f;
+
+    [Header("Card 3D Settings")]
+    [SerializeField] private Card3D _cardPrefab;
+    private List<Card3D> _instantiatedCards;
 
     void Awake()
     {
@@ -74,7 +80,6 @@ public class CardViewerModal3D : MonoBehaviour
          * Slider knob size should depend on the % of the container is visible at any one time
          * based on _containerBounds.size and _camera.ScreenToWorldPoint
          */
-
     }
    
     private void DoCardLayout()
@@ -86,6 +91,49 @@ public class CardViewerModal3D : MonoBehaviour
             var card = cards[i];
             var xPos = (i * (card.GetComponent<Collider>().bounds.size.x + _cardSpacing));
             card.transform.localPosition = new Vector3(xPos, 0, 0); 
+        }
+    }
+
+    public void Show(List<ICard> cards, string title)
+    {
+        this.gameObject.SetActive(true);
+        SetCards(cards);
+
+        //TODO - need a title still
+    }
+
+    public void Hide()
+    {
+        this.gameObject.SetActive(false);
+    }
+
+    private void SetCards(List<ICard> cards)
+    {
+        var alreadyInitializedCards = _container.GetComponentsInChildren<Card3D>(true);
+        _instantiatedCards = alreadyInitializedCards.ToList();
+
+        for (var i = 0; i < cards.Count; i++)
+        {
+            Card3D card;
+            if (_instantiatedCards.Count <= i)
+            {
+                card = Instantiate(_cardPrefab);
+                _instantiatedCards.Add(card);
+            }
+            else
+            {
+                card = _instantiatedCards[i];
+                card.gameObject.SetActive(true);
+                card.SetCardInfo(cards[i] as CardInstance);
+                UIGameEntity3D.AddToCard3D(card, cards[i] as CardInstance);
+            }
+            card.transform.SetParent(_container.transform, false);
+        }
+
+        //Hide any additional cards
+        for (var i = cards.Count; i < _instantiatedCards.Count; i++)
+        {
+            _instantiatedCards[i].gameObject.SetActive(false);
         }
     }
 
@@ -145,5 +193,4 @@ public class CardViewerModal3D : MonoBehaviour
 
         return bounds;
     }
-
 }

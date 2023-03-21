@@ -84,6 +84,21 @@ public class Card3D : MonoBehaviour, IHighlightable
         SetCardInfo(cardOptions);
     }
 
+    public void SetCardInfo(ICard card, bool castShadows = true)
+    {
+        var cardOptions = new Card3DOptions
+        {
+            CardName = card.Name,
+            ManaCost = card.ManaCost,
+            CardType = card.CardType,
+            RulesText = card.RulesText,
+            CombatStats = "" /*card. + " / " + card.Toughness*/,
+            CastShadows = castShadows,
+            ArtTexture = Resources.Load<Texture2D>(card.ArtPath),
+            CardFrameTexture = GetCardFrameTexture(card.Colors)
+        };
+    }
+
     public void SetCardInfo(CardInstance card, bool castShadows = true)
     {
         var cardOptions = new Card3DOptions

@@ -33,6 +33,9 @@ public class UI3DController : MonoBehaviour, IUIGameController
     [SerializeField]
     private DeveloperPanel _developerPanel;
 
+    [SerializeField]
+    private CardViewerModal3D _cardViewerModal;
+
     public CardGame CardGame => _gameService.CardGame;
 
     public GameService GameService => _gameService;
@@ -77,6 +80,27 @@ public class UI3DController : MonoBehaviour, IUIGameController
             //Make sure this works with our animations as well.
             _gameUIStateMachine.ToIdle();
             //SetUIGameState(_gameService.CardGame);            
+        }
+
+
+        //Hacked in just like our old one, but is there not a better way to do this?
+        //The card game should be triggering this state
+
+
+        if (CardGame != null && CardGame.CurrentGameState == GameState.WaitingForAction)
+        {
+            if (GameUIStateMachine?.CurrentState is GameUIChoiceAsPartOfResolveState)
+            {
+                GameUIStateMachine.ToIdle();
+            }
+        }
+
+        if (CardGame != null && CardGame.CurrentGameState == GameState.WaitingForChoice)
+        {
+            if (!(GameUIStateMachine.CurrentState is GameUIChoiceAsPartOfResolveState))
+            {
+                GameUIStateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(GameUIStateMachine, CardGame.ChoiceInfoNeeded));
+            }
         }
     }
 
@@ -128,19 +152,18 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     public void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title)
     {
-        //TODO
-        return;
+
+        _cardViewerModal.Show(cardsToView.ToList(), title);
+    }
+
+    public void CloseChoiceWindow()
+    {
+        _cardViewerModal.Hide();
     }
 
     public void ShowGameOverScreen()
     {
         //TODO 
-        return;
-    }
-
-    public void CloseChoiceWindow()
-    {
-        //TODO
         return;
     }
 

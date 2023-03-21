@@ -318,9 +318,11 @@ public class FamousDecks : DecklistDB
         {
             Name = "AllLands",
             Format = "Test",
-            Cards = $@"15 Lightning Bolt
-                       30 Gempalm Incinerator
-                       30 Cragcrown Pathway"
+            Cards = $@"30 Thoughtseize
+                       30 Sleight of Hand
+                       15 Island
+                       15 Swamp
+                       "
         };
     }
 

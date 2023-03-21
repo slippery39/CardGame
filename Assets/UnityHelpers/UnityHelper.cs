@@ -37,7 +37,29 @@ public static class UnityHelper
         return hit;
     }
 
-   
+    public static RaycastHit CastRay(Camera camera)
+    {
+        Vector3 screenMousePositionFar = new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            camera.farClipPlane);
+
+        Vector3 screenMousePositionNear = new Vector3(
+            Input.mousePosition.x,
+            Input.mousePosition.y,
+            camera.nearClipPlane);
+
+        Vector3 worldMousePointerFar = camera.ScreenToWorldPoint(screenMousePositionFar);
+        Vector3 worldMousePointerNear = camera.ScreenToWorldPoint(screenMousePositionNear);
+
+        RaycastHit hit;
+
+        Physics.Raycast(worldMousePointerNear, worldMousePointerFar - worldMousePointerNear, out hit);
+
+        return hit;
+    }
+
+
     /// <summary>
     /// Returns all objects hit from a raycast from the mouse position.
     /// </summary>
