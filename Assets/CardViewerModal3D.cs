@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +31,9 @@ public class CardViewerModal3D : MonoBehaviour
 
     [SerializeField]
     float _cardSpacing = 1f;
+
+    [SerializeField]
+    TextMeshProUGUI title;
 
     [Header("Card 3D Settings")]
     [SerializeField] private Card3D _cardPrefab;
@@ -98,8 +102,14 @@ public class CardViewerModal3D : MonoBehaviour
     {
         this.gameObject.SetActive(true);
         SetCards(cards);
+        SetTitle(title);
 
         //TODO - need a title still
+    }
+
+    public void SetTitle(string title)
+    {
+        this.title.text = title;
     }
 
     public void Hide()
