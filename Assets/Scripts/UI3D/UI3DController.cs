@@ -55,6 +55,8 @@ public class UI3DController : MonoBehaviour, IUIGameController
         }
         );
         _chooseActionPopup.Initialize(this);
+        _player1Board.Initialize(this);
+        _player2Board.Initialize(this);
     }
 
     public void Start()

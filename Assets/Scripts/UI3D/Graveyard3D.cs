@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ public class Graveyard3D : MonoBehaviour
     [SerializeField] public int _numberOfCards;
 
     private List<Card3D> _instantiatedCards;
+
+    public Action OnClickHandler;
 
     /// <summary>
     /// Controls the random amount of rotation to apply via perlin noise. 
@@ -65,6 +68,14 @@ public class Graveyard3D : MonoBehaviour
         for (var i = _numberOfCards; i < _instantiatedCards.Count; i++)
         {
             _instantiatedCards[i].gameObject.SetActive(false);
+        }
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        if (this.OnClickHandler != null)
+        {
+            this.OnClickHandler();
         }
     }
 }

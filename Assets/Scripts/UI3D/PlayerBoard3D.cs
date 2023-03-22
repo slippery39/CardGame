@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerBoard3D : MonoBehaviour
 {
+
+    [Header("Player Zones")]
     [SerializeField]
     private Hand3D _hand;
     [SerializeField]
@@ -20,12 +22,15 @@ public class PlayerBoard3D : MonoBehaviour
     [SerializeField]
     private Exile3D _exile;
 
+
+    [Header("Other Variables")]
     [SerializeField]
     private Avatar3D _avatar;
     [SerializeField]
     private int _playerId;
 
     public int PlayerId { get => _playerId; }
+        
     public Hand3D Hand { get => _hand;}
     public Graveyard3D Graveyard { get => _graveyard; }
     public Lanes3D Lanes { get => _lanes;}
@@ -33,6 +38,15 @@ public class PlayerBoard3D : MonoBehaviour
     public ManaPool3D ManaPool { get => _manaPool;  }
     public Avatar3D Avatar { get => _avatar; }
     public Deck3D Deck { get => _deck; set => _deck = value; }
+
+    [Header("Reference Variables")]
+    [SerializeField]
+    private UI3DController _uiController;
+
+    public void Initialize(UI3DController _uiController)
+    {
+        this._uiController = _uiController;
+    }
 
     public void SetBoard(Player player)
     {
@@ -46,7 +60,7 @@ public class PlayerBoard3D : MonoBehaviour
         //Deck
         SetDeck(player.Deck.Cards);
         //Graveyard
-        SetDiscardPile(player.DiscardPile.Cards);
+        SetDiscardPile(player.DiscardPile.Cards,player);
         //Lanes
         SetLanes(player.Lanes);
         //Items
@@ -115,17 +129,22 @@ public class PlayerBoard3D : MonoBehaviour
         }
     }
 
-    private void SetDiscardPile(List<CardInstance> cards)
+    private void SetDiscardPile(List<CardInstance> cards,Player owner)
     {
         //Setting a players graveyard.
         _graveyard._numberOfCards = cards.Count;
         _graveyard.UpdateCards();
-        var card3Ds = _graveyard.GetCards();
+        _graveyard.OnClickHandler = () =>
+        {
+            _uiController.ViewChoiceWindow(cards, owner.Name + "'s Graveyard");
+        };
+        
+        var card3Ds = _graveyard.GetCards();      
 
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
-            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
+            
         }
     }
 

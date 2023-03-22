@@ -8,6 +8,7 @@ public class UIGameEntity3D : MonoBehaviour, IUIGameEntity
     int _entityId;
     public int EntityId { get => _entityId; set => _entityId = value; }
 
+    [System.Obsolete]
     public static UIGameEntity3D AddToCard3D(Card3D card3D, CardInstance cardInstance)
     {
         var entity = card3D.gameObject.GetComponent<UIGameEntity3D>();
@@ -18,6 +19,7 @@ public class UIGameEntity3D : MonoBehaviour, IUIGameEntity
         entity.EntityId = cardInstance.EntityId;
         return entity;
     }
+    [System.Obsolete]
     public static UIGameEntity3D AddToLane(Lane3D lane3D, Lane lane)
     {
         var entity = lane3D.gameObject.GetComponent<UIGameEntity3D>();
@@ -26,6 +28,17 @@ public class UIGameEntity3D : MonoBehaviour, IUIGameEntity
             entity = lane3D.gameObject.AddComponent<UIGameEntity3D>();
         }
         entity.EntityId = lane.EntityId;
+        return entity;
+    }
+
+    public static UIGameEntity3D AddToGameObject(GameObject zoneGameObject, CardGameEntity gameEntity)
+    {
+        var entity = zoneGameObject.GetComponent<UIGameEntity3D>();
+        if (entity == null)
+        {
+            entity = zoneGameObject.AddComponent<UIGameEntity3D>();
+        }
+        entity.EntityId = gameEntity.EntityId;
         return entity;
     }
 
