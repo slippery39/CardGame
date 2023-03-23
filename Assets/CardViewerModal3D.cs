@@ -142,14 +142,15 @@ public class CardViewerModal3D : MonoBehaviour
             {
                 card = Instantiate(_cardPrefab);
                 _instantiatedCards.Add(card);
+
             }
             else
             {
                 card = _instantiatedCards[i];
                 card.gameObject.SetActive(true);
-                card.SetCardInfo(cards[i] as CardInstance);
-                UIGameEntity3D.AddToCard3D(card, cards[i] as CardInstance);
             }
+            card.SetCardInfo(cards[i] as CardInstance);
+            UIGameEntity3D.AddToGameObject(card.gameObject, cards[i] as CardInstance);
             card.transform.SetParent(_container.transform, false);
         }
 
