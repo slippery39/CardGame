@@ -18,6 +18,9 @@ public class CardViewerModal3D : MonoBehaviour
     private GameObject _container;
 
     [SerializeField]
+    private Button _cancelButton;
+
+    [SerializeField]
     Transform _visibleBoundsObject;
 
     [SerializeField]
@@ -38,6 +41,16 @@ public class CardViewerModal3D : MonoBehaviour
     [Header("Card 3D Settings")]
     [SerializeField] private Card3D _cardPrefab;
     private List<Card3D> _instantiatedCards;
+
+    UI3DController _uiController; 
+
+
+    public void Initialize(UI3DController controller)
+    {
+        this._uiController = controller;
+        this._cancelButton.onClick.RemoveAllListeners();
+        this._cancelButton.onClick.AddListener(() => this._uiController.CloseChoiceWindow());
+    }
 
     void Awake()
     {

@@ -55,8 +55,10 @@ public class UI3DController : MonoBehaviour, IUIGameController
         }
         );
         _chooseActionPopup.Initialize(this);
+        _cardViewerModal.Initialize(this);
         _player1Board.Initialize(this);
         _player2Board.Initialize(this);
+
     }
 
     public void Start()
@@ -70,7 +72,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
         if (Input.GetKeyDown(KeyCode.A))
         {
             _gameEventManager.Reset();
-            _gameService.SetupGame(FamousDecks.AllLands(), FamousDecks.AllLands());
+            _gameService.SetupGame(FamousDecks.UWDelver2012(), FamousDecks.UWDelver2012());
             //_gameService.SetupGame(FamousDecks.TokenTest(), FamousDecks.TokenTest());
             /*
             _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
