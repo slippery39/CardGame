@@ -59,6 +59,8 @@ public class Card3D : MonoBehaviour, IHighlightable
             CardFrameTexture = GetCardFrameTexture(action.SourceCard.Colors),
         };
 
+        //TODO - need to manually figure out the mana cost and combat stats
+
         SetCardInfo(cardOptions);
     }
 
@@ -80,23 +82,12 @@ public class Card3D : MonoBehaviour, IHighlightable
         {
             cardOptions.CombatStats = unitCard.Power + "/" + unitCard.Toughness;
         }
+        else
+        {
+            cardOptions.CombatStats = "";
+        }
 
         SetCardInfo(cardOptions);
-    }
-
-    public void SetCardInfo(ICard card, bool castShadows = true)
-    {
-        var cardOptions = new Card3DOptions
-        {
-            CardName = card.Name,
-            ManaCost = card.ManaCost,
-            CardType = card.CardType,
-            RulesText = card.RulesText,
-            CombatStats = "" /*card. + " / " + card.Toughness*/,
-            CastShadows = castShadows,
-            ArtTexture = Resources.Load<Texture2D>(card.ArtPath),
-            CardFrameTexture = GetCardFrameTexture(card.Colors)
-        };
     }
 
     public void SetCardInfo(CardInstance card, bool castShadows = true)
@@ -112,6 +103,11 @@ public class Card3D : MonoBehaviour, IHighlightable
             ArtTexture = Resources.Load<Texture2D>(card.ArtPath),
             CardFrameTexture = GetCardFrameTexture(card.Colors)
         };
+
+        if (card.CurrentCardData is not UnitCardData)
+        {
+            cardOptions.CombatStats = "";
+        }
 
         SetCardInfo(cardOptions);
     }
@@ -185,6 +181,15 @@ public class Card3D : MonoBehaviour, IHighlightable
         _manaCost.text = cardOptions.ManaCost;
         _cardType.text = cardOptions.CardType;
         _rulesText.text = cardOptions.RulesText;
+
+        if (cardOptions.CombatStats.Trim() == "")
+        {
+            _combatStats.gameObject.SetActive(false);
+        }
+        else
+        {
+            _combatStats.gameObject.SetActive(true);
+        }
         _combatStats.text = cardOptions.CombatStats;
 
         SetCardFrame(cardOptions.CardFrameTexture);
