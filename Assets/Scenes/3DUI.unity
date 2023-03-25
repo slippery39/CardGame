@@ -547,7 +547,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &68766510
 RectTransform:
   m_ObjectHideFlags: 0
@@ -566,8 +566,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 652.99994, y: -357}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 670, y: -360}
+  m_SizeDelta: {x: 49, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &68766511
 MonoBehaviour:
@@ -590,11 +590,11 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.8207547, g: 0.5614108, b: 0.12001601, a: 1}
-    m_HighlightedColor: {r: 0.9528302, g: 0.6578609, b: 0.15730685, a: 1}
-    m_PressedColor: {r: 0.5849056, g: 0.40588138, b: 0.10208259, a: 1}
-    m_SelectedColor: {r: 0.8196079, g: 0.56078434, b: 0.121568635, a: 1}
-    m_DisabledColor: {r: 0.8196079, g: 0.56078434, b: 0.121568635, a: 0.5019608}
+    m_NormalColor: {r: 0.15582131, g: 0.1215686, b: 0.81960785, a: 1}
+    m_HighlightedColor: {r: 0.30291337, g: 0.26779994, b: 0.9622642, a: 1}
+    m_PressedColor: {r: 0.08062397, g: 0.053266272, b: 0.5943396, a: 1}
+    m_SelectedColor: {r: 0.08235294, g: 0.054901965, b: 0.59607846, a: 1}
+    m_DisabledColor: {r: 0.33962262, g: 0.32358468, b: 0.29636878, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -9848,7 +9848,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -4.5}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &884145309
@@ -10963,7 +10963,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1186527891
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10982,8 +10982,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 652.99994, y: -357}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 670, y: -360}
+  m_SizeDelta: {x: 49, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1186527892
 MonoBehaviour:
@@ -13429,7 +13429,7 @@ MonoBehaviour:
   _player2Board: {fileID: 692885231}
   _chooseActionPopup: {fileID: 788825297}
   _endTurnButton: {fileID: 1186527892}
-  _cancelButton: {fileID: 0}
+  _cancelButton: {fileID: 68766511}
   _stack3D: {fileID: 0}
   _developerPanel: {fileID: 460317616}
   _cardViewerModal: {fileID: 1854101072}
