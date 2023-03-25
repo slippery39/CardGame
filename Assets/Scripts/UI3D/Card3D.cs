@@ -182,7 +182,7 @@ public class Card3D : MonoBehaviour, IHighlightable
         _cardType.text = cardOptions.CardType;
         _rulesText.text = cardOptions.RulesText;
 
-        if (cardOptions.CombatStats.Trim() == "")
+        if (cardOptions.CombatStats == null || cardOptions.CombatStats.Trim() == "")
         {
             _combatStats.gameObject.SetActive(false);
         }
