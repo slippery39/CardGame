@@ -24,8 +24,14 @@ public class UI3DController : MonoBehaviour, IUIGameController
     [SerializeField]
     private UIChooseActionPopup3D _chooseActionPopup;
 
+    [Header("UI Buttons")]
     [SerializeField]
     private Button _endTurnButton;
+
+    [SerializeField]
+    private Button _cancelButton;
+
+    [Header("Other")]
 
     [SerializeField]
     private Stack3D _stack3D;
@@ -57,6 +63,16 @@ public class UI3DController : MonoBehaviour, IUIGameController
             this.EndTurn();
         }
         );
+        _cancelButton.onClick.AddListener(() =>
+        {
+            var cancellableState = this._gameUIStateMachine.CurrentState as IGameUICancellable;
+
+            if (cancellableState != null)
+            {
+                cancellableState.HandleCancel();
+            }
+        });
+
         _chooseActionPopup.Initialize(this);
         _cardViewerModal.Initialize(this);
         _player1Board.Initialize(this);
@@ -202,6 +218,28 @@ public class UI3DController : MonoBehaviour, IUIGameController
         }
     }
 
+
+    /*
+     * To simplify the state required for these buttons, we will have a rule that if the cancel button is showing, then the end turn button
+     * cannot be showing. This way if a game state shows one or the other, they don't need to worry about also hiding the other button as well.
+     * Hopefully this will reduce any potential bugs where a button is showing up when it shouldn't
+     */
+    public void ShowEndTurnButton()
+    {
+        _endTurnButton.gameObject.SetActive(true);
+        _cancelButton.gameObject.SetActive(false);
+    }
+
+    public void ShowCancelButton()
+    {
+        _cancelButton.gameObject.SetActive(true);
+        _endTurnButton.gameObject.SetActive(false);
+    }
+    public void HideUIButtons()
+    {
+        _endTurnButton.gameObject.SetActive(false);
+        _cancelButton.gameObject.SetActive(false);
+    }
 
     public void EndTurn()
     {

@@ -6,10 +6,16 @@ public interface IGameUIState
     string GetMessage();
     void OnApply();
     void OnDestroy();
-
     void OnUpdate()
     {
 
     }
-    void HandleSelection(int entityId);
+    void HandleSelection(int entityId); 
+}
+
+
+public interface IGameUICancellable
+{
+    void OnApplyCancellable();
+    void HandleCancel();
 }

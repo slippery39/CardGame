@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
+public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState, IGameUICancellable
 {
     //private CardGame _cardGame;
     private Player _actingPlayer => CardGame.ActivePlayer;
@@ -47,10 +47,13 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
         if (NeedsTargets)
         {
             ChangeToSelectTargetState();
+            this.OnApplyCancellable();
+            
         }
         else if (NeedsCostChoices)
         {
             ChangeToCostChoosingState();
+            this.OnApplyCancellable();
         }
         else
         {
@@ -79,7 +82,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
     public override void HandleSelection(int entityId)
     {
         _internalState?.HandleSelection(entityId);
-    }
+    }   
 
 
     public override void ChangeToCostChoosingState()
@@ -115,5 +118,15 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState
     public override void DoAction()
     {
         ActivateAbility();
+    }
+
+    public void OnApplyCancellable()
+    {
+        this._stateMachine.GameController.ShowCancelButton();
+    }
+
+    public void HandleCancel()
+    {
+        this._stateMachine.ToIdle();
     }
 }

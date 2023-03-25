@@ -11,17 +11,28 @@ public class GameUIStateMachine : MonoBehaviour
     public CardGame CardGame { get => _gameController.CardGame; }
     public GameService GameService { get => _gameController.GameService; }
 
-    private void Start()
+    private void Awake()
     {
         _gameController = GetComponent<IUIGameController>();
+    }
+
+    private void Start()
+    {
         ToIdle();
     }
 
     public void ChangeState(IGameUIState stateTo)
     {
         CurrentState?.OnDestroy();
+        ResetUIState();
         CurrentState = stateTo;
         stateTo.OnApply();
+    }
+
+    public void ResetUIState()
+    {
+        //Which buttons show should depend on the state of the game UI.
+        this.GameController.HideUIButtons();
     }
 
     public string GetMessage()

@@ -15,6 +15,11 @@ public interface IUIGameController
     void CloseChoiceWindow();
     void ShowActionChoicePopup(List<CardGameAction> actions);
     void CloseActionChoicePopup();
+
+    void ShowEndTurnButton();
+    void ShowCancelButton();
+    void HideUIButtons();
+
     public CardGame CardGame { get; }
     public GameService GameService { get; }
 }

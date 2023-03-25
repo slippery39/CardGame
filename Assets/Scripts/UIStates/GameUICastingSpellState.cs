@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameUICastingSpellState : GameUIActionState, IGameUIState
+public class GameUICastingSpellState : GameUIActionState, IGameUIState, IGameUICancellable
 {
     private CardGame _cardGame => _stateMachine.CardGame;
     private GameService _gameService => _stateMachine.GameService;
@@ -57,15 +57,28 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
         if (NeedsTargets)
         {
             ChangeToSelectTargetState();
+            OnApplyCancellable();
+           
         }
         else if (NeedsCostChoices)
         {
             ChangeToCostChoosingState();
+            OnApplyCancellable();
         }
         else
         {
             DoAction();
         }
+    }
+
+    public void OnApplyCancellable()
+    {
+        this._stateMachine.GameController.ShowCancelButton();
+    }
+
+    public void HandleCancel()
+    {
+        this._stateMachine.ToIdle();
     }
 
     public override void OnDestroy()
@@ -120,6 +133,8 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState
         _gameService.ProcessAction(spellAction);
         _stateMachine.ToIdle();
     }
+
+
 }
 
 
