@@ -17,7 +17,7 @@ public class CardGame
     private List<Player> _players = new();
     private int _activePlayerId = 1;
     private readonly int _numberOfLanes = 5;
-    private readonly int _startingPlayerHealth = 3;
+    private  int _startingPlayerHealth = 20;
     //need to make sure this is serialized or else we wont be able to properly id tokens.
     [JsonProperty]
     private int _nextEntityId = 1;
@@ -215,8 +215,10 @@ public class CardGame
     }
 
 
-    public void SetupPlayers(Decklist player1Decklist, Decklist player2Decklist)
+    public void Setup(GameSetupOptions options)
     {
+
+        _startingPlayerHealth = options.StartingLifeTotal;
 
         AddPlayerToGame(new Player(_numberOfLanes)
         {
@@ -230,13 +232,13 @@ public class CardGame
             Health = _startingPlayerHealth
         });
 
-        player1Decklist.ToDeck().ForEach(card =>
+        options.Player1Deck.ToDeck().ForEach(card =>
         {
             AddCardToGame(Player1, card, Player1.Deck);
         });
 
 
-        player2Decklist.ToDeck().ForEach(card =>
+        options.Player2Deck.ToDeck().ForEach(card =>
         {
             AddCardToGame(Player2, card, Player2.Deck);
         });

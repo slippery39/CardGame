@@ -9,10 +9,14 @@ public class GameSetupController : MonoBehaviour
 {
     GameSetupOptions gameSetupOptions;
 
+    [Header("Control References")]
     [SerializeField] TMP_Dropdown _player1Dropdown;
     [SerializeField] TMP_Dropdown _player2Dropdown;
     [SerializeField] TMP_InputField _startingLifeTotalInput;
     [SerializeField] Button _startGameButton;
+
+    [Header("Other References")]
+    [SerializeField] UI3DController _ui3DController;
 
     public void Awake()
     {
@@ -40,9 +44,11 @@ public class GameSetupController : MonoBehaviour
         };
 
         var validation = Validate(gameSetupOptions);
+
         if (validation.Success)
         {
-            Debug.Log("Game should start now!");
+            _ui3DController.StartGame(gameSetupOptions);
+            this.gameObject.SetActive(false);
         }
         else
         {

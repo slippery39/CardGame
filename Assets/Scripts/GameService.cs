@@ -18,14 +18,14 @@ public class GameService : MonoBehaviour
     public bool GameOver { get => _cardGame.CurrentGameState == GameState.GameOver; }
     #endregion
 
-    private readonly Subject<GameEvent> _gameEventSubject = new();
+    private readonly ReplaySubject<GameEvent> _gameEventSubject = new(1);
 
     #region Public Methods
-    public void SetupGame(Decklist player1Deck, Decklist player2Deck)
+    public void SetupGame(GameSetupOptions options)
     {
         _cardGame = new CardGame();
-        _cardGame.SetupPlayers(player1Deck, player2Deck);
-    }
+        _cardGame.Setup(options);
+   }
     public void StartGame()
     {
         if (_cardGame == null)

@@ -13,7 +13,13 @@ public class SimService
         var cardGame = new CardGame();
         //Want to make sure events are not firing;
         cardGame.EventLogSystem = new EmptyEventLogSystem();
-        cardGame.SetupPlayers(player1Deck, player2Deck);
+        cardGame.Setup(
+            new GameSetupOptions
+            {
+                Player1Deck = player1Deck,
+                Player2Deck = player2Deck,
+                StartingLifeTotal = 20
+            });
         //On Game Over needs to be an observable
         cardGame.OnGameOverObservable.Subscribe((c) => Debug.Log($"Game has ended. {c.WinLoseSystem?.GetGameOverInfo().Winner.Name} is the winner"));
         cardGame.StartGame();

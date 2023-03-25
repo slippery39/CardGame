@@ -22,7 +22,14 @@ public static class Tests
         //Abilities, Effects, Components, Counters, Etc..
         var decklistDB = new FamousDecks();
         var testGame = new CardGame();
-        testGame.SetupPlayers(decklistDB.GetByName("Affinity AI TEST - 2004"), decklistDB.GetByName("Affinity AI TEST - 2004"));
+        testGame.Setup(
+            new GameSetupOptions
+            {
+                Player1Deck = decklistDB.GetByName("Affinity AI TEST - 2004"),
+                Player2Deck = decklistDB.GetByName("Affinity AI TEST - 2004"),
+                StartingLifeTotal = 20
+            }
+            );
         testGame.StartGame();
 
         var testCopy = testGame.Copy();

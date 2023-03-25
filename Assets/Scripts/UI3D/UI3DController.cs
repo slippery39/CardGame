@@ -36,6 +36,9 @@ public class UI3DController : MonoBehaviour, IUIGameController
     [SerializeField]
     private CardViewerModal3D _cardViewerModal;
 
+    [SerializeField]
+    private GameObject _gameViewContainer;
+
     public CardGame CardGame => _gameService.CardGame;
 
     public GameService GameService => _gameService;
@@ -58,12 +61,17 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _cardViewerModal.Initialize(this);
         _player1Board.Initialize(this);
         _player2Board.Initialize(this);
-
+        _developerPanel.Initialize(this);
     }
 
     public void Start()
     {
-        _developerPanel.Initialize(this);
+        
+
+        if (CardGame != null)
+        {
+            this.SetUIGameState(CardGame);
+        }
     }
 
     public void Update()
@@ -71,26 +79,15 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
         if (Input.GetKeyDown(KeyCode.A))
         {
-            _gameEventManager.Reset();
-            _gameService.SetupGame(FamousDecks.UWDelver2012(), FamousDecks.UWDelver2012());
-            //_gameService.SetupGame(FamousDecks.TokenTest(), FamousDecks.TokenTest());
-            /*
-            _gameService.GetOnGameStateUpdatedObservable().Subscribe(cardGame =>
+            StartGame(new GameSetupOptions()
             {
-                SetUIGameState(cardGame);
+                Player1Deck = FamousDecks.GRHazeOfRage2007(),
+                Player2Deck = FamousDecks.URDragonstorm2006(),
+                StartingLifeTotal = 20
             });
-            */
-            _gameService.StartGame();
-            //Make sure this works with our animations as well.
-            _gameUIStateMachine.ToIdle();
-            //SetUIGameState(_gameService.CardGame);            
         }
-
-
         //Hacked in just like our old one, but is there not a better way to do this?
         //The card game should be triggering this state
-
-
         if (CardGame != null && CardGame.CurrentGameState == GameState.WaitingForAction)
         {
             if (GameUIStateMachine?.CurrentState is GameUIChoiceAsPartOfResolveState)
@@ -106,6 +103,15 @@ public class UI3DController : MonoBehaviour, IUIGameController
                 GameUIStateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(GameUIStateMachine, CardGame.ChoiceInfoNeeded));
             }
         }
+    }
+
+    public void StartGame(GameSetupOptions options)
+    {
+        _gameViewContainer.SetActive(true);
+        _gameEventManager.Reset();
+        _gameService.SetupGame(options);
+        _gameService.StartGame();
+        _gameUIStateMachine.ToIdle();
     }
 
     private FightAction CreateFightAction(int laneIndex)

@@ -202,7 +202,12 @@ public class UIGameController : MonoBehaviour
         _gameRoom.SetActive(true);
         //TODO - This should go through the service
 
-        _gameService.SetupGame(player1Deck, player2Deck);
+        _gameService.SetupGame(new GameSetupOptions
+        {
+            Player1Deck = player1Deck,
+            Player2Deck = player2Deck
+        });
+
         _gameService.StartGame();
 
         _gameService.GetGameEventLogsObservable().Subscribe(ev =>
