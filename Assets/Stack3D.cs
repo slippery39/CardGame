@@ -1,44 +1,32 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class Stack3D : MonoBehaviour
 {
-    [SerializeField]
-    private Card3D actionCard; //an action as it would appear on the stack represented as a card
-
-    public void SetStack(List<ResolvingActionInfo> _stack)
+    [SerializeField] Card3D _cardPrefab;
+    List<Card3D> _cards; 
+    
+    public void SetCards(List<CardInstance> cards)
     {
-        Debug.Log("Stack Count :" + _stack.Count);
-        this.GetComponent<TextMeshProUGUI>().text = "Stack Count:" + _stack.Count;
-    }
-
-
-    //We need to know more about what we should display
-
-    public void PlayAnimation(Card3D otherCard, Action onComplete = null)
-    {
-        actionCard.SetCardInfo(otherCard);
-        actionCard.gameObject.SetActive(true);
-
-        if (onComplete == null)
+        DestroyChildren();
+        foreach (var card in cards)
         {
-            actionCard.gameObject.SetActive(false);
-            return;
+            var cardUI = Instantiate(_cardPrefab);
+            cardUI.transform.SetParent(transform, true);
+            cardUI.SetCardInfo(card);
+            UIGameEntity3D.AddToGameObject(cardUI.gameObject, card);
+            //The stack is here more as a hacky solution
+            //in case we need to find game objects in the UI, it shouldn't really show otherwise. 
+            cardUI.gameObject.SetActive(false);
         }
-        StartCoroutine(Wait(() =>
-        {
-            actionCard.gameObject.SetActive(false);
-            onComplete();
-        }));
     }
 
-    //Candidate for a static toolbox method
-    public IEnumerator Wait(Action onComplete)
+    private void DestroyChildren()
     {
-        yield return new WaitForSeconds(0.5f);
-        onComplete();
+        while (transform.childCount > 0)
+        {
+            DestroyImmediate(transform.GetChild(0).gameObject);
+        }
     }
 }

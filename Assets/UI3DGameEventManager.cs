@@ -23,7 +23,7 @@ public class UI3DGameEventManager : MonoBehaviour
     private DrawCardAnimation _drawCardAnimation;
     //using a stack 3d for now
     [SerializeField]
-    private Stack3D _playCardAnimation;
+    private PerformActionAnimation _performActionAnimation;
     //[SerializeField] private GameAnimation _currentAnimation;
     [SerializeField]
     private TurnStartAnimation _turnStartAnimation;
@@ -114,7 +114,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 .FirstOrDefault();
                 var card3D = unit.GetComponent<Card3D>();
 
-                _playCardAnimation.PlayAnimation(card3D, NextEvent);
+                _performActionAnimation.PlayAnimation(card3D, NextEvent);
             }
             else if (_currentGameEvent is TurnStartEvent)
             {
@@ -125,9 +125,10 @@ public class UI3DGameEventManager : MonoBehaviour
             else if (_currentGameEvent is UnitSummonedEvent)
             {
                 var evt = _currentGameEvent as UnitSummonedEvent;
-                var unit = GameObject.FindObjectsOfType<UIGameEntity3D>()
+                var unit = GameObject.FindObjectsOfType<UIGameEntity3D>(true)
                             .Where(ent => ent.EntityId == evt.UnitId)
                             .FirstOrDefault();
+                unit.gameObject.SetActive(true);
                 var card3D = unit.GetComponent<Card3D>();
 
                 var lane = GameObject.FindObjectsOfType<UIGameEntity3D>()

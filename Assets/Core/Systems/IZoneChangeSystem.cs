@@ -39,6 +39,12 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         zoneTo.Add(card);
         card.CurrentZone = zoneTo;
 
+        if (zoneTo.ZoneType == ZoneType.Stack)
+        {
+            cardGame.GameEventSystem.FireGameStateUpdatedEvent();
+            return;
+        }
+
         //Apply any ETB Triggers
         if (currentZone.ZoneType != ZoneType.InPlay && zoneTo.ZoneType == ZoneType.InPlay)
         {
@@ -46,7 +52,7 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         }
 
         //Apply Death Triggers
-        if ((currentZone.ZoneType == ZoneType.InPlay) && zoneTo is DiscardPile)
+        else if ((currentZone.ZoneType == ZoneType.InPlay) && zoneTo is DiscardPile)
         {
             card.DamageTaken = 0;
             cardGame.GameEventSystem.FireEvent(
@@ -55,7 +61,6 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
                     UnitId = card.EntityId
                 });
             OnDeathTriggers(card);
-
         }
     }
 
