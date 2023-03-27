@@ -9,8 +9,10 @@ using System;
 
 public class Card3D : MonoBehaviour, IHighlightable
 {
+    [SerializeField] private GameObject _card3D; 
     [SerializeField] private GameObject _cardMesh;
     [SerializeField] private Renderer _cardRenderer;
+    [SerializeField] private GameObject _unknownCard;
 
     [SerializeField] private TextMeshPro _name;
     [SerializeField] private TextMeshPro _combatStats;
@@ -90,7 +92,7 @@ public class Card3D : MonoBehaviour, IHighlightable
         SetCardInfo(cardOptions);
     }
 
-    public void SetCardInfo(CardInstance card, bool castShadows = true)
+    public void SetCardInfo(CardInstance card, bool castShadows = true, bool addEntityComponent = true)
     {
         var cardOptions = new Card3DOptions
         {
@@ -109,7 +111,23 @@ public class Card3D : MonoBehaviour, IHighlightable
             cardOptions.CombatStats = "";
         }
 
+        if (addEntityComponent)
+        {
+            var entityComp = UIGameEntity3D.AddToCard3D(this, card);
+            if (entityComp.EntityId == -1)
+            {
+                SetAsUnknown();
+                return;
+            }
+        }
+
         SetCardInfo(cardOptions);
+    }
+
+    private void SetAsUnknown()
+    {
+        _unknownCard.SetActive(true);
+        _card3D.SetActive(false);
     }
 
     private Texture2D GetCardFrameTexture(List<CardColor> colors)
@@ -161,6 +179,8 @@ public class Card3D : MonoBehaviour, IHighlightable
 
     public void SetCardInfo(Card3DOptions cardOptions)
     {
+        _unknownCard.SetActive(false);
+        _card3D.SetActive(true);
         //Show anything that was hidden before
         this._rulesText.gameObject.SetActive(true);
         this._manaCost.gameObject.SetActive(true);

@@ -316,50 +316,6 @@ public class CardGame
 
         return clone;
     }
-
-    public CardGame Copy2(bool noEventsOrLogs = false)
-    {
-        var timer = new Stopwatch();
-        timer.Start();
-
-        string json = JsonConvert.SerializeObject(this, Formatting.None, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.All,
-            NullValueHandling = NullValueHandling.Ignore,
-        });
-
-        //File.WriteAllText("tempCardGameState", json);
-
-        var copy = JsonConvert.DeserializeObject<CardGame>(json, new JsonSerializerSettings
-        {
-            TypeNameHandling = TypeNameHandling.All,
-            TypeNameAssemblyFormatHandling = TypeNameAssemblyFormatHandling.Simple,
-            ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            PreserveReferencesHandling = PreserveReferencesHandling.All,
-            ObjectCreationHandling = ObjectCreationHandling.Replace,
-            NullValueHandling = NullValueHandling.Ignore
-        });
-
-        if (noEventsOrLogs)
-        {
-            copy.EventLogSystem = new EmptyEventLogSystem();
-            copy._cardGameLogger = new EmptyLogger();
-        }
-
-        copy._isCopy = true;
-
-        timer.Stop();
-
-        Log($"Copy Method took :  {timer.ElapsedMilliseconds} ms");
-
-        return copy;
-
-
-    }
-
     public Player GetOwnerOfCard(CardInstance unitInstance)
     {
         var owner = Players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();

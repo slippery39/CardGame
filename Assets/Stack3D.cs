@@ -15,7 +15,6 @@ public class Stack3D : MonoBehaviour
             var cardUI = Instantiate(_cardPrefab);
             cardUI.transform.SetParent(transform, true);
             cardUI.SetCardInfo(card);
-            UIGameEntity3D.AddToGameObject(cardUI.gameObject, card);
             //The stack is here more as a hacky solution
             //in case we need to find game objects in the UI, it shouldn't really show otherwise. 
             cardUI.gameObject.SetActive(false);

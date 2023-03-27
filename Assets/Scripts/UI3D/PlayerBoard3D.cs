@@ -97,7 +97,6 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
-            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
         }
     }
 
@@ -111,7 +110,6 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
-            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
         }
     }
     //TODO - use ICard instead?
@@ -125,7 +123,6 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
-            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
         }
     }
 
@@ -142,9 +139,8 @@ public class PlayerBoard3D : MonoBehaviour
         var card3Ds = _graveyard.GetCards();      
 
         for (var i = 0; i < cards.Count; i++)
-        {
-            card3Ds[i].SetCardInfo(cards[i]);
-            
+        {           
+            card3Ds[i].SetCardInfo(cards[i],true,false);            
         }
     }
 
@@ -168,7 +164,6 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {
             card3Ds[i].SetCardInfo(cards[i]);
-            UIGameEntity3D.AddToCard3D(card3Ds[i], cards[i]);
         }
     }
 

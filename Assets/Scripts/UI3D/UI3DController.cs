@@ -158,10 +158,10 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     public void SetUIGameState(CardGame cardGame)
     {
-        //Debug.Log("Setting UI Game State");
-        _stack3D.SetCards(cardGame.ResolvingSystem.Stack.Cards);
-        _player1Board.SetBoard(cardGame.Player1);
-        _player2Board.SetBoard(cardGame.Player2);
+        var gameCopy = GameService.GetGameViewForPlayer(cardGame, cardGame.ActivePlayerId);
+        _stack3D.SetCards(gameCopy.ResolvingSystem.Stack.Cards);
+        _player1Board.SetBoard(gameCopy.Player1);
+        _player2Board.SetBoard(gameCopy.Player2);
     }
 
 

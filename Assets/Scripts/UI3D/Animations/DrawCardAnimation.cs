@@ -22,7 +22,7 @@ public class DrawCardAnimation : MonoBehaviour
 
         var cardToMove = _deck.GetComponentsInChildren<Card3D>().ToList().LastOrDefault();
         //cardToMove.transform.SetParent(null);
-        cardToMove.SetCardInfo(cardDrawn);
+        cardToMove.SetCardInfo(cardDrawn,true,false);
 
         if (cardToMove == null)
         {

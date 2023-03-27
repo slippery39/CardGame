@@ -40,7 +40,6 @@ public class Lane3D : MonoBehaviour, IHighlightable
         {
             _card.gameObject.SetActive(true);
             _card.SetCardInfo(card);
-            UIGameEntity3D.AddToCard3D(_card, card);
             _attackButton.gameObject.SetActive(true);
 
             if (canAttack)

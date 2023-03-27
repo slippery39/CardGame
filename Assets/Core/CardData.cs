@@ -193,6 +193,17 @@ public class ManaCardData : BaseCardData
     }
 }
 
+//Not sure if we need this or not
+public class UnknownCardData : BaseCardData
+{
+    public override string CardType => "Unknown";
+
+    public override BaseCardData Clone()
+    {
+        return (BaseCardData)this.MemberwiseClone();
+    }
+}
+
 public interface IManaReadyCondition
 {
     bool IsReady(CardGame cardGame, Player owner);

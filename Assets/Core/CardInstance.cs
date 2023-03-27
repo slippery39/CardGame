@@ -303,6 +303,13 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
     }
 
+    public void SetUnknown()
+    {
+        this.EntityId = -1;
+        
+        //We might need to set other stuff as well?
+    }
+
     public CardInstance(CardGame cardGame, BaseCardData cardData)
     {
         _cardGame = cardGame;

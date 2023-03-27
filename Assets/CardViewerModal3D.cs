@@ -150,7 +150,6 @@ public class CardViewerModal3D : MonoBehaviour
                 card.gameObject.SetActive(true);
             }
             card.SetCardInfo(cards[i] as CardInstance);
-            UIGameEntity3D.AddToGameObject(card.gameObject, cards[i] as CardInstance);
             card.transform.SetParent(_container.transform, false);
         }
 

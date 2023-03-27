@@ -83,5 +83,41 @@ public class GameService : MonoBehaviour
         var gameStateObs = _cardGame.GameStateChangedObservable;
         return gameStateObs;
     }
+    /**
+     * Returns a CardGame where each card that is not currently revealed for the player
+     * is set as an unknown card (entity id -1)
+     */
+    public CardGame GetGameViewForPlayer(CardGame cardGame, int playerId)
+    {
+        //Old Logic from UICard2D
+        //if revealed to all && zonetype is in the hand then show it
+
+        var gameCopy = cardGame.Copy();
+
+        foreach (var cardInstance in gameCopy.GetEntities<CardInstance>())
+        {
+            //We check each card individually with the logic below,
+            //If shouldSeeCard = false, we set it as an unknown card (entity id = -1)
+            //The UI will process unknown cards by 
+            var isOwnTurn = cardGame.ActivePlayerId == cardInstance.OwnerId;
+            var isInDeck = cardInstance.GetZone().ZoneType == ZoneType.Deck;
+            var isInHand = cardInstance.GetZone().ZoneType == ZoneType.Hand;
+            var isVisible = new List<ZoneType> { ZoneType.InPlay, ZoneType.Stack, ZoneType.Discard, ZoneType.Exile }.Contains(cardInstance.GetZone().ZoneType);
+            var shouldSeeCard = isVisible || cardInstance.RevealedToAll || (isInDeck && cardInstance.RevealedToOwner && isOwnTurn) || (isInHand && isOwnTurn);
+            
+            
+            if (isInHand)
+            {
+                var debug = 0;
+            }
+            //Cards that are revealed to owner
+            if (!shouldSeeCard)
+            {
+                cardInstance.SetUnknown();             
+            }
+        }
+
+        return gameCopy;
+    }
     #endregion
 }
