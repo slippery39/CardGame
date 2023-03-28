@@ -111,6 +111,10 @@ public class PlayerBoard3D : MonoBehaviour
         {
             card3Ds[i].SetCardInfo(cards[i]);
         }
+        //Quick fix for issue where the cards aren't properly flipped at the start.
+        //This indicates an issue with the way we handle our zones though.
+        //We may want to change the way we do things here.
+        _deck.UpdateCards();
     }
     //TODO - use ICard instead?
     private void SetHand(List<CardInstance> cards)

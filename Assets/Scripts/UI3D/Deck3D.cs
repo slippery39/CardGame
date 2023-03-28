@@ -61,7 +61,24 @@ public class Deck3D : MonoBehaviour
 
             //Note the y value is the vertical in the world
             card.transform.localPosition = new Vector3(0 + (noise-0.5f) * randomPositionModifier, 0.01f*i, 0 + (noise - 0.5f) * randomPositionModifier);
-            card.transform.localRotation = Quaternion.Euler(270, 180 + ( (noise-0.5f) * randomRotationModifier), 0);
+           // card.transform.localRotation = Quaternion.Euler(270, 180 + ( (noise-0.5f) * randomRotationModifier), 0);
+
+            var entity = card.GetComponent<UIGameEntity3D>();
+
+
+            //These rotations are very confusing and have to do with the how we are setting unknown cards in Card3D.
+            //Its possible that we should have let each zone handle how it rotates the cards to make things less confusing.
+
+            //Unknown Card
+            if (entity!=null && entity.EntityId==-1)
+            {
+                card.transform.localRotation = Quaternion.Euler(90, (noise - 0.5f) * randomRotationModifier, 0);
+            }
+            //Known Card
+            else
+            {
+                card.transform.localRotation = Quaternion.Euler(90,0,0);
+            }
         }
 
         //Hide any additional cards
