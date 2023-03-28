@@ -26,8 +26,16 @@ public class HoverController : MonoBehaviour
         {
             return;
         }
-
+        //Unknowm cards should not have a hover over.
+        var gameEntity = originalCard.GetComponent<UIGameEntity3D>();
+        if (gameEntity && gameEntity.EntityId == -1)
+        {
+            return;
+        }
         hoverCanvas.gameObject.SetActive(true);
+
+        if (originalCard.GetComponent<UIGameEntity3D>()!=null)
+
         hoverCard.SetCardInfo(originalCard, false);
     }
 
