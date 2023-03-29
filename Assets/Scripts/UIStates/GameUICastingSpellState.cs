@@ -69,6 +69,7 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState, IGameUIC
         {
             DoAction();
         }
+        _stateMachine.GameController.SetStateLabel(GetMessage());
     }
 
     public void OnApplyCancellable()

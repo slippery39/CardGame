@@ -30,6 +30,7 @@ public class GameUISummonUnitState : IGameUIState, IGameUICancellable
             }
         }
         OnApplyCancellable();
+        _stateMachine.GameController.SetStateLabel(GetMessage());
     }
 
     public string GetMessage()

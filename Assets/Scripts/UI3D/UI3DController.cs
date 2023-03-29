@@ -31,6 +31,8 @@ public class UI3DController : MonoBehaviour, IUIGameController
     [SerializeField]
     private Button _cancelButton;
 
+    [Header("Other")]
+
     [SerializeField]
     private Stack3D _stack3D;
 
@@ -42,6 +44,9 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     [SerializeField]
     private GameObject _gameViewContainer;
+
+    [SerializeField]
+    private UIStateDescriptionLabel _stateDescriptionLabel;
 
     public CardGame CardGame => _gameService.CardGame;
 
@@ -239,6 +244,20 @@ public class UI3DController : MonoBehaviour, IUIGameController
     {
         _endTurnButton.gameObject.SetActive(false);
         _cancelButton.gameObject.SetActive(false);
+    }
+
+    public void SetStateLabel(string text)
+    {
+        if (text == "" || text == null)
+        {
+            _stateDescriptionLabel.Hide();
+            _stateDescriptionLabel.SetLabel("");
+        }
+        else
+        {
+            _stateDescriptionLabel.Show();
+            _stateDescriptionLabel.SetLabel(text);
+        }
     }
 
     public void EndTurn()

@@ -62,6 +62,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState, IGam
         }
         //Due to the logic of how abilities get activated, we may not have a state to apply.
         _internalState?.OnApply();
+        _stateMachine.GameController.SetStateLabel(GetMessage());
     }
 
 

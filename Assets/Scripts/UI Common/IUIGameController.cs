@@ -11,6 +11,8 @@ public interface IUIGameController
 {
     IEnumerable<IUIGameEntity> GetUIEntities();
     void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title);
+
+    void SetStateLabel(string text);
     void ShowGameOverScreen();
     void CloseChoiceWindow();
     void ShowActionChoicePopup(List<CardGameAction> actions);

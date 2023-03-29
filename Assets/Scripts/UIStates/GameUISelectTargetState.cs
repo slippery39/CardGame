@@ -91,6 +91,7 @@ internal class GameUISelectTargetState : IGameUIState
         {
             entity.Highlight();
         }
+        _stateMachine.GameController.SetStateLabel(GetMessage());
     }
 
     public void OnDestroy()

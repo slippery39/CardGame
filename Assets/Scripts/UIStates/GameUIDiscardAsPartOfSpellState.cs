@@ -57,6 +57,7 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
                 entity.Highlight();
             }
         }
+        _stateMachine.GameController.SetStateLabel(GetMessage());
     }
 
     public void OnUpdate()

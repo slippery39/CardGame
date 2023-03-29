@@ -39,6 +39,7 @@ public class GameUIChooseCardActionState : IGameUIState, IGameUIStateHandleCastC
 
         var availableActions = _cardWithMultipleActions.GetAvailableActions();
 
+        //TODO this should have a message as well.
         _stateMachine.GameController.ShowActionChoicePopup(availableActions);
     }
 

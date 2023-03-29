@@ -62,6 +62,7 @@ public class GameUIIdleState : IGameUIState
     public void OnApply()
     {
         _stateMachine.GameController.ShowEndTurnButton();
+        _stateMachine.GameController.SetStateLabel("");
     }
     public void OnDestroy()
     {

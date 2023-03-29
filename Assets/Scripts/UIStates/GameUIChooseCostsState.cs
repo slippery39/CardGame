@@ -78,6 +78,7 @@ public class GameUIChooseCostsState : IGameUIState
         {
             entity.Highlight();
         }
+        _stateMachine.GameController.SetStateLabel(GetMessage());
     }
 
     public void OnDestroy()
