@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameUISummonUnitState : IGameUIState
+public class GameUISummonUnitState : IGameUIState, IGameUICancellable
 {
     private CardGame _cardGame => _stateMachine.CardGame;
     private GameService _gameService => _stateMachine.GameService;
@@ -29,6 +29,7 @@ public class GameUISummonUnitState : IGameUIState
                 entity.Highlight();
             }
         }
+        OnApplyCancellable();
     }
 
     public string GetMessage()
@@ -72,6 +73,16 @@ public class GameUISummonUnitState : IGameUIState
 
         _gameService.ProcessAction(summonUnitAction);
         _stateMachine.ToIdle();
+    }
+
+    public void OnApplyCancellable()
+    {
+        this._stateMachine.GameController.ShowCancelButton();
+    }
+
+    public void HandleCancel()
+    {
+        this._stateMachine.ToIdle();
     }
 }
 
