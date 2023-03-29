@@ -99,6 +99,13 @@ public class GameService : MonoBehaviour
             //We check each card individually with the logic below,
             //If shouldSeeCard = false, we set it as an unknown card (entity id = -1)
             //The UI will process unknown cards by 
+
+            //Fixes issue regarding dual faced cards
+            if (cardInstance.GetZone() == null)
+            {
+                continue;
+            }
+
             var isOwnTurn = cardGame.ActivePlayerId == cardInstance.OwnerId;
             var isInDeck = cardInstance.GetZone().ZoneType == ZoneType.Deck;
             var isInHand = cardInstance.GetZone().ZoneType == ZoneType.Hand;
