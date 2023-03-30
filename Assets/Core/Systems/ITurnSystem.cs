@@ -81,9 +81,11 @@ public class DefaultTurnSystem : CardGameSystem, ITurnSystem
                 continue;
             }
 
-            var turnStartMods = card.Modifications.GetOfType<IOnTurnStart>();
-            foreach (var mod in turnStartMods)
+            var turnStartMods = card.Modifications.GetOfType<IOnTurnStart>().ToList();
+
+            for (var i = 0; i < turnStartMods.Count; i++)
             {
+                var mod = turnStartMods[i];
                 mod.OnTurnStart(cardGame, cardGame.ActivePlayer, card);
             }
         };
