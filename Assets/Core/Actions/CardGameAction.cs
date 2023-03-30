@@ -10,6 +10,10 @@ public abstract class CardGameAction
 {
     public CardInstance SourceCard { get; set; }
     public CardInstance CardToPlay { get; set; }
+
+    public virtual string ManaCost { get => ""; }
+    public virtual string ActionType { get => ""; }
+
     public Player Player { get; set; }
     public List<ICastModifier> CastModifiers { get; set; } = new List<ICastModifier>();
     private bool HasModifiers => CastModifiers != null && CastModifiers.Count > 0;
@@ -113,6 +117,8 @@ public abstract class CardGameAction
 
 public class PlayUnitAction : CardGameAction
 {
+    public override string ManaCost => CardToPlay.ManaCost;
+    public override string ActionType => "Summon Unit";
     public Lane Lane { get; set; }
     public override List<CardGameEntity> Targets { get { return new List<CardGameEntity> { Lane }; } set { if (value[0] is Lane lane) { Lane = lane; } } }
 
@@ -150,6 +156,9 @@ public class PlayUnitAction : CardGameAction
 
 public class PlayManaAction : CardGameAction
 {
+    public override string ManaCost => "";
+    public override string ActionType => "Mana";
+    
     public override void DoAction(CardGame cardGame)
     {
         cardGame.PlayCard(Player, this);
@@ -168,6 +177,23 @@ public class PlayManaAction : CardGameAction
 
 public class PlaySpellAction : CardGameAction
 {
+    public override string ActionType => "Spell";
+    public override string ManaCost
+    {
+        get
+        {
+            if (this.CastModifiers.Any())
+            {
+
+                string cost = Mana.AddManaStrings(CardToPlay.ManaCost, CastModifiers[0].GetCost(CardToPlay));
+                return cost;
+            }
+            else
+            {
+                return CardToPlay.ManaCost;
+            }
+        }
+    }
     public override string ToUIString()
     {
         var modifiers = this.CastModifiers.Select(m => m.RulesText);
@@ -209,7 +235,9 @@ public class PlaySpellAction : CardGameAction
 
 public class ActivateAbilityAction : CardGameAction
 {
-    public ActivatedAbility Ability { get; set; }
+    public override string ActionType => "Activate Ability";
+    public ActivatedAbility Ability { get; set; }    
+    public override string ManaCost => Ability.ManaCost;
     public override void DoAction(CardGame cardGame)
     {
         cardGame.ActivatedAbilitySystem.ActivateAbililty(Player, SourceCard, new ActivateAbilityInfo

@@ -15,6 +15,13 @@ public class Mana
         ColoredMana = Mana.CreateManaDict();
     }
 
+    public static string AddManaStrings(string manaCost1, string manaCost2)
+    {
+        var mana = new Mana(manaCost1);
+        mana.AddFromString(manaCost2);
+        return mana.ToManaString();
+    }
+
     public Mana(string manaCost)
     {
         ColoredMana = Mana.CreateManaDict();

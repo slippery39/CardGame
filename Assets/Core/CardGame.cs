@@ -694,9 +694,7 @@ public class CardGame
 
                 if (action.CastModifiers.Any())
                 {
-                    var mana = new Mana(manaSpent);
-                    mana.AddFromString(action.CastModifiers[0].GetCost(cardToPlay));
-                    manaSpent = mana.ToManaString();
+                    manaSpent = Mana.AddManaStrings(manaSpent, action.CastModifiers[0].GetCost(cardToPlay));
                 }
 
                 ManaSystem.SpendMana(player, manaSpent);

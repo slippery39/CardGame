@@ -53,13 +53,18 @@ public class Card3D : MonoBehaviour, IHighlightable
         var cardOptions = new Card3DOptions
         {
             CardName = action.SourceCard?.Name,
-            ManaCost = action.SourceCard.ManaCost, //TODO - actions currently don't have a mana cost?
-            CardType = action.SourceCard.CardType,
+            ManaCost = action.ManaCost, //TODO - actions currently don't have a mana cost?
+            CardType = action.ActionType,
             RulesText = action.ToUIString(),
             CastShadows = false,
             ArtTexture = Resources.Load<Texture2D>(action.SourceCard.ArtPath),
             CardFrameTexture = GetCardFrameTexture(action.SourceCard.Colors),
         };
+
+        if (action is PlayUnitAction)
+        {
+            cardOptions.CombatStats = action.SourceCard.Power + "/" + action.SourceCard.Toughness;
+        }
 
         //TODO - need to manually figure out the mana cost and combat stats
 
