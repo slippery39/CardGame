@@ -181,10 +181,10 @@ public class UI3DController : MonoBehaviour, IUIGameController
         return FindObjectsOfType<UIGameEntity3D>().Cast<IUIGameEntity>();
     }
 
-    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title)
+    public void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title, bool showCancel = true)
     {
 
-        _cardViewerModal.Show(cardsToView.ToList(), title);
+        _cardViewerModal.Show(cardsToView.ToList(), title, showCancel);
     }
 
     public void CloseChoiceWindow()

@@ -39,7 +39,7 @@ public class GameUIMultiChoiceState : IGameUIState
             return;
         }
 
-        _stateMachine.GameController.ViewChoiceWindow(validChoices, GetMessage());
+        _stateMachine.GameController.ViewChoiceWindow(validChoices, GetMessage(),false);
 
         var uiEntities = _stateMachine.GameController.GetUIEntities();
         var choicesAsInts = validChoices.Select(c => c.EntityId).ToList();

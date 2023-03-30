@@ -64,7 +64,7 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
                     {
                         var cardsToShow = _sourceEffect.GetValidChoices(_cardGame, _actingPlayer);
                         var cardIds = cardsToShow.Select(c => c.EntityId);
-                        _stateMachine.GameController.ViewChoiceWindow(cardsToShow, GetMessage());
+                        _stateMachine.GameController.ViewChoiceWindow(cardsToShow, GetMessage(),false);
                         _stateMachine.GameController.GetUIEntities().Where(e => cardIds.Contains(e.EntityId))
                             .ToList()
                             .ForEach(e => e.Highlight());                            

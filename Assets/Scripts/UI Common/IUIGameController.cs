@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 public interface IUIGameController
 {
     IEnumerable<IUIGameEntity> GetUIEntities();
-    void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title);
+    void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title, bool showCancel = false);
 
     void SetStateLabel(string text);
     void ShowGameOverScreen();

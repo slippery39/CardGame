@@ -111,11 +111,21 @@ public class CardViewerModal3D : MonoBehaviour
         }
     }
 
-    public void Show(List<ICard> cards, string title)
+    public void Show(List<ICard> cards, string title, bool showCancel = true)
     {
         this.gameObject.SetActive(true);
         SetCards(cards);
         SetTitle(title);
+
+        if (showCancel)
+        {
+            _cancelButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            _cancelButton.gameObject.SetActive(false);
+
+        }
 
         //TODO - need a title still
     }
