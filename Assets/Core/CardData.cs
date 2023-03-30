@@ -150,6 +150,8 @@ public class ItemCardData : BaseCardData
 {
     public override string CardType => "Item";
 
+
+
     public override BaseCardData Clone()
     {
         Abilities = Abilities.Select(ab => ab.Clone()).ToList();

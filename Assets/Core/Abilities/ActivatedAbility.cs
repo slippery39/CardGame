@@ -24,7 +24,14 @@ public class ActivatedAbility : CardAbility
                 }
             }
 
-            return $@"{manaCostStr}{additionalCostStr}: {string.Join(" and ", Effects.Select(e => e.RulesText))}";
+            return $@"{manaCostStr}{additionalCostStr}: {string.Join(" and ",
+                Effects
+                .Select(e =>
+                    e.RulesText.Replace("#effectTargetType#", TargetTypeHelper.TargetTypeToRulesText(e.TargetType)
+                       )
+                    )
+                )}";
+                
         }
     }
     public string ManaCost { get; set; }

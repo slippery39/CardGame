@@ -87,7 +87,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
                 str += $"\r\n {Shields} Shields";
             }
 
-            str = str.Replace("#this", Name);
+            str = str.Replace("#this#", Name);
 
             return str;
         }
