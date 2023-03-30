@@ -100,7 +100,7 @@ public class Card3D : MonoBehaviour, IHighlightable
             ManaCost = card.ManaCost,
             CardType = card.CardType,
             RulesText = card.RulesText,
-            CombatStats = card.Power + " / " + card.Toughness,
+            CombatStats = card.Power + " / " + (card.Toughness - card.DamageTaken),
             CastShadows = castShadows,
             ArtTexture = Resources.Load<Texture2D>(card.ArtPath),
             CardFrameTexture = GetCardFrameTexture(card.Colors)
