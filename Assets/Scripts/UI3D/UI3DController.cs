@@ -10,6 +10,10 @@ public class UI3DController : MonoBehaviour, IUIGameController
 {
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
     private GameService _gameService;
+
+    [SerializeField]
+    private AppController _appController;
+
     [SerializeField]
     private UI3DGameEventManager _gameEventManager;
 
@@ -30,6 +34,9 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     [SerializeField]
     private Button _cancelButton;
+
+    [SerializeField]
+    private Button _backToMainMenuButton;
 
     [Header("Other")]
 
@@ -74,6 +81,11 @@ public class UI3DController : MonoBehaviour, IUIGameController
             {
                 cancellableState.HandleCancel();
             }
+        });
+
+        _backToMainMenuButton.onClick.AddListener(() =>
+        {
+            _appController.GoToMainMenu();
         });
 
         _chooseActionPopup.Initialize(this);
@@ -124,13 +136,25 @@ public class UI3DController : MonoBehaviour, IUIGameController
         }
     }
 
+    public void Initialize(AppController appController)
+    {
+        _appController = appController;
+    }
+
     public void StartGame(GameSetupOptions options)
     {
+        HideUIButtons(); //all ui buttons should be determined by the ui game state
         _gameViewContainer.SetActive(true);
         _gameEventManager.Reset();
         _gameService.SetupGame(options);
         _gameService.StartGame();
         _gameUIStateMachine.ToIdle();
+    }
+
+    public void EndGame()
+    {
+        _gameViewContainer.SetActive(false);
+        _gameEventManager.Reset();
     }
 
     private FightAction CreateFightAction(int laneIndex)
@@ -194,7 +218,8 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     public void ShowGameOverScreen()
     {
-        //TODO 
+        HideUIButtons();
+        _backToMainMenuButton.gameObject.SetActive(true);
         return;
     }
 
@@ -242,6 +267,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
     }
     public void HideUIButtons()
     {
+        _backToMainMenuButton.gameObject.SetActive(false);
         _endTurnButton.gameObject.SetActive(false);
         _cancelButton.gameObject.SetActive(false);
     }
@@ -268,4 +294,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _gameUIStateMachine.ToIdle();
         _gameService.EndTurn();
     }
+
+
 }

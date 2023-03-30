@@ -32,6 +32,9 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         //remove any continuous effects on the card
         card.ContinuousEffects = new List<ContinuousEffect>();
 
+        //remove exhaustian
+        card.IsExhausted = false;
+
         //remove any continuous effects in play that are from the associated card
         //var unitsInPlay = cardGame.GetUnitsInPlay();
 

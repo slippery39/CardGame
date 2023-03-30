@@ -16,7 +16,7 @@ public class GameSetupController : MonoBehaviour
     [SerializeField] Button _startGameButton;
 
     [Header("Other References")]
-    [SerializeField] UI3DController _ui3DController;
+    [SerializeField] AppController _appController;
 
     public void Awake()
     {
@@ -24,6 +24,16 @@ public class GameSetupController : MonoBehaviour
         {
             StartGame();
         });
+    }
+
+    public void Initialize(AppController appController)
+    {
+        _appController = appController;
+    }
+
+    public void Show()
+    {
+        gameObject.SetActive(true);
     }
 
     public void StartGame()
@@ -47,8 +57,7 @@ public class GameSetupController : MonoBehaviour
 
         if (validation.Success)
         {
-            _ui3DController.StartGame(gameSetupOptions);
-            this.gameObject.SetActive(false);
+            _appController.StartGame(gameSetupOptions);
         }
         else
         {

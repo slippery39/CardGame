@@ -67,6 +67,7 @@ public class UI3DGameEventManager : MonoBehaviour
     {
         //TODO - Need to be able to cancel any current animation going on so that no errors occur
         this._eventQueue.Clear();
+        _currentGameEvent = null;
         this._gameOverAnimation.gameObject.SetActive(false);
         this._turnStartAnimation.gameObject.SetActive(false);
     }
@@ -102,8 +103,10 @@ public class UI3DGameEventManager : MonoBehaviour
             }
             else if (_currentGameEvent is GameEndEvent)
             {
-                var evt = _currentGameEvent as GameEndEvent;
-                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!", NextEvent);
+                var evt = _currentGameEvent as GameEndEvent;                
+                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!", () => {
+                    _uiController.ShowGameOverScreen();
+                });
             }
             else if (_currentGameEvent is PlayCardEvent)
             {
