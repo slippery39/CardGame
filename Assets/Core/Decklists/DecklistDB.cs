@@ -316,12 +316,25 @@ public class FamousDecks : DecklistDB
     {
         return new Decklist
         {
-            Name = "AllLands",
+            Name = "Dev Test Deck",
             Format = "Test",
-            Cards = $@"30 Thoughtseize
-                       30 Sleight of Hand
-                       15 Island
-                       15 Swamp
+            Cards = $@"15 Mountain
+                       35 Rite of Flame
+                       10 Dragonstorm
+                       10 Bogardan Hellkite                       
+                       "
+        };
+    }
+
+    public static Decklist ActionsRulesTextTest()
+    {
+        return new Decklist
+        {
+            Name = "Actions Rules Text Test Deck",
+            Format = "Test",
+            Cards = $@"30 Mountain
+                       15 Gempalm Incinerator
+                       15 Haze of Rage                    
                        "
         };
     }
@@ -378,7 +391,8 @@ public class FamousDecks : DecklistDB
             URDragonstorm2006(),
             GRHazeOfRage2007(),
             RagingGoblins(),
-            AllLands()
+            AllLands(),
+            ActionsRulesTextTest()
         };
     }
 }

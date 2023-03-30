@@ -565,6 +565,8 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         clone.EntityId = EntityId;
         clone.Name = Name;
         clone.CardGame = cardGame;
+        clone.RevealedToOwner = RevealedToOwner;
+        clone.RevealedToAll = RevealedToAll;
 
         if (_currentCardData.BackCard != null)
         {

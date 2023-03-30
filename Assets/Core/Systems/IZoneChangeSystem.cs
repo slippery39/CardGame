@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public interface IZoneChangeSystem
 {
-    public void MoveToZone(CardInstance card, IZone zoneTo);
+    public void MoveToZone(CardInstance card, IZone zoneTo, Action onZoneMovedFunc = null);
 }
 
 
@@ -17,7 +17,7 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         this.cardGame = cardGame;
     }
 
-    public void MoveToZone(CardInstance card, IZone zoneTo)
+    public void MoveToZone(CardInstance card, IZone zoneTo, Action onZoneMovedFunc = null)
     {
         var currentZone = card.CurrentZone;//cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();
 
@@ -48,6 +48,10 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         //Apply any ETB Triggers
         if (currentZone.ZoneType != ZoneType.InPlay && zoneTo.ZoneType == ZoneType.InPlay)
         {
+            if (onZoneMovedFunc != null)
+            {
+                onZoneMovedFunc();
+            }
             cardGame.HandleTriggeredAbilities(new List<CardInstance> { card }, TriggerType.SelfEntersPlay);
         }
 

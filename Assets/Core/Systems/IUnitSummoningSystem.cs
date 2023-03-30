@@ -22,13 +22,31 @@ public class DefaultUnitSummoningSystem : CardGameSystem, IUnitSummoningSystem
             cardGame.Log("Cannot summon unit, all lanes are full");
             return;
         }
-        cardGame.ZoneChangeSystem.MoveToZone(unitCard, emptyLanes.First());
 
-        cardGame.GameEventSystem.FireEvent(new UnitSummonedEvent
+        //Note this is a hacky solution as cards that are summoned from the deck need to be revealed first so that
+        //the UI picks it up and can show it appropriately on the screen.
+
+        //Otherwise we would need to come up with some solution (possibly having the UI ask the GameService if it
+        //can have access to a card with an id from the UnitSummonedEvent. 
+        unitCard.RevealedToAll = true;
+        unitCard.RevealedToOwner =  true;
+        cardGame.GameEventSystem.FireGameStateUpdatedEvent();
+
+        if (unitCard.CurrentZone.ZoneType == ZoneType.Deck)
         {
-            PlayerId = player.PlayerId,
-            LaneId = laneEntityId,
-            UnitId = unitCard.EntityId
+            var debug = 0;
+        }
+
+        cardGame.ZoneChangeSystem.MoveToZone(unitCard, emptyLanes.First(), () =>
+        {            
+            cardGame.GameEventSystem.FireEvent(new UnitSummonedEvent
+            {
+                PlayerId = player.PlayerId,
+                LaneId = laneEntityId,
+                UnitId = unitCard.EntityId
+            });
+
+            cardGame.GameEventSystem.FireGameStateUpdatedEvent();
         });
 
         //Search for any abilities with an EntersPlay callback, slightly different from triggered abilities as these would happen immediatly.
