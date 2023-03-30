@@ -170,7 +170,9 @@ public class PlaySpellAction : CardGameAction
 {
     public override string ToUIString()
     {
-        return String.Join("\r\n", CardToPlay.Effects.Select(m => m.RulesText));
+        var modifiers = this.CastModifiers.Select(m => m.RulesText);
+        var effects = CardToPlay.Effects.Select(m => m.RulesText);       
+        return String.Join("\r\n", modifiers.Union(effects));
     }
     public override void DoAction(CardGame cardGame)
     {

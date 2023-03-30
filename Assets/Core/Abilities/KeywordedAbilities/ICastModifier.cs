@@ -6,6 +6,7 @@
 /// </summary>
 public interface ICastModifier
 {
+    public string RulesText { get;}
     public string GetCost(CardInstance sourceCard);
     public void OnResolve(CardGame cardGame, CardInstance source);
 }
