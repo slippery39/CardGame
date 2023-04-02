@@ -9,6 +9,35 @@ public class Decklist
     public string Name;
     public string Format; //format the deck was from.
     public string Cards; //just regular string, line breaks indicate a new card;
+
+    public static Decklist CreateRandomDecklist()
+    {
+        var db = new CardDatabase();
+        List<BaseCardData> list = new List<BaseCardData>();
+        var cityOfBrass = db.GetCardData("City of Brass");
+
+        for (var i = 0; i < 18; i++)
+        {
+            list.Add(cityOfBrass);
+        }
+
+
+        var all = db.GetAll();
+
+        for (var i = 0; i < 42;  i++)
+        {
+            list.Add(all.Randomize().First());
+        }
+
+        return new Decklist()
+        {
+            Name = "Random Deck",
+            Format = "Random",
+            Cards = string.Join("\r\n", list.Select(x => "1 " + x.Name))
+        };
+
+    }
+
     public List<BaseCardData> ToDeck()
     {
         var deck = new List<BaseCardData>();
@@ -339,6 +368,23 @@ public class FamousDecks : DecklistDB
         };
     }
 
+    public static Decklist BadRulesTextTest()
+    {
+        return new Decklist
+        {
+            Name = "Bad Rules Text Test Deck",
+            Format = "Test",
+            Cards = $@"20 City of Brass
+                       5 Disciple of the Vault
+                       5 Vapor Snag
+                       5 Geist of Saint Traft
+                       5 Oracle of Mul Daya
+                       5 Bogardan Hellkite
+                       5 Primeval Titan                                       
+                       "
+        };
+    }
+
 
     public static Decklist RGValakut2011()
     {
@@ -392,7 +438,8 @@ public class FamousDecks : DecklistDB
             GRHazeOfRage2007(),
             RagingGoblins(),
             AllLands(),
-            ActionsRulesTextTest()
+            ActionsRulesTextTest(),
+            BadRulesTextTest()
         };
     }
 }

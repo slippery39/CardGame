@@ -105,6 +105,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
         }
     }
 
+
     public void Update()
     {
 
@@ -112,10 +113,11 @@ public class UI3DController : MonoBehaviour, IUIGameController
         {
             StartGame(new GameSetupOptions()
             {
-                Player1Deck = FamousDecks.GRHazeOfRage2007(),
-                Player2Deck = FamousDecks.URDragonstorm2006(),
+                Player1Deck = Decklist.CreateRandomDecklist(),
+                Player2Deck = Decklist.CreateRandomDecklist(),
                 StartingLifeTotal = 20
             });
+            var i = 0;
         }
         //Hacked in just like our old one, but is there not a better way to do this?
         //The card game should be triggering this state

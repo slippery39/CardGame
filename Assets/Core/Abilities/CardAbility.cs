@@ -102,6 +102,12 @@ public class TriggeredAbility : CardAbility
                 case TriggerType.AtTurnEnd:
                     text += "At the end of the turn ";
                     break;
+                case TriggerType.SomethingDies:
+
+                    var cardFilterString = Filter.RulesTextString();
+                  
+                    text += $"When a {(cardFilterString!=""? cardFilterString : "anything")} dies ";
+                    break;
                 default:
                     text += "";
                     break;
@@ -109,7 +115,7 @@ public class TriggeredAbility : CardAbility
 
             foreach (var effect in Effects)
             {
-                text += effect.RulesText;
+                text += Effect.CompileRulesText(effect);
                 text += ",";
             }
 
@@ -163,14 +169,16 @@ public static class TargetTypeHelper
     {
         switch (targetType)
         {
-            case TargetType.AllUnits: return "each unit";
-            case TargetType.OurUnits: return "each unit you control";
-            case TargetType.OpponentUnits: return "each unit your opponent controls";
-            case TargetType.TargetUnits: return "target unit";
+            case TargetType.AllUnits: return "each #unitType#";
+            case TargetType.OurUnits: return "each #unitType# you control";
+            case TargetType.OpponentUnits: return "each #unitType# your opponent controls";
+            case TargetType.TargetUnits: return "target #unitType#";
             case TargetType.TargetPlayers: return "target player";
-            case TargetType.TargetUnitsOrPlayers: return "target unit or player";
+            case TargetType.TargetUnitsOrPlayers: return "target #unitType# or player";
             case TargetType.UnitSelf: return "#this#";
             case TargetType.PlayerSelf: return "to itself";
+            case TargetType.Opponent: return " an opponent";
+            case TargetType.RandomOpponentOrUnits: return " a random opponent or #unitType# an opponent controls";
             default: return "";
         }
     }

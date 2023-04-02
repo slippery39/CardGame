@@ -25,13 +25,9 @@ public class ActivatedAbility : CardAbility
             }
 
             return $@"{manaCostStr}{additionalCostStr}: {string.Join(" and ",
-                Effects
-                .Select(e =>
-                    e.RulesText.Replace("#effectTargetType#", TargetTypeHelper.TargetTypeToRulesText(e.TargetType)
-                       )
-                    )
+                Effects.Select(GetEffectRulesText)
                 )}";
-                
+
         }
     }
     public string ManaCost { get; set; }
@@ -39,6 +35,12 @@ public class ActivatedAbility : CardAbility
     public CardFilter Filter { get; internal set; }
     public bool OncePerTurnOnly { get; set; } = false;
     public bool ExhaustOnUse { get; set; } = false;
+
+
+    private string GetEffectRulesText(Effect e)
+    {
+        return Effect.CompileRulesText(e);
+    }
 
     public bool HasAdditionalCost()
     {
