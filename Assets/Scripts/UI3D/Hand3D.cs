@@ -46,6 +46,7 @@ public class Hand3D : MonoBehaviour
             if (_instantiatedCards.Count <= i)
             {
                 card = PrefabUtility.InstantiatePrefab(_cardPrefab) as Card3D;
+                
                 _instantiatedCards.Add(card);
             }
             else
@@ -53,6 +54,7 @@ public class Hand3D : MonoBehaviour
                 card = _instantiatedCards[i];
                 card.gameObject.SetActive(true);
             }
+            card.name = "Card in Hand (" + i + ")";
             card.transform.SetParent(transform, false);
             var bounds = card.GetBounds().size;
             card.transform.localPosition = new Vector3((bounds.x + cardOffSet) * (i), card.transform.localPosition.y, card.transform.localPosition.z);

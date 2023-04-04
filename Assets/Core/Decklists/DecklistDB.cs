@@ -221,6 +221,20 @@ public class FamousDecks : DecklistDB
         };
     }
 
+    public static Decklist DrawCardBugTest()
+    {
+        return new Decklist
+        {
+            Name = "DrawCardBugTest",
+            Format = "Test",
+            Cards = @"
+                30 Ancestral Recall
+                20 Careful Study
+                10 Island
+                "
+        };
+    }
+
     public static Decklist URDragonstorm2006()
     {
         return new Decklist
@@ -439,7 +453,8 @@ public class FamousDecks : DecklistDB
             RagingGoblins(),
             AllLands(),
             ActionsRulesTextTest(),
-            BadRulesTextTest()
+            BadRulesTextTest(),
+            DrawCardBugTest()
         };
     }
 }
