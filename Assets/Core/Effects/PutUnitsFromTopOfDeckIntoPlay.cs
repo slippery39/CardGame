@@ -10,10 +10,8 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
     public int CardsToLookAt { get; set; }
     public override string RulesText
     {
-
         get
         {
-
             if (Amount == 1)
             {
                 return $"Put the highest generic mana cost unit from the top {CardsToLookAt} cards of your deck into play";
@@ -22,7 +20,7 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
             var defaultCardType = "units";
 
             if (Filter != null)
-            {                
+            {
                 defaultCardType = Filter.RulesTextString(true);
             }
 
@@ -33,7 +31,6 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
-
         var cardsToCheck = player.Deck.Cards.ToList();
         cardsToCheck.Reverse();
 

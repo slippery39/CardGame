@@ -39,7 +39,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
     private Button _backToMainMenuButton;
 
     [Header("Other")]
-
     [SerializeField]
     private Stack3D _stack3D;
 
@@ -97,8 +96,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     public void Start()
     {
-
-
         if (CardGame != null)
         {
             this.SetUIGameState(CardGame);
@@ -117,7 +114,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
                 Player2Deck = Decklist.CreateRandomDecklist(),
                 StartingLifeTotal = 20
             });
-            var i = 0;
         }
         //Hacked in just like our old one, but is there not a better way to do this?
         //The card game should be triggering this state
@@ -179,13 +175,10 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     }
 
-
     public List<PlayerBoard3D> GetPlayerBoards()
     {
         return new List<PlayerBoard3D> { _player1Board, _player2Board };
     }
-
-
 
     public void SetUIGameState(CardGame cardGame)
     {
@@ -194,7 +187,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _player1Board.SetBoard(gameCopy.Player1);
         _player2Board.SetBoard(gameCopy.Player2);
     }
-
 
     public void HandleSelection(int entityID)
     {
@@ -209,7 +201,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     public void ViewChoiceWindow(IEnumerable<ICard> cardsToView, string title, bool showCancel = true)
     {
-
         _cardViewerModal.Show(cardsToView.ToList(), title, showCancel);
     }
 
@@ -222,7 +213,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
     {
         HideUIButtons();
         _backToMainMenuButton.gameObject.SetActive(true);
-        return;
     }
 
     public void ShowActionChoicePopup(List<CardGameAction> actions)
@@ -230,14 +220,12 @@ public class UI3DController : MonoBehaviour, IUIGameController
         //TODO
         _chooseActionPopup.gameObject.SetActive(true);
         _chooseActionPopup.SetCard(actions);
-        return;
     }
 
     public void CloseActionChoicePopup()
     {
         //TODO
         _chooseActionPopup.gameObject.SetActive(false);
-        return;
     }
 
     public void HandleCastChoice(int castChoiceInfo)
@@ -249,7 +237,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
             (_gameUIStateMachine.CurrentState as IGameUIStateHandleCastChoice).HandleCastChoiceSelection(castChoiceInfo);
         }
     }
-
 
     /*
      * To simplify the state required for these buttons, we will have a rule that if the cancel button is showing, then the end turn button
@@ -296,6 +283,4 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _gameUIStateMachine.ToIdle();
         _gameService.EndTurn();
     }
-
-
 }

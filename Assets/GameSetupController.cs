@@ -82,8 +82,6 @@ public class GameSetupController : MonoBehaviour
             Message = ""
         };
     }
-
-
 }
 
 public class GameSetupOptions
