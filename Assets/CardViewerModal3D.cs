@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 
 public class CardViewerModal3D : MonoBehaviour
@@ -42,7 +43,7 @@ public class CardViewerModal3D : MonoBehaviour
     [SerializeField] private Card3D _cardPrefab;
     private List<Card3D> _instantiatedCards;
 
-    UI3DController _uiController; 
+    UI3DController _uiController;
 
 
     public void Initialize(UI3DController controller)
@@ -54,7 +55,14 @@ public class CardViewerModal3D : MonoBehaviour
 
     void Awake()
     {
-        _camera = this.GetComponent<Camera>();
+        var mainCam = Camera.main;
+        var cameraData = mainCam.GetUniversalAdditionalCameraData();
+        //quick hack to get the stacked camera stuff working;
+        _camera = cameraData.cameraStack.Find(cam => cam.tag == "CardViewerCam");
+        if (_camera == null)
+        {
+            Debug.LogError("Could not find CardViewerCam... maybe you forgot to set up a camera in the scene");
+        }
     }
 
     private void Start()
@@ -85,20 +93,20 @@ public class CardViewerModal3D : MonoBehaviour
             _container.transform.position = new Vector3(leftPoint.x + _paddingLeftRight, middlePoint.y - (_containerBounds.center.y), _container.transform.position.z);
             //Calculates the position of the container based on the slider value.
             var sliderVal = _scrollbar.value;
-            _container.transform.position -= new Vector3(Mathf.Lerp(0, _containerBounds.max.x - _paddingLeftRight -( (rightPoint.x-leftPoint.x)/2), sliderVal), 0, 0);
+            _container.transform.position -= new Vector3(Mathf.Lerp(0, _containerBounds.max.x - _paddingLeftRight - ((rightPoint.x - leftPoint.x) / 2), sliderVal), 0, 0);
         }
 
         var cameraPointDiff = rightPoint - leftPoint;
         var knobSizePerc = Mathf.Clamp(cameraPointDiff.x / _containerBounds.size.x, 0.1f, 0.8f);
         _scrollbar.size = knobSizePerc;
-        
+
         //SLIDER Knob Size
         /*
          * Slider knob size should depend on the % of the container is visible at any one time
          * based on _containerBounds.size and _camera.ScreenToWorldPoint
          */
     }
-   
+
     private void DoCardLayout()
     {
         var cards = _container.GetComponentsInChildren<Card3D>();
@@ -107,7 +115,7 @@ public class CardViewerModal3D : MonoBehaviour
         {
             var card = cards[i];
             var xPos = (i * (card.GetComponent<Collider>().bounds.size.x + _cardSpacing));
-            card.transform.localPosition = new Vector3(xPos, 0, 0); 
+            card.transform.localPosition = new Vector3(xPos, 0, 0);
         }
     }
 

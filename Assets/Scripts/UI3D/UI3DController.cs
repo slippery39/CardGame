@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using UniRx;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(GameService))]
 public class UI3DController : MonoBehaviour, IUIGameController
@@ -84,6 +85,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
         _backToMainMenuButton.onClick.AddListener(() =>
         {
+
             _appController.GoToMainMenu();
         });
 
@@ -92,10 +94,23 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _player1Board.Initialize(this);
         _player2Board.Initialize(this);
         _developerPanel.Initialize(this);
+
     }
 
     public void Start()
     {
+        this.GetComponentsInChildren<Camera>(true).ToList().ForEach(cam =>
+        {
+            Debug.Log("Camera Found", cam);
+        });
+        //Canvases need to be attached to the main camera
+        this.GetComponentsInChildren<Canvas>(true).ToList().ForEach(canvas =>
+        {
+            Debug.Log("Canvas found", canvas);
+            canvas.worldCamera = Camera.main;
+            var cameraData = Camera.main.GetUniversalAdditionalCameraData();
+            //cameraData.cameraStack.Add(myOverlayCamera);
+        });
         if (CardGame != null)
         {
             this.SetUIGameState(CardGame);
