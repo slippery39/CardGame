@@ -19,8 +19,20 @@ public class AppController : MonoBehaviour
     [SerializeField]
     private Camera _defaultMainCamera;
 
+    public static AppController Instance { get; private set; }
+
     public void Awake()
     {
+        //Only allow one AppController to exist
+        if (Instance == null)
+        {
+            Instance= this;
+        }
+        else
+        {
+            DestroyImmediate(this);
+        }
+
         DontDestroyOnLoad(gameObject);
         GoToMainMenu();
     }

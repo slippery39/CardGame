@@ -5,6 +5,7 @@ using System.Linq;
 using UniRx;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
+using System;
 
 [RequireComponent(typeof(GameService))]
 public class UI3DController : MonoBehaviour, IUIGameController
@@ -59,10 +60,8 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     public GameService GameService => _gameService;
 
-    public static UI3DController Instance { get => _instance; set => _instance = value; }
+    public static UI3DController Instance { get; private set; }
     public GameUIStateMachine GameUIStateMachine { get => _gameUIStateMachine; set => _gameUIStateMachine = value; }
-
-    private static UI3DController _instance;
 
     private void Awake()
     {
@@ -70,9 +69,9 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _gameService = GetComponent<GameService>();
         _endTurnButton.onClick.AddListener(() =>
         {
-            this.EndTurn();
-        }
-        );
+            this.EndTurn();         
+        });
+
         _cancelButton.onClick.AddListener(() =>
         {
             var cancellableState = this._gameUIStateMachine.CurrentState as IGameUICancellable;
@@ -85,7 +84,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
         _backToMainMenuButton.onClick.AddListener(() =>
         {
-
             _appController.GoToMainMenu();
         });
 
@@ -94,33 +92,18 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _player1Board.Initialize(this);
         _player2Board.Initialize(this);
         _developerPanel.Initialize(this);
-
     }
 
     public void Start()
     {
-        this.GetComponentsInChildren<Camera>(true).ToList().ForEach(cam =>
-        {
-            Debug.Log("Camera Found", cam);
-        });
-        //Canvases need to be attached to the main camera
-        this.GetComponentsInChildren<Canvas>(true).ToList().ForEach(canvas =>
-        {
-            Debug.Log("Canvas found", canvas);
-            canvas.worldCamera = Camera.main;
-            var cameraData = Camera.main.GetUniversalAdditionalCameraData();
-            //cameraData.cameraStack.Add(myOverlayCamera);
-        });
         if (CardGame != null)
         {
             this.SetUIGameState(CardGame);
         }
     }
 
-
     public void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.A))
         {
             StartGame(new GameSetupOptions()
@@ -142,7 +125,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
         if (CardGame != null && CardGame.CurrentGameState == GameState.WaitingForChoice)
         {
-            if (!(GameUIStateMachine.CurrentState is GameUIChoiceAsPartOfResolveState))
+            if (GameUIStateMachine.CurrentState is not GameUIChoiceAsPartOfResolveState)
             {
                 GameUIStateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(GameUIStateMachine, CardGame.ChoiceInfoNeeded));
             }
@@ -153,7 +136,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
     {
         _appController = appController;
     }
-
     public void StartGame(GameSetupOptions options)
     {
         HideUIButtons(); //all ui buttons should be determined by the ui game state
@@ -163,7 +145,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _gameService.StartGame();
         _gameUIStateMachine.ToIdle();
     }
-
     public void EndGame()
     {
         _gameViewContainer.SetActive(false);
@@ -180,14 +161,13 @@ public class UI3DController : MonoBehaviour, IUIGameController
     }
     public void DoAttack(int entityId)
     {
-        var lane = CardGame.ActivePlayer.Lanes.Where(l => l.EntityId == entityId).FirstOrDefault();
+        var lane = CardGame.ActivePlayer.Lanes.Find(l => l.EntityId == entityId);
         var index = CardGame.ActivePlayer.Lanes.IndexOf(lane);
         GameService.ProcessAction(CreateFightAction(index));
     }
-
     public void DoAbility(int entityId)
     {
-
+        throw new NotImplementedException();
     }
 
     public List<PlayerBoard3D> GetPlayerBoards()
@@ -275,7 +255,6 @@ public class UI3DController : MonoBehaviour, IUIGameController
         _endTurnButton.gameObject.SetActive(false);
         _cancelButton.gameObject.SetActive(false);
     }
-
     public void SetStateLabel(string text)
     {
         if (text == "" || text == null)
