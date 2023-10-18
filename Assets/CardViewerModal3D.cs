@@ -55,14 +55,8 @@ public class CardViewerModal3D : MonoBehaviour
 
     void Awake()
     {
-        var mainCam = Camera.main;
-        var cameraData = mainCam.GetUniversalAdditionalCameraData();
-        //quick hack to get the stacked camera stuff working;
-        _camera = cameraData.cameraStack.Find(cam => cam.tag == "CardViewerCam");
-        if (_camera == null)
-        {
-            Debug.LogError("Could not find CardViewerCam... maybe you forgot to set up a camera in the scene");
-        }
+        //Should be the stacked camera with type of overlay.
+        _camera = this.GetComponent<Camera>();
     }
 
     private void Start()
@@ -83,7 +77,7 @@ public class CardViewerModal3D : MonoBehaviour
         var middlePoint = _camera.ScreenToWorldPoint(new Vector3(Screen.width / 2, Screen.height / 2, _camera.nearClipPlane));
 
         //Bounding box is on the screen.
-        if (_showSlider == false)
+        if (!_showSlider)
         {
             _container.transform.position = new Vector3(middlePoint.x - (_containerBounds.center.x), middlePoint.y - (_containerBounds.center.y), _container.transform.position.z);
         }
@@ -134,8 +128,6 @@ public class CardViewerModal3D : MonoBehaviour
             _cancelButton.gameObject.SetActive(false);
 
         }
-
-        //TODO - need a title still
     }
 
     public void SetTitle(string title)
@@ -228,7 +220,6 @@ public class CardViewerModal3D : MonoBehaviour
 
         _visibleBoundsObject.transform.localPosition = gameObject.transform.localPosition + bounds.center;
         _visibleBoundsObject.transform.localScale = bounds.size;
-
 
         gameObject.transform.rotation = currentRotation;
 
