@@ -34,12 +34,12 @@ public class GameUIMultiChoiceState : IGameUIState
         //Slightly differs from our usual highlight, we are highlighting the cards we have chosen to discard in red.
         var validChoices = _sourceEffect.GetValidChoices(_cardGame, _actingPlayer);
 
-        if (validChoices.Count() == 0)
+        if (!validChoices.Any())
         {
             return;
         }
 
-        _stateMachine.GameController.ViewChoiceWindow(validChoices, GetMessage(),false);
+        _stateMachine.GameController.ViewChoiceWindow(validChoices, GetMessage(), false);
 
         var uiEntities = _stateMachine.GameController.GetUIEntities();
         var choicesAsInts = validChoices.Select(c => c.EntityId).ToList();

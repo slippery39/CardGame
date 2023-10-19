@@ -30,6 +30,7 @@ public class Card3D : MonoBehaviour, IHighlightable
     [SerializeField] private Card3DMaterialSet _dissolveMaterials;
     [SerializeField] private Card3DMaterialSet _summonMaterials;
 
+    [SerializeField] private Color _defaultHighlightColor = Color.yellow * 3;
 
     private void Awake()
     {
@@ -317,12 +318,13 @@ public class Card3D : MonoBehaviour, IHighlightable
     public void Highlight()
     {
         this._highlightObject.SetActive(true);
+        this._highlightObject.GetComponent<Renderer>().materials.Last().SetColor("color", Color.yellow);
     }
 
     public void Highlight(Color highlightColor)
     {
         this._highlightObject.SetActive(true);
-        //TODO - set color
+        this._highlightObject.GetComponent<Renderer>().materials.Last().SetColor("color",highlightColor);
     }
 
     public void StopHighlight()

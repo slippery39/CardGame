@@ -42,19 +42,19 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
         var uiEntities = _stateMachine.GameController.GetUIEntities();
         var choicesAsInts = validChoices.Select(c => c.EntityId).ToList();
         //Highlight all entities that share an entity id with the valid choices;   
-
+        var i = 0;
         var entitiesToHighlight = uiEntities.Where(e => choicesAsInts.Contains(e.EntityId));
 
         foreach (var entity in entitiesToHighlight)
         {
             if (_cardsChosen.Select(c => c.EntityId).Contains(entity.EntityId))
             {
-                entity.Highlight(Color.red);
+                entity.Highlight(Color.green);
             }
             else
             {
                 //Highlight with a red color if it is an already chosen card?
-                entity.Highlight();
+                entity.Highlight(Color.blue);
             }
         }
         _stateMachine.GameController.SetStateLabel(GetMessage());
