@@ -94,7 +94,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 //Update the current game state
                 var evt = _currentGameEvent as GameStateUpdatedEvent;
                 _uiController.SetUIGameState(evt.ResultingState);
-                _currentGameEvent = null;
+                NextEvent();
             }
             else if (_currentGameEvent is GameStartEvent)
             {
@@ -129,20 +129,20 @@ public class UI3DGameEventManager : MonoBehaviour
             {
                 var evt = _currentGameEvent as UnitSummonedEvent;
                 var unit = GameObject.FindObjectsOfType<UIGameEntity3D>(true)
-                            .Where(ent => ent.EntityId == evt.UnitId)
-                            .FirstOrDefault();
+                            .FirstOrDefault(ent => ent.EntityId == evt.UnitId);
+
+                if (unit == null)
+                {
+                    Debug.LogWarning("Could not find unit with entity id:" + evt.UnitId);
+                    NextEvent();
+                    return;
+                }
+                
                 unit.gameObject.SetActive(true);
                 var card3D = unit.GetComponent<Card3D>();
 
                 var lane = GameObject.FindObjectsOfType<UIGameEntity3D>()
-                     .Where(ent => ent.EntityId == evt.LaneId)
-                     .FirstOrDefault();
-
-                if (unit == null)
-                {
-                    _currentGameEvent = null;
-                    return;
-                }
+                      .FirstOrDefault(ent => ent.EntityId == evt.LaneId);
 
                 var newCard = Instantiate(card3D);
 
@@ -163,8 +163,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 var evt = _currentGameEvent as UnitDiedEvent;
 
                 var entity = GameObject.FindObjectsOfType<UIGameEntity3D>()
-                            .Where(ent => ent.EntityId == evt.UnitId)
-                            .FirstOrDefault();
+                            .FirstOrDefault(ent => ent.EntityId == evt.UnitId);
 
                 if (entity == null)
                 {
@@ -186,7 +185,7 @@ public class UI3DGameEventManager : MonoBehaviour
                  * From there we can find its "Deck" and "Hand" game objects
                  * And run the draw card animation.
                  */
-                var playerBoard = _uiController.GetPlayerBoards().Where(pb => pb.PlayerId == evt.PlayerId).FirstOrDefault();
+                var playerBoard = _uiController.GetPlayerBoards().FirstOrDefault(pb => pb.PlayerId == evt.PlayerId);
 
                 /*
                  * How do we get the drawn card?
@@ -199,7 +198,7 @@ public class UI3DGameEventManager : MonoBehaviour
                 //since our card draw animation creates a temporary copy anyways, it probably doesn't matter too much if it isn't 100% accurate 
                 //for the 0.5 to 1 second time the animation is running.
 
-                var cardInstanceDrawn = _uiController.GetComponent<GameService>().CardGame.GetEntities<CardInstance>().Where(c => c.EntityId == evt.DrawnCardId).FirstOrDefault();
+                var cardInstanceDrawn = _uiController.GetComponent<GameService>().CardGame.GetEntities<CardInstance>().FirstOrDefault(c => c.EntityId == evt.DrawnCardId);
                 _drawCardAnimation.PlayAnimation(playerBoard.Deck, playerBoard.Hand, cardInstanceDrawn, NextEvent);
 
 
@@ -208,8 +207,8 @@ public class UI3DGameEventManager : MonoBehaviour
             {
                 var evt = _currentGameEvent as DamageEvent;
                 var damagedEntity = GameObject.FindObjectsOfType<UIGameEntity3D>()
-                     .Where(ent => ent.EntityId == evt.DamagedId)
-                     .FirstOrDefault();
+                     .FirstOrDefault(ent => ent.EntityId == evt.DamagedId);
+
                 if (damagedEntity == null)
                 {
                     NextEvent();
@@ -222,15 +221,14 @@ public class UI3DGameEventManager : MonoBehaviour
             {
                 var evt = _currentGameEvent as AttackGameEvent;
                 var attacker = GameObject.FindObjectsOfType<UIGameEntity3D>()
-                     .Where(ent => ent.EntityId == evt.AttackerId)
-                     .FirstOrDefault();
+                     .FirstOrDefault(ent => ent.EntityId == evt.AttackerId);
+
                 var defender = GameObject.FindObjectsOfType<UIGameEntity3D>()
-                     .Where(ent => ent.EntityId == evt.DefenderId)
-                     .FirstOrDefault();
+                     .FirstOrDefault(ent => ent.EntityId == evt.DefenderId);
 
                 if (attacker == null || defender == null)
                 {
-                    _currentGameEvent = null;
+                    NextEvent();
                     return;
                 }
 
@@ -247,7 +245,6 @@ public class UI3DGameEventManager : MonoBehaviour
     {
         _fightAnimation.AnimationTime = animationTime;
         _damageAnimation.AnimationTime = animationTime;
-        _drawCardAnimation.AnimationTime = animationTime;
-        
+        _drawCardAnimation.AnimationTime = animationTime;        
     }
 }

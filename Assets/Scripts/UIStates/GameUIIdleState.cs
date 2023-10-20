@@ -39,7 +39,7 @@ public class GameUIIdleState : IGameUIState
     }
 
     public void OnUpdate()
-    {     
+    {
         foreach (var uiEntity in _stateMachine.GameController.GetUIEntities())
         {
             var card = _cardGame.GetCardById(uiEntity.EntityId);

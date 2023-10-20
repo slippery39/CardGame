@@ -8,7 +8,7 @@ public class GameUIStateMachine : MonoBehaviour
     public IGameUIState CurrentState;
     private IUIGameController _gameController;
     public IUIGameController GameController { get => _gameController; set => _gameController = value; }
-    public CardGame CardGame { get => _gameController.CardGame; }
+    public CardGame CardGame { get => _gameController.CurrentUICardGame; }
     public GameService GameService { get => _gameController.GameService; }
 
     private void Awake()

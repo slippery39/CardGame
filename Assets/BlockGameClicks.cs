@@ -39,12 +39,6 @@ public class BlockGameClicks : MonoBehaviour
         {
             ClickController.Instance.DisableClicks = false;
         }
-
-        //For every result returned, output the name of the GameObject on the Canvas hit by the Ray
-        foreach (RaycastResult result in results)
-        {
-            Debug.Log("Hit " + result.gameObject.name);
-        }
     }
 }
 

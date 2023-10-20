@@ -59,6 +59,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
     private UIStateDescriptionLabel _stateDescriptionLabel;
 
     public CardGame CardGame => _gameService.CardGame;
+    public CardGame CurrentUICardGame { get; private set; }
 
     public GameService GameService => _gameService;
 
@@ -100,6 +101,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
     {
         if (CardGame != null)
         {
+            CurrentUICardGame = CardGame;
             this.SetUIGameState(CardGame);
         }
     }
@@ -181,6 +183,8 @@ public class UI3DController : MonoBehaviour, IUIGameController
     {
         //If you want to be able to see everyone's cards then change this playerId to cardGame.ActivePlayerId
         var gameCopy = GameService.GetGameViewForPlayer(cardGame, playerId);
+        CurrentUICardGame = gameCopy;
+        Debug.Log("Whose turn is it ? " + gameCopy.ActivePlayerId);
         _stack3D.SetCards(gameCopy.ResolvingSystem.Stack.Cards);
         _player1Board.SetBoard(gameCopy.Player1);
         _player2Board.SetBoard(gameCopy.Player2);

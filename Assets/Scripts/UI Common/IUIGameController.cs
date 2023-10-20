@@ -23,5 +23,6 @@ public interface IUIGameController
     void HideUIButtons();
 
     public CardGame CardGame { get; }
+    public CardGame CurrentUICardGame { get; }
     public GameService GameService { get; }
 }
