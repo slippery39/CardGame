@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Threading;
 using System;
 
 public class Card3D : MonoBehaviour, IHighlightable
@@ -152,7 +150,7 @@ public class Card3D : MonoBehaviour, IHighlightable
         }
         else
         {
-            var color = colors.First();
+            var color = colors[0];
 
             //Do a single color frame.
             switch (color)
@@ -166,7 +164,6 @@ public class Card3D : MonoBehaviour, IHighlightable
                 default: return _cardFrameTextures.Colorless;
             }
         }
-
     }
 
     public void SetCardInfo(Card3D otherCard, bool castShadows = true)
@@ -329,8 +326,6 @@ public class Card3D : MonoBehaviour, IHighlightable
     {
         this._highlightObject.SetActive(true);
         var materials = this._highlightObject.GetComponent<Renderer>().materials;
-        Debug.Log(materials);
-        Debug.Log(materials.Last());
         materials.Last().SetColor("_Color", highlightColor.ToHDR(6));
     }
 
