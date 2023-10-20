@@ -318,13 +318,17 @@ public class Card3D : MonoBehaviour, IHighlightable
     public void Highlight()
     {
         this._highlightObject.SetActive(true);
-        this._highlightObject.GetComponent<Renderer>().materials.Last().SetColor("color", Color.yellow);
+        var materials = this._highlightObject.GetComponent<Renderer>().materials;
+        materials.Last().SetColor("_Color", Color.yellow.ToHDR(3));
     }
 
     public void Highlight(Color highlightColor)
     {
         this._highlightObject.SetActive(true);
-        this._highlightObject.GetComponent<Renderer>().materials.Last().SetColor("color",highlightColor);
+        var materials = this._highlightObject.GetComponent<Renderer>().materials;
+        Debug.Log(materials);
+        Debug.Log(materials.Last());
+        materials.Last().SetColor("_Color", highlightColor.ToHDR(3));
     }
 
     public void StopHighlight()

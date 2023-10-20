@@ -49,12 +49,12 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
         {
             if (_cardsChosen.Select(c => c.EntityId).Contains(entity.EntityId))
             {
-                entity.Highlight(Color.green);
+                entity.Highlight(Color.red);
             }
             else
             {
                 //Highlight with a red color if it is an already chosen card?
-                entity.Highlight(Color.blue);
+                entity.Highlight(Color.yellow);
             }
         }
         _stateMachine.GameController.SetStateLabel(GetMessage());

@@ -60,6 +60,6 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1.9680508, g: 0.87574756, b: 0, a: 0}
     - _HighlightColor: {r: 2.5656495, g: 2.060735, b: 0.32675725, a: 0}
-    - _NoiseColor1: {r: 1.0906965, g: 19.554703, b: 0.6456744, a: 0}
-    - _NoiseColor2: {r: 0.15571101, g: 1.058096, b: 0.11479345, a: 0}
+    - _NoiseColor1: {r: 0.45391807, g: 17.224234, b: 0.08124658, a: 0}
+    - _NoiseColor2: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
