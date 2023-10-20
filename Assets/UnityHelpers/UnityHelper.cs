@@ -86,17 +86,15 @@ public static class UnityHelper
         return hits;
     }
 
-    public static Color ToHDR(this Color color, float scaling)
+    public static Color ToHDR(this Color color, float intensity)
     {
-        return new Color(color.r * scaling, color.g * scaling, color.b * scaling);
+        float factor = Mathf.Pow(2, intensity);
+        return new Color(color.r * factor, color.g * factor, color.b * factor);
     }
-    public static Color ToHDR(this Color color, int scaling)
+    public static Color ToHDR(this Color color, int intensity)
     {
-        return new Color(color.r * scaling, color.g * scaling, color.b * scaling);
-    }
-    public static Color ToHDR(this Color color, Vector3 scaling)
-    {
-        return new Color(color.r * scaling.x, color.g * scaling.y, color.b * scaling.z);
+        float factor = Mathf.Pow(2, intensity);
+        return new Color(color.r * factor, color.g * factor, color.b * factor);
     }
 
     public static Color SetAlpha(this Color color, float alpha)

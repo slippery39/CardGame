@@ -54,7 +54,7 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
             else
             {
                 //Highlight with a red color if it is an already chosen card?
-                entity.Highlight(Color.yellow);
+                entity.Highlight();
             }
         }
         _stateMachine.GameController.SetStateLabel(GetMessage());
