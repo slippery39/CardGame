@@ -18,6 +18,7 @@ public class HoverController : MonoBehaviour
         {
             Debug.Log("Initializing Hovercontroller singleton");
             instance = this;
+            hoverCanvas.GetComponent<Canvas>().worldCamera = Camera.main;
         }
     }
     public void ShowCardTooltip(Card3D originalCard)
@@ -34,9 +35,10 @@ public class HoverController : MonoBehaviour
         }
         hoverCanvas.gameObject.SetActive(true);
 
-        if (originalCard.GetComponent<UIGameEntity3D>()!=null)
-
-        hoverCard.SetCardInfo(originalCard, false);
+        if (originalCard.GetComponent<UIGameEntity3D>() != null)
+        {
+            hoverCard.SetCardInfo(originalCard, false);
+        }
     }
 
     public void HideCardTooltip()
