@@ -106,17 +106,12 @@ public class GameService : MonoBehaviour
                 continue;
             }
 
-            var isOwnTurn = cardGame.ActivePlayerId == cardInstance.OwnerId;
+            var isOwnTurn = playerId == cardInstance.OwnerId;
             var isInDeck = cardInstance.GetZone().ZoneType == ZoneType.Deck;
             var isInHand = cardInstance.GetZone().ZoneType == ZoneType.Hand;
             var isVisible = new List<ZoneType> { ZoneType.InPlay, ZoneType.Stack, ZoneType.Discard, ZoneType.Exile }.Contains(cardInstance.GetZone().ZoneType);
             var shouldSeeCard = isVisible || cardInstance.RevealedToAll || (isInDeck && cardInstance.RevealedToOwner && isOwnTurn) || (isInHand && isOwnTurn);
-            
-            
-            if (isInHand)
-            {
-                var debug = 0;
-            }
+
             //Cards that are revealed to owner
             if (!shouldSeeCard)
             {

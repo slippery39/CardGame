@@ -1,10 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Pool;
-
 
 public class Hand3D : MonoBehaviour
 {
@@ -14,18 +11,6 @@ public class Hand3D : MonoBehaviour
 
     [SerializeField] public int numberOfCards = 5;
     [SerializeField] float cardOffSet = 0.5f;
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-  
-    }
 
     public List<Card3D> GetCards()
     {
