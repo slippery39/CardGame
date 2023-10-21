@@ -98,7 +98,7 @@ public class GameService : MonoBehaviour
         {
             //We check each card individually with the logic below,
             //If shouldSeeCard = false, we set it as an unknown card (entity id = -1)
-            //The UI will process unknown cards by 
+            //The UI will process unknown cards by checking if entity id = -1. if so it will show as an unknown card.
 
             //Fixes issue regarding dual faced cards
             if (cardInstance.GetZone() == null)
@@ -106,12 +106,8 @@ public class GameService : MonoBehaviour
                 continue;
             }
 
-            var isOwnTurn = playerId == cardInstance.OwnerId;
-            var isInDeck = cardInstance.GetZone().ZoneType == ZoneType.Deck;
-            var isInHand = cardInstance.GetZone().ZoneType == ZoneType.Hand;
-            var isVisible = new List<ZoneType> { ZoneType.InPlay, ZoneType.Stack, ZoneType.Discard, ZoneType.Exile }.Contains(cardInstance.GetZone().ZoneType);
-            var shouldSeeCard = isVisible || cardInstance.RevealedToAll || (isInDeck && cardInstance.RevealedToOwner && isOwnTurn) || (isInHand && isOwnTurn);
-
+            var shouldSeeCard = cardInstance.IsVisibleToPlayer(playerId);
+            
             //Cards that are revealed to owner
             if (!shouldSeeCard)
             {

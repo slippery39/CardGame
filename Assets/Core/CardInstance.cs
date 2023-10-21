@@ -298,15 +298,11 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
     //For Serialization Purposes
     [JsonConstructor]
-    public CardInstance()
-    {
-
-    }
+    public CardInstance(){}
 
     public void SetUnknown()
     {
-        this.EntityId = -1;
-        
+        this.EntityId = -1;        
         //We might need to set other stuff as well?
     }
 
@@ -344,7 +340,6 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
         _currentCardData = cardData;
 
-
         //reset the back card if necessary.
         _currentCardData.BackCard = null;
 
@@ -372,7 +367,6 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
     public IEnumerable<T> GetAbilitiesAndComponents<T>()
     {
-
         var abilities = Abilities.Where(a => a is T).Cast<T>();
         //also look for ability components
 
@@ -504,8 +498,6 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
             }
         }
 
-
-
         foreach (var ability in GetActivatedAbilities())
         {
             if (_cardGame.ActivatedAbilitySystem.CanActivateAbility(this, ability))
@@ -533,7 +525,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         //Can we pay the mana cost
         //Can we pay the additional cost
 
-        return GetAvailableActions().Count() > 1;
+        return GetAvailableActions().Count > 1;
     }
 
     public bool HasActivatedAbility()
@@ -544,6 +536,16 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     public void AddModification(Modification mod)
     {
         Modifications.Add(mod);
+    }
+
+    public bool IsVisibleToPlayer(int playerId)
+    {
+        var isOwnTurn = playerId == OwnerId;
+        var isInDeck = GetZone().ZoneType == ZoneType.Deck;
+        var isInHand = GetZone().ZoneType == ZoneType.Hand;
+        var isVisible = new List<ZoneType> { ZoneType.InPlay, ZoneType.Stack, ZoneType.Discard, ZoneType.Exile }.Contains(GetZone().ZoneType);
+        var shouldSeeCard = isVisible || RevealedToAll || (isInDeck && RevealedToOwner && isOwnTurn) || (isInHand && isOwnTurn);
+        return shouldSeeCard;
     }
 
     public CardInstance DeepClone(CardGame cardGame)
@@ -578,7 +580,6 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         //Back Card and Front Card (references or not?)
 
         return clone;
-
     }
     #endregion
 }

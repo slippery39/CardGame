@@ -103,8 +103,9 @@ public class UI3DGameEventManager : MonoBehaviour
             }
             else if (_currentGameEvent is GameEndEvent)
             {
-                var evt = _currentGameEvent as GameEndEvent;                
-                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!", () => {
+                var evt = _currentGameEvent as GameEndEvent;
+                _gameOverAnimation.PlayAnimation($"Game Over!{Environment.NewLine}{evt.WinnerName} has won!", () =>
+                {
                     _uiController.ShowGameOverScreen();
                 });
             }
@@ -137,7 +138,7 @@ public class UI3DGameEventManager : MonoBehaviour
                     NextEvent();
                     return;
                 }
-                
+
                 unit.gameObject.SetActive(true);
                 var card3D = unit.GetComponent<Card3D>();
 
@@ -198,10 +199,29 @@ public class UI3DGameEventManager : MonoBehaviour
                 //since our card draw animation creates a temporary copy anyways, it probably doesn't matter too much if it isn't 100% accurate 
                 //for the 0.5 to 1 second time the animation is running.
 
-                var cardInstanceDrawn = _uiController.GetComponent<GameService>().CardGame.GetEntities<CardInstance>().FirstOrDefault(c => c.EntityId == evt.DrawnCardId);
+                //The problem here is that -1 means that the active player can't see the card. At the time this runs, the card is still technically in the deck
+                //and therefore can't be found.
+
+                //We need someway to be able to detect whether the card is visible to the current player....
+                //Maybe from the card game itself.
+
+                var shouldSeeCard = _uiController.PlayerId == evt.PlayerId;
+
+                CardInstance cardInstanceDrawn = null;
+
+                if (shouldSeeCard)
+                {
+                    cardInstanceDrawn = _uiController.CardGame.GetEntities<CardInstance>().FirstOrDefault(c => c.EntityId == evt.DrawnCardId);
+                }
+                else
+                {
+                    cardInstanceDrawn = _uiController.CurrentUICardGame.GetEntities<CardInstance>().FirstOrDefault(c => c.EntityId == evt.DrawnCardId);
+                    if (cardInstanceDrawn == null)
+                    {
+                        cardInstanceDrawn = _uiController.CurrentUICardGame.GetEntities<CardInstance>().FirstOrDefault(c => c.EntityId == -1);
+                    }
+                }
                 _drawCardAnimation.PlayAnimation(playerBoard.Deck, playerBoard.Hand, cardInstanceDrawn, NextEvent);
-
-
             }
             else if (_currentGameEvent is DamageEvent)
             {
@@ -245,6 +265,6 @@ public class UI3DGameEventManager : MonoBehaviour
     {
         _fightAnimation.AnimationTime = animationTime;
         _damageAnimation.AnimationTime = animationTime;
-        _drawCardAnimation.AnimationTime = animationTime;        
+        _drawCardAnimation.AnimationTime = animationTime;
     }
 }

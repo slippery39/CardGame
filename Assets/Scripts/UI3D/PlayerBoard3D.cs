@@ -151,10 +151,13 @@ public class PlayerBoard3D : MonoBehaviour
     private void SetLanes(List<Lane> lanes)
     {
         var lane3Ds = _lanes.GetLanes();
+        var playerId = _uiController.PlayerId;
+        var activePlayerId = _uiController.CurrentUICardGame.ActivePlayerId;
+
         for (var i = 0; i < lanes.Count; i++)
         {
             UIGameEntity3D.AddToLane(lane3Ds[i], lanes[i]);
-            lane3Ds[i].SetUnitInLane(lanes[i].UnitInLane,lanes[i].CanBattle());
+            lane3Ds[i].SetUnitInLane(lanes[i].UnitInLane,lanes[i].CanBattle() && playerId == activePlayerId);
         }
     }
 

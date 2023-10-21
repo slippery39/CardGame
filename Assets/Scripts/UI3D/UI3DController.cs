@@ -10,7 +10,7 @@ using System;
 [RequireComponent(typeof(GameService))]
 public class UI3DController : MonoBehaviour, IUIGameController
 {
-    [SerializeField] private int playerId = 1;
+    [SerializeField] public int PlayerId = 1;
 
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
     private GameService _gameService;
@@ -182,7 +182,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
     public void SetUIGameState(CardGame cardGame)
     {
         //If you want to be able to see everyone's cards then change this playerId to cardGame.ActivePlayerId
-        var gameCopy = GameService.GetGameViewForPlayer(cardGame, playerId);
+        var gameCopy = GameService.GetGameViewForPlayer(cardGame, PlayerId);
         CurrentUICardGame = gameCopy;
         Debug.Log("Whose turn is it ? " + gameCopy.ActivePlayerId);
         _stack3D.SetCards(gameCopy.ResolvingSystem.Stack.Cards);

@@ -20,14 +20,11 @@ public class DrawCardAnimation : MonoBehaviour
         //Note we added this in in order to try and solve a bug we were having, i'm not entirely sure if 
         //thse actually do anything at the moment, but it might be nice to have.
 
-        if (currentSequence != null)
+        if (currentSequence != null && !currentSequence.IsComplete())
         {
-            if (currentSequence.IsComplete() == false)
-            {
-                currentSequence.Complete();
-                currentSequence.Kill();
-                currentSequence = null;
-            }
+            currentSequence.Complete();
+            currentSequence.Kill();
+            currentSequence = null;
         }
 
         //Grab the last card3D gameObject from the deck.
@@ -35,12 +32,10 @@ public class DrawCardAnimation : MonoBehaviour
         _deck = deck;
         _hand = hand;
 
-        var lastCardInDeck = _deck.GetComponentsInChildren<Card3D>().ToList().LastOrDefault();
+        var lastCardInDeck = _deck.GetComponentsInChildren<Card3D>().LastOrDefault();
         var cardToMove = Instantiate(lastCardInDeck);
         cardToMove.transform.position = lastCardInDeck.transform.position;
-        
-        //cardToMove.transform.SetParent(null);
-        cardToMove.SetCardInfo(cardDrawn, true, false);
+        cardToMove.SetCardInfo(cardDrawn, true, true);
 
         //Update the cards in the deck.
         _deck._numberOfCards--;
