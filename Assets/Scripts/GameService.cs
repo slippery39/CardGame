@@ -87,12 +87,17 @@ public class GameService : MonoBehaviour
      * Returns a CardGame where each card that is not currently revealed for the player
      * is set as an unknown card (entity id -1)
      */
-    public CardGame GetGameViewForPlayer(CardGame cardGame, int playerId)
+    public CardGame GetGameViewForPlayer(CardGame cardGame, int playerId,bool overrideHiddens = false)
     {
         //Old Logic from UICard2D
         //if revealed to all && zonetype is in the hand then show it
 
         var gameCopy = cardGame.Copy();
+
+        if (overrideHiddens)
+        {
+            return gameCopy;
+        }
 
         foreach (var cardInstance in gameCopy.GetEntities<CardInstance>())
         {

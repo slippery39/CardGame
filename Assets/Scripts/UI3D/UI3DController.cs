@@ -11,6 +11,9 @@ using System;
 public class UI3DController : MonoBehaviour, IUIGameController
 {
     [SerializeField] public int PlayerId = 1;
+    
+    //FOR DEBUG PURPOSES - Set to true if you would like to see opponents cards instead of having them hidden
+    [SerializeField] public bool ShowHiddenCards = false;
 
     private List<BaseCardData> cardDB = new CardDatabase().GetAll();
     private GameService _gameService;
@@ -182,9 +185,8 @@ public class UI3DController : MonoBehaviour, IUIGameController
     public void SetUIGameState(CardGame cardGame)
     {
         //If you want to be able to see everyone's cards then change this playerId to cardGame.ActivePlayerId
-        var gameCopy = GameService.GetGameViewForPlayer(cardGame, PlayerId);
+        var gameCopy = GameService.GetGameViewForPlayer(cardGame, PlayerId, this.ShowHiddenCards);
         CurrentUICardGame = gameCopy;
-        Debug.Log("Whose turn is it ? " + gameCopy.ActivePlayerId);
         _stack3D.SetCards(gameCopy.ResolvingSystem.Stack.Cards);
         _player1Board.SetBoard(gameCopy.Player1);
         _player2Board.SetBoard(gameCopy.Player2);
