@@ -1,11 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using UniRx;
 
 
@@ -17,7 +14,7 @@ public class CardGame
     private List<Player> _players = new();
     private int _activePlayerId = 1;
     private readonly int _numberOfLanes = 5;
-    private  int _startingPlayerHealth = 20;
+    private int _startingPlayerHealth = 20;
     //need to make sure this is serialized or else we wont be able to properly id tokens.
     [JsonProperty]
     private int _nextEntityId = 1;
@@ -72,16 +69,16 @@ public class CardGame
 
 
     [JsonIgnore]
-    public Player Player1 { get => Players.Where(p => p.PlayerId == 1).FirstOrDefault(); }
+    public Player Player1 { get => Players.Find(p => p.PlayerId == 1); }
     [JsonIgnore]
-    public Player Player2 { get => Players.Where(p => p.PlayerId == 2).FirstOrDefault(); }
+    public Player Player2 { get => Players.Find(p => p.PlayerId == 2); }
 
     public List<Player> Players { get => _players; set => _players = value; }
     public int ActivePlayerId { get => _activePlayerId; set => _activePlayerId = value; }
     [JsonIgnore]
-    public Player ActivePlayer { get => Players.Where(p => p.PlayerId == ActivePlayerId).FirstOrDefault(); }
+    public Player ActivePlayer { get => Players.Find(p => p.PlayerId == ActivePlayerId); }
     [JsonIgnore]
-    public Player InactivePlayer { get => Players.Where(p => p.PlayerId != ActivePlayerId).FirstOrDefault(); }
+    public Player InactivePlayer { get => Players.Find(p => p.PlayerId != ActivePlayerId); }
 
     public int SpellsCastThisTurn { get; set; } = 0;
     public ICardGameLogger Logger { get => _cardGameLogger; }
@@ -290,10 +287,7 @@ public class CardGame
             clone._gameEventSystem = new EmptyGameEventSystem();
         }
 
-
-
         //Need to update our registered entities
-
         clone._registeredEntities.Add(clone.Player1);
         clone._registeredEntities.Add(clone.Player2);
 
@@ -318,12 +312,12 @@ public class CardGame
     }
     public Player GetOwnerOfCard(CardInstance unitInstance)
     {
-        var owner = Players.Where(p => p.PlayerId == unitInstance.OwnerId).FirstOrDefault();
+        var owner = Players.FirstOrDefault(p => p.PlayerId == unitInstance.OwnerId);
 
         //Might be a double sided card. Check the front card for the owner
         if (owner == null)
         {
-            owner = Players.Where(p => p.PlayerId == unitInstance.FrontCard.OwnerId).FirstOrDefault();
+            owner = Players.FirstOrDefault(p => p.PlayerId == unitInstance.FrontCard.OwnerId);
         }
 
         if (owner == null)
@@ -394,8 +388,6 @@ public class CardGame
 
         cardInstance.CurrentZone = zone;
 
-
-
         zone.Add(cardInstance);
 
         GameEventSystem.FireGameStateUpdatedEvent();
@@ -439,7 +431,6 @@ public class CardGame
         _stateBasedEffectSystem.CheckStateBasedEffects();
         _turnSystem.StartTurn();
         _stateBasedEffectSystem.CheckStateBasedEffects();
-
     }
 
     private void RegisterEntity(CardGameEntity entity)
@@ -471,8 +462,8 @@ public class CardGame
         //Note the entitiesSelected references may not be from this actual game.
         var updatedEntityRefs = entitiesSelected
             .Select(entity => this._registeredEntities
-                            .First(e => e.EntityId == entity.EntityId))
-            .Cast<CardGameEntity>().ToList();
+                              .First(e => e.EntityId == entity.EntityId))
+            .ToList();
 
         effectChoice.OnChoicesSelected(this, ActivePlayer, updatedEntityRefs);
 
@@ -500,7 +491,6 @@ public class CardGame
         var card = GetEntities().Where(e => e.EntityId == entityId && e is CardInstance).Cast<CardInstance>().FirstOrDefault();
         return card;
     }
-
 
     public bool CanPlayCard(CardInstance card, bool checkIfActivePlayer = true, List<ICastModifier> modifiers = null)
     {
@@ -560,8 +550,6 @@ public class CardGame
                     return false;
                 }
             }
-
-
         }
         else if (card.IsOfType<ItemCardData>())
         {
@@ -755,7 +743,7 @@ public class CardGame
 
     public void PromptPlayerForChoice(Player player, IEffectWithChoice effectThatNeedsChoice)
     {
-        CurrentGameState = GameState.WaitingForChoice;//GameState.WaitingForChoice;
+        CurrentGameState = GameState.WaitingForChoice;
         ChoiceInfoNeeded = effectThatNeedsChoice;
     }
 
