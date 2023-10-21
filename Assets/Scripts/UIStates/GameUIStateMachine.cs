@@ -10,6 +10,8 @@ public class GameUIStateMachine : MonoBehaviour
     public IUIGameController GameController { get => _gameController; set => _gameController = value; }
     public CardGame CardGame { get => _gameController.CurrentUICardGame; }
     public GameService GameService { get => _gameController.GameService; }
+    //TODO - Remove when finished, state should apply to a specific player id.
+    public int PlayerId { get => 1; }
 
     private void Awake()
     {

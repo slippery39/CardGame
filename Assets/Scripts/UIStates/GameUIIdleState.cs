@@ -42,9 +42,17 @@ public class GameUIIdleState : IGameUIState
     {
         foreach (var uiEntity in _stateMachine.GameController.GetUIEntities())
         {
-            var card = _cardGame.GetCardById(uiEntity.EntityId);
+            var card = _stateMachine.GameController.CurrentUICardGame.GetCardById(uiEntity.EntityId);
+            
             if (card == null)
             {
+                continue;
+            }
+
+            //Only allow actions to be highlighted if they are of the current player. Computer opponents should not show highlights.
+            if (card.OwnerId != _stateMachine.PlayerId)
+            {
+                uiEntity.StopHighlight();
                 continue;
             }
             
@@ -77,10 +85,16 @@ public class GameUIIdleState : IGameUIState
     {
         var card = _cardGame.GetCardById(entityId);
 
+
         if (card == null)
         {
             _cardGame.Log($"Could not find card with entity id {entityId}");
             return;
+        }
+
+        if (card.OwnerId != _stateMachine.PlayerId)
+        {
+            return; //should not do anything in this case.
         }
 
         if (card.HasMultipleOptions())
