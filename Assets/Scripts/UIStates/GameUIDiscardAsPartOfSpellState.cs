@@ -76,7 +76,7 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
-        var entitySelected = _cardGame.GetEntities<CardInstance>().Where(e => e.EntityId == entityId).FirstOrDefault();
+        var entitySelected = _stateMachine.GameController.CardGame.GetEntities<CardInstance>().Where(e => e.EntityId == entityId).FirstOrDefault();
 
         if (entitySelected == null)
         {
@@ -99,7 +99,7 @@ public class GameUIDiscardAsPartOfSpellState : IGameUIState
                 Choices = _cardsChosen
             };
 
-            if (!makeChoiceAction.IsValidAction(_cardGame))
+            if (!makeChoiceAction.IsValidAction(_stateMachine.CardGame))
             {
                 //TODO - Should probably clear out the choice or something here?
                 return;

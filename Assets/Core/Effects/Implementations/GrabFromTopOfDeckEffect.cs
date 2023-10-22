@@ -44,7 +44,7 @@ public class GrabFromTopOfDeckEffect : Effect
     }
 }
 
-public class ChooseFromTopOfDeckEffect : Effect, IEffectWithChoice
+public class ChooseFromTopOfDeckEffect : EffectWithChoice
 {
     public override string RulesText
     {
@@ -82,28 +82,26 @@ public class ChooseFromTopOfDeckEffect : Effect, IEffectWithChoice
     public int Amount { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.None;
 
-    public string ChoiceMessage => RulesText;
+    public override string ChoiceMessage => RulesText;
 
-    public int NumberOfChoices { get => Amount; set { Amount = value; } }
-
-    public List<CardInstance> Choices => new List<CardInstance>();
+    public override int NumberOfChoices { get => Amount; set { Amount = value; } }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         return;
     }
 
-    public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
+    public override void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
         GetValidChoices(cardGame, player).ForEach(c => c.RevealedToOwner = true);
     }
 
-    public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
+    public override List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
         return player.Deck.Cards.TakeLast(3).ToList();
     }
 
-    public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
+    public override void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
     {
         var cardsSeen = GetValidChoices(cardGame, player);
         foreach (var card in cardsSeen)

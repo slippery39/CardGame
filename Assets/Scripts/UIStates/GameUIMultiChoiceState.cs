@@ -93,23 +93,24 @@ public class GameUIMultiChoiceState : IGameUIState
         }
 
         //This used to be in the MultiEffect.MakeChoice method.
-        if (_sourceEffect.Choices.Contains(entitySelected))
+        if (_cardsChosen.Contains(entitySelected))
         {
             return;
         }
         else
         {
             _sourceEffect.Choices.Add(entitySelected);
+            _cardsChosen.Add(entitySelected);
         }
 
 
-        if (_sourceEffect.Choices.Count >= _sourceEffect.NumberOfChoices)
+        if (_cardsChosen.Count >= _sourceEffect.NumberOfChoices)
         {
 
             var makeChoiceAction = new ResolveChoiceAction
             {
                 Player = _actingPlayer,
-                Choices = _cardsChosen
+                Choices = _cardsChosen//Todo this should be cards chosen?
             };
 
             if (!makeChoiceAction.IsValidAction(_cardGame))

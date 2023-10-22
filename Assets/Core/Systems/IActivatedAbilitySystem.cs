@@ -123,6 +123,10 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
     [Obsolete]
     public bool CanActivateAbility(Player player, CardInstance card)
     {
+        if (cardGame.CurrentGameState != GameState.WaitingForAction)
+        {
+            return false;
+        }
         //TODO - Multiple Activated Abilities - Check ActivateZone
         var activatedAbility = card.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault();
 

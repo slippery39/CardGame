@@ -1,26 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-public class ChooseCardFromDeckIntoHandEffect : Effect, IEffectWithChoice
+public class ChooseCardFromDeckIntoHandEffect : EffectWithChoice
 {
     public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
     public override string RulesText => "Put a #cardType# from your deck into your hand".Replace("#cardType#", Filter.RulesTextString(false).ToLower());
-    public string ChoiceMessage { get => "Choose a card to put into your hand"; }
-    public int NumberOfChoices { get; set; } = 1;
+    public override string ChoiceMessage { get => "Choose a card to put into your hand"; }
+    public override int NumberOfChoices { get; set; } = 1;
 
-    public List<CardInstance> Choices => new List<CardInstance>();
-
-    public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
+    public override List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
         return CardFilter.ApplyFilter(player.Deck.Cards, Filter);
-    }
+    } 
 
-    public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
+    public override void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
         GetValidChoices(cardGame, player).ForEach(c => c.RevealedToOwner = true);
     }
 
-    public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
+    public override void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
     {
         cardGame.CardDrawSystem.PutIntoHand(player, choices.Cast<CardInstance>().First());
         cardGame.CardDrawSystem.Shuffle(player);

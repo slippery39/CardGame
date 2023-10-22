@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-public class DiscardCardEffect : Effect, IEffectWithChoice
+public class DiscardCardEffect : EffectWithChoice
 {
     public override string RulesText
     {
@@ -20,11 +20,9 @@ public class DiscardCardEffect : Effect, IEffectWithChoice
     public int Amount { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
 
-    public string ChoiceMessage => $"Discard {Amount} cards";
+    public override string ChoiceMessage => $"Discard {Amount} cards";
 
-    public int NumberOfChoices { get => Amount; set => Amount = value; }
-
-    public List<CardInstance> Choices => new List<CardInstance>();
+    public override int NumberOfChoices { get => Amount; set => Amount = value; }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
@@ -51,19 +49,19 @@ public class DiscardCardEffect : Effect, IEffectWithChoice
         */
     }
 
-    public void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
+    public override void ChoiceSetup(CardGame cardGame, Player player, CardInstance source)
     {
-        
+
     }
 
-    public List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
+    public override List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
         return player.Hand.Cards;
     }
 
-    public void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
+    public override void OnChoicesSelected(CardGame cardGame, Player player, List<CardGameEntity> choices)
     {
-        cardGame.DiscardSystem.Discard(player,choices.Cast<CardInstance>().ToList());
+        cardGame.DiscardSystem.Discard(player, choices.Cast<CardInstance>().ToList());
     }
 }
 

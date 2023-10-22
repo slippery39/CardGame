@@ -6,6 +6,7 @@ using UniRx;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
 using System;
+using TMPro;
 
 [RequireComponent(typeof(GameService))]
 public class UI3DController : MonoBehaviour, IUIGameController
@@ -60,6 +61,9 @@ public class UI3DController : MonoBehaviour, IUIGameController
 
     [SerializeField]
     private UIStateDescriptionLabel _stateDescriptionLabel;
+
+    [SerializeField]
+    private TextMeshProUGUI _gameStateDescriptionLabel;
 
     public CardGame CardGame => _gameService.CardGame;
     public CardGame CurrentUICardGame { get; private set; }
@@ -122,7 +126,7 @@ public class UI3DController : MonoBehaviour, IUIGameController
         }
         //Hacked in just like our old one, but is there not a better way to do this?
         //The card game should be triggering this state
-        if (CardGame != null && CardGame.CurrentGameState == GameState.WaitingForAction)
+        if (CurrentUICardGame != null && CurrentUICardGame.CurrentGameState == GameState.WaitingForAction)
         {
             if (GameUIStateMachine?.CurrentState is GameUIChoiceAsPartOfResolveState)
             {
@@ -130,13 +134,15 @@ public class UI3DController : MonoBehaviour, IUIGameController
             }
         }
 
-        if (CardGame != null && CardGame.CurrentGameState == GameState.WaitingForChoice)
+        if (CurrentUICardGame != null && CurrentUICardGame.CurrentGameState == GameState.WaitingForChoice)
         {
             if (GameUIStateMachine.CurrentState is not GameUIChoiceAsPartOfResolveState)
             {
-                GameUIStateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(GameUIStateMachine, CardGame.ChoiceInfoNeeded));
+                GameUIStateMachine.ChangeState(new GameUIChoiceAsPartOfResolveState(GameUIStateMachine, CurrentUICardGame.ChoiceInfoNeeded));
             }
         }
+
+        this._gameStateDescriptionLabel.SetText($" {CurrentUICardGame.CurrentGameState.ToString()}");
     }
 
     public void Initialize(AppController appController)

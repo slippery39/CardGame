@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 //TODO - need different classifications of actions,
 //i.e. PlayCardAction for all the actions that have us playing cards from different zones.
@@ -202,13 +203,6 @@ public class PlaySpellAction : CardGameAction
     }
     public override void DoAction(CardGame cardGame)
     {
-        int target = 0;
-        if (Targets != null && Targets.Any())
-        {
-            target = Targets.Select(t => t.EntityId).First();
-        }
-
-
         cardGame.PlayCard(Player, this);
     }
 
@@ -305,9 +299,13 @@ public class ResolveChoiceAction : CardGameAction
 
     public override bool IsValidAction(CardGame cardGame)
     {
-        //All choices must exist in the GetValidChoices method.
-        //TODO - Must also have selected the correct amount of choices.
-        return Choices.Except(cardGame.ChoiceInfoNeeded.GetValidChoices(cardGame, Player)).Count() == 0;
+        if (Choices.Count == 0)
+        {
+            Debug.LogError("For some reason there were no choices passed into a ResolveChoiceAction... look into this");
+            return false;
+        }
+
+        return cardGame.ChoiceInfoNeeded.IsValid(cardGame, Player);
     }
 }
 

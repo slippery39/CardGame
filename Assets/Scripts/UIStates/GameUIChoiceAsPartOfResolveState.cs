@@ -98,7 +98,7 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
             return;
         }
 
-        var entitySelected = _cardGame.GetEntities<CardInstance>().Where(e => e.EntityId == entityId).FirstOrDefault();
+        var entitySelected = _stateMachine.CardGame.GetEntities<CardInstance>().Where(e => e.EntityId == entityId).FirstOrDefault();
         _cardsChosen.Add(entitySelected);
 
         var makeChoiceAction = new ResolveChoiceAction
@@ -107,7 +107,12 @@ public class GameUIChoiceAsPartOfResolveState : IGameUIState
             Choices = _cardsChosen
         };
 
-        if (!makeChoiceAction.IsValidAction(_cardGame))
+        if (makeChoiceAction.Choices.Select(s => s.EntityId).Where(s => s == -1).Any())
+        {
+            var debugPoint = 0;
+        }
+
+        if (!makeChoiceAction.IsValidAction(_stateMachine.CardGame))
         {
             //TODO - Should probably clear out the choice or something here?
             return;

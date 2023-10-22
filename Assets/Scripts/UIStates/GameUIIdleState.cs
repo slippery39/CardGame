@@ -42,7 +42,7 @@ public class GameUIIdleState : IGameUIState
     {
         foreach (var uiEntity in _stateMachine.GameController.GetUIEntities())
         {
-            var card = _stateMachine.GameController.CurrentUICardGame.GetCardById(uiEntity.EntityId);
+            var card = _stateMachine.CardGame.GetCardById(uiEntity.EntityId);
             
             if (card == null)
             {

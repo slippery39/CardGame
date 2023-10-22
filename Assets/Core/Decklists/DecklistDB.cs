@@ -228,7 +228,7 @@ public class FamousDecks : DecklistDB
             Name = "DrawCardBugTest",
             Format = "Test",
             Cards = @"
-                30 Merfolk Looter
+                30 Telling Time
                 20 Careful Study
                 10 Island
                 "

@@ -214,7 +214,6 @@ public class CardGame
 
     public void Setup(GameSetupOptions options)
     {
-
         _startingPlayerHealth = options.StartingLifeTotal;
 
         AddPlayerToGame(new Player(_numberOfLanes)
@@ -506,6 +505,12 @@ public class CardGame
             return false;
         }
 
+        //TODO - Will need to check if this breaks certain cards like our Response cards
+        if (checkIfActivePlayer && CurrentGameState != GameState.WaitingForAction)
+        {
+            return false;
+        }
+
         //Can only play the card if it is in the owners hand.
         //We have hard coded in flashback here.
         var castZones = new List<ZoneType> { ZoneType.Hand };
@@ -590,19 +595,19 @@ public class CardGame
         //Action may come from anywhere, we need to make sure all the references match up to what we have in our card game before going any further.
 
         //Which Things would need to be updated?
-        action.Player = Players.Where(e => e.EntityId == action.Player?.EntityId).FirstOrDefault();
-        action.SourceCard = GetEntities<CardInstance>().Where(e => e.EntityId == action.SourceCard?.EntityId).FirstOrDefault();
-        action.Targets = action.Targets?.Select(t => GetEntities().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
-        action.CardToPlay = GetEntities<CardInstance>().Where(e => (e.EntityId == action.CardToPlay?.EntityId)).FirstOrDefault();
-        action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities().FirstOrDefault(e => e?.EntityId == t?.EntityId)).ToList();
+        action.Player = Players.Find(e => e.EntityId == action.Player?.EntityId);
+        action.SourceCard = GetEntities<CardInstance>().FirstOrDefault(e => e.EntityId == action.SourceCard?.EntityId);
+        action.Targets = action.Targets?.Select(t => GetEntities().Find(e => e?.EntityId == t?.EntityId)).ToList();
+        action.CardToPlay = GetEntities<CardInstance>().FirstOrDefault(e => (e.EntityId == action.CardToPlay?.EntityId));
+        action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities().Find(e => e?.EntityId == t?.EntityId)).ToList();
 
         //Edge case for ResolveChoiceActions;
         if (action as ResolveChoiceAction != null)
         {
-            if (action is ResolveChoiceAction choice)
+            if (action is ResolveChoiceAction choiceAction)
             {
-                var entityIds = choice.Choices.Select(t => t.EntityId);
-                choice.Choices = GetEntities<CardInstance>().Where(t => entityIds.Contains(t.EntityId)).ToList();
+                var entityIds = choiceAction.Choices.Select(t => t.EntityId);
+                choiceAction.Choices = GetEntities<CardInstance>().Where(t => entityIds.Contains(t.EntityId)).ToList();
             }
         }
 
@@ -745,6 +750,7 @@ public class CardGame
     {
         CurrentGameState = GameState.WaitingForChoice;
         ChoiceInfoNeeded = effectThatNeedsChoice;
+        GameEventSystem.FireGameStateUpdatedEvent();
     }
 
 
