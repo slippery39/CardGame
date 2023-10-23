@@ -27,6 +27,8 @@ public class DebugSystem
 
         if (duplicates)
         {
+            //Note Telling Time had an issue with this because of how we were using the "Choices" property... If this occurs
+            //again look there or in a simlar place.
             _cardGame.Logger.LogError("Invalid State Detected. Found more than one entity of the same id when checking all the zones");
         }
     }
