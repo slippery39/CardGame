@@ -607,7 +607,7 @@ public class CardGame
             if (action is ResolveChoiceAction choiceAction)
             {
                 var entityIds = choiceAction.Choices.Select(t => t.EntityId);
-                choiceAction.Choices = GetEntities<CardInstance>().Where(t => entityIds.Contains(t.EntityId)).ToList();
+                choiceAction.Choices = entityIds.Select(eid=>GetEntities<CardInstance>().FirstOrDefault(t => t.EntityId == eid)).ToList();
             }
         }
 
