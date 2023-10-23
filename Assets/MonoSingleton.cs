@@ -14,4 +14,9 @@ public abstract class MonoSingleton<T> : MonoBehaviour
             DestroyImmediate(this);
         }
     }
+
+    public void OnDestroy()
+    {
+        Instance = default(T);
+    }
 }
