@@ -130,6 +130,8 @@ public class CardGame
     public IWinLoseSystem WinLoseSystem { get; set; }
     public IEventLogSystem EventLogSystem { get => _eventLogSystem; set => _eventLogSystem = value; }
 
+    public DebugSystem DebugSystem { get; private set; }
+
     #endregion
     #endregion
 
@@ -169,7 +171,6 @@ public class CardGame
         //Debug.Log("OnDeserialized has fired!");
     }
 
-
     private void InitGame()
     {
         _battleSystem = new DefaultBattleSystem(this);
@@ -197,6 +198,8 @@ public class CardGame
         CountersSystem = new DefaultCountersSystem(this);
         ItemSystem = new DefaultItemSystem(this);
         PlayerAbilitySystem = new PlayerModificationSystem(this);
+
+        DebugSystem = new DebugSystem(this);
 
         _cardGameLogger = new UnityCardGameLogger();
 
@@ -278,12 +281,12 @@ public class CardGame
         clone.Players.Add(Player2.DeepClone(clone));
 
         //What else to clone? Turn Data, other stuff?
-
         if (noEventsOrLogs)
         {
             clone.EventLogSystem = new EmptyEventLogSystem();
             clone._cardGameLogger = new EmptyLogger();
             clone._gameEventSystem = new EmptyGameEventSystem();
+            clone.DebugSystem.Enabled = false;
         }
 
         //Need to update our registered entities

@@ -79,6 +79,8 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
         //if it has been subscribed to.
         cardGame.EventLogSystem.FireGameStateChanged();
         cardGame.GameEventSystem.FireGameStateUpdatedEvent();
+
+        cardGame.DebugSystem.CheckForInvalidEntities();
     }
 
     //Returns true if something died, which means we have to apply/remove any static effects and check again.
