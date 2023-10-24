@@ -186,8 +186,10 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
             }
         }
 
+        var endOfTurnAction = new List<CardGameAction>() { new NextTurnAction() };
 
-        return handActions.Concat(inPlayActions).Concat(fightActions).ToList();
+
+        return handActions.Concat(inPlayActions).Concat(fightActions).Concat(endOfTurnAction).ToList();
     }
 
     #endregion

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 public interface IBrain
 {
@@ -31,6 +32,11 @@ public class DefaultBrain : IBrain
         _calculations = 0;
         return ChooseActionBase(cardGame);
     }
+
+    private void Log(string message)
+    {
+        Debug.Log($"AI Brain : {message}");
+    }
     private int FindBestScoreForNode(StateActionNode node, int currentBest)
     {
         if (node == null)
@@ -47,6 +53,11 @@ public class DefaultBrain : IBrain
                 var childScore = FindBestScoreForNode(child, bestScore);
                 bestScore = Math.Max(bestScore, childScore);
             }
+        }
+
+        if (bestScore == 0)
+        {
+            Log("Best Score was 0 here...");
         }
 
         return bestScore;
@@ -84,17 +95,23 @@ public class DefaultBrain : IBrain
         });
 
         var originalScore = EvaluateBoard(cardGame.ActivePlayer, cardGame);
-        var positiveActions = actionScores.Where(a => (a.Score >= originalScore) || a.Action is ResolveChoiceAction).ToList();
+        var positiveActions = actionScores.Where(a => (a.BestScoreIncludingChildren >= originalScore-20) || a.Action is ResolveChoiceAction).ToList();
 
-        //TODO - this needs to change, there should be no reference to a game service in this part of the code. instead we should just
-        //return the chosen action.
+        Log($"Original Score : {originalScore}");
+        actionScores.ForEach(a =>
+        {
+           Log($"Score for Action : {a.Action.SourceCard?.Name} : {a.Action.ToUIString()} : Best Score : {a.BestScoreIncludingChildren}. Depth 1 Score : {a.Score}");
+        });
+
         if (positiveActions.Any())
         {
-            var actionToChoose = positiveActions.First().Action;
+            var actionToChoose = positiveActions[0].Action;
+            Log($"Choosing Action : ${actionToChoose.ToUIString()}");
             return actionToChoose;
         }
         else
         {
+            Log("No Positive Actions Found");
             return new NextTurnAction();
         }
     }
@@ -104,6 +121,7 @@ public class DefaultBrain : IBrain
 
         if (currentDepth > maxDepth)
         {
+            Log($"Entering a depth of {currentDepth}");
             return null; //end this branch;
         }
 
@@ -121,7 +139,7 @@ public class DefaultBrain : IBrain
             validActions = availableActions.Where(a => a.IsValidAction(cardGame)).ToList();
 
             //Always only consider playing the lands first
-            if (validActions.Where(a => a is PlayManaAction).Any())
+            if (validActions.Exists(a => a is PlayManaAction))
             {
                 validActions = validActions.Where(a => a is PlayManaAction).ToList();
             }
@@ -156,7 +174,7 @@ public class DefaultBrain : IBrain
         {
             var gameStateCopy = gameState.Copy(true);
             gameStateCopy.ProcessAction(act);
-            var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);
+            var score = EvaluateBoard(cardGame.ActivePlayer, gameStateCopy);            
 
             return new StateActionNode
             {
@@ -169,7 +187,7 @@ public class DefaultBrain : IBrain
                 Parent = parent
             };
             //TODO - Recursively or Iteratively Add Depth.
-        });
+        }).ToList();
 
         //Some optimzation needed here, if an action results in a really large increase in score, then automatically use that action, and do not go any further.
         //If an action results in a really low decrease in score, then do not go any furhter.
@@ -177,7 +195,9 @@ public class DefaultBrain : IBrain
         foreach (var node in actionScores)
         {
             //Neutral Actions or only slightly beneficial actions can be pruned for performance reasons
-            if (node.Score - node.OriginalScore <= 10)
+            //This needs to account for actions that have a choice in between.. whic hit is currently not doing so.
+            //If next turn action is the best, then don't attempt to go anymore.
+            if (node.OriginalScore - node.Score <=-500 || node.Action is NextTurnAction)
             {
                 continue;
             }
@@ -201,8 +221,8 @@ public class DefaultBrain : IBrain
          * 
          */
 
-        var me = board.Players.Where(p => p.EntityId == player.EntityId).FirstOrDefault();
-        var opp = board.Players.Where(p => p.EntityId != player.EntityId).FirstOrDefault();
+        var me = board.Players.Find(p => p.EntityId == player.EntityId);
+        var opp = board.Players.Find(p => p.EntityId != player.EntityId);
 
         var myLifeTotal = me.Health;
         var oppLifeTotal = opp.Health;
@@ -223,9 +243,7 @@ public class DefaultBrain : IBrain
             return 999999;
         }
 
-
         //We need to make life total more valuable the more it goes down (for ourselves)
-
         score += Convert.ToInt32(Math.Log(myLifeTotal))* 20;
         score -= Convert.ToInt32(Math.Log(oppLifeTotal)) * 20;
 
@@ -257,10 +275,10 @@ public class DefaultBrain : IBrain
         }
 
         //Total number of resources available.
-        var totalNumberOfResources = me.GetCardsInPlay().Count() + me.Hand.Count();
+        var totalNumberOfResources = me.GetCardsInPlay().Count + me.Hand.Count();
         score += totalNumberOfResources * 40;
 
-        var totalNumberOfOppResources = opp.GetCardsInPlay().Count() + opp.Hand.Count();
+        var totalNumberOfOppResources = opp.GetCardsInPlay().Count + opp.Hand.Count();
         score -= totalNumberOfOppResources * 40;
 
         //Permanent Mana should be considered a resource, but be sure not to count temporary mana.
@@ -270,9 +288,16 @@ public class DefaultBrain : IBrain
         var anyMana = me.ManaPool.TotalMana.TotalSumOfColoredMana * 40;
         score += anyMana;
 
+        //Check if we have a lotus bloom suspended or in play.
+        //Ideally we would just move this to a default action
+        //i.e. check if lotus bloom is in our hand, and if so then activate it.
+        if (me.Exile.Any(e => e.Name.ToLower() == "lotus bloom"))
+        {
+            score += 1000;
+        }
 
-        //Temporary Power is what we should calculate (ie haze of rage
 
+        //Temporary Power is what we should calculate (ie haze of rage)
 
         //Other things to check
 
