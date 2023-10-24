@@ -32,7 +32,6 @@ public class SuspendEffect : Effect
         source.Modifications.Add(new SuspendedComponent
         {
             TurnsLeft = Turns,
-            Source = source
         });
     }
 }
@@ -41,10 +40,8 @@ public class SuspendedComponent : Modification, IOnTurnStart
 {
     public int TurnsLeft { get; set; } //the counters on it
 
-    public CardInstance Source { get; set; }
     public void OnTurnStart(CardGame cardGame, Player player, CardInstance source)
     {
-
         //Remove a 'counter'  from the source.
         TurnsLeft--;
 
@@ -54,7 +51,7 @@ public class SuspendedComponent : Modification, IOnTurnStart
         {
             cardGame.Log($"Suspend has been finished!, trying to add to stack");
             //Also remove this component from the card.
-            Source.RemoveModification(this);
+            source.RemoveModification(this);
             //Move the card onto the stack.
 
             var playCardAction = CardGameAction.CreatePlayCardAction(source);

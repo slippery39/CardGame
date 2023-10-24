@@ -562,7 +562,27 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         //We just need to make sure the continous effect system gets called as part of the cloning process.
         clone.ContinuousEffects = ContinuousEffects.Clone();
         clone.Modifications = Modifications.Clone();
-        clone.Modifications = clone.Modifications.Where(a => a.StaticInfo == null).ToList(); //we cannot keep any static modifications, that will be 
+        clone.Modifications = clone.Modifications.Where(a => a.StaticInfo == null).ToList(); //we cannot keep any static modifications, that will be handled by the game itself. 
+       
+        //Fix for 127 - The suspend component was not properly being cloned when copying the game which was causing issues.
+        //We need to keep note that any Modifications (or anything in general) that needs to hold its own state shouold be cloned properly.
+        //This is currently a big issue with how we set things up
+        clone.Modifications = clone.Modifications.Select(
+            mod =>
+            {
+                var suspend = mod as SuspendedComponent;
+                if (suspend != null)
+                {
+                    return new SuspendedComponent()
+                    {
+                        TurnsLeft = suspend.TurnsLeft
+                    };
+                }
+
+                return mod;
+            }
+        ).ToList();
+
         clone.Counters = Counters.Select(c => c.Clone()).ToList();
         clone.EntityId = EntityId;
         clone.Name = Name;
