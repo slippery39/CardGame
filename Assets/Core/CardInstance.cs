@@ -51,7 +51,8 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }
 
     //Effects was being added to every time we serialize / deserialize it.
-    [JsonIgnore]    public List<Effect> Effects
+    [JsonIgnore]
+    public List<Effect> Effects
     {
         get { if (_currentCardData is SpellCardData data) { return data.Effects; } else { return new List<Effect>(); } }
     }
@@ -298,11 +299,11 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
     //For Serialization Purposes
     [JsonConstructor]
-    public CardInstance(){}
+    public CardInstance() { }
 
     public void SetUnknown()
     {
-        this.EntityId = -1;        
+        this.EntityId = -1;
         //We might need to set other stuff as well?
     }
 
@@ -397,7 +398,17 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 
         foreach (var action in actions)
         {
-            var needsTargets = this.CurrentCardData is UnitCardData || _cardGame.TargetSystem.CardNeedsTargets(this.GetOwner(), this);
+            var needsTargets = false;
+
+            //126 - Fix so that our Computer AI actually uses activated abilities (like Crnial Plating)
+            if (action is ActivateAbilityAction)
+            {
+                needsTargets = _cardGame.TargetSystem.ActivatedAbilityNeedsTargets(this);
+            }
+            else
+            {
+                needsTargets = this.CurrentCardData is UnitCardData || _cardGame.TargetSystem.CardNeedsTargets(this.GetOwner(), this);
+            }
             var targets = action.GetValidTargets(CardGame);
 
             var additionalCosts = action.GetValidAdditionalCosts(CardGame);
@@ -563,7 +574,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
         clone.ContinuousEffects = ContinuousEffects.Clone();
         clone.Modifications = Modifications.Clone();
         clone.Modifications = clone.Modifications.Where(a => a.StaticInfo == null).ToList(); //we cannot keep any static modifications, that will be handled by the game itself. 
-       
+
         //Fix for 127 - The suspend component was not properly being cloned when copying the game which was causing issues.
         //We need to keep note that any Modifications (or anything in general) that needs to hold its own state shouold be cloned properly.
         //This is currently a big issue with how we set things up

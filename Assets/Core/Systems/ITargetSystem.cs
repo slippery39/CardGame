@@ -12,7 +12,7 @@ public interface ITargetSystem
     List<Effect> GetEffectsThatNeedTargets(List<Effect> effects);
     bool CardNeedsTargets(Player player, CardInstance card);
     bool EffectNeedsTargets(Effect effect);
-    bool ActivatedAbilityNeedsTargets(Player player, CardInstance cardWithAbility);
+    bool ActivatedAbilityNeedsTargets(CardInstance cardWithAbility);
 }
 
 public static class TargetHelper
@@ -99,14 +99,14 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
         var spellCard = (SpellCardData)card.CurrentCardData;
         var spellTargetTypes = spellCard.Effects.Select(effect => effect.TargetType);
 
-        return (spellTargetTypes.Where(tt => typesThatDontNeedTargets.Contains(tt) == false).Count() > 0);
+        return (spellTargetTypes.Any(tt => !typesThatDontNeedTargets.Contains(tt)));
     }
 
     //TODO - Generalize this and SpellNeedsTargets... perhaps it should just be under ActionNeedsTargets...
-    public bool ActivatedAbilityNeedsTargets(Player player, CardInstance cardWithAbility)
+    public bool ActivatedAbilityNeedsTargets(CardInstance cardWithAbility)
     {
         var targetsFromEffects = cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType);
-        return targetsFromEffects.Where(te => typesThatDontNeedTargets.Contains(te) == false).Count() > 0;
+        return targetsFromEffects.Any(te => !typesThatDontNeedTargets.Contains(te));
     }
 
     private List<CardGameEntity> GetValidUnitTargets(Player player)
@@ -114,7 +114,7 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
         var units =
             cardGame
             .GetEntities<Lane>()
-            .Where(lane => lane.IsEmpty() == false)
+            .Where(lane => !lane.IsEmpty())
             .Select(lane => lane.UnitInLane);
 
         units = units.Where(unit =>
@@ -179,7 +179,7 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
     public List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance cardWithAbility)
     {
         var effectTargets = cardWithAbility.GetAbilitiesAndComponents<ActivatedAbility>().FirstOrDefault().Effects.Select(e => e.TargetType); //for compatibility purposes. 
-        if (!ActivatedAbilityNeedsTargets(player, cardWithAbility))
+        if (!ActivatedAbilityNeedsTargets(cardWithAbility))
         {
             return new List<CardGameEntity>();
         }
