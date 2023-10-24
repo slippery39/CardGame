@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerBoard3D : MonoBehaviour
@@ -145,6 +146,19 @@ public class PlayerBoard3D : MonoBehaviour
         for (var i = 0; i < cards.Count; i++)
         {           
             card3Ds[i].SetCardInfo(cards[i],true,false);            
+        }
+
+        //Highlight the graveyard if a card exists with an action.
+        //Might be better to have an actual highlight exist around the graveyard instead 
+        //of piggy backing on existing cards
+        bool hasAction = cards.Exists(c => c.GetAvailableActions().Any());
+        if (hasAction)
+        {
+            card3Ds[0].Highlight();
+        }
+        else
+        {
+            card3Ds[0].StopHighlight();
         }
     }
 

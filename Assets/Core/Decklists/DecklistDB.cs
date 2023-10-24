@@ -228,10 +228,10 @@ public class FamousDecks : DecklistDB
             Name = "DrawCardBugTest",
             Format = "Test",
             Cards = @"
-                10 Goblin Ringleader
-                10 Goblin Matron
-                10 Rite of Flame
-                10 Mountain
+                10 Snapcaster Mage
+                10 Gitaxian Probe
+                10 Ponder
+                10 Island
                 "
         };
     }
