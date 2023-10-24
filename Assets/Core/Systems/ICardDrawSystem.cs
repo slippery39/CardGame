@@ -6,7 +6,6 @@ public interface ICardDrawSystem
     void DrawOpeningHand(Player player);
     void GrabRandomCardFromDeck(Player player, CardFilter filter);
     void GrabFromTopOfDeck(Player player, CardFilter filter, int amountToLookAt, int amountToGrab);
-
     void PutIntoHand(Player player, CardInstance card);
     void Shuffle(Player player);
 }
@@ -91,10 +90,12 @@ public class DefaultCardDrawSystem : CardGameSystem, ICardDrawSystem
 
         for (int i = 0; i < amountToGrab; i++)
         {
-            if (validCardsToGet.Count() > i)
+            if (validCardsToGet.Count > i)
             {
                 cardGame.ZoneChangeSystem.MoveToZone(validCardsToGet.ToList()[i], player.Hand);
-                validCardsToGet.Remove(validCardsToGet.ToList()[i]);
+                var cardToGrab = validCardsToGet.ToList()[i];
+                validCardsToGet.Remove(cardToGrab);
+                cardsToLookAt.Remove(cardToGrab);
             }
         }
 

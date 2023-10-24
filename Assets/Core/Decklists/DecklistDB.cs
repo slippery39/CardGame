@@ -228,9 +228,10 @@ public class FamousDecks : DecklistDB
             Name = "DrawCardBugTest",
             Format = "Test",
             Cards = @"
-                30 Telling Time
-                20 Careful Study
-                10 Island
+                10 Goblin Ringleader
+                10 Goblin Matron
+                10 Rite of Flame
+                10 Mountain
                 "
         };
     }
