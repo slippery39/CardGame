@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237c7c521b6c7af4cabdc22fc5d91fab, type: 3}
+  m_Name: Decklist_UWDelver2012
+  m_EditorClassIdentifier: 
+  DeckName: UW Delver 2012
+  Format: Standard
+  Contents: "        3 Restoration Angel\r\n        4 Geist of Saint Traft\r\n       
+    4 Delver of Secrets\r\n        4 Snapcaster Mage\r\n        2 Augur of Bolas\r\n       
+    Sorcery(8)\r\n        4 Ponder\r\n        4 Gitaxian Probe\r\n        Instant(14)\r\n       
+    4 Vapor Snag\r\n        4 Thought Scour\r\n        4 Gut Shot\r\n        2 Mana
+    Leak\r\n        Artifact(2)\r\n        2 Runechanter's Pike\r\n        Land(19)\r\n       
+    8 Island\r\n        4 Seachrome Coast\r\n        4 Glacial Fortress\r\n       
+    2 Moorland Haunt\r\n        1 Plains"

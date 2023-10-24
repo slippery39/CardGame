@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 237c7c521b6c7af4cabdc22fc5d91fab, type: 3}
+  m_Name: Decklist_GRHazeOfRage
+  m_EditorClassIdentifier: 
+  DeckName: GR Haze of Rage
+  Format: Time Spiral Block Constructed
+  Contents: "                    Lands(25)\r\n                    6 Mountain\r\n                   
+    5 Forest\r\n                    4 Stomping Ground\r\n                    4 Cragcrown
+    Pathway\r\n                    4 Copperline Gorge\r\n                    4 Rootbound
+    Crag\r\n                    \r\n                    Spells(35)\r\n                   
+    4 Tarmogoyf\r\n                    4 Mogg War Marshal\r\n                   
+    4 Thornweald Archer\r\n                    4 Kavu Predator\r\n                   
+    4 Uktabi Drake\r\n                    4 Gaea's Anthem\r\n                   
+    4 Summoner's Pact\r\n                    3 Dead\r\n                    4 Haze
+    of Rage"

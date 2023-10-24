@@ -191,6 +191,17 @@ Transform:
   m_Father: {fileID: 953191320}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &472742907 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2326967093647577380, guid: 8542bbeca99d17f499ba190124a4b13d, type: 3}
+  m_PrefabInstance: {fileID: 953191319}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970cf36a57b061f4babf40ecda72bf3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &518697385 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 2326967092910813708, guid: 8542bbeca99d17f499ba190124a4b13d, type: 3}
@@ -320,6 +331,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Setup Menu
       objectReference: {fileID: 0}
+    - target: {fileID: 2326967094189253398, guid: 8542bbeca99d17f499ba190124a4b13d, type: 3}
+      propertyPath: decklists
+      value: 
+      objectReference: {fileID: 11400000, guid: a8f2ba70493d0cb48805df940623d010, type: 2}
+    - target: {fileID: 2326967094189253398, guid: 8542bbeca99d17f499ba190124a4b13d, type: 3}
+      propertyPath: _player1Dropdown
+      value: 
+      objectReference: {fileID: 472742907}
+    - target: {fileID: 2326967094189253398, guid: 8542bbeca99d17f499ba190124a4b13d, type: 3}
+      propertyPath: _player2Dropdown
+      value: 
+      objectReference: {fileID: 1650256994}
     - target: {fileID: 2326967094189253399, guid: 8542bbeca99d17f499ba190124a4b13d, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -533,3 +556,14 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &1650256994 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2326967093241596932, guid: 8542bbeca99d17f499ba190124a4b13d, type: 3}
+  m_PrefabInstance: {fileID: 953191319}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 970cf36a57b061f4babf40ecda72bf3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

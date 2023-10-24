@@ -9,9 +9,12 @@ public class GameSetupController : MonoBehaviour
 {
     GameSetupOptions gameSetupOptions;
 
+    [Header("Decklist References")]
+    [SerializeField] private ListOfDecklistsScriptableObject decklists;
+
     [Header("Control References")]
-    [SerializeField] TMP_Dropdown _player1Dropdown;
-    [SerializeField] TMP_Dropdown _player2Dropdown;
+    [SerializeField] DeckSelectionDropdown _player1Dropdown;
+    [SerializeField] DeckSelectionDropdown _player2Dropdown;
     [SerializeField] TMP_InputField _startingLifeTotalInput;
     [SerializeField] Button _startGameButton;
 
@@ -20,10 +23,18 @@ public class GameSetupController : MonoBehaviour
 
     public void Awake()
     {
+        if (decklists == null)
+        {
+            Debug.LogError("No decklists have been assigned to the GameSetupController");
+        }
+
         _startGameButton.onClick.AddListener(() =>
         {
             StartGame();
         });
+
+        _player1Dropdown.Decklists = decklists;
+        _player2Dropdown.Decklists = decklists;
     }
 
     public void Initialize(AppController appController)
@@ -38,10 +49,15 @@ public class GameSetupController : MonoBehaviour
 
     public void StartGame()
     {
-        var decklistDB = new FamousDecks();
 
-        var player1Deck = decklistDB.GetByName(_player1Dropdown.options[_player1Dropdown.value].text);
-        var player2Deck = decklistDB.GetByName(_player2Dropdown.options[_player2Dropdown.value].text);
+        DecklistScriptableObject deck1 = _player1Dropdown.Selected;
+        DecklistScriptableObject deck2 = _player2Dropdown.Selected;
+
+        var player1Deck = deck1.ToDecklist();
+        var player2Deck = deck2.ToDecklist();
+
+        //var player1Deck = decklistDB.GetByName(_player1Dropdown.dropdown.options[_player1Dropdown.dropdown.value].text);
+        //var player2Deck = decklistDB.GetByName(_player2Dropdown.dropdown.options[_player2Dropdown.dropdown.value].text);
 
         var inputText = _startingLifeTotalInput.text.Trim();
         int startingLifeTotal = Convert.ToInt32(inputText);
