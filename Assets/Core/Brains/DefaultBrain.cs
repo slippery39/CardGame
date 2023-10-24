@@ -87,10 +87,12 @@ public class DefaultBrain : IBrain
         {
             actionScores = new List<StateActionNode>();
         }
+        actionScores.ForEach(node =>
+        {
+            node.BestScoreIncludingChildren = FindBestScoreForNode(node, -999999);
+        });
         actionScores.Sort((a, b) =>
         {
-            a.BestScoreIncludingChildren = FindBestScoreForNode(a, -999999);
-            b.BestScoreIncludingChildren = FindBestScoreForNode(b, -999999);
             return b.BestScoreIncludingChildren - a.BestScoreIncludingChildren;
         });
 
