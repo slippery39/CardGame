@@ -81,6 +81,7 @@ public class DefaultStateBasedEffectSystem : CardGameSystem, IStateBasedEffectSy
         cardGame.GameEventSystem.FireGameStateUpdatedEvent();
 
         cardGame.DebugSystem.CheckForInvalidEntities();
+        cardGame.DebugSystem.CheckForNullModificationsOnPlayers();
     }
 
     //Returns true if something died, which means we have to apply/remove any static effects and check again.

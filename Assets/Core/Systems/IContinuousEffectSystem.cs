@@ -133,9 +133,9 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
         //TODO - remove continuous effects
         entity.ContinuousEffects.Add(effect);
         //Note this makes it so that static abilities with multiple effects will not work.
-        var sourceEffect = effect.SourceAbility.Effects.First();
+        var sourceEffect = effect.SourceAbility.Effects[0];
 
-        if (effect.SourceAbility.Effects.Count() > 1)
+        if (effect.SourceAbility.Effects.Count > 1)
         {
             cardGame.Log("Continuous effects are only supported for 1 effect at a time... if you are seeing this message it is likely you have a bug and it is time to update");
         }

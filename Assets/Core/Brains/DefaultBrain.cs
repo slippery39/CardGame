@@ -55,33 +55,11 @@ public class DefaultBrain : IBrain
             }
         }
 
-        if (bestScore == 0)
-        {
-            Log("Best Score was 0 here...");
-        }
-
         return bestScore;
     }
 
-
     private CardGameAction ChooseActionBase(CardGame cardGame)
     {
-        //We need an edge case for choices.
-
-        /*
-        var newDebugMsg = $"Number of valid actions {validActions.Count()}";
-
-        if (newDebugMsg != previousDebugMessage)
-        {
-            Debug.Log(newDebugMsg);
-            previousDebugMessage = newDebugMsg;
-        }
-
-        if (validActions.Count() == 0)
-        {
-             return;
-        }
-        */
         var actionScores = CalculateStateActionScoresForState(cardGame, null, 1);
         if (actionScores == null)
         {

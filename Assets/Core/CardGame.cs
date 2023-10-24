@@ -665,7 +665,7 @@ public class CardGame
         {
             var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
-            var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
+            var targetAsEntity = validTargets.Find(tar => tar.EntityId == targetId);
 
             if (targetAsEntity != null)
             {
@@ -710,7 +710,7 @@ public class CardGame
                 //TODO - This Validation should happen on a different layer
                 var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
 
-                var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == targetId);
+                var targetAsEntity = validTargets.Find(tar => tar.EntityId == targetId);
 
                 if (targetAsEntity != null)
                 {
@@ -732,6 +732,7 @@ public class CardGame
                         mod.OnSpellCast(this, cardToPlay, GetZoneOfCard(cardToPlay));//etc...
                     });
                     ResolvingSystem.Add(action, cardToPlay);
+
                     //Do we need our state based effects here?
                     _stateBasedEffectSystem.CheckStateBasedEffects();
                 }

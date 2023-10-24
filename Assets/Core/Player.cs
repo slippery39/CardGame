@@ -82,7 +82,11 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         var clone = (Player)MemberwiseClone();
 
         clone.ContinuousEffects = ContinuousEffects.Clone();
-        clone.Modifications = Modifications.Clone();
+        //The Clone Method is dangerous and may not be working in the correct way... somehow it turned my snapcaster mage modification into a null..
+        //not sure why...keep an eye out for any other weird errors regarding this clone object.
+        //maybe do a sanity check on all lists checking for nulls?
+        clone.Modifications = Modifications.Select(m => m.Clone()).ToList();
+
         clone.EntityId = EntityId;
         clone.Name = Name;
 
@@ -167,6 +171,8 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         //TODO - should grab all actions with targets
         var inPlayActions = GetCardsInPlay().SelectMany(c => c.GetAvailableActionsWithTargets()).ToList();
 
+        var discardPileActions = DiscardPile.Cards.SelectMany(c => c.GetAvailableActionsWithTargets()).ToList();
+
         var fightActions = Lanes.Where(l => cardGame.BattleSystem.CanBattle(l.LaneIndex)).Select(l =>
         {
             return new FightAction
@@ -189,7 +195,7 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         var endOfTurnAction = new List<CardGameAction>() { new NextTurnAction() };
 
 
-        return handActions.Concat(inPlayActions).Concat(fightActions).Concat(endOfTurnAction).ToList();
+        return handActions.Concat(inPlayActions).Concat(fightActions).Concat(discardPileActions).Concat(endOfTurnAction).ToList();
     }
 
     #endregion
