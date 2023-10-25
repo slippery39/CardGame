@@ -23,6 +23,32 @@ public static class TokenHelper
             Colors = new List<CardColor> { CardColor.Red }
         };
     }
+
+    public static ItemCardData ClueToken()
+    {
+        return new ItemCardData
+        {
+            Name = "Clue Token",
+            ManaCost = "0",
+            Subtype = "Artifact",
+            ArtPath = $"{ArtPath}ClueToken",
+            Abilities = new List<CardAbility>
+            {
+                new ActivatedAbility()
+                {
+                    ManaCost ="3",
+                    AdditionalCost = new SacrificeSelfAdditionalCost(),
+                    Effects = new List<Effect>
+                    {
+                        new DrawCardEffect()
+                        {
+                            Amount = 1
+                        }
+                    }
+                }
+            }
+        };
+    }
 }
 
 public interface ICard
@@ -118,7 +144,7 @@ public class SpellCardData : BaseCardData
         {
             var additionalCostText = AdditionalCost != null ? $"Additional Cost : {AdditionalCost.RulesText}\r\n" : "";
             var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
-            var effectsText = string.Join("\r\n", Effects.Select(e => Effect.CompileRulesText(e)));       
+            var effectsText = string.Join("\r\n", Effects.Select(e => Effect.CompileRulesText(e)));
             return additionalCostText + abilitiesText + effectsText;
         }
     }
@@ -1936,7 +1962,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Great Furnace",
-            ManaAdded = "1",
+            ManaAdded = "1R",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>()
             {
@@ -1947,29 +1973,8 @@ public class CardDatabase : ICardDatabase
                     {
                         new CreateTokenEffect<ItemCardData>
                         {
-                            TokenData = new ItemCardData()
-                            {
-                                Name = "Great Furnace",
-                                Subtype = "Artifact",
-                                ArtPath = $"{ArtPath}GreatFurnace",
-                                Abilities = new List<CardAbility>
-                                {
-                                    new ActivatedAbility()
-                                    {
-                                        OncePerTurnOnly = true,
-                                        ManaCost = "1",
-                                        Effects = new List<Effect>
-                                        {
-                                            new AddTempManaEffect
-                                            {
-                                                ManaToAdd = "R"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
+                            TokenData = TokenHelper.ClueToken(),
                             AmountOfTokens = 1
-
                         }
                     }
                 }
@@ -1980,7 +1985,7 @@ public class CardDatabase : ICardDatabase
         _cards.Add(new ManaCardData()
         {
             Name = "Seat of the Synod",
-            ManaAdded = "1",
+            ManaAdded = "1U",
             Colors = new List<CardColor> { CardColor.Blue },
             Abilities = new List<CardAbility>()
             {
@@ -1991,29 +1996,8 @@ public class CardDatabase : ICardDatabase
                     {
                         new CreateTokenEffect<ItemCardData>
                         {
-                            TokenData = new ItemCardData()
-                            {
-                                Name = "Seat of the Synod",
-                                Subtype = "Artifact",
-                                ArtPath = $"{ArtPath}SeatOfTheSynod",
-                                Abilities = new List<CardAbility>
-                                {
-                                    new ActivatedAbility()
-                                    {
-                                        OncePerTurnOnly = true,
-                                        ManaCost = "1",
-                                        Effects = new List<Effect>
-                                        {
-                                            new AddTempManaEffect
-                                            {
-                                                ManaToAdd = "U"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
+                            TokenData = TokenHelper.ClueToken(),
                             AmountOfTokens = 1
-
                         }
                     }
                 }
@@ -2031,33 +2015,13 @@ public class CardDatabase : ICardDatabase
                 new TriggeredAbility()
                 {
                     TriggerType = TriggerType.SelfEntersPlay,
+                    
                     Effects = new List<Effect>
                     {
                         new CreateTokenEffect<ItemCardData>
                         {
-                            TokenData = new ItemCardData()
-                            {
-                                Name = "Vault of Whispers",
-                                Subtype = "Artifact",
-                                ArtPath = $"{ArtPath}VaultOfWhispers",
-                                Abilities = new List<CardAbility>
-                                {
-                                    new ActivatedAbility()
-                                    {
-                                        OncePerTurnOnly = true,
-                                        ManaCost = "1",
-                                        Effects = new List<Effect>
-                                        {
-                                            new AddTempManaEffect
-                                            {
-                                                ManaToAdd = "B"
-                                            }
-                                        }
-                                    }
-                                }
-                            },
+                            TokenData = TokenHelper.ClueToken(),
                             AmountOfTokens = 1
-
                         }
                     }
                 }
