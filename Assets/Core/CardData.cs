@@ -3126,6 +3126,67 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Damage Test Target",
+            ManaCost = "1R",
+            ArtPath = $"{ArtPath}Pyroclasm",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>()
+            {
+                new DamageEffect()
+                {
+                    Amount = 2,
+                    TargetInfo = new TargetInfo
+                    {
+                        TargetMode = TargetMode.Target,
+                        OwnerType = TargetOwnerType.Theirs                        
+                    }
+                }
+            }
+        }); 
+
+
+        /*
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Damage Test All",
+            ManaCost = "1R",
+            ArtPath = $"{ArtPath}Pyroclasm",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>()
+            {
+                new DamageEffect()
+                {
+                    Amount = 2,
+                    TargetInfo = new TargetInfo
+                    {
+                        TargetMode = TargetMode.All,,
+                        OwnerType = TargetOwnerType.Any,
+                        TargetType = TargetType.
+                    }
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Damage Test Random",
+            ManaCost = "1R",
+            ArtPath = $"{ArtPath}Pyroclasm",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>()
+            {
+                new DamageEffect()
+                {
+                    Amount = 2,
+                    TargetType = TargetType.AllUnits
+                }
+            }
+        });
+        */
+
 
 
 
@@ -3254,6 +3315,8 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
+
+
 
         //Use Default ArtPaths
         foreach (var card in _cards)

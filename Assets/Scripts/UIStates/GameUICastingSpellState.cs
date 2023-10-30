@@ -97,7 +97,7 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState, IGameUIC
         var effectsWithTargets = _spellToCast.Effects.Where(e => e.NeedsTargets()).ToList();
         if (effectsWithTargets.Any())
         {
-            ChangeState(new GameUISelectTargetState(_stateMachine, this, effectsWithTargets));
+            ChangeState(new GameUISelectTargetState(_stateMachine, this, _spellToCast, effectsWithTargets));
         }
         else
         {

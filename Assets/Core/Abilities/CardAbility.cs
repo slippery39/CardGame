@@ -269,6 +269,7 @@ public class TargetInfo
     /// <exception cref="Exception"></exception>
     public IEnumerable<CardGameEntity> GetTargets(CardGame cardGame, Player player, CardGameEntity effectSource)
     {
+        //TODO - Filter by OwnerType
         //Differentiating between TargetTypes that need targets vs TargetTypes that don't at the moment.
         //In the future this might change.
         if (NeedsTargets)
@@ -281,7 +282,7 @@ public class TargetInfo
             {
                 return GetUnits(cardGame);
             }
-            else if (TargetType == TargetType.TargetUnitsOrPlayers)
+            else if (TargetType == TargetType.TargetUnitsOrPlayers || (TargetType == TargetType.UnitsAndPlayers))
             {
                 return GetUnits(cardGame).Concat(GetPlayers(cardGame));
             }

@@ -93,7 +93,7 @@ public class GameUIActivatedAbilityState : GameUIActionState, IGameUIState, IGam
 
     public override void ChangeToSelectTargetState()
     {
-        ChangeState(new GameUISelectTargetState(_stateMachine, this, GetActivatedAbility().Effects));
+        ChangeState(new GameUISelectTargetState(_stateMachine, this, _cardWithAbility, GetActivatedAbility().Effects));
     }
 
     public void ActivateAbility()

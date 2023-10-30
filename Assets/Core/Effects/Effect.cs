@@ -15,6 +15,7 @@ public abstract class Effect
 
     public abstract void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply);
 
+    //TODO - this is not set up to work with TargetInfo yet, should probably actually be moved inside target info
     public static string CompileRulesText(Effect effect)
     {
         var effectText = effect.RulesText;
@@ -33,6 +34,7 @@ public abstract class Effect
     }
 
     //Temporary placing this here while we refactor our TargetSystem.
+    [Obsolete("Use TargetInfo.NeedsTargets from now on instead")]
     private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.RandomOpponentOrUnits, TargetType.OpenLane, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
 
     public bool NeedsTargets()
@@ -62,7 +64,29 @@ public abstract class Effect
         return units.Cast<CardGameEntity>();
     }
 
-    public IEnumerable<CardGameEntity> GetEffectTargets(CardGame cardGame, Player player)
+    public IEnumerable<CardGameEntity> GetEffectTargets(CardGame cardGame, Player player, CardGameEntity sourceOfEffects)
+    {
+        if (TargetInfo != null)
+        {
+            //New way of getting effect targets
+            return TargetInfo.GetTargets(cardGame, player, sourceOfEffects);
+        }
+        else
+        {
+            //Old way of grabbing effect targets.. Obsolete but keeping here for compatibility.
+            return GetEffectTargetsOld(cardGame);
+        }
+    }
+
+    /// <summary>
+    /// Old way of figuring out the targets of an effect via the TargetType enum
+    /// </summary>
+    /// <param name="cardGame"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+   
+    [Obsolete("Use TargetInfo.GetTargets() from now on instead")]
+    private IEnumerable<CardGameEntity> GetEffectTargetsOld(CardGame cardGame)
     {
         if (!NeedsTargets())
         {
@@ -88,9 +112,30 @@ public abstract class Effect
                     throw new Exception($"Attempted to process invalid or unimplemented target type for GetEffectTargets() : ${TargetType}");
                 }
         }
-
     }
+
     public IEnumerable<CardGameEntity> GetEntitiesToApplyEffect(CardGame cardGame, Player player, CardGameEntity effectSource)
+    {
+        if (TargetInfo != null)
+        {
+            return TargetInfo.GetTargets(cardGame, player, effectSource);
+        }
+        else
+        {
+            return GetEntitiesToApplyEffectOld(cardGame, player, effectSource);
+        }
+    }
+
+    /// <summary>
+    /// Old way of getting figuring out which entity will be effected via the TargetType enum
+    /// </summary>
+    /// <param name="cardGame"></param>
+    /// <param name="player"></param>
+    /// <param name="effectSource"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    [Obsolete("Use TargetInfo.GetTargets() from now on instead")]
+    private IEnumerable<CardGameEntity> GetEntitiesToApplyEffectOld(CardGame cardGame, Player player, CardGameEntity effectSource)
     {
         switch (TargetType)
         {

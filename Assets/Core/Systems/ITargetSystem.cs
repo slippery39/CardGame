@@ -6,7 +6,7 @@ using System.Linq;
 public interface ITargetSystem
 {
     List<CardGameEntity> GetValidTargets(Player player, CardInstance card);
-    List<CardGameEntity> GetValidEffectTargets(Player player, List<Effect> effects);
+    List<CardGameEntity> GetValidEffectTargets(Player player, CardGameEntity effectSource, List<Effect> effects);
     List<CardGameEntity> GetValidAbilityTargets(Player player, CardInstance card);
     List<CardGameEntity> GetEntitiesToApplyEffect(Player player, CardGameEntity source, Effect effect);
     bool CardNeedsTargets(Player player, CardInstance card);
@@ -28,9 +28,9 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
     /// <param name="effect">The effect that is being applied</param>
     /// <returns></returns>
     /// 
-    public List<CardGameEntity> GetEntitiesToApplyEffect(Player player, CardGameEntity effectSource, Effect effect)
+    public List<CardGameEntity> GetEntitiesToApplyEffect(Player player, CardGameEntity source, Effect effect)
     {
-        return effect.GetEntitiesToApplyEffect(cardGame, player, effectSource).ToList();
+        return effect.GetEntitiesToApplyEffect(cardGame, player, source).ToList();
     }
 
     public bool CardNeedsTargets(Player player, CardInstance card)
@@ -57,35 +57,6 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
         return activatedAbility.Effects.NeedsTargets();
     }
 
-    private List<CardGameEntity> GetValidUnitTargets(Player player)
-    {
-        var units =
-            cardGame
-            .GetEntities<Lane>()
-            .Where(lane => !lane.IsEmpty())
-            .Select(lane => lane.UnitInLane);
-
-        units = units.Where(unit =>
-        {
-            var modTargetAbilities = unit.GetAbilitiesAndComponents<IModifyCanBeTargeted>();
-            var canBeTargeted = true;
-
-            foreach (var ability in modTargetAbilities)
-            {
-                canBeTargeted = ability.ModifyCanBeTargeted(cardGame, unit, player);
-            }
-
-            return canBeTargeted;
-        });
-
-        return units.Cast<CardGameEntity>().ToList();
-    }
-
-    private List<CardGameEntity> GetValidPlayerTargets()
-    {
-        return cardGame.Players.Cast<CardGameEntity>().ToList();
-    }
-
     /// <summary>
     /// Gets the valid effect targets for a List of effects.
     /// This assumes a list of effects will always have only 1 TargetType declared.
@@ -93,9 +64,9 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
     /// <param name="player"></param>
     /// <param name="effects"></param>
     /// <returns></returns>
-    public List<CardGameEntity> GetValidEffectTargets(Player player, List<Effect> effects)
+    public List<CardGameEntity> GetValidEffectTargets(Player player, CardGameEntity sourceOfEffects, List<Effect> effects)
     {
-        var effectTargets = effects.SelectMany(effect => effect.GetEffectTargets(cardGame, player));
+        var effectTargets = effects.SelectMany(effect => effect.GetEffectTargets(cardGame, player, sourceOfEffects));
         effectTargets = effectTargets.Where(target =>
         {
             CardInstance cardInstanceTarget = target as CardInstance;
@@ -134,13 +105,14 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
             return new List<CardGameEntity>();
         }
 
-        var effectTargets = GetValidEffectTargets(player, ability.Effects);
+        var effectTargets = GetValidEffectTargets(player, cardWithAbility, ability.Effects);
         return effectTargets;
     }
     //TODO - Perhaps Targets should only matter for Actions, and not for cards.
     //So instead of passing in a card here, we pass in an action and process the targets that way.
     public List<CardGameEntity> GetValidTargets(Player player, CardInstance card)
     {
+        //Handles summoning a unit to a lane
         if (card.CurrentCardData is UnitCardData)
         {
             var emptyLanes = player.Lanes.Where(lane => lane.IsEmpty()).ToList();
@@ -149,6 +121,7 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
             return emptyLanesCast.ToList();
         }
 
+        //Handles casting a spell
         var spellCard = card.CurrentCardData as SpellCardData;
 
         if (spellCard != null)
@@ -159,9 +132,10 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
             }
             else
             {
-                return GetValidEffectTargets(player, spellCard.Effects);
+                return GetValidEffectTargets(player, card, spellCard.Effects);
             }
         }
+
 
         return new List<CardGameEntity>();
     }

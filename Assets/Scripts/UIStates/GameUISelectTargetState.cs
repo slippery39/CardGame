@@ -13,12 +13,17 @@ internal class GameUISelectTargetState : IGameUIState
     private GameUIStateMachine _stateMachine;
     private List<Effect> _effects;
     private GameUIActionState _parentState;
+    /// <summary>
+    /// Source of the effects in question.
+    /// </summary>
+    private CardGameEntity _source;
 
-    public GameUISelectTargetState(GameUIStateMachine stateMachine, GameUIActionState parentState, List<Effect> effects)
+    public GameUISelectTargetState(GameUIStateMachine stateMachine, GameUIActionState parentState, CardGameEntity source,  List<Effect> effects)
     {
         _stateMachine = stateMachine;
         _effects = effects;
         _parentState = parentState;
+        _source = source;
     }
 
     public string GetMessage()
@@ -39,14 +44,14 @@ internal class GameUISelectTargetState : IGameUIState
 
     public void HandleSelection(int entityId)
     {
-        var validTargets = _cardGame.TargetSystem.GetValidEffectTargets(_actingPlayer, _effects); ;
+        var validTargets = _cardGame.TargetSystem.GetValidEffectTargets(_actingPlayer,_source, _effects); ;
 
         if (!validTargets.Select(e => e.EntityId).Contains(entityId))
         {
             return;
         }
 
-        var targetAsEntity = validTargets.FirstOrDefault(tar => tar.EntityId == entityId);
+        var targetAsEntity = validTargets.Find(tar => tar.EntityId == entityId);
 
         if (targetAsEntity == null)
         {
@@ -74,10 +79,11 @@ internal class GameUISelectTargetState : IGameUIState
     {
         var validTargets = _cardGame.TargetSystem.GetValidEffectTargets(
         _actingPlayer,
+        _source,
         _effects)
         .Select(e => e.EntityId);
 
-        if (validTargets.Count() == 0)
+        if (!validTargets.Any())
         {
             return;
         }
