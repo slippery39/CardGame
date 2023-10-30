@@ -19,7 +19,7 @@ public class DefaultEffectsProcessor : CardGameSystem, IEffectsProcessor
     public void ApplyEffect(Player player, CardInstance source, Effect effect, List<CardGameEntity> targets)
     {
         List<CardGameEntity> entitiesToEffect;
-        if (!cardGame.TargetSystem.EffectNeedsTargets(effect))
+        if (!effect.NeedsTargets())
         {
             entitiesToEffect = cardGame.TargetSystem.GetEntitiesToApplyEffect(player, source, effect);
         }

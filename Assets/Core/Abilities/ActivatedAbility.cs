@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets.Core;
+using System.Collections.Generic;
 using System.Linq;
 
 public class ActivatedAbility : CardAbility
@@ -36,7 +37,7 @@ public class ActivatedAbility : CardAbility
     public bool OncePerTurnOnly { get; set; } = false;
     public bool ExhaustOnUse { get; set; } = false;
 
-
+    //TODO - Why can't the effect compile its own rules text? Why does it need to be a static method?
     private string GetEffectRulesText(Effect e)
     {
         return Effect.CompileRulesText(e);
@@ -54,6 +55,6 @@ public class ActivatedAbility : CardAbility
 
     public bool HasTargets()
     {
-        return TargetHelper.NeedsTargets(this);
+        return Effects.NeedsTargets();
     }
 }

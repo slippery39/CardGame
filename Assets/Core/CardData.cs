@@ -995,7 +995,8 @@ public class CardDatabase : ICardDatabase
                     Effects = new List<Effect>{ new PumpUnitEffect()
                     {
                         Power = 1,
-                        Toughness =1
+                        Toughness =1,
+                        TargetType = TargetType.OurUnits
                     }
                     },
                  }
@@ -2015,7 +2016,7 @@ public class CardDatabase : ICardDatabase
                 new TriggeredAbility()
                 {
                     TriggerType = TriggerType.SelfEntersPlay,
-                    
+
                     Effects = new List<Effect>
                     {
                         new CreateTokenEffect<ItemCardData>
@@ -2297,7 +2298,15 @@ public class CardDatabase : ICardDatabase
             Colors = new List<CardColor> { CardColor.Red },
             Effects = new List<Effect>
             {
-                new DamageEffect {TargetType = TargetType.TargetUnitsOrPlayers, Amount = 1}
+                new DamageEffect {
+                    TargetInfo = new TargetInfo
+                    {
+                        TargetType = TargetType.UnitsAndPlayers,
+                        OwnerType = TargetOwnerType.Theirs,
+                        TargetMode = TargetMode.Target
+                    },
+                    Amount = 1
+                }
             }
         });
 
@@ -3245,7 +3254,6 @@ public class CardDatabase : ICardDatabase
                 }
             }
         });
-
 
         //Use Default ArtPaths
         foreach (var card in _cards)

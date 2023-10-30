@@ -159,7 +159,7 @@ public class PlayManaAction : CardGameAction
 {
     public override string ManaCost => "";
     public override string ActionType => "Mana";
-    
+
     public override void DoAction(CardGame cardGame)
     {
         cardGame.PlayCard(Player, this);
@@ -198,7 +198,7 @@ public class PlaySpellAction : CardGameAction
     public override string ToUIString()
     {
         var modifiers = this.CastModifiers.Select(m => m.RulesText);
-        var effects = CardToPlay.Effects.Select(m => m.RulesText);       
+        var effects = CardToPlay.Effects.Select(m => m.RulesText);
         return String.Join("\r\n", modifiers.Union(effects));
     }
     public override void DoAction(CardGame cardGame)
@@ -230,7 +230,7 @@ public class PlaySpellAction : CardGameAction
 public class ActivateAbilityAction : CardGameAction
 {
     public override string ActionType => "Activate Ability";
-    public ActivatedAbility Ability { get; set; }    
+    public ActivatedAbility Ability { get; set; }
     public override string ManaCost => Ability.ManaCost;
     public override void DoAction(CardGame cardGame)
     {

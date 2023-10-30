@@ -29,7 +29,7 @@ internal class GameUISelectTargetState : IGameUIState
     //Assumes we only have spells with one target, will need to change this for when we have spells with more than one target.
     public Effect GetEffectWithTarget()
     {
-        return _effects.Where(effect => _cardGame.TargetSystem.EffectNeedsTargets(effect)).FirstOrDefault();
+        return _effects.Find(e => e.NeedsTargets());
     }
 
     public void HandleInput()

@@ -30,7 +30,7 @@ public abstract class CardAbility
 }
 
 public abstract class AbilityComponent
-{ 
+{
 }
 
 public class AbilityCooldown : AbilityComponent
@@ -105,8 +105,8 @@ public class TriggeredAbility : CardAbility
                 case TriggerType.SomethingDies:
 
                     var cardFilterString = Filter.RulesTextString();
-                  
-                    text += $"When a {(cardFilterString!=""? cardFilterString : "anything")} dies ";
+
+                    text += $"When a {(cardFilterString != "" ? cardFilterString : "anything")} dies ";
                     break;
                 default:
                     text += "";
@@ -147,24 +147,207 @@ public enum TargetType
 {
     None,
     PlayerSelf, //Player
-    Opponent,
-    AllUnits,
-    OurUnits,
+    Opponent, //non targetting
+    AllUnits, //non targetting
+    OurUnits, //non targetting
     CardsInHand,
-    OtherCreaturesYouControl,
-    OpponentUnits,
+    OtherCreaturesYouControl, //non targetting
+    OpponentUnits, //non targetting
     UnitSelf, //Self Unit
-    TargetPlayers,
-    TargetUnits,
-    TargetUnitsOrPlayers,
+    TargetPlayers, //any player
+    TargetUnits, //any unit
+    TargetUnitsOrPlayers, //any unit or player
     RandomOurUnits,
     RandomOpponentOrUnits,
     OpenLane,
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
+    //NEW TARGET TYPES FOR UPDATED SYSTEM HERE:
+    /// <summary>
+    /// Targets units and/or players
+    /// </summary>
+    UnitsAndPlayers
 }
+
+/// <summary>
+/// This enum describes which entities will be targeted by an effect basedd on the owner of the entity.
+/// </summary>
+public enum TargetOwnerType
+{
+    /// <summary>
+    /// Target entities from any owner i.e. Destroy all creatures.
+    /// </summary>
+    Any,
+    /// <summary>
+    /// Only target our entities i.e. ex. Our Creatures get +1/+1 until end of turn.
+    /// </summary>
+    Ours,
+    /// <summary>
+    /// Only target their cards i.e. Deal 2 damage to target creature an opponent controls
+    /// </summary>
+    Theirs
+}
+
+/// <summary>
+/// This enum descibes which entities will be targeted based on a list of valid choices.
+/// ex. If you want to target a single creature, you would use Target.
+/// If you want to target all creatures at once you would use All./// 
+/// </summary>
+public enum TargetMode
+{
+    /// <summary>
+    /// IN PROGRESS - NOT SURE ABOUT THIS ONE YET, MAY NEED TO CHANGE
+    /// Card has no targets at all ex. Divination - Draw 2 Cards
+    /// </summary>
+    None,
+    /// <summary>
+    /// Card selects random targets ex. Deal 2 damage to 2 random creatures
+    /// </summary>
+    Random,
+    /// <summary>
+    /// You select the targets for the effect. ex. Deal 2 damage to a target creature
+    /// </summary>
+    Target,
+    /// <summary>
+    /// All targets are selected for the effect ex. Deal 2 damage to each creature
+    /// </summary>
+    All
+}
+
+//Our new target type might have the following:
+/*
+ * None,
+ * PlayerSelf,
+ * Opponent,
+ * Units,
+ * CardsInHand,
+ * UnitSelf,
+ * OpenLane,
+ * OpenLaneBesidenUnit
+ */
+
+/// <summary>
+/// In progress class to replace our TargetType enum and make it more flexible.
+/// </summary>
+public class TargetInfo
+{
+    /// <summary>
+    /// Used to determine the overall type of target. Temporary while we refactor this out
+    /// </summary>
+    public TargetType TargetType { get; set; }
+
+    /// <summary>
+    /// Whose cards should be able to chosen as targets. (Any, Ours or Theirs)
+    /// ex. All creatures get +1/+1, Our creatures get +1/+!, Their creatures get +1/+1
+    /// </summary>
+    public TargetOwnerType OwnerType { get; set; } = TargetOwnerType.Any;
+
+    public TargetMode TargetMode { get; set; } = TargetMode.Target;
+    /// <summary>
+    /// A class to define if we should filter the original target info by Type / Subtype / Colors etc..
+    /// </summary>
+    public CardFilter TargetFilter { get; set; }
+
+    /// <summary>
+    /// Helper method, checkes whether this TargetInfo represents an effect that needs targets
+    /// </summary>
+    public bool NeedsTargets => TargetMode == TargetMode.Target;
+
+    /// <summary>
+    /// Number of targets required for the effect in question. Note that our codebase does not currently support cards with multiple targets.
+    /// This may change in the future.
+    /// </summary>
+    public int NumberOfTargets => NeedsTargets ? 1 : 0;
+
+    /// <summary>
+    /// This grabs the targets from a cardGame based on the TargetInfo, but before any systems have done their modifications.
+    /// For example, Hexproof 
+    /// </summary>
+    /// <param name="cardGame"></param>
+    /// <param name="player"></param>
+    /// <param name="effectSource"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public IEnumerable<CardGameEntity> GetTargets(CardGame cardGame, Player player, CardGameEntity effectSource)
+    {
+        //Differentiating between TargetTypes that need targets vs TargetTypes that don't at the moment.
+        //In the future this might change.
+        if (NeedsTargets)
+        {
+            if (TargetType == TargetType.TargetPlayers)
+            {
+                return GetPlayers(cardGame);
+            }
+            else if (TargetType == TargetType.TargetUnits)
+            {
+                return GetUnits(cardGame);
+            }
+            else if (TargetType == TargetType.TargetUnitsOrPlayers)
+            {
+                return GetUnits(cardGame).Concat(GetPlayers(cardGame));
+            }
+        }
+        else
+        {
+            switch (TargetType)
+            {
+                case TargetType.None:
+                    return new List<CardGameEntity> { effectSource };
+                case TargetType.PlayerSelf:
+                    {
+                        return new List<CardGameEntity> { player };
+                    }
+                case TargetType.AllUnits:
+                    {
+                        return cardGame.GetUnitsInPlay().Cast<CardGameEntity>().ToList();
+                    }
+                case TargetType.OurUnits:
+                    return player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
+                case TargetType.OpponentUnits:
+                    return cardGame.Players.Find(p => player.PlayerId != p.PlayerId).Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
+                case TargetType.UnitSelf:
+                    return new List<CardGameEntity>() { effectSource };
+                case TargetType.Opponent:
+                    return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
+                case TargetType.RandomOurUnits:
+                    var ourUnits = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Randomize();
+                    var filtered = CardFilter.ApplyFilter(ourUnits.ToList(), TargetFilter);
+                    return new List<CardGameEntity> { filtered.FirstOrDefault() };
+                case TargetType.RandomOpponentOrUnits:
+                    var opponent = cardGame.Players.Find(p => p.EntityId != player.EntityId);
+                    var things = new List<CardGameEntity> { opponent };
+
+                    var everything = things.Union(opponent.GetUnitsInPlay());
+
+                    if (!everything.Any())
+                    {
+                        return new List<CardGameEntity> { };
+                    }
+                    return new List<CardGameEntity> { everything.Randomize().First() };
+                default:
+                    throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
+            }
+        }
+
+        throw new Exception($"Could not find a way to handle {TargetType} in GetTargets()");
+    }
+
+    private IEnumerable<CardGameEntity> GetPlayers(CardGame cardGame)
+    {
+        return cardGame.Players.Cast<CardGameEntity>().ToList();
+    }
+
+    private IEnumerable<CardGameEntity> GetUnits(CardGame cardGame)
+    {
+        return cardGame.GetEntities<Lane>().Where(lane => !lane.IsEmpty()).Select(lane => lane.UnitInLane);
+    }
+}
+
+
+
 
 public static class TargetTypeHelper
 {
+    //TODO - Move to TargetInfo
     public static string TargetTypeToRulesText(TargetType targetType)
     {
         switch (targetType)

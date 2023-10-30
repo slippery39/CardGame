@@ -403,6 +403,7 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
             //126 - Fix so that our Computer AI actually uses activated abilities (like Crnial Plating)
             if (action is ActivateAbilityAction)
             {
+                var activatedAction = action as ActivateAbilityAction;
                 needsTargets = _cardGame.TargetSystem.ActivatedAbilityNeedsTargets(this);
             }
             else

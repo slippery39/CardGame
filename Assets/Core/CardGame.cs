@@ -708,7 +708,10 @@ public class CardGame
             else
             {
                 //TODO - This Validation should happen on a different layer
+                //This is not returning any targets
                 var validTargets = _targetSystem.GetValidTargets(player, cardToPlay);
+
+                //TODO - This is now null.
 
                 var targetAsEntity = validTargets.Find(tar => tar.EntityId == targetId);
 
