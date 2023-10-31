@@ -64,9 +64,9 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
     /// <param name="player"></param>
     /// <param name="effects"></param>
     /// <returns></returns>
-    public List<CardGameEntity> GetValidEffectTargets(Player player, CardGameEntity sourceOfEffects, List<Effect> effects)
+    public List<CardGameEntity> GetValidEffectTargets(Player player, CardGameEntity source, List<Effect> effects)
     {
-        var effectTargets = effects.SelectMany(effect => effect.GetEffectTargets(cardGame, player, sourceOfEffects));
+        var effectTargets = effects.SelectMany(effect => effect.GetEffectTargets(cardGame, player, source));
         effectTargets = effectTargets.Where(target =>
         {
             CardInstance cardInstanceTarget = target as CardInstance;
