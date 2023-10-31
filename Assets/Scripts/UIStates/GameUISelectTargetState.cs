@@ -28,7 +28,7 @@ internal class GameUISelectTargetState : IGameUIState
 
     public string GetMessage()
     {
-        return $@"Please choose a target for {GetEffectWithTarget().RulesText}";
+        return $@"Please choose a target for {GetEffectWithTarget().CompileRulesText()}";
     }
 
     //Assumes we only have spells with one target, will need to change this for when we have spells with more than one target.

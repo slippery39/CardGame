@@ -40,7 +40,7 @@ public class ActivatedAbility : CardAbility
     //TODO - Why can't the effect compile its own rules text? Why does it need to be a static method?
     private string GetEffectRulesText(Effect e)
     {
-        return Effect.CompileRulesText(e);
+        return e.CompileRulesText();
     }
 
     public bool HasAdditionalCost()

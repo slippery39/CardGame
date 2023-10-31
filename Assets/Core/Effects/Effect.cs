@@ -9,23 +9,37 @@ public abstract class Effect
     [Obsolete("Being replaced by TargetInfo")]
     public virtual TargetType TargetType { get; set; }
     [Obsolete("Being replaced by TargetInfo")]
-    public CardFilter Filter { get; set; }
+
+    private CardFilter _filter;
+    public CardFilter Filter
+    {
+        //POSSIBLE CLONING ISSUE HERE?
+        get
+        {
+            if (TargetInfo == null){
+                return _filter;
+            }
+            else
+            {
+                return TargetInfo.TargetFilter;
+            }
+        }
+        set { _filter = value; }
+    }
 
     public TargetInfo TargetInfo { get; set; }
 
     public abstract void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply);
 
     //TODO - this is not set up to work with TargetInfo yet, should probably actually be moved inside target info
-    public static string CompileRulesText(Effect effect)
+    public string CompileRulesText()
     {
-        var effectText = effect.RulesText;
-
-        effectText = effectText.Replace("#effectTargetType#", TargetTypeHelper.TargetTypeToRulesText(effect.TargetType));
+        string effectText = RulesText.Replace("#effectTargetType#", TargetTypeHelper.TargetTypeToRulesText(TargetType));
 
         var unitType = "unit";
-        if (effect.Filter != null && effect.Filter.RulesTextString() != "")
+        if (Filter != null && Filter.RulesTextString() != "")
         {
-            unitType = effect.Filter.RulesTextString();
+            unitType = Filter.RulesTextString();
         }
 
         effectText = effectText.Replace("#unitType#", unitType);
@@ -84,7 +98,7 @@ public abstract class Effect
     /// <param name="cardGame"></param>
     /// <returns></returns>
     /// <exception cref="Exception"></exception>
-   
+
     [Obsolete("Use TargetInfo.GetTargets() from now on instead")]
     private IEnumerable<CardGameEntity> GetEffectTargetsOld(CardGame cardGame)
     {

@@ -144,7 +144,7 @@ public class SpellCardData : BaseCardData
         {
             var additionalCostText = AdditionalCost != null ? $"Additional Cost : {AdditionalCost.RulesText}\r\n" : "";
             var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
-            var effectsText = string.Join("\r\n", Effects.Select(e => Effect.CompileRulesText(e)));
+            var effectsText = string.Join("\r\n", Effects.Select(e => e.CompileRulesText()));
             return additionalCostText + abilitiesText + effectsText;
         }
     }
@@ -3140,11 +3140,11 @@ public class CardDatabase : ICardDatabase
                     TargetInfo = new TargetInfo
                     {
                         TargetMode = TargetMode.Target,
-                        OwnerType = TargetOwnerType.Theirs                        
+                        OwnerType = TargetOwnerType.Theirs
                     }
                 }
             }
-        }); 
+        });
 
 
         /*
