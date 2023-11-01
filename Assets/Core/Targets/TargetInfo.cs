@@ -43,8 +43,10 @@ public class TargetInfo
     /// <summary>
     /// Number of targets required for the effect in question. Note that our codebase does not currently support cards with multiple targets.
     /// This may change in the future.
+    /// Note that this is also the number of entities that will be affected by a random selection as well.
+    /// Does not apply if TargetMode is All or None
     /// </summary>
-    public int NumberOfTargets => NeedsTargets ? 1 : 0;
+    public int NumberOfTargets { get; set; } = 1;
 
     /// <summary>
     /// This grabs the targets from a cardGame based on the TargetInfo, but before any systems have done their modifications.
@@ -58,6 +60,13 @@ public class TargetInfo
     public IEnumerable<CardGameEntity> GetTargets(CardGame cardGame, Player player, CardGameEntity effectSource)
     {
         var baseTargets = GetTargetsInternal(cardGame, player, effectSource);
+        baseTargets = FilterByOwnerType(player, baseTargets);
+        baseTargets = FilterByTargetMode(baseTargets);
+        return baseTargets;
+    }
+
+    private IEnumerable<CardGameEntity> FilterByOwnerType(Player player, IEnumerable<CardGameEntity> baseTargets)
+    {
         if (OwnerType == TargetOwnerType.Ours)
         {
             baseTargets = baseTargets.Where(target => target.IsOwnedBy(player));
@@ -67,6 +76,15 @@ public class TargetInfo
             baseTargets = baseTargets.Where(target => !target.IsOwnedBy(player));
         }
         //Note - OwnerType.Any would have no changes to the original list here.
+        return baseTargets;
+    }
+
+    private IEnumerable<CardGameEntity> FilterByTargetMode(IEnumerable<CardGameEntity> baseTargets)
+    {
+        if (TargetMode == TargetMode.Random)
+        {
+            baseTargets = baseTargets.Randomize().Take(NumberOfTargets);
+        }
         return baseTargets;
     }
 

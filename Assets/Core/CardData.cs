@@ -3139,19 +3139,19 @@ public class CardDatabase : ICardDatabase
 
         _cards.Add(new SpellCardData()
         {
-            Name = "Damage Test Target",
-            ManaCost = "1R",
-            ArtPath = $"{ArtPath}Pyroclasm",
-            Colors = new List<CardColor> { CardColor.Red },
+            Name = "Deadly Shot",
+            ManaCost = "1",
+            Colors = new List<CardColor> { CardColor.Colorless },
             Effects = new List<Effect>()
             {
-                new DamageEffect()
-                {
-                    Amount = 2,
+                new DestroyEffect()
+                {  
                     TargetInfo = new TargetInfo
                     {
-                        TargetMode = TargetMode.Target,
-                        OwnerType = TargetOwnerType.Theirs
+                        TargetType = TargetType.Units,
+                        TargetMode = TargetMode.Random,
+                        OwnerType = TargetOwnerType.Theirs,
+                        NumberOfTargets = 1
                     }
                 }
             }
