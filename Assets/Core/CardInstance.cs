@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static TargetInfo;
 
 //This class represents a card as it exists inside the game state.
 //It is essentially just a wrapper class around an existing card data.
@@ -11,7 +12,6 @@ using System.Threading.Tasks;
 public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
 {
     private BaseCardData _currentCardData;
-    private int _ownerId;
     private bool _isSummoningSick = true;
     private bool _isExhausted = false; //exhausted will be our term for tapped
     private CardGame _cardGame;
@@ -44,8 +44,6 @@ public class CardInstance : CardGameEntity, ICard, IDeepCloneable<CardInstance>
             }
         }
     }
-
-    public int OwnerId { get => _ownerId; set => _ownerId = value; }
 
     [JsonIgnore]
     public override string Name { get => _currentCardData.Name; set => _currentCardData.Name = value; }

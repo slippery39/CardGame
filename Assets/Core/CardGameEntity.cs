@@ -15,10 +15,15 @@ public abstract class CardGameEntity
     public int EntityId { get; set; }
     public List<ContinuousEffect> ContinuousEffects { get; set; } = new List<ContinuousEffect>();
     public List<Modification> Modifications { get; set; } = new List<Modification>();
-
+    public int OwnerId { get; set; }
 
     public void RemoveModification(Modification modToRemove)
     {
         Modifications.Remove(modToRemove);
+    }
+
+    public bool IsOwnedBy(Player player)
+    {
+        return OwnerId == player.PlayerId|| EntityId == player.EntityId;
     }
 }

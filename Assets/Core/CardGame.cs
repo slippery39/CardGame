@@ -423,8 +423,8 @@ public class CardGame
         player.Lanes.ForEach(lane =>
         {
             RegisterEntity(lane);
+            lane.OwnerId = player.EntityId;
         });
-        //TODO add other zones as needed.
     }
 
     public void NextTurn()

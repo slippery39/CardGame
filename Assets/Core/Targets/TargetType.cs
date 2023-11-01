@@ -1,0 +1,26 @@
+﻿public enum TargetType
+{
+    None,
+    PlayerSelf, //Player
+    Opponent, //non targetting
+    AllUnits, //non targetting
+    OurUnits, //non targetting
+    CardsInHand,
+    OtherCreaturesYouControl, //non targetting
+    OpponentUnits, //non targetting
+    UnitSelf, //Self Unit
+    TargetPlayers, //any player
+    TargetUnits, //any unit
+    TargetUnitsOrPlayers, //any unit or player
+    RandomOurUnits,
+    RandomOpponentOrUnits,
+    OpenLane,
+    OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
+    //NEW TARGET TYPES FOR UPDATED SYSTEM HERE:
+    /// <summary>
+    /// Targets units and/or players
+    /// </summary>
+    UnitsAndPlayers
+}
+
+

@@ -145,7 +145,7 @@ public class StaticPumpEffect : Effect
             {
                 continue;
             }
-            var abilitySource = source.Abilities.Where(ab => ab.Effects.Contains(this)).First();
+            var abilitySource = source.Abilities.First(ab => ab.Effects.Contains(this));
 
             var modification = new ModAddToPowerToughness
             {
@@ -212,7 +212,7 @@ public class StaticManaReductionEffect : Effect
 
             manaModification.StaticInfo = new StaticInfo
             {
-                SourceAbility = abilitySource.First(),
+                SourceAbility = abilitySource[0],
                 SourceCard = source
             };
 
@@ -264,7 +264,7 @@ public class StaticRevealTopCardEffect : Effect
 
             revealTopCardModification.StaticInfo = new StaticInfo
             {
-                SourceAbility = source.Abilities.Where(ab => ab.Effects.Contains(this)).First(),
+                SourceAbility = source.Abilities.First(ab => ab.Effects.Contains(this)),
                 SourceCard = source
             };
 
@@ -313,7 +313,7 @@ public class StaticPlayAdditionalLandEffect : Effect
 
             manaPerTurnModification.StaticInfo = new StaticInfo
             {
-                SourceAbility = source.Abilities.Where(ab => ab.Effects.Contains(this)).First(),
+                SourceAbility = source.Abilities.First(ab => ab.Effects.Contains(this)),
                 SourceCard = source
             };
 
