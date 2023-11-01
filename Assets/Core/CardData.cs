@@ -2040,7 +2040,13 @@ public class CardDatabase : ICardDatabase
             {
                 new DamageEffect
                 {
-                   Amount = 5
+                   Amount = 5,
+                   TargetInfo = new TargetInfo
+                   {
+                       TargetType = TargetType.UnitsAndPlayers,
+                       OwnerType = TargetOwnerType.Theirs,
+                       TargetMode = TargetMode.Target
+                   }
                 }
             }
         });
