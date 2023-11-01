@@ -729,7 +729,12 @@ public class CardDatabase : ICardDatabase
                 new DamageEffect()
                 {
                     Amount = 2,
-                    TargetType = TargetType.AllUnits
+                    TargetInfo = new TargetInfo
+                    {
+                        TargetType = TargetType.Units,
+                        TargetMode = TargetMode.All,
+                        OwnerType = TargetOwnerType.Any
+                    }
                 }
             }
         });

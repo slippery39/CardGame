@@ -64,8 +64,6 @@ public class TargetInfo
         }
         else if (OwnerType == TargetOwnerType.Theirs)
         {
-            var tempTargets = baseTargets.ToList();
-            var tempOwnedBy = baseTargets.Select(t => t.IsOwnedBy(player));
             baseTargets = baseTargets.Where(target => !target.IsOwnedBy(player));
         }
         //Note - OwnerType.Any would have no changes to the original list here.
@@ -77,61 +75,59 @@ public class TargetInfo
         //TODO - Filter by OwnerType
         //Differentiating between TargetTypes that need targets vs TargetTypes that don't at the moment.
         //In the future this might change.
-        if (NeedsTargets)
+
+        //Handled in both TargetEffects and NonTaregetedEffects
+        if (TargetType == TargetType.Units)
         {
-            if (TargetType == TargetType.TargetPlayers)
-            {
-                return GetPlayers(cardGame);
-            }
-            else if (TargetType == TargetType.TargetUnits)
-            {
-                return GetUnits(cardGame);
-            }
-            else if (TargetType == TargetType.TargetUnitsOrPlayers || (TargetType == TargetType.UnitsAndPlayers))
-            {
-                return GetUnits(cardGame).Concat(GetPlayers(cardGame));
-            }
+            return GetUnits(cardGame);
         }
-        else
+        else if (TargetType == TargetType.UnitsAndPlayers)
         {
-            switch (TargetType)
-            {
-                case TargetType.None:
-                    return new List<CardGameEntity> { effectSource };
-                case TargetType.PlayerSelf:
-                    {
-                        return new List<CardGameEntity> { player };
-                    }
-                case TargetType.AllUnits:
-                    {
-                        return cardGame.GetUnitsInPlay().Cast<CardGameEntity>().ToList();
-                    }
-                case TargetType.OurUnits:
-                    return player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
-                case TargetType.OpponentUnits:
-                    return cardGame.Players.Find(p => player.PlayerId != p.PlayerId).Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
-                case TargetType.UnitSelf:
-                    return new List<CardGameEntity>() { effectSource };
-                case TargetType.Opponent:
-                    return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
-                case TargetType.RandomOurUnits:
-                    var ourUnits = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Randomize();
-                    var filtered = CardFilter.ApplyFilter(ourUnits.ToList(), TargetFilter);
-                    return new List<CardGameEntity> { filtered.FirstOrDefault() };
-                case TargetType.RandomOpponentOrUnits:
-                    var opponent = cardGame.Players.Find(p => p.EntityId != player.EntityId);
-                    var things = new List<CardGameEntity> { opponent };
+            return GetUnits(cardGame).Concat(GetPlayers(cardGame));
+        }
+        else if (TargetType == TargetType.Players)
+        {
+            return GetPlayers(cardGame);
+        }
 
-                    var everything = things.Union(opponent.GetUnitsInPlay());
+        //TODO - This is the old way of doing things that needs to slowly be refactored as we update our TargetInfo class and Cards that use it.
+        switch (TargetType)
+        {
+            case TargetType.None:
+                return new List<CardGameEntity> { effectSource };
+            case TargetType.PlayerSelf:
+                {
+                    return new List<CardGameEntity> { player };
+                }
+            case TargetType.AllUnits:
+                {
+                    return cardGame.GetUnitsInPlay().Cast<CardGameEntity>().ToList();
+                }
+            case TargetType.OurUnits:
+                return player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
+            case TargetType.OpponentUnits:
+                return cardGame.Players.Find(p => player.PlayerId != p.PlayerId).Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
+            case TargetType.UnitSelf:
+                return new List<CardGameEntity>() { effectSource };
+            case TargetType.Opponent:
+                return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
+            case TargetType.RandomOurUnits:
+                var ourUnits = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Randomize();
+                var filtered = CardFilter.ApplyFilter(ourUnits.ToList(), TargetFilter);
+                return new List<CardGameEntity> { filtered.FirstOrDefault() };
+            case TargetType.RandomOpponentOrUnits:
+                var opponent = cardGame.Players.Find(p => p.EntityId != player.EntityId);
+                var things = new List<CardGameEntity> { opponent };
 
-                    if (!everything.Any())
-                    {
-                        return new List<CardGameEntity> { };
-                    }
-                    return new List<CardGameEntity> { everything.Randomize().First() };
-                default:
-                    throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
-            }
+                var everything = things.Union(opponent.GetUnitsInPlay());
+
+                if (!everything.Any())
+                {
+                    return new List<CardGameEntity> { };
+                }
+                return new List<CardGameEntity> { everything.Randomize().First() };
+            default:
+                throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
         }
         throw new Exception($"Could not find a way to handle {TargetType} in GetTargets()");
 
