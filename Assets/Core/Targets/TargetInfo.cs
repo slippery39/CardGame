@@ -129,8 +129,6 @@ public class TargetInfo
                 {
                     return new List<CardGameEntity> { player };
                 }
-            case TargetType.OpponentUnits:
-                return cardGame.Players.Find(p => player.PlayerId != p.PlayerId).Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
             case TargetType.UnitSelf:
                 return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
@@ -166,51 +164,6 @@ public class TargetInfo
     private IEnumerable<CardGameEntity> GetUnits(CardGame cardGame)
     {
         return cardGame.GetEntities<Lane>().Where(lane => !lane.IsEmpty()).Select(lane => lane.UnitInLane);
-    }
-}
-
-
-public class TargetInfoBuilder
-{
-    private TargetInfo _targetInfo;
-
-    public TargetInfoBuilder()
-    {
-        _targetInfo = new TargetInfo();
-    }
-
-    public static TargetInfoBuilder UnitsYouControl()
-    {
-        return new TargetInfoBuilder()._UnitsYouControl();
-    }
-
-    private TargetInfoBuilder _UnitsYouControl()
-    {
-        _targetInfo.TargetType = TargetType.Units;
-        _targetInfo.TargetMode = TargetMode.All;
-        _targetInfo.OwnerType = TargetOwnerType.Ours;
-        return this;
-    }
-
-    public TargetInfoBuilder WithUnitType(string unitType)
-    {
-        if (_targetInfo.TargetFilter == null)
-        {
-            _targetInfo.TargetFilter = new CardFilter();
-        }
-        _targetInfo.TargetFilter.CreatureType = unitType;
-        return this;
-    }
-
-    public TargetInfoBuilder WithTargetFilter(CardFilter filter)
-    {
-        _targetInfo.TargetFilter = filter;
-        return this;
-    }
-
-    public TargetInfo Build()
-    {
-        return _targetInfo;
     }
 }
 

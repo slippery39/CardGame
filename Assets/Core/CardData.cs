@@ -756,18 +756,13 @@ public class CardDatabase : ICardDatabase
                 {
                     Power = -1,
                     Toughness = -1,
-                     TargetType = TargetType.OpponentUnits
+                    TargetInfo = TargetInfoBuilder.EachOpponentUnit().Build()
                 },
                 new PumpUnitEffect()
                 {
                     Power = 1,
                     Toughness = 1,
-                    TargetInfo = new TargetInfo
-                    {
-                        OwnerType = TargetOwnerType.Ours,
-                        TargetType = TargetType.Units,
-                        TargetMode = TargetMode.All
-                    }
+                    TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
                 }
             }
         });
@@ -789,7 +784,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetInfo = TargetInfoBuilder.UnitsYouControl().Build()
+                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
                         }
                     }
                 }
@@ -1139,7 +1134,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new StaticGiveAbilityEffect
                         {
-                            TargetInfo = TargetInfoBuilder.UnitsYouControl().WithUnitType("Goblin").Build(),
+                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().WithUnitType("Goblin").Build(),
                             Ability = new HasteAbility()
                         }
                     }
@@ -1333,7 +1328,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetInfo = TargetInfoBuilder.UnitsYouControl().WithUnitType("Goblin").Build()
+                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().WithUnitType("Goblin").Build()
                         }
                     }
                 }
@@ -1477,7 +1472,7 @@ public class CardDatabase : ICardDatabase
                             new StaticGiveAbilityEffect
                             {
                                 Ability = new FlyingAbility(),
-                                TargetInfo = TargetInfoBuilder.UnitsYouControl().Build()
+                                TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
                             }
                         }
                     }
@@ -3030,7 +3025,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetInfo = TargetInfoBuilder.UnitsYouControl().Build()
+                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
                         }
                     }
                 }
