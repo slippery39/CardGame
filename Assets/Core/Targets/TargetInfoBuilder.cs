@@ -17,6 +17,35 @@
         return new TargetInfoBuilder()._EachOpponentUnit();
     }
 
+    public static TargetInfoBuilder TargetOpponentUnit()
+    {
+        return new TargetInfoBuilder()._TargetOpponentUnit();
+    }
+
+    public static TargetInfoBuilder TargetOwnUnit()
+    {
+        var builder = new TargetInfoBuilder();
+        builder._targetInfo = new TargetInfo
+        {
+            TargetType = TargetType.Units,
+            TargetMode = TargetMode.Target,
+            OwnerType = TargetOwnerType.Ours,
+        };
+        return builder;
+    }
+
+    public static TargetInfoBuilder TargetAnyUnit()
+    {
+        var builder = new TargetInfoBuilder();
+        builder._targetInfo = new TargetInfo
+        {
+            TargetType = TargetType.Units,
+            TargetMode = TargetMode.Target,
+            OwnerType = TargetOwnerType.Any
+        };
+        return builder;
+    }
+
     private TargetInfoBuilder _EachUnitYouControl()
     {
         _targetInfo.TargetType = TargetType.Units;
@@ -29,6 +58,14 @@
     {
         _targetInfo.TargetType = TargetType.Units;
         _targetInfo.TargetMode = TargetMode.All;
+        _targetInfo.OwnerType = TargetOwnerType.Theirs;
+        return this;
+    }
+
+    private TargetInfoBuilder _TargetOpponentUnit()
+    {
+        _targetInfo.TargetType = TargetType.Units;
+        _targetInfo.TargetMode = TargetMode.Target;
         _targetInfo.OwnerType = TargetOwnerType.Theirs;
         return this;
     }

@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 public class BounceUnitEffect : Effect
-{
-    public override TargetType TargetType { get; set; } = TargetType.TargetUnits;
+{ 
     public override string RulesText => "Return a unit to its owners hand";
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

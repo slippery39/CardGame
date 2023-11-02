@@ -114,10 +114,6 @@ public abstract class Effect
 
         switch (TargetType)
         {
-            case TargetType.TargetUnits:
-                {
-                    return GetUnits(cardGame);
-                }
             case TargetType.TargetUnitsOrPlayers:
                 {
                     return GetPlayers(cardGame).Concat(GetUnits(cardGame));

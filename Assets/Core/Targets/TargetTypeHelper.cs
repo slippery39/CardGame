@@ -9,7 +9,7 @@
             //case TargetType.AllUnits: return "each #unitType#";
             //case TargetType.OurUnits: return "each #unitType# you control";
             //case TargetType.OpponentUnits: return "each #unitType# your opponent controls";
-            case TargetType.TargetUnits: return "target #unitType#";
+            //case TargetType.TargetUnits: return "target #unitType#";
             //case TargetType.TargetPlayers: return "target player";
             case TargetType.TargetUnitsOrPlayers: return "target #unitType# or player";
             case TargetType.UnitSelf: return "#this#";

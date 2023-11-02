@@ -697,7 +697,12 @@ public class CardDatabase : ICardDatabase
             {
                 new DestroyEffect()
                 {
-                    TargetType = TargetType.TargetUnits
+                    TargetInfo = new TargetInfo()
+                    {
+                        TargetType = TargetType.Units,
+                        OwnerType = TargetOwnerType.Theirs,
+                        TargetMode = TargetMode.Target
+                    }
                 }
             }
         });
@@ -1253,7 +1258,7 @@ public class CardDatabase : ICardDatabase
             {
                 new CyclingAbility(new List<Effect>{new DamageEffect
                 {
-                    TargetType = TargetType.TargetUnits,
+                    TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build(),
                     Amount = 2
                 } })
                 {
@@ -1363,13 +1368,9 @@ public class CardDatabase : ICardDatabase
                                         {
                                             new PumpUnitEffect
                                             {
-                                                TargetType = TargetType.TargetUnits,
+                                                TargetInfo = TargetInfoBuilder.TargetOwnUnit().WithUnitType("Goblin").Build(),
                                                 Power = 2,
                                                 Toughness = 0,
-                                                Filter = new CardFilter
-                                                {
-                                                    CreatureType = "Goblin"
-                                                }
                                             }
                                         }
                                     }
@@ -1718,7 +1719,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new PumpPowerByNumberOfArtifactsEffect()
                         {
-                            TargetType = TargetType.TargetUnits
+                            TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build()
                         }
                     }
                 }
@@ -1760,7 +1761,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new GiveShieldEffect()
                         {
-                        TargetType = TargetType.TargetUnits
+                            TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build()
                         }
                     }
                 }
@@ -2272,7 +2273,7 @@ public class CardDatabase : ICardDatabase
             {
                 new BounceUnitEffect
                 {
-                    TargetType = TargetType.TargetUnits
+                    TargetInfo = TargetInfoBuilder.TargetAnyUnit().Build()
                 },
                 new DamageEffect
                 {
@@ -2446,7 +2447,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new PumpPowerByNumberOfSpellsInGraveyardEffect
                         {
-                              TargetType = TargetType.TargetUnits
+                              TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build()
                         }
                     }
                 }
@@ -3062,7 +3063,7 @@ public class CardDatabase : ICardDatabase
                 new DamageEffect
                 {
                     Amount = 2,
-                    TargetType = TargetType.TargetUnits
+                    TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build()
                 }
             },
             BackCard = new SpellCardData
@@ -3074,7 +3075,7 @@ public class CardDatabase : ICardDatabase
                 {
                     new BounceUnitEffect
                     {
-                        TargetType = TargetType.TargetUnits
+                        TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build()
                     }
                 }
             }
@@ -3352,7 +3353,7 @@ public class CardDatabase : ICardDatabase
                   ManaCost = "2",
                   Effects = new List<Effect>{ new DamageEffect
                   {
-                      TargetType = TargetType.TargetUnits,
+                      TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build(),
                       Amount = 1
                   }
                   }

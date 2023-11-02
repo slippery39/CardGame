@@ -4,7 +4,11 @@ using System.Collections.Generic;
 public class DestroyEffect : Effect
 {
     public override string RulesText => $"Destroy {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
-    public override TargetType TargetType { get; set; } = TargetType.TargetUnits;
+
+    public DestroyEffect()
+    {
+        TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build();
+    }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {

@@ -23,7 +23,12 @@ public class PumpUnitEffect : Effect
     }
     public int Power { get; set; }
     public int Toughness { get; set; }
-    public override TargetType TargetType { get; set; } = TargetType.TargetUnits;
+
+    public PumpUnitEffect()
+    {
+        TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build();
+    }
+
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         foreach (var entity in entitiesToApply)
