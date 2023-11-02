@@ -1,11 +1,12 @@
 ﻿public static class TargetTypeHelper
 {
     //TODO - Move to TargetInfo
+    //Commenting TargetTypes out that we have already removed.
     public static string TargetTypeToRulesText(TargetType targetType)
     {
         switch (targetType)
         {
-            case TargetType.AllUnits: return "each #unitType#";
+            //case TargetType.AllUnits: return "each #unitType#";
             case TargetType.OurUnits: return "each #unitType# you control";
             case TargetType.OpponentUnits: return "each #unitType# your opponent controls";
             case TargetType.TargetUnits: return "target #unitType#";

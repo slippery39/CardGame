@@ -34,6 +34,11 @@ public abstract class Effect
     //TODO - this is not set up to work with TargetInfo yet, should probably actually be moved inside target info
     public string CompileRulesText()
     {
+        if (TargetInfo != null)
+        {
+            return "Rules Text Needs to be updated for TargetInfo based rules";
+        }
+
         string effectText = RulesText.Replace("#effectTargetType#", TargetTypeHelper.TargetTypeToRulesText(TargetType));
 
         var unitType = "unit";
@@ -49,7 +54,7 @@ public abstract class Effect
 
     //Temporary placing this here while we refactor our TargetSystem.
     [Obsolete("Use TargetInfo.NeedsTargets from now on instead")]
-    private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.RandomOpponentOrUnits, TargetType.OpenLane, TargetType.AllUnits, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
+    private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.RandomOpponentOrUnits, TargetType.OpenLane, TargetType.OpponentUnits, TargetType.OurUnits, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
 
     public bool NeedsTargets()
     {
@@ -159,8 +164,6 @@ public abstract class Effect
                 {
                     return new List<CardGameEntity> { player };
                 }
-            case TargetType.AllUnits:
-                return cardGame.GetUnitsInPlay().Cast<CardGameEntity>().ToList();
             case TargetType.OurUnits:
                 return player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
             case TargetType.OpponentUnits:

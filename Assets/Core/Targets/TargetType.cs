@@ -3,7 +3,6 @@
     None,
     PlayerSelf, //Player
     Opponent, //non targetting
-    AllUnits, //non targetting
     OurUnits, //non targetting
     CardsInHand,
     OtherCreaturesYouControl, //non targetting

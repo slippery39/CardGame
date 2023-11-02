@@ -712,7 +712,12 @@ public class CardDatabase : ICardDatabase
             {
                 new DestroyEffect()
                 {
-                   TargetType = TargetType.AllUnits
+                   TargetInfo = new TargetInfo
+                   {
+                       TargetMode = TargetMode.All,
+                       TargetType = TargetType.Units,
+                       OwnerType = TargetOwnerType.Any
+                   }
                 }
             }
         });

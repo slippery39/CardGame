@@ -112,7 +112,7 @@ public class CardFilter
     /// Applys a CardFilter to a list of CardGameEntities. Note that the filter will only filter out CardInstances.
     /// Any non CardInstances in the list will not be effected.
     /// </summary>
-    /// <param name="list"></param>
+    /// <param name="list"></param>d
     /// <param name="filter"></param>
     /// <returns></returns>
     public IEnumerable<CardGameEntity> ApplyFilter(IEnumerable<CardGameEntity> list)

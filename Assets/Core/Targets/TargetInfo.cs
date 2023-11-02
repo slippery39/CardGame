@@ -129,10 +129,6 @@ public class TargetInfo
                 {
                     return new List<CardGameEntity> { player };
                 }
-            case TargetType.AllUnits:
-                {
-                    return cardGame.GetUnitsInPlay().Cast<CardGameEntity>().ToList();
-                }
             case TargetType.OurUnits:
                 return player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
             case TargetType.OpponentUnits:
