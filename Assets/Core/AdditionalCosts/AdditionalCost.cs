@@ -108,7 +108,24 @@ public class CardFilter
         return str;
     }
 
+    /// <summary>
+    /// Applys a CardFilter to a list of CardGameEntities. Note that the filter will only filter out CardInstances.
+    /// Any non CardInstances in the list will not be effected.
+    /// </summary>
+    /// <param name="list"></param>
+    /// <param name="filter"></param>
+    /// <returns></returns>
+    public IEnumerable<CardGameEntity> ApplyFilter(IEnumerable<CardGameEntity> list)
+    {
+        var nonCards = list.Where(e => e is not CardInstance);
+        var cards = list.Where(e => e is CardInstance).Cast<CardInstance>().ToList();
 
+        var cardsFiltered = ApplyFilter(cards,this);
+
+        return nonCards.Concat(cardsFiltered);
+    }
+
+    [Obsolete("Use the non static ApplyFilter method instead")]
     public static List<CardInstance> ApplyFilter(List<CardInstance> list, CardFilter filter)
     {
         if (filter == null)

@@ -62,6 +62,8 @@ public class TargetInfo
         var baseTargets = GetTargetsInternal(cardGame, player, effectSource);
         baseTargets = FilterByOwnerType(player, baseTargets);
         baseTargets = FilterByTargetMode(baseTargets);
+        baseTargets = FilterByCardFilter(baseTargets);
+
         return baseTargets;
     }
 
@@ -86,6 +88,16 @@ public class TargetInfo
             baseTargets = baseTargets.Randomize().Take(NumberOfTargets);
         }
         return baseTargets;
+    }
+
+    private IEnumerable<CardGameEntity> FilterByCardFilter(IEnumerable<CardGameEntity> baseTargets)
+    {
+        if (TargetFilter == null)
+        {
+            return baseTargets;
+        }
+
+        return TargetFilter.ApplyFilter(baseTargets);
     }
 
     private IEnumerable<CardGameEntity> GetTargetsInternal(CardGame cardGame, Player player, CardGameEntity effectSource)

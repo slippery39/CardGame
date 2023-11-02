@@ -3157,6 +3157,30 @@ public class CardDatabase : ICardDatabase
             }
         });
 
+        //Testing our filter here.
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Pyroclasm For Goblins",
+            ManaCost = "1",
+            Colors = new List<CardColor> { CardColor.Red },
+            Effects = new List<Effect>()
+            {
+                new DamageEffect()
+                {
+                    Amount = 2,
+                    TargetInfo = new TargetInfo
+                    {
+                        TargetType = TargetType.Units,
+                        TargetMode = TargetMode.All,
+                        OwnerType = TargetOwnerType.Any,
+                        TargetFilter = new CardFilter()
+                        {
+                            CreatureType = "Goblin"
+                        }
+                    }
+                }
+            }
+        });
 
         /*
 
