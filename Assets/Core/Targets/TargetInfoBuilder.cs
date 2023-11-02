@@ -46,6 +46,18 @@
         return builder;
     }
 
+    public static TargetInfoBuilder TargetOpponentOrTheirUnits()
+    {
+        var builder = new TargetInfoBuilder();
+        builder._targetInfo = new TargetInfo
+        {
+            TargetType = TargetType.UnitsAndPlayers,
+            TargetMode = TargetMode.Target,
+            OwnerType = TargetOwnerType.Theirs
+        };
+        return builder;
+    }
+
     private TargetInfoBuilder _EachUnitYouControl()
     {
         _targetInfo.TargetType = TargetType.Units;

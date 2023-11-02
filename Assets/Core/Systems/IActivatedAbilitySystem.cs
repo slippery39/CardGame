@@ -79,7 +79,7 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
 
         var owner = cardGame.GetOwnerOfCard(card);
 
-        if (activatedAbility.HasTargets() && cardGame.TargetSystem.GetValidAbilityTargets(owner, card).Count() == 0)
+        if (activatedAbility.HasTargets() && cardGame.TargetSystem.GetValidAbilityTargets(owner, card).Count == 0)
         {
             return false;
         }
@@ -109,12 +109,12 @@ public class DefaultActivatedAbilitySystem : CardGameSystem, IActivatedAbilitySy
 
         var player = cardGame.GetOwnerOfCard(card);
 
-        var canPayManaCost = cardGame.ManaSystem.CanPayManaCost(player, (string)activatedAbility.ManaCost);
+        var canPayManaCost = cardGame.ManaSystem.CanPayManaCost(player, activatedAbility.ManaCost);
         var canPayAdditionalCost = true;
 
         if (activatedAbility.HasAdditionalCost())
         {
-            canPayAdditionalCost = cardGame.AdditionalCostSystem.CanPayAdditionalCost(player, (CardInstance)card, activatedAbility.AdditionalCost);
+            canPayAdditionalCost = cardGame.AdditionalCostSystem.CanPayAdditionalCost(player,card, activatedAbility.AdditionalCost);
         }
 
         return canPayManaCost && canPayAdditionalCost;

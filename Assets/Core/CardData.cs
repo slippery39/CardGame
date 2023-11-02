@@ -306,7 +306,7 @@ public class CardDatabase : ICardDatabase
             {
                 new DamageEffect()
                 {
-                    TargetType = TargetType.TargetUnitsOrPlayers,
+                    TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build(),
                     Amount = 3
                 }
             }
@@ -895,7 +895,7 @@ public class CardDatabase : ICardDatabase
                         Effects = new List<Effect>{new DamageEffect()
                         {
                            Amount = 1,
-                           TargetType = TargetType.TargetUnitsOrPlayers
+                           TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build()
                         }
                         }
                     }
@@ -1062,7 +1062,7 @@ public class CardDatabase : ICardDatabase
                     Effects = new List<Effect>{ new DamageEffect()
                     {
                         Amount = 2,
-                        TargetType = TargetType.TargetUnitsOrPlayers
+                        TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build()
                     }
                     },
                  }
@@ -1594,7 +1594,7 @@ public class CardDatabase : ICardDatabase
                 new DamageEffect
                 {
                     Amount = 5,
-                    TargetType = TargetType.TargetUnitsOrPlayers
+                    TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build()
                 }
             }
         });

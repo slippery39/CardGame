@@ -68,21 +68,6 @@ public abstract class Effect
         }
     }
 
-    private IEnumerable<CardGameEntity> GetPlayers(CardGame cardGame)
-    {
-        return cardGame.Players.Cast<CardGameEntity>().ToList();
-    }
-
-    private IEnumerable<CardGameEntity> GetUnits(CardGame cardGame)
-    {
-        var units =
-        cardGame
-        .GetEntities<Lane>()
-        .Where(lane => !lane.IsEmpty())
-        .Select(lane => lane.UnitInLane);
-        return units.Cast<CardGameEntity>();
-    }
-
     public IEnumerable<CardGameEntity> GetEffectTargets(CardGame cardGame, Player player, CardGameEntity sourceOfEffects)
     {
         if (TargetInfo != null)
@@ -92,36 +77,12 @@ public abstract class Effect
         }
         else
         {
-            //Old way of grabbing effect targets.. Obsolete but keeping here for compatibility.
-            return GetEffectTargetsOld(cardGame);
-        }
-    }
-
-    /// <summary>
-    /// Old way of figuring out the targets of an effect via the TargetType enum
-    /// </summary>
-    /// <param name="cardGame"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-
-    [Obsolete("Use TargetInfo.GetTargets() from now on instead")]
-    private IEnumerable<CardGameEntity> GetEffectTargetsOld(CardGame cardGame)
-    {
-        if (!NeedsTargets())
-        {
-            return new List<CardGameEntity>();
-        }
-
-        switch (TargetType)
-        {
-            case TargetType.TargetUnitsOrPlayers:
-                {
-                    return GetPlayers(cardGame).Concat(GetUnits(cardGame));
-                }
-            default:
-                {
-                    throw new Exception($"Attempted to process invalid or unimplemented target type for GetEffectTargets() : ${TargetType}");
-                }
+            //Note that if we reach this point, it means that we have some TargetType that isn't properly being considered.
+            //The old code would return an Empty List, but we shouldn't even need to do that anymore
+            //Regardless, Gempalm Incinerator is breaking without this, so we are adding it here until we figure out the
+            //correct path forward
+            return new List<CardGameEntity>() { };
+            //throw new Exception("Something went wrong, we should never reach this point in GetEffectTargets(). TargetInfo is null");
         }
     }
 

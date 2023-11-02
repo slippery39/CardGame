@@ -7,7 +7,10 @@ public class DamageEffect : Effect
     public override string RulesText => $"Deal {Amount} Damage to {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
     public int Amount { get; set; }
 
-    public override TargetType TargetType { get; set; } = TargetType.TargetUnitsOrPlayers;
+    public DamageEffect()
+    {
+        TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build();
+    }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {

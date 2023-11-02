@@ -11,7 +11,7 @@
             //case TargetType.OpponentUnits: return "each #unitType# your opponent controls";
             //case TargetType.TargetUnits: return "target #unitType#";
             //case TargetType.TargetPlayers: return "target player";
-            case TargetType.TargetUnitsOrPlayers: return "target #unitType# or player";
+            //case TargetType.TargetUnitsOrPlayers: return "target #unitType# or player";
             case TargetType.UnitSelf: return "#this#";
             case TargetType.PlayerSelf: return "to itself";
             case TargetType.Opponent: return " an opponent";
