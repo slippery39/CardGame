@@ -2,7 +2,6 @@
 {
     None,
     PlayerSelf, //Player
-    CardsInHand,
     UnitSelf, //Self Unit
     OpenLane,
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
@@ -18,7 +17,11 @@
     /// <summary>
     /// Targets just players, for new TargetInfo System
     /// </summary>
-    Players
+    Players,
+    /// <summary>
+    /// Targets cards in players hands
+    /// </summary>
+    CardsInHand
 }
 
 

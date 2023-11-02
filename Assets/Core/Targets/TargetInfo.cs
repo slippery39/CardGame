@@ -253,6 +253,10 @@ public class TargetInfo
         {
             return GetPlayers(cardGame);
         }
+        else if (TargetType == TargetType.CardsInHand)
+        {
+            return GetPlayers(cardGame).Cast<Player>().SelectMany(p => p.Hand.Cards);
+        }
 
         //TODO - This is the old way of doing things that needs to slowly be refactored as we update our TargetInfo class and Cards that use it.
         switch (TargetType)

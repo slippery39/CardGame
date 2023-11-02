@@ -1128,8 +1128,13 @@ public class CardDatabase : ICardDatabase
                         new StaticManaReductionEffect
                         {
                             ReductionAmount = "1",
-                            TargetType = TargetType.CardsInHand,
-                            Filter = new CardFilter{CreatureType = "Goblin"}
+                            TargetInfo = new TargetInfo
+                            {
+                                TargetType = TargetType.CardsInHand,
+                                TargetMode = TargetMode.All,
+                                OwnerType = TargetOwnerType.Ours    
+                            }
+                            .WithUnitType("Goblin")
                         }
                     }
                 },

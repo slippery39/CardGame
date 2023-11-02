@@ -216,11 +216,6 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
                 }
             case TargetType.UnitSelf:
                 return new List<CardGameEntity> { source };
-            case TargetType.CardsInHand:
-                {
-                    var owner = cardGame.GetOwnerOfCard(source);
-                    return ApplyFilter(owner.Hand.Cards, filter).Cast<CardGameEntity>().ToList();
-                }
             default:
                 {
                     throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {effect.TargetType} is not handled");

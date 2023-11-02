@@ -53,6 +53,7 @@ public class StaticAbility : CardAbility
 
                  switch (eff.TargetType)
                  {
+                     /*
                      case TargetType.CardsInHand:
                          {
                              defaultCardType = "cards";
