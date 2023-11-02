@@ -49,6 +49,136 @@ public class TargetInfo
     public int NumberOfTargets { get; set; } = 1;
 
     /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Each Unit you Control"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo EachUnitYouControl()
+    {
+        var info = new TargetInfo();
+        info.TargetType = TargetType.Units;
+        info.TargetMode = TargetMode.All;
+        info.OwnerType = TargetOwnerType.Ours;
+        return info;
+    }
+
+    /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Each Opponent Unit"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo EachOpponentUnit()
+    {
+        var info = new TargetInfo();
+        info.TargetType = TargetType.Units;
+        info.TargetMode = TargetMode.All;
+        info.OwnerType = TargetOwnerType.Theirs;
+        return info;
+    }
+
+    /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Target Opponent Unit"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo TargetOpponentUnit()
+    {
+        var info = new TargetInfo();
+        info.TargetType = TargetType.Units;
+        info.TargetMode = TargetMode.Target;
+        info.OwnerType = TargetOwnerType.Theirs;
+        return info;
+    }
+
+    /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Target Own Unit"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo TargetOwnUnit()
+    {
+        var info = new TargetInfo
+        {
+            TargetType = TargetType.Units,
+            TargetMode = TargetMode.Target,
+            OwnerType = TargetOwnerType.Ours,
+        };
+        return info;
+    }
+
+    /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Target Any Unit"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo TargetAnyUnit()
+    {
+        var info = new TargetInfo
+        {
+            TargetType = TargetType.Units,
+            TargetMode = TargetMode.Target,
+            OwnerType = TargetOwnerType.Any
+        };
+        return info;
+    }
+
+    /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Target Opponent or Their Units"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo TargetOpponentOrTheirUnits()
+    {
+        var info = new TargetInfo
+        {
+            TargetType = TargetType.UnitsAndPlayers,
+            TargetMode = TargetMode.Target,
+            OwnerType = TargetOwnerType.Theirs
+        };
+        return info;
+    }
+
+    /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Random Opponent or Their Units"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo RandomOpponentOrUnits()
+    {
+        var info = new TargetInfo
+        {
+            TargetType = TargetType.UnitsAndPlayers,
+            TargetMode = TargetMode.Random,
+            OwnerType = TargetOwnerType.Theirs
+        };
+        return info;
+    }
+
+    /// <summary>
+    /// Creates a TargetInfo that is equal in behaviour to "Your Opponent"
+    /// </summary>
+    /// <returns></returns>
+    public static TargetInfo Opponent()
+    {
+        var info = new TargetInfo
+        {
+            TargetType = TargetType.Players,
+            TargetMode = TargetMode.All,
+            OwnerType = TargetOwnerType.Theirs
+        };
+        return info;
+    }
+
+    /// <summary>
+    /// Convenience method to help create a TargetType in a declarative way. 
+    /// ex. TargetInfo.OpponentUnits().WithUnitType("Goblin");
+    /// </summary>
+    /// <param name="unitType"></param>
+    /// <returns></returns>
+    public TargetInfo WithUnitType(string unitType)
+    {
+        if (TargetFilter == null)
+        {
+            TargetFilter = new CardFilter();
+        }
+        TargetFilter.CreatureType = unitType;
+        return this;
+    }
+
+    /// <summary>
     /// This grabs the targets from a cardGame based on the TargetInfo, but before any systems have done their modifications.
     /// For example, Hexproof 
     /// </summary>
@@ -135,8 +265,6 @@ public class TargetInfo
                 }
             case TargetType.UnitSelf:
                 return new List<CardGameEntity>() { effectSource };
-            case TargetType.Opponent:
-                return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
         }

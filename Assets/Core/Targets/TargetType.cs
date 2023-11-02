@@ -2,7 +2,6 @@
 {
     None,
     PlayerSelf, //Player
-    Opponent, //non targetting
     CardsInHand,
     UnitSelf, //Self Unit
     OpenLane,

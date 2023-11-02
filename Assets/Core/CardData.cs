@@ -306,7 +306,7 @@ public class CardDatabase : ICardDatabase
             {
                 new DamageEffect()
                 {
-                    TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build(),
+                    TargetInfo = TargetInfo.TargetOpponentOrTheirUnits(),
                     Amount = 3
                 }
             }
@@ -761,13 +761,13 @@ public class CardDatabase : ICardDatabase
                 {
                     Power = -1,
                     Toughness = -1,
-                    TargetInfo = TargetInfoBuilder.EachOpponentUnit().Build()
+                    TargetInfo = TargetInfo.EachOpponentUnit()
                 },
                 new PumpUnitEffect()
                 {
                     Power = 1,
                     Toughness = 1,
-                    TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
+                    TargetInfo = TargetInfo.EachUnitYouControl()
                 }
             }
         });
@@ -789,7 +789,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
+                            TargetInfo = TargetInfo.EachUnitYouControl()
                         }
                     }
                 }
@@ -895,7 +895,7 @@ public class CardDatabase : ICardDatabase
                         Effects = new List<Effect>{new DamageEffect()
                         {
                            Amount = 1,
-                           TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build()
+                           TargetInfo = TargetInfo.TargetOpponentOrTheirUnits()
                         }
                         }
                     }
@@ -1062,7 +1062,7 @@ public class CardDatabase : ICardDatabase
                     Effects = new List<Effect>{ new DamageEffect()
                     {
                         Amount = 2,
-                        TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build()
+                        TargetInfo = TargetInfo.TargetOpponentOrTheirUnits()
                     }
                     },
                  }
@@ -1139,7 +1139,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new StaticGiveAbilityEffect
                         {
-                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().WithUnitType("Goblin").Build(),
+                            TargetInfo = TargetInfo.EachUnitYouControl().WithUnitType("Goblin"),
                             Ability = new HasteAbility()
                         }
                     }
@@ -1258,7 +1258,7 @@ public class CardDatabase : ICardDatabase
             {
                 new CyclingAbility(new List<Effect>{new DamageEffect
                 {
-                    TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build(),
+                    TargetInfo = TargetInfo.TargetOpponentUnit(),
                     Amount = 2
                 } })
                 {
@@ -1333,7 +1333,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().WithUnitType("Goblin").Build()
+                            TargetInfo = TargetInfo.EachUnitYouControl().WithUnitType("Goblin")
                         }
                     }
                 }
@@ -1368,7 +1368,7 @@ public class CardDatabase : ICardDatabase
                                         {
                                             new PumpUnitEffect
                                             {
-                                                TargetInfo = TargetInfoBuilder.TargetOwnUnit().WithUnitType("Goblin").Build(),
+                                                TargetInfo = TargetInfo.TargetOwnUnit().WithUnitType("Goblin"),
                                                 Power = 2,
                                                 Toughness = 0,
                                             }
@@ -1473,7 +1473,7 @@ public class CardDatabase : ICardDatabase
                             new StaticGiveAbilityEffect
                             {
                                 Ability = new FlyingAbility(),
-                                TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
+                                TargetInfo = TargetInfo.EachUnitYouControl()
                             }
                         }
                     }
@@ -1594,7 +1594,7 @@ public class CardDatabase : ICardDatabase
                 new DamageEffect
                 {
                     Amount = 5,
-                    TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build()
+                    TargetInfo = TargetInfo.TargetOpponentOrTheirUnits()
                 }
             }
         });
@@ -1719,7 +1719,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new PumpPowerByNumberOfArtifactsEffect()
                         {
-                            TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build()
+                            TargetInfo = TargetInfo.TargetOwnUnit()
                         }
                     }
                 }
@@ -1761,7 +1761,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new GiveShieldEffect()
                         {
-                            TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build()
+                            TargetInfo = TargetInfo.TargetOwnUnit()
                         }
                     }
                 }
@@ -1929,7 +1929,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 1,
-                            TargetType = TargetType.Opponent
+                            TargetInfo = TargetInfo.Opponent()
                         }
                     }
                 }
@@ -2051,12 +2051,7 @@ public class CardDatabase : ICardDatabase
                 new DamageEffect
                 {
                    Amount = 5,
-                   TargetInfo = new TargetInfo
-                   {
-                       TargetType = TargetType.UnitsAndPlayers,
-                       OwnerType = TargetOwnerType.Theirs,
-                       TargetMode = TargetMode.Target
-                   }
+                   TargetInfo = TargetInfo.TargetOpponentOrTheirUnits()
                 }
             }
         });
@@ -2279,12 +2274,12 @@ public class CardDatabase : ICardDatabase
             {
                 new BounceUnitEffect
                 {
-                    TargetInfo = TargetInfoBuilder.TargetAnyUnit().Build()
+                    TargetInfo = TargetInfo.TargetAnyUnit()
                 },
                 new DamageEffect
                 {
                     Amount = 1,
-                    TargetType = TargetType.Opponent
+                    TargetInfo = TargetInfo.Opponent()
                 }
             }
         });
@@ -2421,7 +2416,7 @@ public class CardDatabase : ICardDatabase
                     Effects = new List<Effect>{
                                     new CreateTokenEffect<UnitCardData>
                 {
-                    TargetType = TargetType.Opponent,
+                    TargetInfo = TargetInfo.Opponent(),
                     AmountOfTokens = 3,
                     TokenData = new UnitCardData
                     {
@@ -2453,7 +2448,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new PumpPowerByNumberOfSpellsInGraveyardEffect
                         {
-                              TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build()
+                              TargetInfo = TargetInfo.TargetOwnUnit()
                         }
                     }
                 }
@@ -2634,7 +2629,7 @@ public class CardDatabase : ICardDatabase
                                             {
                                                 new ValakutEffect()
                                                 {
-                                                    TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
+                                                    TargetInfo = TargetInfo.RandomOpponentOrUnits()
                                                 }
                                             }
                                         }
@@ -2730,7 +2725,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 3,
-                            TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
+                            TargetInfo = TargetInfo.RandomOpponentOrUnits()
                         }
                     }
                 },
@@ -2742,7 +2737,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 3,
-                            TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
+                            TargetInfo = TargetInfo.RandomOpponentOrUnits()
                         }
                     }
                 }
@@ -3032,7 +3027,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetInfo = TargetInfoBuilder.EachUnitYouControl().Build()
+                            TargetInfo = TargetInfo.EachUnitYouControl()
                         }
                     }
                 }
@@ -3069,7 +3064,7 @@ public class CardDatabase : ICardDatabase
                 new DamageEffect
                 {
                     Amount = 2,
-                    TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build()
+                    TargetInfo = TargetInfo.TargetOpponentUnit()
                 }
             },
             BackCard = new SpellCardData
@@ -3081,7 +3076,7 @@ public class CardDatabase : ICardDatabase
                 {
                     new BounceUnitEffect
                     {
-                        TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build()
+                        TargetInfo = TargetInfo.TargetOpponentUnit()
                     }
                 }
             }
@@ -3337,7 +3332,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 5,
-                            TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
+                            TargetInfo = TargetInfo.RandomOpponentOrUnits()
                         }
                     }
                 },
@@ -3359,7 +3354,7 @@ public class CardDatabase : ICardDatabase
                   ManaCost = "2",
                   Effects = new List<Effect>{ new DamageEffect
                   {
-                      TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build(),
+                      TargetInfo = TargetInfo.TargetOpponentUnit(),
                       Amount = 1
                   }
                   }

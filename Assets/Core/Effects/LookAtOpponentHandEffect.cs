@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 
 public class LookAtOpponentHandEffect : Effect
-{
-    public override TargetType TargetType { get; set; } = TargetType.Opponent;
+{    
     public override string RulesText => "Look at your opponents hand";
 
+    public LookAtOpponentHandEffect()
+    {
+        TargetInfo = TargetInfo.Opponent();
+    }
+    
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         var opponent = entitiesToApply[0] as Player;

@@ -54,7 +54,7 @@ public abstract class Effect
 
     //Temporary placing this here while we refactor our TargetSystem.
     [Obsolete("Use TargetInfo.NeedsTargets from now on instead")]
-    private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.OpenLane, TargetType.UnitSelf, TargetType.Opponent, TargetType.None};
+    private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.OpenLane, TargetType.UnitSelf, TargetType.None};
 
     public bool NeedsTargets()
     {
@@ -119,8 +119,6 @@ public abstract class Effect
                 }
             case TargetType.UnitSelf:
                 return new List<CardGameEntity>() { effectSource };
-            case TargetType.Opponent:
-                return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
         }

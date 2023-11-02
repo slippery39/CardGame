@@ -14,7 +14,7 @@
             //case TargetType.TargetUnitsOrPlayers: return "target #unitType# or player";
             case TargetType.UnitSelf: return "#this#";
             case TargetType.PlayerSelf: return "to itself";
-            case TargetType.Opponent: return " an opponent";
+            //case TargetType.Opponent: return " an opponent";
             //case TargetType.RandomOpponentOrUnits: return " a random opponent or #unitType# an opponent controls";
             default: return "";
         }

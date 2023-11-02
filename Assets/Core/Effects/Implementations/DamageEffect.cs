@@ -9,7 +9,7 @@ public class DamageEffect : Effect
 
     public DamageEffect()
     {
-        TargetInfo = TargetInfoBuilder.TargetOpponentOrTheirUnits().Build();
+        TargetInfo = TargetInfo.TargetOpponentOrTheirUnits();
     }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

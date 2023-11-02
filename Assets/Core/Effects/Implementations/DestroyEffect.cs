@@ -7,7 +7,7 @@ public class DestroyEffect : Effect
 
     public DestroyEffect()
     {
-        TargetInfo = TargetInfoBuilder.TargetOpponentUnit().Build();
+        TargetInfo = TargetInfo.TargetOpponentUnit();
     }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

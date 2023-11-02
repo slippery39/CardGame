@@ -10,7 +10,7 @@ public class AddTempAbilityEffect : Effect
         TempAbility = tempAbility;
         TempAbility.ThisTurnOnly = true;
         //Default Target Info
-        TargetInfo = TargetInfoBuilder.TargetOwnUnit().Build();
+        TargetInfo = TargetInfo.TargetOwnUnit();
     }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

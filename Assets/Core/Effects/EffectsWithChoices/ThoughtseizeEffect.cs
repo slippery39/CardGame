@@ -3,12 +3,16 @@ using System.Linq;
 
 public class ThoughtseizeEffect : EffectWithChoice
 {
-    public override TargetType TargetType { get; set; } = TargetType.Opponent;
     public override string RulesText => "Look at your opponents hand. Choose 1 non mana card from it and discard it";
 
     public override string ChoiceMessage => "Choose a card to discard.";
 
     public override int NumberOfChoices { get; set; } = 1;
+
+    public ThoughtseizeEffect()
+    {
+        TargetInfo = TargetInfo.Opponent();
+    }
 
     public override List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {
