@@ -756,13 +756,18 @@ public class CardDatabase : ICardDatabase
                 {
                     Power = -1,
                     Toughness = -1,
-                    TargetType = TargetType.OpponentUnits
+                     TargetType = TargetType.OpponentUnits
                 },
                 new PumpUnitEffect()
                 {
                     Power = 1,
                     Toughness = 1,
-                    TargetType = TargetType.OurUnits
+                    TargetInfo = new TargetInfo
+                    {
+                        OwnerType = TargetOwnerType.Ours,
+                        TargetType = TargetType.Units,
+                        TargetMode = TargetMode.All
+                    }
                 }
             }
         });
@@ -1006,7 +1011,12 @@ public class CardDatabase : ICardDatabase
                     {
                         Power = 1,
                         Toughness =1,
-                        TargetType = TargetType.OurUnits
+                        TargetInfo = new TargetInfo
+                        {
+                            TargetType = TargetType.Units,
+                            OwnerType = TargetOwnerType.Ours,
+                            TargetMode = TargetMode.All
+                        }
                     }
                     },
                  }
@@ -3095,7 +3105,12 @@ public class CardDatabase : ICardDatabase
                 new StormEffect{
                 ChildEffect = new PumpUnitEffect
                 {
-                    TargetType = TargetType.OurUnits,
+                    TargetInfo = new TargetInfo
+                    {
+                        TargetType = TargetType.Units,
+                        OwnerType = TargetOwnerType.Ours,
+                        TargetMode = TargetMode.All
+                    },
                     Power = 1,
                     Toughness =0
                 }
@@ -3150,7 +3165,7 @@ public class CardDatabase : ICardDatabase
             Effects = new List<Effect>()
             {
                 new DestroyEffect()
-                {  
+                {
                     TargetInfo = new TargetInfo
                     {
                         TargetType = TargetType.Units,

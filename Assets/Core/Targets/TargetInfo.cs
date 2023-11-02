@@ -129,8 +129,6 @@ public class TargetInfo
                 {
                     return new List<CardGameEntity> { player };
                 }
-            case TargetType.OurUnits:
-                return player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
             case TargetType.OpponentUnits:
                 return cardGame.Players.Find(p => player.PlayerId != p.PlayerId).Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Cast<CardGameEntity>().ToList();
             case TargetType.UnitSelf:
