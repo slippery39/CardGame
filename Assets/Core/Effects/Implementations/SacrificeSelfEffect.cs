@@ -4,7 +4,11 @@ using System.Collections.Generic;
 public class SacrificeSelfEffect : Effect
 {
     public override string RulesText => "Sacrifice this unit";
-    public override TargetType TargetType { get; set; } = TargetType.UnitSelf; //Should never need to change.
+
+    public SacrificeSelfEffect()
+    {
+        TargetInfo = TargetInfo.Source();
+    }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {

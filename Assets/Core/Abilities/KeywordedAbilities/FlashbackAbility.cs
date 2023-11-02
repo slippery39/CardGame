@@ -5,7 +5,7 @@ public class FlashbackAbility : CardAbility, IModifyCastZones, IModifyAdditional
 {
     public string ManaCost { get; set; }
     public AdditionalCost AdditionalCost { get; set; }
-    public override string RulesText => $"Flashback : {ManaCost},{AdditionalCost.RulesText}";
+    public override string RulesText => $"Flashback : {ManaCost},{AdditionalCost?.RulesText}";
 
     //Need to change things to have a cost, not just a mana cost.
     public string ModifyManaCost(CardGame cardGame, CardInstance cardInstance, string originalManaCost)

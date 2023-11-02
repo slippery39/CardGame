@@ -30,7 +30,6 @@ public class PactLoseGameModification : Modification, IOnTurnStart
         if (!cardGame.ManaSystem.CanPayManaCost(player, ManaToPay))
         {
             cardGame.WinLoseSystem.LoseGame(player);
-            return;
         }
     }
 }

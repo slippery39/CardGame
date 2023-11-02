@@ -2,7 +2,7 @@
 {
     None,
     PlayerSelf, //Player
-    UnitSelf, //Self Unit
+    //UnitSelf, //Self Unit
     OpenLane,
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
     //NEW TARGET TYPES FOR UPDATED SYSTEM HERE:
@@ -21,7 +21,13 @@
     /// <summary>
     /// Targets cards in players hands
     /// </summary>
-    CardsInHand
+    CardsInHand,
+    /// <summary>
+    /// Targets the source that the effect came from. Ex. Self pump like Basking Rootwalla or Wild Mongrel
+    /// </summary>
+    Source
+    //UnitSelf, //Self Unit
+
 }
 
 

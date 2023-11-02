@@ -175,32 +175,11 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
         }
     }
 
-    private List<CardInstance> ApplyFilter(List<CardInstance> originalList, CardFilter filter)
-    {
-
-        if (filter == null)
-        {
-            return originalList;
-        }
-
-        var filteredList = new List<CardInstance>();
-
-        if (filter.CreatureType != null)
-        {
-            filteredList = originalList.Where(ol => ol.CreatureType == filter.CreatureType).ToList();
-        }
-
-        return filteredList;
-    }
-
-    //TODO - fix this.
     private List<CardGameEntity> GetUnitsToApplyAbility(CardInstance source, StaticAbility sourceAbility)
     {
         //TODO - only one effect per static ability?
-
-        var effect = sourceAbility.Effects.First();
+        var effect = sourceAbility.Effects[0];
         var targetType = effect.TargetType;
-        var filter = effect.Filter;
 
         if (effect.TargetInfo != null)
         {
@@ -214,8 +193,6 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
                 {
                     return new List<CardGameEntity> { cardGame.GetOwnerOfCard(source) };
                 }
-            case TargetType.UnitSelf:
-                return new List<CardGameEntity> { source };
             default:
                 {
                     throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {effect.TargetType} is not handled");

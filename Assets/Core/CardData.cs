@@ -814,7 +814,7 @@ public class CardDatabase : ICardDatabase
                     {
                         Power = 1,
                         Toughness = 0,
-                        TargetType = TargetType.UnitSelf
+                        TargetInfo = TargetInfo.Source()
                     }
                     }
                 }
@@ -948,7 +948,7 @@ public class CardDatabase : ICardDatabase
                     {
                         Power = 2,
                         Toughness = 2,
-                        TargetType = TargetType.UnitSelf
+                        TargetInfo = TargetInfo.Source()
                     }
                     }
                  }
@@ -1132,7 +1132,7 @@ public class CardDatabase : ICardDatabase
                             {
                                 TargetType = TargetType.CardsInHand,
                                 TargetMode = TargetMode.All,
-                                OwnerType = TargetOwnerType.Ours    
+                                OwnerType = TargetOwnerType.Ours
                             }
                             .WithUnitType("Goblin")
                         }
@@ -1299,7 +1299,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new UnExhaustEffect
                         {
-                            TargetType = TargetType.UnitSelf
+                            TargetInfo = TargetInfo.Source()
                         }
                     }
                 },
@@ -1425,7 +1425,6 @@ public class CardDatabase : ICardDatabase
         4 Yavimaya Coast - Dual Lands.
         60 Cards
         */
-
         _cards.Add(
             new UnitCardData
             {
@@ -1505,7 +1504,7 @@ public class CardDatabase : ICardDatabase
             {
                 Power = 1,
                 Toughness = 1,
-                TargetType = TargetType.UnitSelf
+                TargetInfo = TargetInfo.Source()
             }
             }
         }
@@ -1528,7 +1527,7 @@ public class CardDatabase : ICardDatabase
                 },
                 Effects = new List<Effect>{  new SwitchPowerToughnessEffect
             {
-                TargetType = TargetType.UnitSelf
+                TargetInfo = TargetInfo.Source()
                 }
             }
             }
@@ -1546,12 +1545,32 @@ public class CardDatabase : ICardDatabase
             {
                 new ActivatedAbility(){
                 ManaCost = "1G",
-                Effects = new List<Effect>{  new PumpUnitEffect{Power = 2, Toughness = 2, TargetType = TargetType.UnitSelf},
+                Effects = new List<Effect>{  new PumpUnitEffect{Power = 2, Toughness = 2, TargetInfo = TargetInfo.Source()},
                 }
                 },
                 new MadnessAbility()
                 {
                     ManaCost = "0"
+                }
+            }
+        });
+
+        _cards.Add(new UnitCardData()
+        {
+            Name = "Arrogant Wurm",
+            ManaCost = "4G",
+            Power = 4,
+            Toughness = 4,
+            Colors = new List<CardColor> { CardColor.Green },
+            Abilities = new List<CardAbility>
+            {
+                new TrampleAbility()
+                {
+
+                },
+                new MadnessAbility()
+                {
+                    ManaCost = "2G"
                 }
             }
         });
@@ -1578,6 +1597,34 @@ public class CardDatabase : ICardDatabase
                     {
                         Amount = 3
                     }
+                }
+            }
+        });
+
+        _cards.Add(new SpellCardData()
+        {
+            Name = "Roar of the Wurm",
+            ManaCost = "3G",
+            ArtPath = $"{ArtPath}Roar of the Wurm",
+            Colors = new List<CardColor> { CardColor.Green },
+            Effects = new List<Effect>
+            {
+                new CreateTokenEffect<UnitCardData>()
+                {
+                    TokenData = new UnitCardData
+                    {
+                        Name = "Wurm",
+                        Power = 6,
+                        Toughness = 6,
+                        Colors = new List<CardColor> { CardColor.Green },
+                    }
+                }
+            },
+            Abilities = new List<CardAbility>
+            {
+                new FlashbackAbility
+                {
+                    ManaCost = "3G",
                 }
             }
         });
@@ -1862,7 +1909,7 @@ public class CardDatabase : ICardDatabase
                         new AddPlusOnePlusOneCounterEffect
                         {
                             Amount = 1,
-                            TargetType = TargetType.UnitSelf
+                            TargetInfo = TargetInfo.Source()
                         }
                     }
                 }
@@ -1894,7 +1941,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 2,
                             Toughness = 2,
-                            TargetType = TargetType.UnitSelf
+                            TargetInfo = TargetInfo.Source()
                         }
                     }
                 }
@@ -2718,7 +2765,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness =0,
-                            TargetType = TargetType.UnitSelf
+                            TargetInfo = TargetInfo.Source()
                         }
                     }
                 },
@@ -3132,7 +3179,7 @@ public class CardDatabase : ICardDatabase
                         new AddPlusOnePlusOneCounterEffect()
                         {
                             Amount = 1,
-                            TargetType = TargetType.UnitSelf
+                            TargetInfo = TargetInfo.Source()
                         }
                     }
                 }
