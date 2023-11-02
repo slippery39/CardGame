@@ -4,7 +4,6 @@
     PlayerSelf, //Player
     Opponent, //non targetting
     CardsInHand,
-    OtherCreaturesYouControl, //non targetting
     OpponentUnits, //non targetting
     UnitSelf, //Self Unit
     TargetPlayers, //any player

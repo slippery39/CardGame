@@ -776,8 +776,8 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Benalish Marshal",
             ManaCost = "WWW",
-            Power = 3,
-            Toughness = 3,
+            Power = 2,
+            Toughness = 2,
             Colors = new List<CardColor> { CardColor.White },
             Abilities = new List<CardAbility>
             {
@@ -789,7 +789,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetType = TargetType.OtherCreaturesYouControl,
+                            TargetInfo = TargetInfoBuilder.UnitsYouControl().Build()
                         }
                     }
                 }
@@ -1121,7 +1121,6 @@ public class CardDatabase : ICardDatabase
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
             {
-                new HasteAbility(),
                 new StaticAbility()
                 {
                     Effects = new List<Effect>
@@ -1140,9 +1139,8 @@ public class CardDatabase : ICardDatabase
                     {
                         new StaticGiveAbilityEffect
                         {
-                            TargetType = TargetType.OtherCreaturesYouControl,
-                            Ability = new HasteAbility(),
-                            Filter = new CardFilter{CreatureType = "Goblin"}
+                            TargetInfo = TargetInfoBuilder.UnitsYouControl().WithUnitType("Goblin").Build(),
+                            Ability = new HasteAbility()
                         }
                     }
                 }
@@ -1321,8 +1319,8 @@ public class CardDatabase : ICardDatabase
         {
             Name = "Goblin King",
             ManaCost = "1RR",
-            Power = 2,
-            Toughness = 2,
+            Power = 1,
+            Toughness = 1,
             CreatureType = "Goblin",
             Colors = new List<CardColor> { CardColor.Red },
             Abilities = new List<CardAbility>
@@ -1335,11 +1333,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetType = TargetType.OtherCreaturesYouControl,
-                            Filter = new CardFilter
-                            {
-                                CreatureType = "Goblin"
-                            }
+                            TargetInfo = TargetInfoBuilder.UnitsYouControl().WithUnitType("Goblin").Build()
                         }
                     }
                 }
@@ -1483,7 +1477,7 @@ public class CardDatabase : ICardDatabase
                             new StaticGiveAbilityEffect
                             {
                                 Ability = new FlyingAbility(),
-                                TargetType = TargetType.OtherCreaturesYouControl
+                                TargetInfo = TargetInfoBuilder.UnitsYouControl().Build()
                             }
                         }
                     }
@@ -3036,7 +3030,7 @@ public class CardDatabase : ICardDatabase
                         {
                             Power = 1,
                             Toughness = 1,
-                            TargetType = TargetType.OtherCreaturesYouControl,
+                            TargetInfo = TargetInfoBuilder.UnitsYouControl().Build()
                         }
                     }
                 }

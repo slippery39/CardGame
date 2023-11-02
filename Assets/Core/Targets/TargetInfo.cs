@@ -170,3 +170,48 @@ public class TargetInfo
 }
 
 
+public class TargetInfoBuilder
+{
+    private TargetInfo _targetInfo;
+
+    public TargetInfoBuilder()
+    {
+        _targetInfo = new TargetInfo();
+    }
+
+    public static TargetInfoBuilder UnitsYouControl()
+    {
+        return new TargetInfoBuilder()._UnitsYouControl();
+    }
+
+    private TargetInfoBuilder _UnitsYouControl()
+    {
+        _targetInfo.TargetType = TargetType.Units;
+        _targetInfo.TargetMode = TargetMode.All;
+        _targetInfo.OwnerType = TargetOwnerType.Ours;
+        return this;
+    }
+
+    public TargetInfoBuilder WithUnitType(string unitType)
+    {
+        if (_targetInfo.TargetFilter == null)
+        {
+            _targetInfo.TargetFilter = new CardFilter();
+        }
+        _targetInfo.TargetFilter.CreatureType = unitType;
+        return this;
+    }
+
+    public TargetInfoBuilder WithTargetFilter(CardFilter filter)
+    {
+        _targetInfo.TargetFilter = filter;
+        return this;
+    }
+
+    public TargetInfo Build()
+    {
+        return _targetInfo;
+    }
+}
+
+

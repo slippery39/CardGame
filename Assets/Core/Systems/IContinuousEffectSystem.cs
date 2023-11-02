@@ -27,7 +27,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
     /// <summary>
     /// Removes all static effects from all game entities.
     /// </summary>
-    public void RemoveAllStaticEffects() 
+    public void RemoveAllStaticEffects()
     {
         foreach (var entity in cardGame.GetEntities())
         {
@@ -36,7 +36,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
             //Remove abilities with a continous ability component on it
             //Remove modifications with a static info.source card !=null
             entity.ContinuousEffects = new List<ContinuousEffect>();
-            
+
             var cardInstance = entity as CardInstance;
             if (cardInstance != null)
             {
@@ -55,7 +55,8 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
 
         foreach (var card in cardsWithStaticAbilities)
         {
-            foreach (var sAbility in card.GetAbilitiesAndComponents<StaticAbility>())
+            var abilitiesAndComponents = card.GetAbilitiesAndComponents<StaticAbility>().ToList();
+            foreach (var sAbility in abilitiesAndComponents)
             {
                 if (cardGame.IsInZone(card, sAbility.ApplyWhenIn))
                 {
@@ -67,33 +68,28 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
 
     public void RemoveStaticEffects()
     {
-        var cardsInPlay = cardGame.GetCardsInPlay();
-        var cardsInGraveyards = cardGame.Players.Select(p => p.DiscardPile).SelectMany(discard => discard.Cards);
-
-        foreach (var card in cardGame.GetEntities())
+        var contEffects = cardGame.GetEntities().Select(c => c.ContinuousEffects);
+        foreach (var contEffect in contEffects)
         {
-            var continousEffectsOnUnit = card.ContinuousEffects;
-
-            if (continousEffectsOnUnit.Count == 0)
+            if (contEffect.Count == 0)
             {
                 continue;
             }
 
             Func<ContinuousEffect, bool> GetContinuousEffectsToRemove = (ContinuousEffect ce) =>
             {
-                var cardsInPlayAndDiscard = cardsInPlay.Concat(cardsInGraveyards);
                 var zoneOfSourceCard = cardGame.GetZoneOfCard(ce.SourceCard);
                 return zoneOfSourceCard.ZoneType != ce.SourceAbility.ApplyWhenIn;
             };
 
-            var continousEffectsToRemove = continousEffectsOnUnit
-                 .Where(ce => GetContinuousEffectsToRemove(ce)
-            ).ToList();
+            var continousEffectsToRemove = contEffect
+            .Where(ce => GetContinuousEffectsToRemove(ce))
+            .ToList();
 
             foreach (var effect in continousEffectsToRemove)
             {
                 RemoveContinuousEffectsFromSource(effect.SourceCard);
-            };
+            }
         }
     }
 
@@ -101,7 +97,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
     {
         //Note - Ideally our abilities and our effects would also have unique id's so that we can compare if they are the same
         //by id and not necessarily compare them by reference. 
-        return entityToCheck.ContinuousEffects.Where(ce => ce.SourceCard.EntityId == source.EntityId && ce.SourceAbility.RulesText == sourceAbility.RulesText).Any();
+        return entityToCheck.ContinuousEffects.Exists(ce => ce.SourceCard.EntityId == source.EntityId && ce.SourceAbility.RulesText == sourceAbility.RulesText);
     }
 
     private void Apply(CardInstance source, StaticAbility sourceAbility)
@@ -117,7 +113,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
                 {
                     SourceCard = source,
                     SourceAbility = sourceAbility,
-                    SourceEffect = sourceAbility.Effects.First()
+                    SourceEffect = sourceAbility.Effects[0]
                 };
 
                 //This way each effect can be responsible for how it needs to apply and remove from the uni.
@@ -155,7 +151,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
             card.ContinuousEffects = card.ContinuousEffects.Where(ce => ce.SourceCard != sourceCard).ToList();
 
             //Remove any modifications that came from the source
-            var modificationsToKeep = card.Modifications.Where(mod => mod.StaticInfo == null || (mod.StaticInfo.SourceCard.EntityId != sourceCard.EntityId) ).ToList();
+            var modificationsToKeep = card.Modifications.Where(mod => mod.StaticInfo == null || (mod.StaticInfo.SourceCard.EntityId != sourceCard.EntityId)).ToList();
             card.Modifications = modificationsToKeep;
 
             //Remove any abilities that come from the source
@@ -167,7 +163,7 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
                 {
                     var components = ab.Components.GetOfType<ContinuousAblityComponent>();
 
-                    if (components.Where(comp => comp.SourceCard == sourceCard).Any())
+                    if (components.Any(comp => comp.SourceCard == sourceCard))
                     {
                         return false;
                     }
@@ -206,6 +202,12 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
         var targetType = effect.TargetType;
         var filter = effect.Filter;
 
+        if (effect.TargetInfo != null)
+        {
+            //Note if we are having issues here, it might be because we aren't handling "other" creatures you control right now.
+            return effect.TargetInfo.GetTargets(cardGame, source.GetOwner(), source).ToList();
+        }
+
         switch (targetType)
         {
             case TargetType.PlayerSelf:
@@ -214,16 +216,9 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
                 }
             case TargetType.UnitSelf:
                 return new List<CardGameEntity> { source };
-            case TargetType.OtherCreaturesYouControl:
-                {
-                    var owner = cardGame.GetOwnerOfCard((CardInstance)source);
-                    return ApplyFilter(
-                        cardGame.GetUnitsInPlay().Where(u => u.OwnerId == owner.PlayerId && u.EntityId != source.EntityId).ToList(),
-                        filter).Cast<CardGameEntity>().ToList();
-                }
             case TargetType.CardsInHand:
                 {
-                    var owner = cardGame.GetOwnerOfCard((CardInstance)source);
+                    var owner = cardGame.GetOwnerOfCard(source);
                     return ApplyFilter(owner.Hand.Cards, filter).Cast<CardGameEntity>().ToList();
                 }
             default:

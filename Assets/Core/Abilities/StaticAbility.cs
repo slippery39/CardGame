@@ -59,12 +59,14 @@ public class StaticAbility : CardAbility
                              rulesText = "#cardType# you play";
                              break;
                          }
+                    /*
                      case TargetType.OtherCreaturesYouControl:
                          {
                              defaultCardType = "units";
                              rulesText = "Other #cardType# you control";
                              break;
                          }
+                     */
                      case TargetType.PlayerSelf:
                          {
                              rulesText = "You";
@@ -72,6 +74,7 @@ public class StaticAbility : CardAbility
                          }
                      default:
                          {
+                             return "Rules Text Update Needed for TargetInfo here";
                              throw new Exception($"Unhandled TargetType {eff.TargetType.ToString()} in StaticAbility rules text");
                          }
                  }
