@@ -5,7 +5,6 @@
     Opponent, //non targetting
     CardsInHand,
     UnitSelf, //Self Unit
-    TargetPlayers, //any player
     TargetUnits, //any unit
     TargetUnitsOrPlayers, //any unit or player
     RandomOurUnits,
