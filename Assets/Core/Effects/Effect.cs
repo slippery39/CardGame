@@ -54,7 +54,7 @@ public abstract class Effect
 
     //Temporary placing this here while we refactor our TargetSystem.
     [Obsolete("Use TargetInfo.NeedsTargets from now on instead")]
-    private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.RandomOpponentOrUnits, TargetType.OpenLane, TargetType.UnitSelf, TargetType.Opponent, TargetType.None, TargetType.RandomOurUnits };
+    private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.PlayerSelf, TargetType.OpenLane, TargetType.UnitSelf, TargetType.Opponent, TargetType.None};
 
     public bool NeedsTargets()
     {
@@ -121,21 +121,6 @@ public abstract class Effect
                 return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
                 return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
-            case TargetType.RandomOurUnits:
-                var ourUnits = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Randomize();
-                var filtered = CardFilter.ApplyFilter(ourUnits.ToList(), Filter);
-                return new List<CardGameEntity> { filtered.FirstOrDefault() };
-            case TargetType.RandomOpponentOrUnits:
-                var opponent = cardGame.Players.Find(p => p.EntityId != player.EntityId);
-                var things = new List<CardGameEntity> { opponent };
-
-                var everything = things.Union(opponent.GetUnitsInPlay());
-
-                if (!everything.Any())
-                {
-                    return new List<CardGameEntity> { };
-                }
-                return new List<CardGameEntity> { everything.Randomize().First() };
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
         }

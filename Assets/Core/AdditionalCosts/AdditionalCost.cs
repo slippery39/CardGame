@@ -135,7 +135,7 @@ public class CardFilter
 
         //Need to add the cast here.
         Func<CardInstance, bool> cardColorFilter = x => x.Colors.Contains((CardColor)filter.CardColor);
-        Func<CardInstance, bool> creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType == filter.CreatureType;
+        Func<CardInstance, bool> creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType.ToLower() == filter.CreatureType.ToLower();
         Func<CardInstance, bool> subTypeFilter = x => x.Subtype?.ToLower() == filter.Subtype.ToLower();
         Func<CardInstance, bool> cardTypeFilter = x => x.IsOfType(filter.CardType);
         Func<CardInstance, bool> manaFilter = x => filter.ManaCheck.Check(x);
@@ -144,7 +144,7 @@ public class CardFilter
         {
 
             cardColorFilter = x => !(x.Colors.Contains((CardColor)filter.CardColor));
-            creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType != filter.CreatureType;
+            creatureTypeFilter = x => x.CurrentCardData is UnitCardData && x.CreatureType.ToLower() != filter.CreatureType.ToLower();
             subTypeFilter = x => x.Subtype?.ToLower() != filter.Subtype.ToLower();
             cardTypeFilter = x => !x.IsOfType(filter.CardType);
             manaFilter = x => !filter.ManaCheck.Check(x);

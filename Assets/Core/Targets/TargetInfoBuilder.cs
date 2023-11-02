@@ -58,6 +58,18 @@
         return builder;
     }
 
+    public static TargetInfoBuilder RandomOpponentOrUnits()
+    {
+        var builder = new TargetInfoBuilder();
+        builder._targetInfo = new TargetInfo
+        {
+            TargetType = TargetType.UnitsAndPlayers,
+            TargetMode = TargetMode.Random,
+            OwnerType = TargetOwnerType.Theirs
+        };
+        return builder;
+    }
+
     private TargetInfoBuilder _EachUnitYouControl()
     {
         _targetInfo.TargetType = TargetType.Units;

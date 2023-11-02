@@ -61,8 +61,12 @@ public class TargetInfo
     {
         var baseTargets = GetTargetsInternal(cardGame, player, effectSource);
         baseTargets = FilterByOwnerType(player, baseTargets);
-        baseTargets = FilterByTargetMode(baseTargets);
         baseTargets = FilterByCardFilter(baseTargets);
+        //Target Mode needs to be the last filter since we are actually taking values there.
+        //We had an issue with Restoration Angel where it would select itself, then be filtered out
+        //by the non angel criteria.Other option is to have a seperate method for random selections 
+        //and explciitly apply it at the end here.
+        baseTargets = FilterByTargetMode(baseTargets);
 
         return baseTargets;
     }
@@ -133,21 +137,6 @@ public class TargetInfo
                 return new List<CardGameEntity>() { effectSource };
             case TargetType.Opponent:
                 return cardGame.Players.Where(p => p.EntityId != player.EntityId).Cast<CardGameEntity>().ToList();
-            case TargetType.RandomOurUnits:
-                var ourUnits = player.Lanes.Where(l => !l.IsEmpty()).Select(l => l.UnitInLane).Randomize();
-                var filtered = CardFilter.ApplyFilter(ourUnits.ToList(), TargetFilter);
-                return new List<CardGameEntity> { filtered.FirstOrDefault() };
-            case TargetType.RandomOpponentOrUnits:
-                var opponent = cardGame.Players.Find(p => p.EntityId != player.EntityId);
-                var things = new List<CardGameEntity> { opponent };
-
-                var everything = things.Union(opponent.GetUnitsInPlay());
-
-                if (!everything.Any())
-                {
-                    return new List<CardGameEntity> { };
-                }
-                return new List<CardGameEntity> { everything.Randomize().First() };
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
         }

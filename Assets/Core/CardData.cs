@@ -2097,12 +2097,18 @@ public class CardDatabase : ICardDatabase
                     {
                         new BlinkEffect
                         {
-                            Filter = new CardFilter
+                            TargetInfo = new TargetInfo
                             {
-                                Not = true,
-                                CreatureType = "Angel"
-                            },
-                            TargetType = TargetType.RandomOurUnits
+                                TargetType = TargetType.Units,
+                                OwnerType = TargetOwnerType.Ours,
+                                TargetMode = TargetMode.Random,
+                                NumberOfTargets = 1,
+                                TargetFilter = new CardFilter
+                                {
+                                    Not = true,
+                                    CreatureType = "Angel"
+                                }
+                            }
                         }
                     }
                 }
@@ -2628,7 +2634,7 @@ public class CardDatabase : ICardDatabase
                                             {
                                                 new ValakutEffect()
                                                 {
-                                                TargetType = TargetType.RandomOpponentOrUnits
+                                                    TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
                                                 }
                                             }
                                         }
@@ -2724,7 +2730,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 3,
-                            TargetType = TargetType.RandomOpponentOrUnits
+                            TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
                         }
                     }
                 },
@@ -2736,7 +2742,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 3,
-                            TargetType = TargetType.RandomOpponentOrUnits
+                            TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
                         }
                     }
                 }
@@ -3331,7 +3337,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 5,
-                            TargetType = TargetType.RandomOpponentOrUnits
+                            TargetInfo = TargetInfoBuilder.RandomOpponentOrUnits().Build()
                         }
                     }
                 },

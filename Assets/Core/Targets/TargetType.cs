@@ -5,8 +5,6 @@
     Opponent, //non targetting
     CardsInHand,
     UnitSelf, //Self Unit
-    RandomOurUnits,
-    RandomOpponentOrUnits,
     OpenLane,
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
     //NEW TARGET TYPES FOR UPDATED SYSTEM HERE:
