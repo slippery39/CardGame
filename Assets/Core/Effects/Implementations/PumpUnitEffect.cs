@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Assets.Core;
+using System;
 using System.Collections.Generic;
-
 public class PumpUnitEffect : Effect
 {
     public override string RulesText
@@ -13,9 +13,9 @@ public class PumpUnitEffect : Effect
             //Shivan Dragon gets +1/+0 until end of turn.
             //Target creature gets +3/+3 until end of turn.
 
-            var powerSymbol = Power >= 0 ? "+" : "-";
-            var toughnessSymbol = Toughness >= 0 ? "+" : "-";
-            var cardTargetText = TargetTypeHelper.TargetTypeToRulesText(TargetType);
+            var powerSymbol = Power >= 0 ? "+" : "";
+            var toughnessSymbol = Toughness >= 0 ? "+" : "";
+            var cardTargetText = TargetInfo.GetRulesText().CapitalizeFirst();
             var rulesText = $"{cardTargetText} gets {powerSymbol}{Power}/{toughnessSymbol}{Toughness} until end of turn";
 
             return rulesText;

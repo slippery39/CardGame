@@ -93,7 +93,14 @@ public class CardFilter
             str += $" {CardType}";
         }
 
-        str += " card";
+        if (CreatureType != null)
+        {
+            str += " unit";
+        }
+        else
+        {
+            str += " card";
+        }
 
         if (plural)
         {

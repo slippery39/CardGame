@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Assets.Core
 {
@@ -17,6 +14,23 @@ namespace Assets.Core
         {
             var targetInfo = effects.Where(e => e.NeedsTargets());
             return targetInfo.Any();
+        }
+
+        /// <summary>
+        /// Capitalizes the first character of a string
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string CapitalizeFirst(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            // Convert the first letter to uppercase and concatenate the rest of the string
+            string result = char.ToUpper(input[0]) + input.Substring(1).ToLower();
+            return result;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class AddTempAbilityEffect : Effect
 {
-    public override string RulesText => $@"Give {TempAbility.RulesText} to {TargetTypeHelper.TargetTypeToRulesText(TargetType)} until end of turn";
+    public override string RulesText => $@"Give {TempAbility.RulesText} to {TargetInfo.GetRulesText()} until end of turn";
     public CardAbility TempAbility { get; set; }
     public AddTempAbilityEffect(CardAbility tempAbility)
     {

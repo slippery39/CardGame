@@ -226,28 +226,75 @@ public class TargetInfo
     public string GetRulesText()
     {
         string retStr = "";
+
+        //Quick hack to properly show the card type if we don't have a TargetFilter.
+        string defaultCardType = "";
+
         switch (TargetType)
         {
             case TargetType.PlayerSelf:
                 retStr = "You";
                 break;
             case TargetType.Units:
-                retStr = "a unit";
+                defaultCardType = "unit";
+                if (TargetMode == TargetMode.All)
+                {
+                    retStr = "each #cardType# #ownerType#";
+                }
+                if (TargetMode == TargetMode.Random)
+                {
+                    retStr = "random #cardType# #ownerType#";
+                }
+                if (TargetMode == TargetMode.Target)
+                {
+                    retStr = "a #cardType# #ownerType#";
+                }
+                break;
+            case TargetType.UnitsAndPlayers:
+                defaultCardType = "unit";
+                if (TargetMode == TargetMode.All)
+                {
+                    retStr = "each #cardType# and player";
+                }
+                if (TargetMode == TargetMode.Random)
+                {
+                    retStr = "random #cardType# or players";
+                }
+                if (TargetMode == TargetMode.Target)
+                {
+                    retStr = "a #cardType# or player";
+                }
                 break;
             default:
                 retStr = $"Rules Text not implemented yet in TargetInfo for {TargetType}";
                 break;
         }
 
-        //TODO - this needs to be figured out
+        //Factor in our card type
         if (TargetFilter != null)
         {
-            return TargetFilter.RulesTextString();
+            retStr = retStr.Replace("#cardType#", TargetFilter.RulesTextString().Trim().ToLower());
         }
         else
         {
-            return retStr;
+            retStr = retStr.Replace("#cardType#", defaultCardType);
         }
+
+        //Factor in our owner type
+        if (OwnerType == TargetOwnerType.Theirs)
+        {
+            retStr = retStr.Replace("#ownerType#", "your opponent controls");
+        }
+        else if (OwnerType == TargetOwnerType.Ours)
+        {
+            retStr = retStr.Replace("#ownerType#", "you control");
+        }
+        else
+        {
+            retStr = retStr.Replace("#ownerType#", "");
+        }
+
+        return retStr;
     }
 
     private IEnumerable<CardGameEntity> FilterByOwnerType(Player player, IEnumerable<CardGameEntity> baseTargets)

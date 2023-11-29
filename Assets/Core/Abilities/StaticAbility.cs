@@ -15,19 +15,19 @@ public class StaticAbility : CardAbility
 
 
                  //TODO apply filter for goblins or something.
-                 rulesText = eff.RulesText.Replace("#targetType#", rulesText);
+                 //rulesText = eff.RulesText.Replace("#targetType#", rulesText);
 
                  //TODO - this will need to be removed. Top level effects should no nothing about the filtering involved.
                  //if (eff.Filter != null)
                  //{
                  //    defaultCardType = eff.Filter.RulesTextString() + "s";
                  //}
-                 rulesText = rulesText.Replace("#cardType#", defaultCardType);
+                 //rulesText = rulesText.Replace("#cardType#", defaultCardType);
 
                  return rulesText;
 
              })
-                );
+            );
 
         }
     }
@@ -55,7 +55,7 @@ public class TarmogoyfAbility : CardAbility, IModifyPower, IModifyToughness
 
 public class StaticPumpEffect : Effect
 {
-    public override string RulesText => $"#targetType# gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
+    public override string RulesText => $"{TargetInfo.GetRulesText()} gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
     public int Power { get; set; }
     public int Toughness { get; set; }
 

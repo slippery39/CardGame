@@ -15,7 +15,7 @@ public abstract class Effect
     //TODO - this is not set up to work with TargetInfo yet, should probably actually be moved inside target info
     public string CompileRulesText()
     {
-        string effectText = RulesText.Replace("#effectTargetType#", TargetTypeHelper.TargetTypeToRulesText(TargetType));
+        string effectText = RulesText.Replace("#effectTargetType#",TargetInfo.GetRulesText());
 
         var unitType = "unit";
         //TODO - We may need to remove this completely
