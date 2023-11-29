@@ -1,51 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-//Other creatures you control get +1/+1
-//This creature gets +0/+2 as long as its your turn
-//Lhurgoyf's Power and Toughness are equal to the number of creatures in all graveyards (or boneyard wurm)
-
-
-/*
-public class TargetInfo
-{
-    TargetType TargetType { get; set; } //needs target, does not need target??
-    CardFilter Filter { get; set; } //goblin - It needs to target a goblin
-}
-*/
-
-/*
-interface ITargetInfo
-{
-    public TargetType TargetType { get; set; } - TargetType.NoTarget;
-    public CardFilter CardFilter { get; set; } 
-}
-*/
-
-public enum EntityType
-{
-    Self,
-    OtherCreaturesYouControl,
-    CardsInHand
-}
-
-
-public class EntitiesAffectedInfo
-{
-    //Entities to Affect
-    public EntityType EntitiesAffected { get; set; }
-    public CardFilter Filter { get; set; }
-}
-
-//How do we handle spells that have targets but affect other entities?
 
 public class StaticAbility : CardAbility
 {
-
- 
-
     public override string RulesText
-    {        
+    {
         get
         {
             return String.Join(" and ", Effects.Select(eff =>
@@ -53,36 +13,6 @@ public class StaticAbility : CardAbility
                  string rulesText = "";
                  string defaultCardType = "";
 
-                 switch (eff.TargetType)
-                 {
-                     /*
-                     case TargetType.CardsInHand:
-                         {
-                             defaultCardType = "cards";
-                             rulesText = "#cardType# you play";
-                             break;
-                         }
-                    /*
-                     case TargetType.OtherCreaturesYouControl:
-                         {
-                             defaultCardType = "units";
-                             rulesText = "Other #cardType# you control";
-                             break;
-                         }
-                     */
-                     /*
-                     case TargetType.PlayerSelf:
-                         {
-                             rulesText = "You";
-                             break;
-                         }
-                    */
-                     default:
-                         {
-                             return "Rules Text Update Needed for TargetInfo here";
-                             throw new Exception($"Unhandled TargetType {eff.TargetType.ToString()} in StaticAbility rules text");
-                         }
-                 }
 
                  //TODO apply filter for goblins or something.
                  rulesText = eff.RulesText.Replace("#targetType#", rulesText);
@@ -100,12 +30,7 @@ public class StaticAbility : CardAbility
 
         }
     }
-
-    //public EntitiesAffectedInfo EntitiesAffectedInfo { get; set; }
     public ZoneType ApplyWhenIn { get; set; } = ZoneType.InPlay;
-
-    //private EntityType EntitiesAffected => EntitiesAffectedInfo.EntitiesAffected;
-    //private CardFilter Filter => EntitiesAffectedInfo.Filter;
 }
 
 
@@ -127,17 +52,6 @@ public class TarmogoyfAbility : CardAbility, IModifyPower, IModifyToughness
 }
 
 
-public enum StaticAbilityEntitiesAffected
-{
-    Self,
-    OtherCreaturesYouControl,
-    CardsInHand
-}
-
-
-//These need to be changed to use modifictions instead.
-
-//TODO - replace with a PumpEffect with a StaticInfo
 public class StaticPumpEffect : Effect
 {
     public override string RulesText => $"#targetType# gain {(Power >= 0 ? "+" : "-")}{Power}/{(Toughness >= 0 ? "+" : "-")}{Toughness}";
@@ -173,9 +87,6 @@ public class StaticPumpEffect : Effect
     }
 }
 
-
-
-//TODO - replace with with a mana effect with a static info
 public class StaticManaReductionEffect : Effect
 {
     public override string RulesText
@@ -382,9 +293,6 @@ public class OracleOfMulDayaModification : Modification, IModifyCastZones
 }
 
 
-
-
-//TODO - replace with a GiveAbility effect with a static info
 public class StaticGiveAbilityEffect : Effect
 {
     public override string RulesText => $"#targetType# gain {Ability.RulesText}.";
