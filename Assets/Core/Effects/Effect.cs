@@ -12,23 +12,6 @@ public abstract class Effect
 
     public abstract void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply);
 
-    //TODO - this is not set up to work with TargetInfo yet, should probably actually be moved inside target info
-    public string CompileRulesText()
-    {
-        string effectText = RulesText.Replace("#effectTargetType#",TargetInfo.GetRulesText());
-
-        var unitType = "unit";
-        //TODO - We may need to remove this completely
-        //if (Filter != null && Filter.RulesTextString() != "")
-        //{
-        //    unitType = Filter.RulesTextString();
-        //}
-
-        effectText = effectText.Replace("#unitType#", unitType);
-
-        return effectText;
-    }
-
     //Temporary placing this here while we refactor our TargetSystem.
     [Obsolete("Use TargetInfo.NeedsTargets from now on instead")]
     private static readonly List<TargetType> TypesThatDontNeedTargets = new List<TargetType> { TargetType.OpenLane, TargetType.None};

@@ -144,7 +144,7 @@ public class SpellCardData : BaseCardData
         {
             var additionalCostText = AdditionalCost != null ? $"Additional Cost : {AdditionalCost.RulesText}\r\n" : "";
             var abilitiesText = string.Join("\r\n", Abilities.Select(ab => ab.RulesText));
-            var effectsText = string.Join("\r\n", Effects.Select(e => e.CompileRulesText()));
+            var effectsText = string.Join("\r\n", Effects.Select(e => e.RulesText));
             return additionalCostText + abilitiesText + effectsText;
         }
     }

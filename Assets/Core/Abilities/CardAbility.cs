@@ -114,7 +114,7 @@ public class TriggeredAbility : CardAbility
 
             foreach (var effect in Effects)
             {
-                text += effect.CompileRulesText();
+                text += effect.RulesText;
                 text += ",";
             }
 
