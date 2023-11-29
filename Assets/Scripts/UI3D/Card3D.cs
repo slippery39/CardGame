@@ -86,10 +86,16 @@ public class Card3D : MonoBehaviour, IHighlightable
             CardFrameTexture = GetCardFrameTexture(card.Colors),
         };
 
+
         var unitCard = card as UnitCardData;
         if (unitCard != null)
         {
             cardOptions.CombatStats = unitCard.Power + "/" + unitCard.Toughness;
+
+            if (!unitCard.CreatureType.IsNullOrEmpty())
+            {
+                cardOptions.CardType += " - " + unitCard.CreatureType;
+            }
         }
         else
         {
@@ -112,6 +118,11 @@ public class Card3D : MonoBehaviour, IHighlightable
             ArtTexture = Resources.Load<Texture2D>(card.ArtPath),
             CardFrameTexture = GetCardFrameTexture(card.Colors)
         };
+
+        if (!card.CreatureType.IsNullOrEmpty())
+        {
+            cardOptions.CardType += " - " + card.CreatureType;
+        }
 
         if (card.CurrentCardData is not UnitCardData)
         {
