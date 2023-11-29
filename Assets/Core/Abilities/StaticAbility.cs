@@ -17,10 +17,11 @@ public class StaticAbility : CardAbility
                  //TODO apply filter for goblins or something.
                  rulesText = eff.RulesText.Replace("#targetType#", rulesText);
 
-                 if (eff.Filter != null)
-                 {
-                     defaultCardType = eff.Filter.RulesTextString() + "s";
-                 }
+                 //TODO - this will need to be removed. Top level effects should no nothing about the filtering involved.
+                 //if (eff.Filter != null)
+                 //{
+                 //    defaultCardType = eff.Filter.RulesTextString() + "s";
+                 //}
                  rulesText = rulesText.Replace("#cardType#", defaultCardType);
 
                  return rulesText;

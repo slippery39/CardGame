@@ -8,25 +8,6 @@ public abstract class Effect
 
     [Obsolete("Being replaced by TargetInfo")]
     public virtual TargetType TargetType { get; set; }
-    [Obsolete("Being replaced by TargetInfo")]
-
-    private CardFilter _filter;
-    public CardFilter Filter
-    {
-        //POSSIBLE CLONING ISSUE HERE?
-        get
-        {
-            if (TargetInfo == null){
-                return _filter;
-            }
-            else
-            {
-                return TargetInfo.TargetFilter;
-            }
-        }
-        set { _filter = value; }
-    }
-
     public virtual TargetInfo TargetInfo { get; set; }
 
     public abstract void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply);
@@ -42,10 +23,11 @@ public abstract class Effect
         string effectText = RulesText.Replace("#effectTargetType#", TargetTypeHelper.TargetTypeToRulesText(TargetType));
 
         var unitType = "unit";
-        if (Filter != null && Filter.RulesTextString() != "")
-        {
-            unitType = Filter.RulesTextString();
-        }
+        //TODO - We may need to remove this completely
+        //if (Filter != null && Filter.RulesTextString() != "")
+        //{
+        //    unitType = Filter.RulesTextString();
+        //}
 
         effectText = effectText.Replace("#unitType#", unitType);
 

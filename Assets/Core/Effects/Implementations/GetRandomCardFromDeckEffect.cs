@@ -5,6 +5,8 @@ public class GetRandomCardFromDeckEffect : Effect
 {
     public int Amount { get; set; } = 1;
 
+    public CardFilter Filter { get; set; }
+
     public override string RulesText
     {
         get

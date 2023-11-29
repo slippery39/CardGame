@@ -37,6 +37,7 @@ public class GrabFromTopOfDeckEffect : Effect
     }
     public int CardsToLookAt { get; set; }
     public int Amount { get; set; }
+    public CardFilter Filter { get; set; }
     public override TargetType TargetType { get; set; } = TargetType.None;
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
@@ -46,6 +47,7 @@ public class GrabFromTopOfDeckEffect : Effect
 
 public class ChooseFromTopOfDeckEffect : EffectWithChoice
 {
+    public CardFilter Filter { get; set; }
     public override string RulesText
     {
         get

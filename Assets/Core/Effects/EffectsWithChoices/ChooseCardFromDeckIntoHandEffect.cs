@@ -7,6 +7,8 @@ public class ChooseCardFromDeckIntoHandEffect : EffectWithChoice
     public override string ChoiceMessage { get => "Choose a card to put into your hand"; }
     public override int NumberOfChoices { get; set; } = 1;
 
+    public CardFilter Filter { get; set; }
+
     public ChooseCardFromDeckIntoHandEffect()
     {
         TargetInfo = TargetInfo.PlayerSelf();

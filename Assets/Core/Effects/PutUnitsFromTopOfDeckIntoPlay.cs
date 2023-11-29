@@ -8,6 +8,7 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
 {
     public int Amount { get; set; } = 1;
     public int CardsToLookAt { get; set; }
+    public CardFilter Filter { get; set; }
     public override string RulesText
     {
         get
