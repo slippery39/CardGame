@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,30 +11,15 @@ public class StaticAbility : CardAbility
         {
             return String.Join(" and ", Effects.Select(eff =>
              {
-                 string rulesText = "";
-                 string defaultCardType = "";
-
-
-                 //TODO apply filter for goblins or something.
-                 //rulesText = eff.RulesText.Replace("#targetType#", rulesText);
-
-                 //TODO - this will need to be removed. Top level effects should no nothing about the filtering involved.
-                 //if (eff.Filter != null)
-                 //{
-                 //    defaultCardType = eff.Filter.RulesTextString() + "s";
-                 //}
-                 //rulesText = rulesText.Replace("#cardType#", defaultCardType);
-
-                 return rulesText;
+                 return eff.RulesText;
 
              })
-            );
-
+            )
+            .CapitalizeFirst();
         }
     }
     public ZoneType ApplyWhenIn { get; set; } = ZoneType.InPlay;
 }
-
 
 public class TarmogoyfAbility : CardAbility, IModifyPower, IModifyToughness
 {
