@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DeckName: Target Refactor
   Format: TEST
-  Contents: '100 City of Brass
+  Contents: '20 Mountain
 
-    10 Oracle of Mul Daya
+    20 Gempalm Incinerator
+
+    20 Seething Song
 
 
 '

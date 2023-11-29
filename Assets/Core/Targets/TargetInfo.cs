@@ -282,7 +282,7 @@ public class TargetInfo
         else if (TargetType == TargetType.Source)
         {
             return new List<CardGameEntity> { effectSource };
-        }        
+        }
         else if (TargetType == TargetType.PlayerSelf)
         {
             return new List<CardGameEntity> { player };
@@ -312,4 +312,59 @@ public class TargetInfo
     }
 }
 
+
+public class TargetInfoWithComponents
+{
+    /// <summary>
+    /// The type of targetting that will be used.
+    /// </summary>
+    public TargetMode TargetMode { get; set; }
+
+    /// <summary>
+    /// The amount of targets that need to be selected
+    /// </summary>
+    public int Amount { get; set; }
+
+    public List<TargetInfoFilter> TargetFilters = new List<TargetInfoFilter>();
+
+    public IEnumerable<CardGameEntity> GetValidTargets(CardGame gameState, TargetSourceInfo sourceInfo)
+    {
+        var entities = gameState.GetEntities();
+        return entities.Intersect(
+            TargetFilters.SelectMany(tf => tf.GetTargets(gameState, sourceInfo))
+        );
+    }
+}
+
+
+public class TargetSourceInfo
+{
+    /// <summary>
+    /// The source player for a target info
+    /// </summary>
+    public Player SourcePlayer { get; set; }
+
+    /// <summary>
+    /// The source card for a target info
+    /// </summary>
+    public CardInstance SourceCard { get; set; }
+}
+
+public abstract class TargetInfoFilter
+{
+    public abstract IEnumerable<CardGameEntity> GetTargets(
+        CardGame gameState,
+        TargetSourceInfo sourceInfo);
+}
+
+public class PlayerSelfTargetFilter : TargetInfoFilter
+{
+    public override IEnumerable<CardGameEntity> GetTargets(
+        CardGame cardGame,
+        TargetSourceInfo sourceInfo
+    )
+    {
+        return new List<CardGameEntity> { sourceInfo.SourcePlayer };
+    }
+}
 
