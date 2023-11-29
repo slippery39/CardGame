@@ -18,11 +18,14 @@ public class DiscardCardEffect : EffectWithChoice
         }
     }
     public int Amount { get; set; }
-    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
-
     public override string ChoiceMessage => $"Discard {Amount} cards";
 
     public override int NumberOfChoices { get => Amount; set => Amount = value; }
+
+    public DiscardCardEffect()
+    {
+        TargetInfo = TargetInfo.PlayerSelf();
+    }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {

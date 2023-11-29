@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Assets.Core.Abilities;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -314,12 +315,12 @@ public class CardGame
     }
     public Player GetOwnerOfCard(CardInstance unitInstance)
     {
-        var owner = Players.FirstOrDefault(p => p.PlayerId == unitInstance.OwnerId);
+        var owner = Players.Find(p => p.PlayerId == unitInstance.OwnerId);
 
         //Might be a double sided card. Check the front card for the owner
         if (owner == null)
         {
-            owner = Players.FirstOrDefault(p => p.PlayerId == unitInstance.FrontCard.OwnerId);
+            owner = Players.Find(p => p.PlayerId == unitInstance.FrontCard.OwnerId);
         }
 
         if (owner == null)
@@ -439,9 +440,31 @@ public class CardGame
     {
         entity.EntityId = GetNextEntityId();
         _registeredEntities.Add(entity);
-        if (entity is CardInstance)
+
+        var cardInst = entity as CardInstance;
+
+        if (cardInst!=null)
         {
-            _registeredCardEntities.Add(entity as CardInstance);
+            _registeredCardEntities.Add(cardInst);
+            RegisterStaticAbilities(cardInst);
+        }
+    }
+
+    private int _nextAbilityId = 1;
+
+    /// <summary>
+    /// Registers Static Abilities with the game.
+    /// We need to give a unique idenfifier to StaticAbilities so that we can properly identify which abillity a continuous effect originates from.
+    /// </summary>
+    private void RegisterStaticAbilities(CardInstance cardInstance)
+    {
+        var statics = cardInstance.Abilities.GetOfType<StaticAbility>();
+        foreach(var staticAb in statics)
+        {
+            if (staticAb.Components.GetOfType<AbilityIdentifierComponent>().IsNullOrEmpty())
+            {
+                staticAb.Components.Add(new AbilityIdentifierComponent { UniqueId = _nextAbilityId++ });
+            }
         }
     }
 
@@ -612,6 +635,11 @@ public class CardGame
                 var entityIds = choiceAction.Choices.Select(t => t.EntityId);
                 choiceAction.Choices = entityIds.Select(eid=>GetEntities<CardInstance>().FirstOrDefault(t => t.EntityId == eid)).ToList();
             }
+        }
+
+        if (action.SourceCard?.Name == "Vapor Snag")
+        {
+            var debug = 0;
         }
 
         if (action.IsValidAction(this))

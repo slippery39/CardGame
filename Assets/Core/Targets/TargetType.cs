@@ -1,8 +1,7 @@
 ﻿public enum TargetType
 {
     None,
-    PlayerSelf, //Player
-    //UnitSelf, //Self Unit
+    //PlayerSelf, //Player
     OpenLane,
     OpenLaneBesideUnit, //mainly for token creation, tries to place the token nearest left or right to the unit that is creating it.
     //NEW TARGET TYPES FOR UPDATED SYSTEM HERE:
@@ -18,6 +17,11 @@
     /// Targets just players, for new TargetInfo System
     /// </summary>
     Players,
+    /// <summary>
+    /// An effect that automatically targets the player casting it
+    /// NOTE : Still undecided if we should just use Players, with TargetMode None and OwnerType ours... this could change in the future
+    /// </summary>
+    PlayerSelf,
     /// <summary>
     /// Targets cards in players hands
     /// </summary>

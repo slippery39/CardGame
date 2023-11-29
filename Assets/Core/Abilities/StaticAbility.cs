@@ -42,8 +42,10 @@ public class EntitiesAffectedInfo
 public class StaticAbility : CardAbility
 {
 
+ 
+
     public override string RulesText
-    {
+    {        
         get
         {
             return String.Join(" and ", Effects.Select(eff =>
@@ -68,11 +70,13 @@ public class StaticAbility : CardAbility
                              break;
                          }
                      */
+                     /*
                      case TargetType.PlayerSelf:
                          {
                              rulesText = "You";
                              break;
                          }
+                    */
                      default:
                          {
                              return "Rules Text Update Needed for TargetInfo here";
@@ -329,7 +333,11 @@ public class StaticPlayAdditionalLandEffect : Effect
 public class OracleOfMulDayaEffect : Effect
 {
     public override string RulesText => "You may play lands from the top of your deck";
-    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
+
+    public OracleOfMulDayaEffect()
+    {
+        TargetInfo = TargetInfo.PlayerSelf();
+    }
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         foreach (var entity in entitiesToApply)
@@ -348,7 +356,7 @@ public class OracleOfMulDayaEffect : Effect
 
             modification.StaticInfo = new StaticInfo
             {
-                SourceAbility = source.Abilities.Where(ab => ab.Effects.Contains(this)).First(),
+                SourceAbility = source.Abilities.First(ab => ab.Effects.Contains(this)),
                 SourceCard = source
             };
 

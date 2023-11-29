@@ -18,6 +18,10 @@ public class DefaultEffectsProcessor : CardGameSystem, IEffectsProcessor
     }
     public void ApplyEffect(Player player, CardInstance source, Effect effect, List<CardGameEntity> targets)
     {
+        if (source.Name == "Vapor Snag")
+        {
+            var debug = 0;
+        }
         List<CardGameEntity> entitiesToEffect;
         if (!effect.NeedsTargets())
         {

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 public class SleightOfHandEffect : EffectWithChoice
 {
-    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
     public override string RulesText => "Look at the top two cards of your deck. Put one of them into your hand and the other on the bottom of your library";
 
     public override string ChoiceMessage => "Choose a card to put into your hand.";
@@ -14,6 +13,11 @@ public class SleightOfHandEffect : EffectWithChoice
     public override int NumberOfChoices { get; set; } = 1;
 
     private List<CardInstance> _cardsSeen = new List<CardInstance>();
+
+    public SleightOfHandEffect()
+    {
+        TargetInfo = TargetInfo.PlayerSelf();
+    }
 
     public override List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {

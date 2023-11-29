@@ -173,6 +173,17 @@ public class TargetInfo
         return info;
     }
 
+    public static TargetInfo PlayerSelf()
+    {
+        var info = new TargetInfo
+        {
+            TargetType = TargetType.PlayerSelf, //non target type attributes shouldn't matter here
+            TargetMode = TargetMode.None,
+            OwnerType = TargetOwnerType.Ours
+        };
+        return info;
+    }
+
     /// <summary>
     /// Convenience method to help create a TargetType in a declarative way. 
     /// ex. TargetInfo.OpponentUnits().WithUnitType("Goblin");
@@ -271,6 +282,10 @@ public class TargetInfo
         else if (TargetType == TargetType.Source)
         {
             return new List<CardGameEntity> { effectSource };
+        }        
+        else if (TargetType == TargetType.PlayerSelf)
+        {
+            return new List<CardGameEntity> { player };
         }
 
         //TODO - This is the old way of doing things that needs to slowly be refactored as we update our TargetInfo class and Cards that use it.
@@ -278,10 +293,6 @@ public class TargetInfo
         {
             case TargetType.None:
                 return new List<CardGameEntity> { effectSource };
-            case TargetType.PlayerSelf:
-                {
-                    return new List<CardGameEntity> { player };
-                }
             default:
                 throw new Exception($"Wrong target type to call in GetEntitiesToApplyEffect : {TargetType}");
         }

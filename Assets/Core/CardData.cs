@@ -1443,12 +1443,12 @@ public class CardDatabase : ICardDatabase
                         {
                             new DrawCardEffect
                             {
-                                TargetType = TargetType.PlayerSelf,
+                                TargetInfo = TargetInfo.PlayerSelf(),
                                 Amount = 1
                             },
                             new DiscardCardEffect
                             {
-                                TargetType= TargetType.PlayerSelf,
+                                TargetInfo = TargetInfo.PlayerSelf(),
                                 Amount = 1
                             }
                         }
@@ -1716,12 +1716,12 @@ public class CardDatabase : ICardDatabase
             {
                 new DrawCardEffect()
                 {
-                    TargetType = TargetType.PlayerSelf,
+                    TargetInfo = TargetInfo.PlayerSelf(),
                     Amount = 2
                 },
                 new DiscardCardEffect()
                 {
-                    TargetType= TargetType.PlayerSelf,
+                    TargetInfo = TargetInfo.PlayerSelf(),
                     Amount = 2
                 }
             }
@@ -2346,12 +2346,12 @@ public class CardDatabase : ICardDatabase
                 new MillEffect
                 {
                     Amount = 2,
-                    TargetType = TargetType.PlayerSelf
+                    TargetInfo = TargetInfo.PlayerSelf()
                 },
                 new DrawCardEffect
                 {
                     Amount = 1,
-                    TargetType = TargetType.PlayerSelf
+                    TargetInfo = TargetInfo.PlayerSelf()
                 }
             }
         });
@@ -2597,7 +2597,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 2,
-                            TargetType = TargetType.PlayerSelf
+                            TargetInfo = TargetInfo.PlayerSelf()
                         }
                     }
                 }
@@ -2619,7 +2619,7 @@ public class CardDatabase : ICardDatabase
                         new DamageEffect
                         {
                             Amount = 2,
-                            TargetType = TargetType.PlayerSelf
+                            TargetInfo = TargetInfo.PlayerSelf()
                         }
                     }
                 }
@@ -2873,7 +2873,7 @@ public class CardDatabase : ICardDatabase
                        new StaticPlayAdditionalLandEffect
                        {
                             Amount = 1,
-                            TargetType = TargetType.PlayerSelf
+                            TargetInfo = TargetInfo.PlayerSelf()
                        }
                     }
                 },
@@ -2883,7 +2883,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new OracleOfMulDayaEffect()
                         {
-                            TargetType = TargetType.PlayerSelf
+                            TargetInfo = TargetInfo.PlayerSelf()
                         }
                     }
                 },
@@ -2893,7 +2893,7 @@ public class CardDatabase : ICardDatabase
                     {
                         new StaticRevealTopCardEffect
                         {
-                            TargetType = TargetType.PlayerSelf
+                            TargetInfo = TargetInfo.PlayerSelf()
                         }
                     }
                 }

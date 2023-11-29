@@ -28,16 +28,16 @@ public class CreateTokenEffect<T> : Effect where T : BaseCardData
         }
     }
     public T TokenData { get; set; }
-    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
     public int AmountOfTokens { get; set; } = 1;
 
     public CreateTokenEffect()
     {
-
+        TargetInfo = TargetInfo.PlayerSelf();
     }
 
     public CreateTokenEffect(T cardData)
     {
+        TargetInfo = TargetInfo.PlayerSelf();
         TokenData = cardData;
     }
 

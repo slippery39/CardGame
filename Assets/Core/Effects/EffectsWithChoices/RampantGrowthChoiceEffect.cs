@@ -3,11 +3,14 @@ using System.Linq;
 
 public class RampantGrowthChoiceEffect : EffectWithChoice
 {
-    public override TargetType TargetType { get; set; } = TargetType.PlayerSelf;
     public override string RulesText => "Put a mana from your deck into play";
-
     public override string ChoiceMessage { get => "Choose a mana to card to put into play from your deck"; }
     public override int NumberOfChoices { get; set; } = 1;
+
+    public RampantGrowthChoiceEffect()
+    {
+        TargetInfo = TargetInfo.PlayerSelf();
+    }
 
     public override List<CardInstance> GetValidChoices(CardGame cardGame, Player player)
     {

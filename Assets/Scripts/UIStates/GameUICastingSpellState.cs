@@ -93,8 +93,8 @@ public class GameUICastingSpellState : GameUIActionState, IGameUIState, IGameUIC
 
     public override void ChangeToSelectTargetState()
     {
-
         var effectsWithTargets = _spellToCast.Effects.Where(e => e.NeedsTargets()).ToList();
+        
         if (effectsWithTargets.Any())
         {
             ChangeState(new GameUISelectTargetState(_stateMachine, this, _spellToCast, effectsWithTargets));

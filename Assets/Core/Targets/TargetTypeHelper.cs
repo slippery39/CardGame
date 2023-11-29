@@ -1,7 +1,10 @@
-﻿public static class TargetTypeHelper
+﻿using System;
+
+public static class TargetTypeHelper
 {
     //TODO - Move to TargetInfo
     //Commenting TargetTypes out that we have already removed.
+    [Obsolete("No longer in use, refactor out of the code base")]  
     public static string TargetTypeToRulesText(TargetType targetType)
     {
         switch (targetType)
@@ -13,7 +16,7 @@
             //case TargetType.TargetPlayers: return "target player";
             //case TargetType.TargetUnitsOrPlayers: return "target #unitType# or player";
             //case TargetType.UnitSelf: return "#this#";
-            case TargetType.PlayerSelf: return "to itself";
+            //case TargetType.PlayerSelf: return "to itself";
             //case TargetType.Opponent: return " an opponent";
             //case TargetType.RandomOpponentOrUnits: return " a random opponent or #unitType# an opponent controls";
             default: return "";

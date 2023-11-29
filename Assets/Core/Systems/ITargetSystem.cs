@@ -66,7 +66,8 @@ public class DefaultTargetSystem : CardGameSystem, ITargetSystem
     /// <returns></returns>
     public List<CardGameEntity> GetValidEffectTargets(Player player, CardGameEntity source, List<Effect> effects)
     {
-        var effectTargets = effects.SelectMany(effect => effect.GetEffectTargets(cardGame, player, source));
+        //TODO - why is this different from what was being shown in the UI?
+        var effectTargets = effects.Where(effect=>effect.NeedsTargets()).SelectMany(effect => effect.GetEffectTargets(cardGame, player, source));
         effectTargets = effectTargets.Where(target =>
         {
             CardInstance cardInstanceTarget = target as CardInstance;

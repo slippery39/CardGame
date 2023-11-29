@@ -14,14 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DeckName: Target Refactor
   Format: TEST
-  Contents: '20 City of Brass
+  Contents: '100 City of Brass
 
-    10 Thoughtseize
-
-    10 Vapor Snag
-
-    10 Hunted
-    Dragon
+    10 Oracle of Mul Daya
 
 
 '

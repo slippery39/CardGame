@@ -40,7 +40,7 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
 
         cardsToCheck = cardsToCheck.Where(c => c.IsOfType<UnitCardData>()).ToList();
 
-        cardsToCheck = CardFilter.ApplyFilter(cardsToCheck, Filter);
+        cardsToCheck = CardFilter.ApplyFilter(cardsToCheck,Filter);
 
         if (cardsToCheck.Count == 0)
         {

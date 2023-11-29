@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Core.Abilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -36,12 +37,12 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
             //Remove abilities with a continous ability component on it
             //Remove modifications with a static info.source card !=null
             entity.ContinuousEffects = new List<ContinuousEffect>();
+            entity.Modifications = entity.Modifications.Where(mod => mod.StaticInfo == null || mod.StaticInfo.SourceCard == null).ToList();
 
             var cardInstance = entity as CardInstance;
             if (cardInstance != null)
             {
                 cardInstance.Abilities = cardInstance.Abilities.Where(a => a.GetComponent<ContinuousAblityComponent>() == null).ToList();
-                cardInstance.Modifications = cardInstance.Modifications.Where(mod => mod.StaticInfo == null || mod.StaticInfo.SourceCard == null).ToList();
             }
         }
     }
@@ -93,13 +94,20 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
         }
     }
 
+    [Obsolete("This method is using RulesText to check if its a unique ability. This is currently causing an issue with Oracle of Mul Daya when we were in the middle of refactoring our rules texts. We should try to find a different way " +
+        "to do this.")]
     private bool HasEffectFromSource(CardGameEntity entityToCheck, CardInstance source, StaticAbility sourceAbility)
     {
         //Note - Ideally our abilities and our effects would also have unique id's so that we can compare if they are the same
         //by id and not necessarily compare them by reference. 
-        return entityToCheck.ContinuousEffects.Exists(ce => ce.SourceCard.EntityId == source.EntityId && ce.SourceAbility.RulesText == sourceAbility.RulesText);
+        return entityToCheck.ContinuousEffects.Exists(ce => ce.SourceCard.EntityId == source.EntityId && ce.SourceAbilityId == sourceAbility.GetComponent<AbilityIdentifierComponent>().UniqueId);
     }
 
+    /// <summary>
+    /// Adds a Continuous Effect to entities from a source Static Ability
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="sourceAbility"></param>
     private void Apply(CardInstance source, StaticAbility sourceAbility)
     {
         //get the entities that the ability affects.
@@ -113,8 +121,14 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
                 {
                     SourceCard = source,
                     SourceAbility = sourceAbility,
-                    SourceEffect = sourceAbility.Effects[0]
+                    SourceEffect = sourceAbility.Effects[0],
+                    SourceAbilityId = sourceAbility.GetComponent<AbilityIdentifierComponent>().UniqueId
                 };
+
+                if (continuousEffect.SourceAbilityId <= 0)
+                {
+                    throw new Exception("There should be a source ability identifier applied to the continuous effect");
+                }
 
                 //This way each effect can be responsible for how it needs to apply and remove from the uni.
                 ApplyTo(continuousEffect, unit);
@@ -179,29 +193,14 @@ public class DefaultContinousEffectSystem : CardGameSystem, IContinuousEffectSys
     {
         //TODO - only one effect per static ability?
         var effect = sourceAbility.Effects[0];
-        var targetType = effect.TargetType;
-
-        if (effect.TargetInfo != null)
-        {
-            //Note if we are having issues here, it might be because we aren't handling "other" creatures you control right now.
-            return effect.TargetInfo.GetTargets(cardGame, source.GetOwner(), source).ToList();
-        }
-
-        switch (targetType)
-        {
-            case TargetType.PlayerSelf:
-                {
-                    return new List<CardGameEntity> { cardGame.GetOwnerOfCard(source) };
-                }
-            default:
-                {
-                    throw new System.Exception($"GetUnitsToApplyAbility :: StaticAbilityEntitiesEffected: {effect.TargetType} is not handled");
-                }
-        }
+        return effect.TargetInfo.GetTargets(cardGame, source.GetOwner(), source).ToList();
     }
 }
 
 
+/// <summary>
+/// Adds an ability to an Entity based on whether another card exists in a zone (or some other condition is met)
+/// </summary>
 public class ContinuousAblityComponent : AbilityComponent
 {
     public CardInstance SourceCard { get; set; }
