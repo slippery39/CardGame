@@ -223,6 +223,33 @@ public class TargetInfo
         return baseTargets;
     }
 
+    public string GetRulesText()
+    {
+        string retStr = "";
+        switch (TargetType)
+        {
+            case TargetType.PlayerSelf:
+                retStr = "You";
+                break;
+            case TargetType.Units:
+                retStr = "a unit";
+                break;
+            default:
+                retStr = $"Rules Text not implemented yet in TargetInfo for {TargetType}";
+                break;
+        }
+
+        //TODO - this needs to be figured out
+        if (TargetFilter != null)
+        {
+            return TargetFilter.RulesTextString();
+        }
+        else
+        {
+            return retStr;
+        }
+    }
+
     private IEnumerable<CardGameEntity> FilterByOwnerType(Player player, IEnumerable<CardGameEntity> baseTargets)
     {
         if (OwnerType == TargetOwnerType.Ours)
@@ -360,11 +387,24 @@ public abstract class TargetInfoFilter
 public class PlayerSelfTargetFilter : TargetInfoFilter
 {
     public override IEnumerable<CardGameEntity> GetTargets(
-        CardGame cardGame,
+        CardGame gameState,
         TargetSourceInfo sourceInfo
     )
     {
         return new List<CardGameEntity> { sourceInfo.SourcePlayer };
     }
 }
+
+public class UnitsTargetFilter : TargetInfoFilter
+{
+    public override IEnumerable<CardGameEntity> GetTargets(
+        CardGame gameState,
+        TargetSourceInfo sourceInfo
+    )
+    {
+        return new List<CardGameEntity> { sourceInfo.SourcePlayer };
+    }
+}
+
+
 

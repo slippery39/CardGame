@@ -7,7 +7,7 @@ public static class TargetTypeHelper
     [Obsolete("No longer in use, refactor out of the code base")]  
     public static string TargetTypeToRulesText(TargetType targetType)
     {
-        return "TargetTypeHelper no longer in use... remove";
+        return $"TargetTypeHelper no longer in use... need to remove this. TargetType attempted :  {targetType}";
     }
 }
 

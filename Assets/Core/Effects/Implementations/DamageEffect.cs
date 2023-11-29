@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class DamageEffect : Effect
 {
-    public override string RulesText => $"Deal {Amount} Damage to {TargetTypeHelper.TargetTypeToRulesText(TargetType)}";
+    public override string RulesText => $"Deal {Amount} damage to {TargetInfo.GetRulesText()}";
     public int Amount { get; set; }
 
     public DamageEffect()
