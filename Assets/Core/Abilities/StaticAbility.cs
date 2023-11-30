@@ -91,7 +91,7 @@ public class StaticManaReductionEffect : Effect
 
             //Target Type is handled by the parent ability of this effect, in there it also handles the CardFilter part of it.
 
-            var str = $"#targetType# cost {ReductionAmount} less to play.";
+            var str = $"{TargetInfo.GetRulesText()} cost {ReductionAmount} less to play.";
 
             return str;
         }
@@ -282,7 +282,7 @@ public class OracleOfMulDayaModification : Modification, IModifyCastZones
 
 public class StaticGiveAbilityEffect : Effect
 {
-    public override string RulesText => $"#targetType# gain {Ability.RulesText}.";
+    public override string RulesText => $"{TargetInfo.GetRulesText()} gains {Ability.RulesText}.";
     public CardAbility Ability { get; set; }
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

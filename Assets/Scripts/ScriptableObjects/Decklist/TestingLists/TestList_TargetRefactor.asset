@@ -14,16 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DeckName: Target Refactor
   Format: TEST
-  Contents: '20 Goblin Burrows
+  Contents: '20 Goblin Warchief
 
-    20 Moorland Haunt
+    20 Valakut, The Molten Pinnacle
 
-    20 Dragonstorm
-
-    20
-    Welding Jar
-
-
+    20 Runechanter''s
+    Pike
 
 
 '

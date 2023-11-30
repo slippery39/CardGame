@@ -28,7 +28,6 @@ public class CardFilter
          */
         var str = "";
 
-
         if (CardColor != null)
         {
             str = AppendToFilterStr(str, $"{CardColor}");

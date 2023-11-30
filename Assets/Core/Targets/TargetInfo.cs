@@ -327,6 +327,10 @@ public class TargetInfo
             case TargetType.Source:
                 retStr = "this";
                 break;
+            case TargetType.CardsInHand:
+                defaultCardType = "cards in hand";
+                retStr = "#cardType# cards in your hand";
+                break;
             default:
                 retStr = $"Rules Text not implemented yet in TargetInfo for {TargetType}";
                 break;
