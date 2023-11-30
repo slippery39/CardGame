@@ -14,7 +14,7 @@ public class PutManaFromDeckIntoPlayEffect : Effect
         {
             string amountTxt = Amount == 1 ? "a" : Amount.ToString();
             string cardTxt = Amount > 1 ? "cards" : "card";
-            return $"Play {amountTxt} mana {cardTxt} from your deck";
+            return $"Play {amountTxt} random mana {cardTxt} from your deck";
         }
     }
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)

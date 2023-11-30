@@ -11,11 +11,15 @@ public class GetRandomCardFromDeckEffect : Effect
     {
         get
         {
-            var str = "draw a random #cardType# from your deck";
+            var str = "Draw a random #cardType# from your deck";
 
             if (Filter?.CreatureType != null)
             {
-                return str.Replace("#cardType#", Filter.CreatureType);
+                return str.Replace("#cardType#", Filter.CreatureType.ToLower());
+            }
+            else if (Filter.CardType != null)
+            {
+                return str.Replace("#cardType#", Filter.CardType.ToLower());
             }
             else
             {
