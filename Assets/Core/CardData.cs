@@ -1034,7 +1034,7 @@ public class CardDatabase : ICardDatabase
             Abilities = new List<CardAbility>
             {
                 new TriggeredAbility(TriggerType.SelfEntersPlay
-                ,new CreateTokenEffect<UnitCardData>(new UnitCardData()
+                ,new CreateUnitTokenEffect(new UnitCardData()
                             {
                                 Name = "Goblin Token",
                                 ManaCost = "0",
@@ -1081,10 +1081,10 @@ public class CardDatabase : ICardDatabase
             {
                 new TriggeredAbility(
                     TriggerType.SelfEntersPlay,
-                    new CreateTokenEffect<UnitCardData>(TokenHelper.GoblinToken())),
+                    new CreateUnitTokenEffect(TokenHelper.GoblinToken())),
 
                 new TriggeredAbility(TriggerType.SelfDies,
-                new CreateTokenEffect<UnitCardData>(TokenHelper.GoblinToken())),
+                new CreateUnitTokenEffect(TokenHelper.GoblinToken())),
                 new EchoAbility
                 {
                     EchoCost = "1R"
@@ -1356,7 +1356,7 @@ public class CardDatabase : ICardDatabase
                     TriggerType = TriggerType.SelfEntersPlay,
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<ItemCardData>
+                        new CreateItemTokenEffect
                         {
                             TokenData = new ItemCardData()
                             {
@@ -1609,7 +1609,7 @@ public class CardDatabase : ICardDatabase
             Colors = new List<CardColor> { CardColor.Green },
             Effects = new List<Effect>
             {
-                new CreateTokenEffect<UnitCardData>()
+                new CreateUnitTokenEffect()
                 {
                     TokenData = new UnitCardData
                     {
@@ -1999,7 +1999,7 @@ public class CardDatabase : ICardDatabase
                     TriggerType = TriggerType.SelfEntersPlay,
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<UnitCardData>
+                        new CreateUnitTokenEffect
                         {
                             TokenData = new UnitCardData()
                             {
@@ -2034,7 +2034,7 @@ public class CardDatabase : ICardDatabase
                     TriggerType = TriggerType.SelfEntersPlay,
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<ItemCardData>
+                        new CreateItemTokenEffect
                         {
                             TokenData = TokenHelper.ClueToken(),
                             AmountOfTokens = 1
@@ -2057,7 +2057,7 @@ public class CardDatabase : ICardDatabase
                     TriggerType = TriggerType.SelfEntersPlay,
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<ItemCardData>
+                        new CreateItemTokenEffect
                         {
                             TokenData = TokenHelper.ClueToken(),
                             AmountOfTokens = 1
@@ -2081,7 +2081,7 @@ public class CardDatabase : ICardDatabase
 
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<ItemCardData>
+                        new CreateItemTokenEffect
                         {
                             TokenData = TokenHelper.ClueToken(),
                             AmountOfTokens = 1
@@ -2177,7 +2177,7 @@ public class CardDatabase : ICardDatabase
                     TriggerType= TriggerType.SelfAttacks,
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<UnitCardData>{
+                        new CreateUnitTokenEffect{
                             TokenData = new UnitCardData
                             {
                                 Name = "Angel",
@@ -2466,7 +2466,7 @@ public class CardDatabase : ICardDatabase
                 new TriggeredAbility(){
                     TriggerType = TriggerType.SelfEntersPlay,
                     Effects = new List<Effect>{
-                                    new CreateTokenEffect<UnitCardData>
+                                    new CreateUnitTokenEffect
                 {
                     TargetInfo = TargetInfo.Opponent(),
                     AmountOfTokens = 3,
@@ -2537,7 +2537,7 @@ public class CardDatabase : ICardDatabase
                     TriggerType = TriggerType.SelfEntersPlay,
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<ItemCardData>
+                        new CreateItemTokenEffect
                         {
                             TokenData = new ItemCardData()
                             {
@@ -2553,7 +2553,7 @@ public class CardDatabase : ICardDatabase
                                         AdditionalCost = new ExileRandomCreatureFromDiscardAdditionalCost(),
                                         Effects = new List<Effect>
                                         {
-                                            new CreateTokenEffect<UnitCardData>
+                                            new CreateUnitTokenEffect
                                             {
                                                 AmountOfTokens = 1,
                                                 TokenData = new UnitCardData
@@ -2666,7 +2666,7 @@ public class CardDatabase : ICardDatabase
                     TriggerType = TriggerType.SelfEntersPlay,
                     Effects = new List<Effect>
                     {
-                        new CreateTokenEffect<ItemCardData>()
+                        new CreateItemTokenEffect()
                         {
                             TokenData = new ItemCardData
                             {

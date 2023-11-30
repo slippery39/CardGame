@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Assets.Core;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -114,7 +115,7 @@ public class TriggeredAbility : CardAbility
 
             foreach (var effect in Effects)
             {
-                text += effect.RulesText;
+                text += effect.RulesText.LowerFirst();
                 text += ",";
             }
 

@@ -21,7 +21,7 @@ namespace Assets.Core
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static string CapitalizeFirst(this string input)
+        public static string UpperFirst(this string input)
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -30,6 +30,18 @@ namespace Assets.Core
 
             // Convert the first letter to uppercase and concatenate the rest of the string
             string result = char.ToUpper(input[0]) + input.Substring(1).ToLower();
+            return result;
+        }
+
+        public static string LowerFirst(this string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+
+            // Convert the first letter to uppercase and concatenate the rest of the string
+            string result = char.ToLower(input[0]) + input.Substring(1).ToLower();
             return result;
         }
     }

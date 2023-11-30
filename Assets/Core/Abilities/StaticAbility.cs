@@ -15,7 +15,7 @@ public class StaticAbility : CardAbility
 
              })
             )
-            .CapitalizeFirst();
+            .UpperFirst();
         }
     }
     public ZoneType ApplyWhenIn { get; set; } = ZoneType.InPlay;

@@ -15,7 +15,7 @@ public class PumpUnitEffect : Effect
 
             var powerSymbol = Power >= 0 ? "+" : "";
             var toughnessSymbol = Toughness >= 0 ? "+" : "";
-            var cardTargetText = TargetInfo.GetRulesText().CapitalizeFirst();
+            var cardTargetText = TargetInfo.GetRulesText().UpperFirst();
             var rulesText = $"{cardTargetText} gets {powerSymbol}{Power}/{toughnessSymbol}{Toughness} until end of turn";
 
             return rulesText;
