@@ -7,7 +7,7 @@ public class GiveShieldEffect : Effect
     {
         get
         {
-            return $"Give a shield to #effectTargetType#";
+            return $"Give a shield to {TargetInfo.GetRulesText()}";
         }
     }
 

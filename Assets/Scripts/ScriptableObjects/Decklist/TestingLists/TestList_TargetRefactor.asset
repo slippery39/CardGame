@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DeckName: Target Refactor
   Format: TEST
-  Contents: '20 Mountain
+  Contents: '20 Goblin Burrows
 
-    20 Goblin Ringleader
+    20 Moorland Haunt
+
+    20 Dragonstorm
+
+    20
+    Welding Jar
+
 
 
 
