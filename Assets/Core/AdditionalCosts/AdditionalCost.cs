@@ -75,31 +75,31 @@ public class CardFilter
 
         if (CardColor != null)
         {
-            str = $"{CardColor.ToString()}";
+            str = AppendToFilterStr(str, $"{CardColor}");
         }
 
         if (CreatureType != null)
         {
-            str += $" {CreatureType}";
+            str = AppendToFilterStr(str, $"{CreatureType}");
         }
 
         if (Subtype != null)
         {
-            str += $" {Subtype}";
+            str = AppendToFilterStr(str, $"{Subtype}");
         }
 
         if (CardType != null)
         {
-            str += $" {CardType}";
+            str = AppendToFilterStr(str, $"{CardType}");
         }
 
         if (CreatureType != null)
         {
-            str += " unit";
+            str = AppendToFilterStr(str, $"unit");
         }
         else
         {
-            str += " card";
+            str = AppendToFilterStr(str, $"card");
         }
 
         if (plural)
@@ -109,10 +109,22 @@ public class CardFilter
 
         if (ManaCheck != null)
         {
-            str += " with " + ManaCheck.RulesTextString();
+            str = AppendToFilterStr(str, " with " + ManaCheck.RulesTextString());
         }
 
         return str;
+    }
+
+    private string AppendToFilterStr(string existingStr, string input)
+    {
+        if (existingStr.IsNullOrEmpty())
+        {
+            return input;
+        }
+        else
+        {
+            return existingStr + " " + input;
+        }
     }
 
     /// <summary>
@@ -127,7 +139,7 @@ public class CardFilter
         var nonCards = list.Where(e => e is not CardInstance);
         var cards = list.Where(e => e is CardInstance).Cast<CardInstance>().ToList();
 
-        var cardsFiltered = ApplyFilter(cards,this);
+        var cardsFiltered = ApplyFilter(cards, this);
 
         return nonCards.Concat(cardsFiltered);
     }
