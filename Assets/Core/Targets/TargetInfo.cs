@@ -233,6 +233,10 @@ public class TargetInfo
         {
             case TargetType.PlayerSelf:
                 retStr = "You";
+                if (hasActionStr)
+                {
+                    retStr += $" {actionStr}";
+                }
                 break;
             case TargetType.Players:
                 if (OwnerType == TargetOwnerType.Ours)
