@@ -1,17 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-//Our new target type might have the following:
-/*
- * None,
- * PlayerSelf,
- * Opponent,
- * Units,
- * CardsInHand,
- * UnitSelf,
- * OpenLane,
- * OpenLaneBesidenUnit
- */
 
 /// <summary>
 /// In progress class to replace our TargetType enum and make it more flexible.
@@ -223,17 +212,55 @@ public class TargetInfo
         return baseTargets;
     }
 
-    public string GetRulesText()
+    /// <summary>
+    /// Creates the rules text for this specific target info object.    /// 
+    /// </summary>
+    /// <param name="actionStr">Optionally in a string so that the method can decide if it needs to be plural or not.
+    /// Currently only used for the "Players" TargetType.
+    /// Ex. You create / An opponent creates</param>
+    /// <returns></returns>
+
+    public string GetRulesText(string actionStr = null)
     {
         string retStr = "";
 
         //Quick hack to properly show the card type if we don't have a TargetFilter.
         string defaultCardType = "";
 
+        bool hasActionStr = !actionStr.IsNullOrEmpty();
+
         switch (TargetType)
         {
             case TargetType.PlayerSelf:
                 retStr = "You";
+                break;
+            case TargetType.Players:
+                if (OwnerType == TargetOwnerType.Ours)
+                {
+                    retStr = $"You";
+                    if (hasActionStr)
+                    {
+                        retStr += $" {actionStr}";
+                    }
+
+                }
+                else if (OwnerType == TargetOwnerType.Theirs)
+                {
+                    retStr = "Your opponent ";
+                    if (hasActionStr)
+                    {
+                        //Making plural here, ex. Your opponent creates
+                        retStr += $" {actionStr}s";
+                    }
+                }
+                else
+                {
+                    retStr = "Players";
+                    if (hasActionStr)
+                    {
+                        retStr = $" {actionStr}";
+                    }
+                }
                 break;
             case TargetType.Units:
                 defaultCardType = "unit";

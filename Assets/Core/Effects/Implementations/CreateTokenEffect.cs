@@ -22,10 +22,10 @@ public class CreateUnitTokenEffect : CreateTokenEffect<UnitCardData>
             string tokenTxt = AmountOfTokens > 1 ? "tokens" : "token";
             if (TokenData.RulesText.IsEmpty())
             {
-                return $"Create {amountTxt} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} unit {tokenTxt}";
+                return $"{TargetInfo.GetRulesText("create")} {amountTxt} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} unit {tokenTxt}";
             }
 
-            return $"Create {amountTxt} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} unit {tokenTxt} with {TokenData.RulesText}";
+            return $"{TargetInfo.GetRulesText("create")} {amountTxt} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} unit {tokenTxt} with {TokenData.RulesText}";
         }
     }
 
@@ -58,7 +58,7 @@ public class CreateItemTokenEffect : CreateTokenEffect<ItemCardData>
         {
             string amountTxt = AmountOfTokens == 1 ? "an" : AmountOfTokens.ToString();
             string tokenTxt = AmountOfTokens > 1 ? "tokens" : "token";
-            return $"Create {amountTxt} item {tokenTxt} with {TokenData.RulesText}";
+            return $"{TargetInfo.GetRulesText("create")} {amountTxt} item {tokenTxt} with {TokenData.RulesText}";
         }
     }
 
