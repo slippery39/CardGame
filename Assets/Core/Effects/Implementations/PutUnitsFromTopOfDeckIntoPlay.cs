@@ -67,7 +67,7 @@ public class PutUnitsFromTopOfDeckIntoPlay : Effect
         {
             if (player.GetEmptyLanes().Any())
             {
-                cardGame.UnitSummoningSystem.SummonUnit(player, cardsToCheck.First(), player.GetEmptyLanes().First().EntityId);
+                cardGame.UnitSummoningSystem.SummonUnit(player, cardsToCheck[0], player.GetEmptyLanes()[0].EntityId);
                 cardsToCheck.RemoveAt(0);
             }
         }

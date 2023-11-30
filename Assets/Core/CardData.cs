@@ -2413,9 +2413,8 @@ public class CardDatabase : ICardDatabase
             Effects = new List<Effect>
             {
                 new StormEffect{
-                ChildEffect = new PutUnitsFromTopOfDeckIntoPlay
+                ChildEffect = new PutUnitFromDeckIntoPlayEffect
                 {
-                    CardsToLookAt = 100,
                     Amount = 1,
                     Filter = new CardFilter
                     {

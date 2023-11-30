@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public class PutManaFromDeckIntoPlayEffect : Effect
 {
@@ -31,7 +28,6 @@ public class PutManaFromDeckIntoPlayEffect : Effect
             }
 
             var manaCardToPlay = manaCards[0];
-            //TODO - should be either tapped or untapped.
             cardGame.ManaSystem.PlayManaCardFromEffect(player, manaCardToPlay, ForceEmpty);
             manaCards.Remove(manaCardToPlay);
 
@@ -39,4 +35,8 @@ public class PutManaFromDeckIntoPlayEffect : Effect
         }
     }
 }
+
+
+
+
 

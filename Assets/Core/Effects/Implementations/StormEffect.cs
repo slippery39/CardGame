@@ -2,7 +2,7 @@
 
 public class StormEffect : Effect
 {
-    public override string RulesText => $"Storm\r\n {ChildEffect.RulesText}";
+    public override string RulesText => $"Storm\r\n{ChildEffect.RulesText}";
     public Effect ChildEffect { get; set; }
 
     public override TargetInfo TargetInfo { get => ChildEffect.TargetInfo; }
