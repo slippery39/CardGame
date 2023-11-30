@@ -131,7 +131,7 @@ public class TargetInfo
         {
             TargetType = TargetType.UnitsAndPlayers,
             TargetMode = TargetMode.Random,
-            OwnerType = TargetOwnerType.Theirs
+            OwnerType = TargetOwnerType.Theirs,
         };
         return info;
     }
@@ -222,12 +222,19 @@ public class TargetInfo
 
     public string GetRulesText(string actionStr = null)
     {
+        //Note that there are way too many different combinations of effects and target types and other stuff..
+        //We are building this as we go, some combinations may not be accounted for and therefore may show up incorrect 
+        //on the actual card.
+
         string retStr = "";
 
         //Quick hack to properly show the card type if we don't have a TargetFilter.
         string defaultCardType = "";
 
         bool hasActionStr = !actionStr.IsNullOrEmpty();
+
+        string amountStr = NumberOfTargets > 1 ? NumberOfTargets.ToString() : "a";
+        string pluralStr = NumberOfTargets > 1 ? "s" : "";
 
         switch (TargetType)
         {
@@ -285,16 +292,40 @@ public class TargetInfo
                 defaultCardType = "unit";
                 if (TargetMode == TargetMode.All)
                 {
-                    retStr = "each #cardType# and player";
+                    if (OwnerType == TargetOwnerType.Any)
+                    { 
+                        retStr = "each #cardType# and player";
+                    }
+                    else if (OwnerType == TargetOwnerType.Theirs)
+                    {
+                        retStr = "each enemy #cardType# and opponent";
+                    }
                 }
                 if (TargetMode == TargetMode.Random)
                 {
-                    retStr = "random #cardType# or players";
+                    if (OwnerType == TargetOwnerType.Any)
+                    {
+                        retStr = $"{amountStr} randomly chosen #cardType#{pluralStr} or player{pluralStr}";
+                    }
+                    else if (OwnerType == TargetOwnerType.Theirs)
+                    {
+                        retStr = $"{amountStr} randomly chosen enemy #cardType#{pluralStr} or opponent{pluralStr}";
+                    }
                 }
                 if (TargetMode == TargetMode.Target)
                 {
-                    retStr = "a #cardType# or player";
+                    if (OwnerType == TargetOwnerType.Any)
+                    {
+                        retStr = "a #cardType# or player";
+                    }
+                    else if (OwnerType == TargetOwnerType.Theirs)
+                    {
+                        retStr = "an enemy #cardType# or opponent";
+                    }
                 }
+                break;
+            case TargetType.Source:
+                retStr = "this";
                 break;
             default:
                 retStr = $"Rules Text not implemented yet in TargetInfo for {TargetType}";
