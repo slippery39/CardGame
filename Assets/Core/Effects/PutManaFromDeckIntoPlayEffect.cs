@@ -8,8 +8,15 @@ public class PutManaFromDeckIntoPlayEffect : Effect
 {
     public int Amount { get; set; } = 1;
     public bool ForceEmpty { get; set; } = true;
-    public override string RulesText => " play a mana card from your deck";
-
+    public override string RulesText
+    {
+        get
+        {
+            string amountTxt = Amount == 1 ? "a" : Amount.ToString();
+            string cardTxt = Amount > 1 ? "cards" : "card";
+            return $"Play {amountTxt} mana {cardTxt} from your deck";
+        }
+    }
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
         var manaCards = player.Deck.Cards.Where(card => card.IsOfType<ManaCardData>()).ToList();
