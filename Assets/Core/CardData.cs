@@ -1,11 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
 using Newtonsoft.Json;
 using System.IO;
-using Newtonsoft.Json.Linq;
 
 public static class TokenHelper
 {
@@ -201,7 +198,7 @@ public class ManaCardData : BaseCardData
     public string ManaAdded { get; set; } = "*";
 
     [JsonIgnore]
-    public override string RulesText => $"Add {ManaAdded} to your mana";
+    public override string RulesText => $"Add {ManaAdded} to your mana \r\n\r\n{String.Join("\r\n",Abilities.Select(a=>a.RulesText))}";
     public bool ReadyImmediately { get; set; } = true;
     public IManaReadyCondition ReadyCondition { get; set; } = null;
     public override BaseCardData Clone()
@@ -1036,7 +1033,7 @@ public class CardDatabase : ICardDatabase
                 new TriggeredAbility(TriggerType.SelfEntersPlay
                 ,new CreateUnitTokenEffect(new UnitCardData()
                             {
-                                Name = "Goblin Token",
+                                Name = "Goblin",
                                 ManaCost = "0",
                                 Power = 1,
                                 Toughness =1,
@@ -1360,7 +1357,7 @@ public class CardDatabase : ICardDatabase
                         {
                             TokenData = new ItemCardData()
                             {
-                                Name = "Goblin Burrows",
+                                Name = "Goblin Burrows Item",
                                 Subtype = "Artifact",
                                 ArtPath = $"{ArtPath}GoblinBurrows",
                                 Abilities = new List<CardAbility>
@@ -2540,7 +2537,7 @@ public class CardDatabase : ICardDatabase
                         {
                             TokenData = new ItemCardData()
                             {
-                                Name = "Moorland Haunt",
+                                Name = "Moorland Haunt Item",
                                 Subtype = "Artifact",
                                 ArtPath = $"{ArtPath}MoorlandHaunt",
                                 Abilities = new List<CardAbility>

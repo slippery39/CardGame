@@ -18,14 +18,13 @@ public class CreateUnitTokenEffect : CreateTokenEffect<UnitCardData>
     {
         get
         {
-            string amountTxt = AmountOfTokens == 1 ? "a" : AmountOfTokens.ToString();
             string tokenTxt = AmountOfTokens > 1 ? "tokens" : "token";
             if (TokenData.RulesText.IsEmpty())
             {
-                return $"{TargetInfo.GetRulesText("create")} {amountTxt} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} unit {tokenTxt}";
+                return $"{TargetInfo.GetRulesText("create")} {AmountOfTokens} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} {tokenTxt}";
             }
 
-            return $"{TargetInfo.GetRulesText("create")} {amountTxt} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} unit {tokenTxt} with {TokenData.RulesText}";
+            return $"{TargetInfo.GetRulesText("create")} {AmountOfTokens} {TokenData.Power}/{TokenData.Toughness} {TokenData.Name} {tokenTxt}";
         }
     }
 
@@ -56,9 +55,8 @@ public class CreateItemTokenEffect : CreateTokenEffect<ItemCardData>
     {
         get
         {
-            string amountTxt = AmountOfTokens == 1 ? "an" : AmountOfTokens.ToString();
-            string tokenTxt = AmountOfTokens > 1 ? "tokens" : "token";
-            return $"{TargetInfo.GetRulesText("create")} {amountTxt} item {tokenTxt} with {TokenData.RulesText}";
+            string tokenTxt = AmountOfTokens > 1 ? "s" : "";
+            return $"{TargetInfo.GetRulesText("create")} {AmountOfTokens} {TokenData.Name}{tokenTxt}";
         }
     }
 
