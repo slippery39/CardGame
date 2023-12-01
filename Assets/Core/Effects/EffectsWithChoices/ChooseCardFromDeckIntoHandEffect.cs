@@ -3,7 +3,7 @@ using System.Linq;
 
 public class ChooseCardFromDeckIntoHandEffect : EffectWithChoice
 {
-    public override string RulesText => "Needs Updated Rules Text due to TargetInfo updates"; //"Put a #cardType# from your deck into your hand".Replace("#cardType#", Filter.RulesTextString(false).ToLower());
+    public override string RulesText => $"Put a #cardType# from your deck into your hand".Replace("#cardType#", Filter.RulesTextString(false).ToLower());
     public override string ChoiceMessage { get => "Choose a card to put into your hand"; }
     public override int NumberOfChoices { get; set; } = 1;
 
