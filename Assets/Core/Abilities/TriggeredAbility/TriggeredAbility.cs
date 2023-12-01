@@ -26,6 +26,9 @@ public class TriggeredAbility : CardAbility
                 case TriggerType.AtTurnEnd:
                     text += "At the end of the turn, ";
                     break;
+                case TriggerType.SelfManaPlayed:
+                    text += "Whenever you play a mana card, ";
+                    break;
                 case TriggerType.SomethingDies:
 
                     var cardFilterString = Filter.RulesTextString();

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 public class ValakutEffect : Effect
 {
-    public override string RulesText => " deal 3 damage to a random target";
+    public override string RulesText => "if you have more than 7 total red mana, deal 3 damage to a random target";
 
     public override void Apply(CardGame cardGame, Player player, CardInstance source, List<CardGameEntity> entitiesToApply)
     {
