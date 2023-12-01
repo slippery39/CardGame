@@ -84,7 +84,7 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         clone.ContinuousEffects = ContinuousEffects.Clone();
         //The Clone Method is dangerous and may not be working in the correct way... somehow it turned my snapcaster mage modification into a null..
         //not sure why...keep an eye out for any other weird errors regarding this clone object.
-        //maybe do a sanity check on all lists checking for nulls?
+        //maybe do a sanity check on all lists checking for nulls?      
         clone.Modifications = Modifications.Select(m => m.Clone()).ToList();
 
         clone.EntityId = EntityId;
@@ -120,10 +120,7 @@ public class Player : CardGameEntity, IDeepCloneable<Player>
         clone.Items.Cards.AddRange(Items.Cards.DeepClone(cardGame).ToList());
         clone.Items.Cards.ForEach(card => card.CurrentZone = clone.Items);
 
-        //TODO - do an actual clone here.
         ManaPool = ManaPool.DeepClone();
-        //Need to clone the mana pool
-        //Need to clone all the cards inside.
 
         return clone;
     }

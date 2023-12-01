@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 public interface IEffectsProcessor
 {
     void ApplyEffect(Player player, CardInstance source, Effect effects, List<CardGameEntity> targets);
@@ -18,10 +14,6 @@ public class DefaultEffectsProcessor : CardGameSystem, IEffectsProcessor
     }
     public void ApplyEffect(Player player, CardInstance source, Effect effect, List<CardGameEntity> targets)
     {
-        if (source.Name == "Vapor Snag")
-        {
-            var debug = 0;
-        }
         List<CardGameEntity> entitiesToEffect;
         if (!effect.NeedsTargets())
         {

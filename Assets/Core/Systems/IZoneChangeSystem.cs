@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 public interface IZoneChangeSystem
 {
     public void MoveToZone(CardInstance card, IZone zoneTo, Action onZoneMovedFunc = null);
 }
-
-
 public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
 {
     public DefaultZoneChangeSystem(CardGame cardGame)
@@ -19,7 +15,7 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
 
     public void MoveToZone(CardInstance card, IZone zoneTo, Action onZoneMovedFunc = null)
     {
-        var currentZone = card.CurrentZone;//cardGame.GetZones().Where(zone => zone.Cards.Contains(card)).FirstOrDefault();
+        var currentZone = card.CurrentZone;
 
         if (currentZone == null)
         {
@@ -34,9 +30,6 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
 
         //remove exhaustian
         card.IsExhausted = false;
-
-        //remove any continuous effects in play that are from the associated card
-        //var unitsInPlay = cardGame.GetUnitsInPlay();
 
         currentZone.Remove(card);
         zoneTo.Add(card);
@@ -73,7 +66,6 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
 
     private void OnDeathTriggers(CardInstance card)
     {
-
         //These are things that might happen when a card dies, that don't necessarily use the stack.
         //They would be defined in the ability itself, not as a trigger.
         var onDeathAbilities = card.Abilities.GetOfType<IOnDeath>();

@@ -117,12 +117,15 @@ public class UI3DController : MonoBehaviour, IUIGameController
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
+            _gameService.ResetGame();
+            /*
             StartGame(new GameSetupOptions()
             {
                 Player1Deck = Decklist.CreateRandomDecklist(),
                 Player2Deck = Decklist.CreateRandomDecklist(),
                 StartingLifeTotal = 20
             });
+            */
         }
         //Hacked in just like our old one, but is there not a better way to do this?
         //The card game should be triggering this state

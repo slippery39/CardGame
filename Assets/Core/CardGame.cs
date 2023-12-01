@@ -287,7 +287,7 @@ public class CardGame
             clone.EventLogSystem = new EmptyEventLogSystem();
             clone._cardGameLogger = new EmptyLogger();
             clone._gameEventSystem = new EmptyGameEventSystem();
-            clone.DebugSystem.Enabled = false;
+            clone.DebugSystem.Enabled = true;
         }
 
         //Need to update our registered entities
@@ -816,6 +816,8 @@ public class CardGame
 
             zones.Add(Player1.Items);
             zones.Add(Player2.Items);
+
+            zones.Add(ResolvingSystem.Stack);
             _cachedZones = zones;
         }
         //TODO - generalize this?

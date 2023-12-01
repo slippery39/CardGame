@@ -95,13 +95,6 @@ public class Zone : IZone, IEnumerable<CardInstance>
     {
         return ((IEnumerable)_cards).GetEnumerator();
     }
-
-    /*
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        throw new NotImplementedException();
-    }
-    */
 }
 
 
