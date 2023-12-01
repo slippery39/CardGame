@@ -27,7 +27,8 @@ public class ActivatedAbility : CardAbility
 
             return $@"{manaCostStr}{additionalCostStr}: {string.Join(" and ",
                 Effects.Select(GetEffectRulesText)
-                )}";
+                )
+                .UpperFirst()}";
 
         }
     }

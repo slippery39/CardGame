@@ -29,7 +29,7 @@ namespace Assets.Core
             }
 
             // Convert the first letter to uppercase and concatenate the rest of the string
-            string result = char.ToUpper(input[0]) + input.Substring(1).ToLower();
+            string result = char.ToUpper(input[0]) + input.Substring(1);
             return result;
         }
 
@@ -41,7 +41,7 @@ namespace Assets.Core
             }
 
             // Convert the first letter to uppercase and concatenate the rest of the string
-            string result = char.ToLower(input[0]) + input.Substring(1).ToLower();
+            string result = char.ToLower(input[0]) + input.Substring(1);
             return result;
         }
     }

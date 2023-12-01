@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 public class PumpPowerByNumberOfSpellsInGraveyardEffect : Effect
 {
-    public override string RulesText => "unit gets +X/+0 where X is the number of spells in the owner's graveyard";
+    public override string RulesText => $"{TargetInfo.GetRulesText()} gets +X/+0 where X is the number of spells in your graveyard";
 
     private int CountSpells(Player player)
     {
