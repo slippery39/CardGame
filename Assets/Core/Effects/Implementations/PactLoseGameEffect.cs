@@ -3,7 +3,7 @@
 public class PactLoseGameEffect : Effect
 {
     public string ManaToPay { get; set; }
-    public override string RulesText => $"At the start of your next turn, pay {ManaToPay} or you lose the game";
+    public override string RulesText => $"At the start of your next turn, unless you have {ManaToPay}, you lose the game";
 
     public PactLoseGameEffect(string manaToPay)
     {

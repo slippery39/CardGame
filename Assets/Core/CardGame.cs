@@ -817,7 +817,6 @@ public class CardGame
             zones.Add(Player1.Items);
             zones.Add(Player2.Items);
 
-            zones.Add(ResolvingSystem.Stack);
             _cachedZones = zones;
         }
         //TODO - generalize this?

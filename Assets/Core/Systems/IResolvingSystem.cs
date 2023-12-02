@@ -287,7 +287,6 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
 
     public void ResolveNext()
     {
-
         //If for whatever reason 
         if (IsResolvingEffect)
         {
@@ -368,9 +367,16 @@ public class DefaultResolvingSystem : CardGameSystem, IResolvingSystem, IDeepClo
         clone.cardGame = cardGame;
         clone._internalStack = _internalStack.Select(x => x.Clone()).ToList();
         clone.Stack = new ResolvingStack();
+
+        if (_effectsToResolve != null) {
+            clone._effectsToResolve = new Queue<Effect>(_effectsToResolve);
+        }
+
         foreach(var card in Stack.Cards)
         {
-            clone.Stack.Add(card);
+            var newCard = card.DeepClone(cardGame);
+            newCard.CurrentZone = clone.Stack;
+            clone.Stack.Add(newCard);
         }
         //This might be broken.
         return clone;

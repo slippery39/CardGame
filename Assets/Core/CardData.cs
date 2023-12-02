@@ -3088,7 +3088,7 @@ public class CardDatabase : ICardDatabase
             ManaCost = "0",
             Colors = new List<CardColor> { CardColor.Green },
             Effects = new List<Effect>
-            {
+            {                
                 new ChooseCardFromDeckIntoHandEffect()
                 {
                     Filter = new CardFilter
@@ -3097,7 +3097,7 @@ public class CardDatabase : ICardDatabase
                         CardType = "unit" //change this to an enum, or at the very least a static string somewhere.
                     }
                 },
-                new PactLoseGameEffect("2GG")
+                new PactLoseGameEffect("2GG"),
             }
         });
 

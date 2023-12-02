@@ -31,8 +31,16 @@ public class DefaultZoneChangeSystem : CardGameSystem, IZoneChangeSystem
         //remove exhaustian
         card.IsExhausted = false;
 
-        currentZone.Remove(card);
-        zoneTo.Add(card);
+        currentZone.Remove(card);   
+        
+        //TODO - DEBUG ONLY
+        if (zoneTo.Cards.Contains(card))
+        {
+            cardGame.Logger.LogError($"{zoneTo.Name} already contains {card.Name} {card.EntityId}. Zone it was coming from : {currentZone.Name}.");
+        }
+
+        zoneTo.Add(card);     
+
         card.CurrentZone = zoneTo;
 
         if (zoneTo.ZoneType == ZoneType.Stack)
