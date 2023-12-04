@@ -122,7 +122,12 @@ public class CardGame
             }
         }
     }
-    public IEffectWithChoice ChoiceInfoNeeded { get; set; } //Get this working with discards effects with, then see what we should evolve it to.
+    public IEffectWithChoice ChoiceInfoNeeded { get; set; }  //Get this working with discards effects with, then see what we should evolve it to.
+
+    /// <summary>
+    /// Store the source card of the ChoiceInfoNeeded above.
+    /// </summary>
+    public CardGameEntity ChoiceInfoNeededSource { get; set; }
     internal IAdditionalCostSystem AdditionalCostSystem { get => _additionalCostSystem; set => _additionalCostSystem = value; }
 
     public ICountersSystem CountersSystem { get; set; }
@@ -260,9 +265,22 @@ public class CardGame
 
     public CardGame Copy(bool noEventsOrLogs = false)
     {
+        /*
+        var copy = this.DeepClone();
+        copy._isCopy = true;
+        if (noEventsOrLogs)
+        { 
+            copy.EventLogSystem = new EmptyEventLogSystem();
+            copy._cardGameLogger = new EmptyLogger();
+            copy._gameEventSystem = new EmptyGameEventSystem();
+            copy.DebugSystem.Enabled = true;
+        }      
+
+        //return copy;
+        */
+
         var newCardData = RegisteredCardData.ToDictionary(entry => entry.Key,
                                                entry => entry.Value.Clone());
-
         //Look for any cloneable systems
         var clone = new CardGame();
         clone._isCopy = true;
@@ -310,6 +328,11 @@ public class CardGame
         //This does mean we have to make sure we don't clone them in the card instance
         clone.ContinuousEffectSystem.RemoveAllStaticEffects();
         clone.ContinuousEffectSystem.ApplyStaticEffects();
+     
+        if (ChoiceInfoNeededSource != null)
+        {
+            clone.ChoiceInfoNeededSource = _registeredEntities.Find(e => e.EntityId == ChoiceInfoNeededSource.EntityId);
+        }
 
         return clone;
     }
@@ -503,6 +526,8 @@ public class CardGame
                 }
             }
         });
+        //Reset the choice card
+        this.ChoiceInfoNeededSource = null;
         ResolvingSystem.Continue();
     }
 
@@ -780,14 +805,30 @@ public class CardGame
         _eventLogSystem.AddEvent($"{player.Name} has played {cardToPlay.Name}.");
     }
 
-
-    public void PromptPlayerForChoice(Player player, IEffectWithChoice effectThatNeedsChoice)
+    /// <summary>
+    /// Prompts a player to make a choice in order to finish resolving a card.
+    /// Ex. Chrome Mox, Telling Time, Thoughtseize etc...
+    /// 
+    /// Note that for compatibility reasons, we are not expecting the SourceCard parameter to be passed in.
+    /// Currently that is only to get Chrome Mox working properly, as it needs to know
+    /// </summary>
+    /// <param name="player"></param>
+    /// <param name="effectThatNeedsChoice"></param>
+    /// <param name="sourceCard"></param>
+    public void PromptPlayerForChoice(Player player, IEffectWithChoice effectThatNeedsChoice,CardInstance sourceCard = null)
     {
         CurrentGameState = GameState.WaitingForChoice;
         ChoiceInfoNeeded = effectThatNeedsChoice;
+        if (sourceCard != null)
+        {
+            this.ChoiceInfoNeededSource = sourceCard;
+        }
+        else
+        {
+            this.ChoiceInfoNeededSource = null;
+        }
         GameEventSystem.FireGameStateUpdatedEvent();
     }
-
 
     //Grab a master list of all zones in the game.
     public List<IZone> GetZones()

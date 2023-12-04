@@ -39,7 +39,7 @@ public class DefaultTurnSystem : CardGameSystem, ITurnSystem
         //Reset any spent mana
         cardGame.ManaSystem.ResetManaAndEssence(cardGame.ActivePlayer);
         //Reset any summoning sick units
-        var activePlayersUnits = cardGame.GetUnitsInPlay().Where(unit => cardGame.GetOwnerOfCard(unit) == cardGame.ActivePlayer);
+        var activePlayersUnits = cardGame.ActivePlayer.GetUnitsInPlay();
         foreach (var unit in activePlayersUnits)
         {
             unit.IsSummoningSick = false;
@@ -90,7 +90,7 @@ public class DefaultTurnSystem : CardGameSystem, ITurnSystem
             }
         };
 
-        cardGame.HandleTriggeredAbilities(activePlayersUnits, TriggerType.AtTurnStart);
+        cardGame.HandleTriggeredAbilities(cardGame.ActivePlayer.GetUnitsInPlay().Concat(cardGame.ActivePlayer.Items.Cards), TriggerType.AtTurnStart);
         //Active Player Gains A Mana - not anymore.
         //cardGame.ManaSystem.AddMana(cardGame, cardGame.ActivePlayer, 1);
         //Active Player draws a card

@@ -14,7 +14,7 @@ public interface IEffectWithChoice
     /// Can be used to temporarily store choices in case there is choice specific logic needed.
     /// For example, in Telling Time, the Choice message would change depend on the choices selected.
     /// </summary>
-    List<CardInstance> Choices { get; }
+    List<CardInstance> Choices { get; }   
 }
 
 public abstract class EffectWithChoice : Effect, IEffectWithChoice

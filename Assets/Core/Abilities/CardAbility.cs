@@ -13,7 +13,7 @@ public abstract class CardAbility
     public List<AbilityComponent> Components { get; set; } = new List<AbilityComponent>();
     public List<Effect> Effects { get; set; } = new List<Effect> { };
 
-    public CardAbility Clone()
+    public virtual CardAbility Clone()
     {
         CardAbility clone = (CardAbility)MemberwiseClone();
         clone.Components = Components.Select(c => c.Clone()).ToList();

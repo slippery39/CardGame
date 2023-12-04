@@ -2118,8 +2118,6 @@ public class CardDatabase : ICardDatabase
                 //to the cards ability components as an ImprintedCardComponent?
                 //then our imprint effect can modify the AddManaEffect as needed. 
                 new ImprintAbility()
-                {
-                }
             }
         });
 
@@ -3472,7 +3470,7 @@ public class CardDatabase : ICardDatabase
             }
         }
 
-
+        /*
         string json = JsonConvert.SerializeObject(_cards, Formatting.Indented, new JsonSerializerSettings
         {
             TypeNameHandling = TypeNameHandling.All,
@@ -3488,7 +3486,7 @@ public class CardDatabase : ICardDatabase
         });
 
         File.WriteAllText(@"./tempCardsJson", json);
-
+        */
 
 
 

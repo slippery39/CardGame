@@ -1,11 +1,9 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode]
 public class UICard2D : MonoBehaviour, IUICard, IHighlightable
 {
     [Header("Debugging")]
