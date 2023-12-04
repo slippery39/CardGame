@@ -1,24 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
-//Make it for Chrome Mox right now, but we might need to expand it later..
-//Would probably be an ImprintAbility<T> where T is the Effect?
-//Maybe it would be a double generic <ActivatedAbility,Effect>
-//<StaticAbility,Effect>
 public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//generic interface for ContainsAbility
 {
     public int SourceCardId { get; set; }
     AddTempManaEffect ImprintEffect { get; set; }
     bool hasImprinted { get; set; } = false;
 
-    //Temporary for testing;
-    private List<CardInstance> sourceCards = new List<CardInstance>();
-
     private DiscardCardEffect _imprintDiscardEffect = new DiscardCardEffect
     {
         Amount = 1
     };
-    public override string RulesText => "Imprint - Add mana of the imprinted card";
+    public override string RulesText => hasImprinted ? "" : "Imprint - Add one mana of the imprinted card at the start of your turn and when this comes into play";
     //Discard a card as it comes into play.
     //Remember this discard  
     public void OnSummoned(CardGame cardGame, CardInstance source)
@@ -48,13 +40,10 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
             ImprintEffect = new AddTempManaEffect();
             ImprintEffect.ManaToAdd = "1" + choice.Colors.ToManaString();
 
-            var etbAbility = new TriggeredAbility(TriggerType.SelfEntersPlay, ImprintEffect);
-            var startTurnAbility = new TriggeredAbility(TriggerType.AtTurnStart, ImprintEffect);
-         
-            sourceCard.Abilities.Add(etbAbility);
-            sourceCard.Abilities.Add(startTurnAbility);
+            cardGame.ManaSystem.AddTemporaryMana(sourceCard.GetOwner(),ImprintEffect.ManaToAdd);
 
-            sourceCards.Add(sourceCard);
+            var startTurnAbility = new TriggeredAbility(TriggerType.AtTurnStart, ImprintEffect);        
+            sourceCard.Abilities.Add(startTurnAbility);
             hasImprinted = true;
         }
     }
@@ -63,7 +52,7 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
     {
         var clone = base.Clone() as ImprintAbility;
         clone.hasImprinted = hasImprinted;
-        return clone as CardAbility;
+        return clone;
     }
 }
 
