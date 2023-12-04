@@ -1,4 +1,5 @@
-﻿using Assets.Core.Abilities;
+﻿using Assets.Core;
+using Assets.Core.Abilities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -490,14 +491,13 @@ public class CardGame
             }
         }
     }
-
-    internal bool IsInZone(CardInstance unit, ZoneType zoneType)
+    public bool IsInZone(CardInstance unit, ZoneType zoneType)
     {
         var zone = GetZoneOfCard(unit);
         return zone.ZoneType == zoneType;
     }
 
-    internal void MakeChoice(List<CardInstance> entitiesSelected)
+    public void MakeChoice(List<CardInstance> entitiesSelected)
     {
         //Right now as of August 16 2022, Careful Study, Sleight of Hand and Chrome Mox use this...
         if (CurrentGameState != GameState.WaitingForChoice)

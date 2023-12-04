@@ -4,6 +4,7 @@ using UnityEngine;
 using UniRx;
 using System.Linq;
 using System;
+using Assets.Core;
 
 public class SimService
 {

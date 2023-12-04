@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using Assets.Core;
 
 public class UIGameController : MonoBehaviour
 {
