@@ -1,5 +1,5 @@
 {
-    "name": "CoreAssemblyDefinition",
+    "name": "Core",
     "rootNamespace": "",
     "references": [
         "GUID:560b04d1a97f54a4e82edc0cbbb69285"
@@ -9,7 +9,6 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "DeepCloner.dll",
         "Newtonsoft.Json.dll"
     ],
     "autoReferenced": true,

@@ -1,22 +1,19 @@
 using Assets.Core;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UniRx;
 using UnityEngine;
 
 public class GameService : MonoBehaviour
 {
     #region Fields
-    private CardGame _cardGame;
     [SerializeField]
     private bool _hasGameStarted = false;
     #endregion
 
     #region Properties
     public bool HasGameStarted { get => _hasGameStarted; set => _hasGameStarted = value; }
-    public CardGame CardGame { get => _cardGame; set => _cardGame = value; }
-    public bool GameOver { get => _cardGame.CurrentGameState == GameState.GameOver; }
+    public CardGame CardGame { get; set; }
+    public bool GameOver { get => CardGame.CurrentGameState == GameState.GameOver; }
     #endregion
 
 
@@ -28,62 +25,57 @@ public class GameService : MonoBehaviour
     public void SetupGame(GameSetupOptions options)
     {
         _options = options;
-        _cardGame = new CardGame();
-        _cardGame.Setup(options);        
+        CardGame = new CardGame();
+        CardGame.Setup(options);        
    }
 
     public void ResetGame()
     {
-        _cardGame = new CardGame();
-        _cardGame.Setup(_options);
+        CardGame = new CardGame();
+        CardGame.Setup(_options);
         StartGame();
     }
 
     public void StartGame()
     {
-        if (_cardGame == null)
+        if (CardGame == null)
         {
             throw new Exception("StartGame() has failed. Game is null. Perhaps you forgot to Setup the game first?");
         }
 
         //Push any events happening from the card game to this 
-        _cardGame.GameEventSystem.GameEventObservable.Subscribe((gameEvent) =>
+        CardGame.GameEventSystem.GameEventObservable.Subscribe((gameEvent) =>
         {
             this._gameEventSubject.OnNext(gameEvent);
         });
 
-        _cardGame.StartGame();
+        CardGame.StartGame();
         _hasGameStarted = true;
     }
 
     public void ProcessAction(CardGameAction action)
     {
-        if (_cardGame == null)
+        if (CardGame == null)
         {
             throw new Exception("ProcessAction() has failed. Game is null. Perhaps you forgot to Setup the game first?");
         }
 
-        _cardGame.ProcessAction(action);
+        CardGame.ProcessAction(action);
     }
     
     public void EndTurn()
     {
-        if (_cardGame == null)
+        if (CardGame == null)
         {
             throw new Exception("EndTurn() has failed. Game is null. Perhaps you forgot to Setup the game first?");
         }
         var endTurnAction = new NextTurnAction();
-        _cardGame.ProcessAction(endTurnAction);
-    }
-
-    public void MakeChoice(List<CardInstance> choices)
-    {
-        _cardGame.MakeChoice(choices);
+        CardGame.ProcessAction(endTurnAction);
     }
 
     public IObservable<GameEventLog> GetGameEventLogsObservable()
     {
-        return _cardGame.EventLogSystem.GetGameEventLogsAsObservable();
+        return CardGame.EventLogSystem.GetGameEventLogsAsObservable();
     }
 
     public IObservable<GameEvent> GetGameEventObservable()
@@ -93,7 +85,7 @@ public class GameService : MonoBehaviour
 
     public IObservable<CardGame> GetOnGameStateUpdatedObservable()
     {
-        var gameStateObs = _cardGame.GameStateChangedObservable;
+        var gameStateObs = CardGame.GameStateChangedObservable;
         return gameStateObs;
     }
     /**

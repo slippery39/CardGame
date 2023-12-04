@@ -265,26 +265,13 @@ public class CardGame
 
 
     public CardGame Copy(bool noEventsOrLogs = false)
-    {
-        /*
-        var copy = this.DeepClone();
-        copy._isCopy = true;
-        if (noEventsOrLogs)
-        { 
-            copy.EventLogSystem = new EmptyEventLogSystem();
-            copy._cardGameLogger = new EmptyLogger();
-            copy._gameEventSystem = new EmptyGameEventSystem();
-            copy.DebugSystem.Enabled = true;
-        }      
-
-        //return copy;
-        */
-
-        var newCardData = RegisteredCardData.ToDictionary(entry => entry.Key,
-                                               entry => entry.Value.Clone());
+    { 
         //Look for any cloneable systems
         var clone = new CardGame();
         clone._isCopy = true;
+
+        clone.RegisteredCardData = RegisteredCardData.ToDictionary(entry => entry.Key,
+                                       entry => entry.Value.Clone());
 
         clone.CurrentGameState = CurrentGameState;
         clone.ActivePlayerId = ActivePlayerId;
@@ -296,7 +283,6 @@ public class CardGame
         clone.ResolvingSystem = this.ResolvingSystem.DeepClone(clone);
 
         //Clone the player data.
-        clone.RegisteredCardData = newCardData;
         clone.Players.Add(Player1.DeepClone(clone));
         clone.Players.Add(Player2.DeepClone(clone));
 
@@ -332,7 +318,7 @@ public class CardGame
      
         if (ChoiceInfoNeededSource != null)
         {
-            clone.ChoiceInfoNeededSource = _registeredEntities.Find(e => e.EntityId == ChoiceInfoNeededSource.EntityId);
+            clone.ChoiceInfoNeededSource = clone. _registeredEntities.Find(e => e.EntityId == ChoiceInfoNeededSource.EntityId);
         }
 
         return clone;
@@ -405,8 +391,6 @@ public class CardGame
         var cardInstance = new CardInstance(this, data);
         cardInstance.OwnerId = player.PlayerId;
         RegisterEntity(cardInstance);
-
-        //TODO - Cache CardData here.
 
         if (cardInstance.BackCard != null)
         {
@@ -509,7 +493,7 @@ public class CardGame
 
         //Note the entitiesSelected references may not be from this actual game.
         var updatedEntityRefs = entitiesSelected
-            .Select(entity => this._registeredEntities
+            .Select(entity =>  _registeredEntities
                               .First(e => e.EntityId == entity.EntityId))
             .ToList();
 
@@ -522,7 +506,7 @@ public class CardGame
             {
                 foreach (var component in card.GetAbilitiesAndComponents<IOnResolveChoiceMade>().ToList())
                 {
-                    component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded);
+                    component.OnResolveChoiceMade(this, entitiesSelected[0], ChoiceInfoNeeded, ChoiceInfoNeededSource as CardInstance);
                 }
             }
         });
@@ -653,6 +637,7 @@ public class CardGame
         action.AdditionalChoices = action.AdditionalChoices?.Select(t => GetEntities().Find(e => e?.EntityId == t?.EntityId)).ToList();
 
         //Edge case for ResolveChoiceActions;
+        
         if (action as ResolveChoiceAction != null)
         {
             if (action is ResolveChoiceAction choiceAction)
@@ -660,11 +645,6 @@ public class CardGame
                 var entityIds = choiceAction.Choices.Select(t => t.EntityId);
                 choiceAction.Choices = entityIds.Select(eid=>GetEntities<CardInstance>().FirstOrDefault(t => t.EntityId == eid)).ToList();
             }
-        }
-
-        if (action.SourceCard?.Name == "Vapor Snag")
-        {
-            var debug = 0;
         }
 
         if (action.IsValidAction(this))

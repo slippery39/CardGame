@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 //Make it for Chrome Mox right now, but we might need to expand it later..
 //Would probably be an ImprintAbility<T> where T is the Effect?
@@ -6,12 +7,12 @@
 //<StaticAbility,Effect>
 public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//generic interface for ContainsAbility
 {
-    /// <summary>
-    /// The card that the imprint ability is on.
-    /// </summary>
-    CardInstance SourceCard { get; set; }
+    public int SourceCardId { get; set; }
     AddTempManaEffect ImprintEffect { get; set; }
     bool hasImprinted { get; set; } = false;
+
+    //Temporary for testing;
+    private List<CardInstance> sourceCards = new List<CardInstance>();
 
     private DiscardCardEffect _imprintDiscardEffect = new DiscardCardEffect
     {
@@ -23,12 +24,12 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
     public void OnSummoned(CardGame cardGame, CardInstance source)
     {
         var owner = cardGame.GetOwnerOfCard(source);
-        SourceCard = source;
+        SourceCardId = source.EntityId;
 
         if (owner.Hand.Any())
         {
             //Technically Imprint Exiles the card.
-            cardGame.PromptPlayerForChoice(owner, _imprintDiscardEffect, SourceCard);
+            cardGame.PromptPlayerForChoice(owner, _imprintDiscardEffect, source);
         }
         else
         {
@@ -36,15 +37,13 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
             hasImprinted = true;
         }
     }
-    public void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, IEffectWithChoice effectWithChoice)
+    public void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, IEffectWithChoice effectWithChoice, CardInstance sourceCard)
     {
         //ISSUE HERE -> after cloning the ChoiceInfoNeededSource and the SourceCard may not be the same.
         //The source card needs to be grabbed from the game itself, not from this object.
         //This should only happen once.
-        if (!hasImprinted && cardGame.ChoiceInfoNeededSource.EntityId == SourceCard.EntityId)
+        if (!hasImprinted && cardGame.ChoiceInfoNeededSource.EntityId == SourceCardId)
         {
-            SourceCard = cardGame.ChoiceInfoNeededSource as CardInstance;
-
             cardGame.Log($"Imprint has been resolved : {choice.Name}");
             ImprintEffect = new AddTempManaEffect();
             ImprintEffect.ManaToAdd = "1" + choice.Colors.ToManaString();
@@ -52,8 +51,10 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
             var etbAbility = new TriggeredAbility(TriggerType.SelfEntersPlay, ImprintEffect);
             var startTurnAbility = new TriggeredAbility(TriggerType.AtTurnStart, ImprintEffect);
          
-            SourceCard.Abilities.Add(etbAbility);
-            SourceCard.Abilities.Add(startTurnAbility);
+            sourceCard.Abilities.Add(etbAbility);
+            sourceCard.Abilities.Add(startTurnAbility);
+
+            sourceCards.Add(sourceCard);
             hasImprinted = true;
         }
     }
@@ -61,6 +62,7 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
     public override CardAbility Clone()
     {
         var clone = base.Clone() as ImprintAbility;
+        clone.hasImprinted = hasImprinted;
         return clone as CardAbility;
     }
 }
@@ -68,6 +70,6 @@ public class ImprintAbility : CardAbility, IOnSummon, IOnResolveChoiceMade//gene
 
 public interface IOnResolveChoiceMade
 {
-    void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, IEffectWithChoice effectWithChoice);
+    void OnResolveChoiceMade(CardGame cardGame, CardInstance choice, IEffectWithChoice effectWithChoice, CardInstance sourceCard);
 }
 
